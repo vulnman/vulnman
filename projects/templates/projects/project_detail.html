@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ project.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+  <li class="breadcrumb-item active">{{ project.name }}</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-center">{{ project.name }}</h3>
+    <hr/>
+    <div class="clearfix">
+        <div class="float-end">
+            <a href="{% url 'projects:project-update' project.pk %}" class="btn btn-primary">
+                <i class="fa fa-edit"></i> Edit Project</a>
+        </div>
+    </div>
+
+    <p><strong>Vulnerabilities: </strong>{{ project.vulnerability_set.count }}</p>
+    <p><strong>Hosts: </strong>{{ project.host_set.count }}</p>
+    <p><strong>Customer: </strong>{{ project.customer }}</p>
+    <p><strong>Date Updated: </strong>{{ project.date_updated }}</p>
+    <p><strong>Start Date: </strong>{{ project.start_date|date }}</p>
+    <p><strong>End Date: </strong>{{ project.end_date|date }}</p>
+
+    <h4 class="mt-5">Contacts</h4>
+    <hr />
+    <div class="list-group mt-3">
+        {% for contact in project.projectcontact_set.all %}
+            <div class="list-group-item">
+                <div class="clearfix">
+                    <div class="float-start">
+                        <p>{{ contact.first_name }} {{ contact.last_name }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Projects
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item active">Projects</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+    <div class="clearfix">
+        <div class="float-end">
+            <a class="btn btn-primary" href="{% url 'projects:project-create' %}"><i class="fa fa-plus"></i> New Project</a>
+        </div>
+    </div>
+
+    <div class="list-group mt-3">
+    {% for project in projects %}
+        <a class="list-group-item list-group-item-action" href="{% url 'projects:project-detail' project.pk %}">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="clearfix">
+                        <div class="float-start">
+                            {{ project }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="clearfix">
+                        <div class="float-start">
+                            <small class="text-muted"><i>Last updated: {{ project.date_updated|timesince }} ago</i></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    {% empty %}
+        <li class="list-group-item">No projects here!</li>
+    {% endfor %}
+    </div>
+
+    {% include 'navigation/pagination.html' %}
+{% endblock %}

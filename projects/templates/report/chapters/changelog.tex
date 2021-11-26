@@ -1,0 +1,16 @@
+\chapter{Änderungsverzeichnis}
+
+
+\begin{table}[h]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \begin{tabularx}{\textwidth}{| X | X | X |}
+        \hline
+        \textbf{Revision} & \textbf{Datum} & \textbf{Änderungen}     \\
+        \hline
+        {%- for report in project.report_set.all() -%}
+        {{- report.revision -}} & {{- report.date_created| date('d.m.Y') -}} & {{- report.changes -}} \\
+        \hline
+        {%- endfor -%}
+    \end{tabularx}
+\end{table}

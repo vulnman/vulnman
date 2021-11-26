@@ -1,0 +1,45 @@
+%-------------------------------------------------------------------------------
+% TITLE PAGE
+%-------------------------------------------------------------------------------
+{% if report.custom_title %}
+\title { {{- report.custom_title -}} }
+{% else %}
+\title{ {{- project.report_default_title }} - \\ {{ project.customer }} }
+{% endif %}
+
+\author{
+    {{ project.creator.first_name }} {{ project.creator.last_name }}    \\
+    {%- for member in project.projectmember_set.all() -%}
+    {{ member.user.first_name }} {{ member.user.last_name }}    \\
+    {%- endfor -%}
+}
+
+
+\makeatletter
+\renewcommand{\maketitle}{
+	\begin{titlepage}
+		\begin{center}
+			\large
+			\vspace*{2cm}
+			\includegraphics[width=0.7\textwidth]{logo.transparent.png}\\
+			\large
+			\vspace*{3cm}
+			{\LARGE\@title}
+			\vfill
+			\par\vspace{6ex}
+			\begin{tabular}[t]{c}
+				von \\
+				\@author
+			\end{tabular}
+			\vfill
+			\vfill
+			\par\vspace{1ex}
+			v{{report.revision}}
+			\par\vspace{1ex}
+			Durchführungszeitraum: \\
+			{{ project.start_date|date }} - {{ project.end_date|date }}   \\
+		\end{center}
+		\@thanks
+	\end{titlepage}
+}
+\makeatother

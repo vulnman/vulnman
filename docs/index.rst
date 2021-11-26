@@ -1,0 +1,76 @@
+Welcome to Vulnman's documentation!
+===================================
+
+Vulnman is a vulnerability management application written in `Django <https://www.djangoproject.com/>`_.
+
+
+.. toctree::
+   :maxdepth: 9
+   :caption: Contents:
+
+
+First Steps
+===========
+
+.. toctree::
+    :caption: First Steps
+    :hidden:
+
+    introduction/install
+    introduction/configuration
+
+:doc:`introduction/install`
+    Install instructions for Vulnman.
+:doc:`introduction/configuration`
+    List of settings.
+
+
+Vulnerability Management
+========================
+
+.. toctree::
+    :caption: Vulnerability Management
+    :hidden:
+
+    topics/vuln_management/templates
+
+:doc:`topics/vuln_management/templates`
+    Describe the usage of vulnerability templates
+
+
+Customization
+=============
+
+.. toctree::
+    :caption: Customization
+    :hidden:
+
+    topics/customization/report
+    topics/customization/css
+
+:doc:`topics/customization/report`
+    How to customize report
+
+:doc:`topics/customization/css`
+    How to customize CSS theme
+
+
+Misc
+====
+
+.. toctree::
+    :caption: Misc
+    :hidden:
+
+    topics/misc/other_products
+
+:doc:`topics/misc/other_products`
+    Other products in use
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

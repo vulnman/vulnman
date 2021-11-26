@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ host }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:vulns:host-list' project.pk %}">Hosts</a></li>
+    <li class="breadcrumb-item active">{{ host }}</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-center">{{ host }}</h3>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="clearfix">
+                <div class="float-start">
+                    <small class="text-muted">Last updated: {{ host.date_updated|timesince }} ago</small>
+                </div>
+                <div class="float-end">
+                    <small class="text-muted">Created by: {{ host.creator }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <p><strong>OS: </strong>{{ host.os }}</p>
+    <p><strong>Hostnames: </strong>{{ host.get_hostnames }}</p>
+    <p><strong>Vulnerabilities: </strong>{{ host.vulnerability_set.count }}</p>
+    <h3>Services</h3>
+    <hr/>
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Service</th>
+                <th>Name</th>
+                <th>Banner</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in host.service_set.all %}
+                <tr>
+                    <td>{{ service }}</td>
+                    <td>{{ service.name }}</td>
+                    <td>{{ service.banner }}</td>
+                    <td>{{ service.status }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

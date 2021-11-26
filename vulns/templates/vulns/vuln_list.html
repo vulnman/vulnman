@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Vulnerabilities
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item active">Vulnerabilities</li>
+</ol>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="clearfix">
+        <div class="float-end">
+            <a class="btn btn-primary" href="{% url 'projects:vulns:vuln-create' project.pk %}">
+                <i class="fa fa-plus"></i> Create Vulnerability
+            </a>
+        </div>
+    </div>
+
+    <div class="list-group mt-3">
+        {% for vuln in vulns %}
+            <div class="list-group-item list-group-item-action">
+                <div class="float-start">
+                    <a href="{% url 'projects:vulns:vuln-detail' project.pk vuln.pk %}" style="color: #{{ vuln.get_severity_colors.hex }}">
+                        {{ vuln }}
+                    </a>
+                </div>
+                <div class="float-end">
+                    <a href="{% url 'projects:vulns:vuln-update' project.pk vuln.pk %}" class="btn btn-info">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ vuln.pk }}">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        {% empty %}
+            <span class="list-group-item">No vulnerabilities yet!</span>
+        {% endfor %}
+    </div>
+
+    {% for vuln in vulns %}
+        {% include 'modals/delete_object.html' with obj=vuln %}
+    {% endfor %}
+
+    {% include 'navigation/pagination.html' %}
+
+{% endblock %}

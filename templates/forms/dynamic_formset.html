@@ -1,0 +1,26 @@
+{% load static %}
+
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script type="text/javascript">
+    {% if single_inline %}
+        $(function () {
+            $('div#{{ single_inline.prefix }}').formset({
+                prefix: '{{ single_inline.prefix }}',
+                formCssClass: 'dynamic-formset0'
+            });
+    })
+    {% else %}
+    $(function () {
+        {% for formset in inlines %}
+            $('div#{{ formset.prefix }}').formset({
+                prefix: '{{ formset.prefix }}',
+                formCssClass: 'dynamic-formset{{ forloop.counter }}',
+                addCssClass: 'btn btn-outline-info add-row float-end',
+                addText: '<i class="fa fa-plus"></i>',
+                deleteCssClass: 'btn btn-outline-danger delete-row float-end',
+                deleteText: '<i class="fa fa-minus"></i>',
+            });
+        {% endfor %}
+    })
+    {% endif %}
+</script>

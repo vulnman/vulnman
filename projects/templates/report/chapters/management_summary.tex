@@ -1,0 +1,19 @@
+\chapter{Management Summary}
+
+TODO: lorem ipsum
+
+\begin{table}[h]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \begin{tabularx}{\textwidth}{ | X | X | X | X | }
+    \hline
+    \textbf{Schweregrad} & \textbf{Beschreibung} & \textbf{System} & \textbf{Abschnitt} \\
+    \hline
+    {%- for vuln in project.vulnerability_set.all() -%}
+    \cellcolor{ {{- vuln.get_severities()[0] -}} }{{ vuln.get_severities()[0] }} & {{ vuln.name }} & {{ vuln.host.ip }} & \ref{ ss:vuln-{{- vuln.pk -}} }    \\
+    \hline
+    {%- endfor -%}
+    \end{tabularx}
+    \caption{Schwachstellenübersicht}
+    \label{tbl:vulnerability-overview}
+\end{table}

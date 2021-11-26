@@ -1,0 +1,13 @@
+django
+django-widget-tweaks
+django-better-choices
+cvss
+django-tex
+django-extra-views
+django-crispy-forms
+crispy-bootstrap5
+django-autocomplete-light==3.5.1
+django-dynamic-fixture
+django-querysetsequence
+djangorestframework
+python-libnmap

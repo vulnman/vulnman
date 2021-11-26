@@ -1,0 +1,9 @@
+{% load widget_tweaks %}
+
+<div class="form-check">
+    {{ field|add_class:'form-check-input' }}
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {% if field.field.required %}
+        <span class="required">*</span>
+    {% endif %}
+</div>

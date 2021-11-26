@@ -1,0 +1,42 @@
+{% load widget_tweaks %}
+
+{% if field.field.widget.input_type == "checkbox" %}
+    {% include 'forms/widgets/checkbox.html' %}
+{% elif field.field.widget.input_type == "select" %}
+    <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {% if field.field.required %}
+            <span class="required">*</span>
+        {% endif %}
+        {% if field.errors %}
+            {{ field|add_class:'form-select is-invalid' }}
+        {% else %}
+            {{ field|add_class:'form-select' }}
+        {% endif %}
+        {% for error in field.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+        {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+        {% endif %}
+    </div>
+
+{% else %}
+<div class="form-group">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {% if field.field.required %}
+        <span class="required">*</span>
+    {% endif %}
+    {% if field.errors %}
+        {{ field|add_class:'form-control is-invalid' }}
+    {% else %}
+        {{ field|add_class:'form-control' }}
+    {% endif %}
+    {% for error in field.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+    {% endfor %}
+    {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+</div>
+{% endif %}
