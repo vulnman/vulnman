@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 class Index(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return reverse_lazy('dashboard:dashboard')
+            return reverse_lazy('projects:project-list')
         return reverse_lazy('account:login')
 
 

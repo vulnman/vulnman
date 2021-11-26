@@ -1,18 +1,23 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ project.name }}
+    {{ project.name }}
 {% endblock %}
 
+{% block extra_head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
+{% endblock extra_head %}
+
 {% block breadcrumbs %}
-<ol class="breadcrumb">
-  <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
-  <li class="breadcrumb-item active">{{ project.name }}</li>
-</ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+        <li class="breadcrumb-item active">{{ project.name }}</li>
+    </ol>
 {% endblock %}
 
 {% block content %}
     <h3 class="text-center">{{ project.name }}</h3>
+    <small><p class="text-center"><i>{{ project.customer }}</i></p></small>
     <hr/>
     <div class="clearfix">
         <div class="float-end">
@@ -21,24 +26,242 @@
         </div>
     </div>
 
-    <p><strong>Vulnerabilities: </strong>{{ project.vulnerability_set.count }}</p>
-    <p><strong>Hosts: </strong>{{ project.host_set.count }}</p>
-    <p><strong>Customer: </strong>{{ project.customer }}</p>
-    <p><strong>Date Updated: </strong>{{ project.date_updated }}</p>
-    <p><strong>Start Date: </strong>{{ project.start_date|date }}</p>
-    <p><strong>End Date: </strong>{{ project.end_date|date }}</p>
-
-    <h4 class="mt-5">Contacts</h4>
-    <hr />
-    <div class="list-group mt-3">
-        {% for contact in project.projectcontact_set.all %}
-            <div class="list-group-item">
-                <div class="clearfix">
-                    <div class="float-start">
-                        <p>{{ contact.first_name }} {{ contact.last_name }}</p>
+    <div class="container-fluid mt-3">
+        <!-- Dashboard Charts Row 1 -->
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <canvas id="vulns-chart"></canvas>
                     </div>
                 </div>
             </div>
-        {% endfor %}
+            <div class="col-md-4 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <canvas id="hosts-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <canvas id="vulns-per-day-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Row 1 -->
+        <div class="row mt-3">
+            <div class="col-md-4 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body bg-primary text-white">
+                        <div class="row">
+                            <div class="col-sm-2 border-light border-end">
+                                <h3 class="text-center"><i class="fa fa-clock-o"></i></h3>
+                            </div>
+                            <div class="col-sm-9">
+                                <h3 id="countdown" class="text-center"></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body bg-secondary text-white">
+                        <div class="row">
+                            <div class="col-sm-2 border-light border-end">
+                                <h3 class="text-center"><i class="fa fa-exclamation-triangle"></i></h3>
+                            </div>
+                            <div class="col-sm-9">
+                                <h3 class="text-center">{{ project.vulnerability_set.count }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body bg-primary text-white">
+                        <div class="row">
+                            <div class="col-sm-2 border-light border-end">
+                                <h3 class="text-center"><i class="fa fa-server"></i></h3>
+                            </div>
+                            <div class="col-sm-9">
+                                <h3 class="text-center">{{ project.host_set.count }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Dashboard Row 3 -->
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <h4>Contacts</h4>
+                <hr/>
+                <div class="list-group mt-3">
+                    {% for contact in project.projectcontact_set.all %}
+                        <div class="list-group-item">
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    <p>{{ contact.first_name }} {{ contact.last_name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
     </div>
+
+
+
+
 {% endblock %}
+
+
+{% block extra_scripts %}
+    <script>
+        let severity_labels =  {{ severity_labels|safe }};
+        new Chart(document.getElementById('vulns-chart').getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: severity_labels,
+                datasets: [{
+                    data: {{ severity_vulns_count|safe }},
+                    backgroundColor: {{ severity_background_colors|safe }},
+                    borderColor: {{ severity_border_colors|safe }},
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {text: "Vulnerabilities", display: true},
+                    legend: {display: false},
+                }
+            }
+        });
+
+        new Chart(document.getElementById('hosts-chart'), {
+            type: 'bar',
+            data: {
+                labels: {{ hosts_list|safe }},
+                datasets: [{
+                    data: {{ hosts_service_count|safe }},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {text: "Open Ports", display: true},
+                    legend: {display: false},
+                }
+            }
+        });
+
+        new Chart(document.getElementById('vulns-per-day-chart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: {{ latest_days|safe }},
+                datasets: [{
+                    label: "hosts",
+                    data: {{ vulns_per_day|safe }},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {text: "Latest Vulnerabilities", display: true},
+                    legend: {display: false},
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            precision: 0
+                        }
+                    }]
+                }
+            }
+        });
+
+
+        /* taken from https://www.w3schools.com/howto/howto_js_countdown.asp */
+        // Set the date we're counting down to
+        var countDownDate = new Date("Jan 5, 2022 15:37:25").getTime();
+        var countDownDate = new Date("{{ project.end_date|date:'M d, Y' }} 00:00:00").getTime();
+
+
+        // Update the count down every 1 second
+        var x = setInterval(function () {
+
+            // Get today's date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now and the count down date
+            var distance = countDownDate - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the result in the element with id="demo"
+            document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
+                + minutes + "m " + seconds + "s";
+
+            // If the count down is finished, write some text
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "EXPIRED";
+            }
+        }, 1000);
+
+
+    </script>
+
+{% endblock extra_scripts %}
