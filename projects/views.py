@@ -2,6 +2,8 @@ from django.http import Http404
 from django.utils.translation import gettext as _
 from django.urls import reverse_lazy
 from django.conf import settings
+from django.utils import timezone
+from django.db.models import Count
 from django_tex.response import PDFResponse
 from django_tex.shortcuts import compile_template_to_pdf
 from django_tex.core import render_template_with_context, run_tex
@@ -55,6 +57,36 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
         if self.object:
             self.request.session['project_pk'] = str(self.get_object().pk)
         return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        # this one is ugly. use API!!!
+        context = super().get_context_data(**kwargs)
+        context['severity_vulns_count'] = [
+            self.get_object().vulnerability_set.filter(cvss_base_score__gte=9.0, cvss_base_score__lte=10.0).count(),
+            self.get_object().vulnerability_set.filter(cvss_base_score__gte=7.0, cvss_base_score__lte=8.9).count(),
+            self.get_object().vulnerability_set.filter(cvss_base_score__gte=4.0, cvss_base_score__lte=6.9).count(),
+            self.get_object().vulnerability_set.filter(cvss_base_score__gte=0.1, cvss_base_score__lte=3.9).count(),
+            self.get_object().vulnerability_set.filter(cvss_base_score=0.0).count()
+        ]
+        context['severity_labels'] = list(settings.SEVERITY_COLORS.keys())
+        context['severity_background_colors'] = []
+        context['severity_border_colors'] = []
+        for key, value in settings.SEVERITY_COLORS.items():
+            context['severity_background_colors'].append(value.get('chart'))
+            context['severity_border_colors'].append(value.get('chart_border'))
+        context['hosts_list'] = list(self.get_object().host_set.annotate(
+            service_count=Count('service')).order_by('-service_count').values_list('ip', flat=True))[:5]
+        context['hosts_service_count'] = list(self.get_object().host_set.annotate(
+            service_count=Count('service')).order_by('-service_count').values_list('service_count', flat=True))[:5]
+        context['latest_days'] = []
+        context['vulns_per_day'] = []
+        for i in range(10):
+            context['latest_days'].append(str(timezone.now().date() - timezone.timedelta(days=i)))
+            context['vulns_per_day'].append(self.get_object().vulnerability_set.filter(
+                date_created__date=timezone.now().date() - timezone.timedelta(days=i)).count())
+        context['latest_days'].reverse()
+        context['vulns_per_day'].reverse()
+        return context
 
     def get_queryset(self):
         return models.Project.objects.filter(creator=self.request.user)
