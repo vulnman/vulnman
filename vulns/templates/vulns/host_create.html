@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create Host
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:vulns:host-list' project.pk %}">Hosts</a></li>
+    <li class="breadcrumb-item active">Create</li>
+</ol>
+{% endblock %}
+
+
+{% block content %}
+    {% include 'forms/formset.html' with method="post" %}
+{% endblock %}
+
+{% block extra_scripts %}
+    {% include 'forms/dynamic_formset.html' %}
+{% endblock  %}

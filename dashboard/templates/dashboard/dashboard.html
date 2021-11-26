@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item active">Dashboard</li>
+</ol>
+{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
+{% endblock extra_head %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <canvas id="vulns-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <div class="col-md-4 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <canvas id="hosts-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+new Chart(document.getElementById('vulns-chart').getContext('2d'), {
+    type: 'pie',
+    data: {
+        labels: ['Critical', 'High', 'Medium', 'Low', 'Information', 'Best Practice'],
+        datasets: [{
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {text: "Vulnerabilities", display: true},
+            legend: {display: false},
+        }
+    }
+});
+
+new Chart(document.getElementById('hosts-chart'), {
+    type: 'bar',
+    data: {
+        labels: ['10.10.10.19', "10.10.10.5", "10.10.10.12"],
+        datasets: [{
+            data: [3, 9, 1],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+           responsive: true,
+    maintainAspectRatio: false,
+        plugins: {
+            title: {text: "Open Ports", display: true},
+            legend: {display: false},
+        }
+    }
+});
+
+</script>
+
+{% endblock extra_scripts %}

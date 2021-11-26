@@ -1,0 +1,28 @@
+{% load widget_tweaks %}
+
+{% if method %}
+<form method="{{ method }}" {% if enctype %}enctype="multipart/form-data"{% endif %}>
+    {% csrf_token %}
+{% else %}
+<form method="get">
+{% endif %}
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    {% for field in form.visible_fields %}
+      {% include 'forms/field.html' %}
+    {% endfor %}
+
+    <div class="form-group mt-3">
+        <div class="clearfix">
+            <button type="submit" class="btn btn-success form-control">
+                {% if submit_text %}
+                    {{ submit_text }}
+                {% else %}
+                    Submit
+                {% endif %}
+            </button>
+        </div>
+    </div>
+  </form>

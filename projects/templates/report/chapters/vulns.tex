@@ -1,0 +1,85 @@
+\chapter{Schwachstellen}
+
+{%- if project.has_vulns_with_severity('Critical') or project.has_vulns_with_severity('High') -%}
+Im Rahmen der Untersuchung wurden Schwachstellen gefunden, die unter anderem ein hohes Risiko
+aufweisen. Die gelisteten Handlungsempfehlungen sollten schnellstmöglich durchgeführt werden.
+
+{% elif project.has_vulns_with_severity('Medium') %}
+TODO
+{% elif project.has_vulns_with_severity('Low') %}
+TODO
+{%- else %}
+Im Rahmen der Untersuchung konnten wir keine Schwachstellen identifizieren.
+{%- endif -%}
+
+Die folgenden Schwachstellen sind nach Systemen gruppiert.
+
+\clearpage
+
+{%- for host in project.host_set.all() -%}
+\section{ {{- host.ip -}} }
+\label{ss:host-{{- host.ip -}} }
+
+\textbf{Hostname(s)}:  {{ host.get_hostnames() }}   \\
+{%- if host.os -%}
+\textbf{OS}: {{ host.os }}    \\
+{%- endif -%}
+
+{%- for vuln in host.vulnerability_set.all() -%}
+\subsection{ \textcolor{ {{- vuln.get_severities()[0] -}} }{ {{- vuln.name -}} } }
+\label{ ss:vuln-{{- vuln.pk -}} }
+
+\begin{table}[h]
+  \renewcommand{\arraystretch}{1.5}
+    \centering
+    \begin{tabular}{| l | p{12cm} |}
+        \hline
+        Beschreibung & {{- vuln.description -}}  \\
+        \hline
+        \multirow{2}{*}{CVSS} & {{- vuln.get_scores()[0] }} ({{- vuln.get_severities()[0] -}})   \\
+        \cline{2-2}
+        & {{- vuln.cvss_string -}}  \\
+        \hline
+        Auswirkungen & {{- vuln.impact -}}   \\
+        \hline
+        \multirow{ {{-vuln.get_references_as_list()|length -}} }{*}{Referenzen}
+         {%- for reference in vuln.get_references_as_list() -%}
+         {%- if loop.index == 1 -%}
+         & {{ reference }} \\
+         {%- if loop.last -%}
+         \hline
+         {%- endif -%}
+         {%- elif loop.last -%}
+         \cline{2-2}
+         & {{ reference }} \\
+         \hline
+         {%- else %}
+         \cline{2-2}
+         & {{ reference }} \\
+         {%- endif -%}
+         {%- endfor %}
+    \end{tabular}
+\end{table}
+
+\subsubsection{Handlungsempfehlung}
+
+{{- vuln.remediation|linebreaks -}}
+
+{%- if vuln.proofofconcept_set.count() -%}
+\subsubsection{Proof Of Concept}
+{%- for proof in vuln.proofofconcept_set.all() -%}
+    {%- if proof.image -%}
+        \begin{figure}[h]
+            \centering
+            \includegraphics[scale=0.5]{ {{- proof.image.path -}} }
+            \caption{ {{- proof.name -}} }
+        \end{figure}
+    {%- endif -%}
+{%- endfor -%}
+{%- endif -%}
+
+\clearpage
+{%- endfor -%}
+
+
+{%- endfor -%}

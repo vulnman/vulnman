@@ -1,0 +1,75 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'dashboard:index' %}">
+            VULNMAN
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav me-auto">
+                {% if project.pk %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:project-detail' %}active{% endif %}"
+                           href="{% url 'projects:project-detail' project.pk %}">Home
+                            <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:vulns:host-list' %}active{% endif %}"
+                           href="{% url 'projects:vulns:host-list' project.pk %}">Hosts</a>
+                    </li>
+                    <li class="nav-item">
+
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:vulns:vuln-list' %}active{% endif %}"
+                           href="{% url 'projects:vulns:vuln-list' project.pk %}">Vulnerabilities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:credentials:credentials-list' %}active{% endif %}"
+                            href="{% url 'projects:credentials:credentials-list' project.pk %}">Credentials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:report-list' %}active{% endif %}"
+                           href="{% url 'projects:report-list' %}">Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="alert('not implemented')">Tasks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:tools:tool-import' %}active{% endif %}"
+                            href="{% url 'projects:tools:tool-import' project.pk %}">Tool Import</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav my-2 my-sm-0">
+                <li class="nav-item dropdown my-1 my-sm-0">
+                    {% if request.user.is_authenticated %}
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            {{ request.user.username }}
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="{% url 'projects:project-list' %}">Projects</a>
+                            <a class="dropdown-item" href="{% url 'vulns:vuln-template-list' %}">Vulnerability
+                                Templates</a>
+                            <a class="dropdown-item" href="">Methodologies</a>
+                            <a class="dropdown-item" href="{% url 'account:profile-edit' %}">Edit Profile</a>
+                            {% if request.user.is_staff %}
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank" rel="noopener">Administration</a>
+                            {% endif %}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a>
+                        </div>
+                    {% else %}
+                        <a class="nav-link">Login</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+

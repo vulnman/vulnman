@@ -1,0 +1,4 @@
+
+
+class BreadcrumbMixin(object):
+    breadcrumbs = []

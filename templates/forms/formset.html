@@ -1,0 +1,46 @@
+{% load widget_tweaks %}
+{% load verbose_name %}
+
+{% if method %}
+    <form method="{{ method }}" {% if enctype %}enctype="multipart/form-data"{% endif %}>
+    {% csrf_token %}
+{% else %}
+    <form method="get">
+{% endif %}
+
+{% for hidden in form.hidden_fields %}
+    {{ hidden }}
+{% endfor %}
+{% for field in form.visible_fields %}
+    {% include 'forms/field.html' %}
+{% endfor %}
+
+<!-- inlines -->
+{% for formset in inlines %}
+     <h4 class="mt-4">{{ formset.model|verbose_name_plural }}</h4>
+    <hr/>
+    <div id="{{ formset.prefix }}">
+    {% for form in formset.forms %}
+        <div id="{{ form.prefix }}-row">
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {% for field in form.visible_fields %}
+            {% include 'forms/field.html' %}
+        {% endfor %}
+        </div>
+    {% endfor %}
+    </div>
+            {{ formset.management_form }}
+
+{% endfor %}
+
+<div class="form-group mt-3">
+    <div class="clearfix">
+        <div class="float-right">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </div>
+</div>
+</form>
+

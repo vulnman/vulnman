@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Reports
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item active">Reports</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+    <div class="clearfix">
+        <div class="float-end">
+            <a class="btn btn-primary" href="{% url 'projects:report-create' %}">
+                <i class="fa fa-plus"></i> New Report
+            </a>
+        </div>
+    </div>
+
+    <div class="list-group mt-3">
+    {% for report in reports %}
+        <div class="list-group-item list-group-item-action">
+            <div class="clearfix">
+                <div class="float-start">
+                    <a href="{% url 'projects:report-detail' report.pk %}" target="_blank">
+                        {{ report }}
+                    </a>
+                </div>
+                <div class="float-end">
+                    <a href="{% url 'projects:report-update' project.pk report.pk %}" class="btn btn-info">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    {% empty %}
+        <li class="list-group-item">No reports here!</li>
+    {% endfor %}
+    </div>
+
+    {% include 'navigation/pagination.html' %}
+
+{% endblock %}

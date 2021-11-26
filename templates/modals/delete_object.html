@@ -1,0 +1,21 @@
+<!-- Modal -->
+<div class="modal fade" id="delete-modal-{{ obj.pk }}" tabindex="-1" aria-labelledby="delete-modal-{{ obj.pk }}-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form method="post" action="{{ obj.get_absolute_delete_url }}">
+            {% csrf_token %}
+      <div class="modal-header">
+        <h5 class="modal-title" id="delete-modal-{{ obj.pk }}-label">Delete Item</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          Do you really want to delete {{ obj.name }}?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Delete</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>

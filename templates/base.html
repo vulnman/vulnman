@@ -1,0 +1,32 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>{% block title %}{% endblock title %}| Vulnman</title>
+    {% block extra_head %}
+    {% endblock extra_head %}
+</head>
+<body>
+{% include 'navigation/topbar.html' %}
+<div class="container-fluid">
+    <div class="col-sm-12 col-md-8 offset-md-2">
+        <div class="mt-2">
+            {% block breadcrumbs %}
+            {% endblock %}
+            {% if not TEMPLATE_HIDE_BREADCRUMBS %}
+            <hr/>
+            {% endif %}
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+{% block extra_scripts %}
+{% endblock extra_scripts %}
+</body>
+</html>

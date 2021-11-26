@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ project.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:vulns:vuln-list' project.pk %}">Vulnerabilities</a></li>
+    <li class="breadcrumb-item active">{{ vuln }}</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-center">{{ vuln.name }}</h3>
+    <hr/>
+    <p><strong>Creator: </strong>{{ vuln.creator }}</p>
+    <p><strong>Date created: </strong>{{ vuln.date_created|date }}</p>
+    <p><strong>Description: </strong>
+        {% if vuln.template %}
+        {{ vuln.template.description | linebreaksbr }}
+        {% else %}
+        {{ vuln.description | linebreaksbr }}
+        {% endif %}
+    </p>
+    <p style="color: #{{ vuln.get_severity_colors.hex }}"><strong>Score: </strong>{{ vuln.get_scores.0 }} ({{ vuln.get_severities.0 }})</p>
+    <p><strong>CVSS-Vector: </strong>{{ vuln.cvss_string }}</p>
+    <p><strong>Impact: </strong>{{ vuln.impact | linebreaksbr }}</p>
+
+    <h4>Proof of concept</h4>
+    {% for proof in vuln.proofofconcept_set.all %}
+        {% if proof.image %}
+            <figure class="figure">
+                <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
+                <figcaption class="figure-caption">{{ proof.name }}</figcaption>
+            </figure>
+        {% endif %}
+        <p>{{ proof.description|linebreaksbr }}</p>
+    {% endfor %}
+    <h4>Handlungsempfehlung</h4>
+    {% if vuln.template %}
+        <p>{{ vuln.template.remediation | linebreaksbr }}</p>
+    {% else %}
+        <p>{{ vuln.remediation | linebreaksbr }}</p>
+    {% endif %}
+
+    <h4>References</h4>
+    <ul>
+    {% for reference in vuln.get_references_as_list %}
+        <li>{{ reference }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
