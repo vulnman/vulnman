@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     {{ project.name }}
 {% endblock %}
 
 {% block extra_head %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
+    <script src="{% static 'js/chart.min.js' %}"></script>
 {% endblock extra_head %}
 
 {% block breadcrumbs %}
@@ -97,32 +98,7 @@
                 </div>
             </div>
         </div>
-        <!-- Dashboard Row 3 -->
-
-        <div class="row mt-3">
-            <div class="col-sm-12">
-                <h4>Contacts</h4>
-                <hr/>
-                <div class="list-group mt-3">
-                    {% for contact in project.projectcontact_set.all %}
-                        <div class="list-group-item">
-                            <div class="clearfix">
-                                <div class="float-start">
-                                    <p>{{ contact.first_name }} {{ contact.last_name }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-        </div>
-
     </div>
-
-
-
-
 {% endblock %}
 
 
@@ -217,13 +193,6 @@
                 plugins: {
                     title: {text: "Latest Vulnerabilities", display: true},
                     legend: {display: false},
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            precision: 0
-                        }
-                    }]
                 }
             }
         });
@@ -231,7 +200,6 @@
 
         /* taken from https://www.w3schools.com/howto/howto_js_countdown.asp */
         // Set the date we're counting down to
-        var countDownDate = new Date("Jan 5, 2022 15:37:25").getTime();
         var countDownDate = new Date("{{ project.end_date|date:'M d, Y' }} 00:00:00").getTime();
 
 
