@@ -38,4 +38,5 @@ The documentation files can be found under `_build/html`.
 - jQuery Formset 1.5-pre
 - Forkawesome 1.1.7
 - Django latest
+- chart.js 3.6.0
 
