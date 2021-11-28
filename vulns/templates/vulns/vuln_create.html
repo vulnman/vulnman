@@ -10,6 +10,8 @@
             min-height: 40px;
         }
     </style>
+        <script src="{% static 'js/cvss.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/cvss.css' %}" />
 {% endblock  %}
 
 {% block breadcrumbs %}
@@ -41,5 +43,19 @@
                 $('#id_references').val(data.references);
                 $('#id_impact').val(data.impact);
             })
-}    </script>
+}   </script>
+    <script>
+    cvss_string = document.getElementById("id_cvss_string");
+    var el = document.createElement("div");
+    el.setAttribute("id", "cvssboard");
+    cvss_string.parentNode.insertBefore(el, cvss_string.nextSibling);
+    var c = new CVSS("cvssboard", {
+        onchange: function() {
+            if (c.get().score !== "?"){
+                $("#id_cvss_string").val(c.get().vector);
+            }
+        }
+    });
+
+    </script>
 {% endblock  %}
