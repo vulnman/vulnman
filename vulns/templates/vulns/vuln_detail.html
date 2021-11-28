@@ -15,9 +15,20 @@
 
 {% block content %}
     <h3 class="text-center">{{ vuln.name }}</h3>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="clearfix">
+                <div class="float-start">
+                    <small class="text-muted">Created: {{ vuln.date_created|date }}</small>
+                </div>
+                <div class="float-end">
+                    <small class="text-muted">Created by: {{ vuln.creator }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
     <hr/>
-    <p><strong>Creator: </strong>{{ vuln.creator }}</p>
-    <p><strong>Date created: </strong>{{ vuln.date_created|date }}</p>
+
     <p><strong>Description: </strong>
         {% if vuln.template %}
         {{ vuln.template.description | linebreaksbr }}
