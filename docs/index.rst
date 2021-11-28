@@ -33,9 +33,14 @@ Vulnerability Management
     :hidden:
 
     topics/vuln_management/templates
+    topics/vuln_management/external_tools
+
 
 :doc:`topics/vuln_management/templates`
     Describe the usage of vulnerability templates
+
+:doc:`topics/vuln_management/external_tools`
+    Import external tool reports into vulnman
 
 
 Customization
@@ -66,6 +71,7 @@ Misc
 
 :doc:`topics/misc/other_products`
     Other products in use
+
 
 
 Indices and tables
