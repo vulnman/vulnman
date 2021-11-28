@@ -183,7 +183,8 @@ SEVERITY_COLORS = {
 VULNMAN_CSS_THEME = "flatly"
 
 EXTERNAL_TOOLS = {
-    "nmap": "tools.parsers.nmap.NmapParser"
+    "nmap": "tools.parsers.nmap.NmapParser",
+    "gobuster-vhost": "tools.parsers.gobuster.GobusterVhost"
 }
 
 try:
