@@ -32,12 +32,6 @@ class ReportUpdateForm(forms.ModelForm):
         fields = ['latex_source']
 
 
-class ProjectClassificationInline(InlineFormSetFactory):
-    model = models.ProjectClassification
-    exclude = ["project"]
-    factory_kwargs = {'extra': 1, 'can_delete': False, 'max_num': 1}
-
-
 class ProjectContactInline(InlineFormSetFactory):
     model = models.ProjectContact
     exclude = ["project"]
