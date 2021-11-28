@@ -13,7 +13,7 @@ class Project(models.Model):
     end_date = models.DateField(blank=True, null=True)
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     customer = models.CharField(max_length=64)
-    report_default_title = models.CharField(max_length=64, default="Abschlussbericht Penetrationstest")
+    report_default_title = models.CharField(max_length=64, default="Pentest Report")
 
     def __str__(self):
         return self.name
@@ -26,19 +26,6 @@ class Project(models.Model):
 
     class Meta:
         ordering = ["-date_updated"]
-
-
-class ProjectClassification(models.Model):
-    project = models.OneToOneField(Project, on_delete=models.CASCADE)
-    information_basis = models.CharField(max_length=32, choices=constants.INFORMATION_BASIS_CHOICES)
-    aggression = models.CharField(max_length=32, choices=constants.AGGRESSION_CHOICES)
-    extent = models.CharField(max_length=32, choices=constants.EXTENT_CHOICES)
-    approach = models.CharField(max_length=32, choices=constants.APPROACH_CHOICES)
-    technique = models.CharField(max_length=32, choices=constants.TECHNIQUE_CHOICES)
-    starting_point = models.CharField(max_length=32, choices=constants.STARTING_POINT_CHOICES)
-
-    class Meta:
-        verbose_name_plural = "Classifications"
 
 
 class ProjectMember(models.Model):
