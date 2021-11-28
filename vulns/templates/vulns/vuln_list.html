@@ -27,15 +27,20 @@ Vulnerabilities
         {% for vuln in vulns %}
             <div class="list-group-item list-group-item-action">
                 <div class="float-start">
-                    <a href="{% url 'projects:vulns:vuln-detail' project.pk vuln.pk %}" style="color: #{{ vuln.get_severity_colors.hex }}">
+                    <div class="row">
+                        <a href="{% url 'projects:vulns:vuln-detail' project.pk vuln.pk %}" style="color: #{{ vuln.get_severity_colors.hex }}">
                         {{ vuln }}
-                    </a>
+                        </a>
+                    </div>
+                    <div class="row">
+                        <p>{{ vuln.host }}</p>
+                    </div>
                 </div>
                 <div class="float-end">
-                    <a href="{% url 'projects:vulns:vuln-update' project.pk vuln.pk %}" class="btn btn-info">
+                    <a href="{% url 'projects:vulns:vuln-update' project.pk vuln.pk %}" class="btn btn-sm btn-info">
                         <i class="fa fa-edit"></i> Edit
                     </a>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ vuln.pk }}">
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ vuln.pk }}">
                         <i class="fa fa-trash"></i> Delete
                     </button>
                 </div>
