@@ -21,6 +21,9 @@ class Host(models.Model):
     def get_absolute_url(self):
         return reverse_lazy('projects:vulns:host-detail', kwargs={'pk': self.pk})
 
+    def get_absolute_delete_url(self):
+        return reverse_lazy('projects:vulns:host-delete', kwargs={'pk': self.pk})
+
     def get_hostnames(self):
         if not self.hostname_set.exists():
             return "-"

@@ -129,3 +129,11 @@ class HostEdit(generic.ProjectUpdateWithInlinesView):
     form_class = forms.HostForm
     model = models.Host
     inlines = [forms.HostnameInline]
+
+
+class HostDelete(generic.ProjectDeleteView):
+    http_method_names = ["post"]
+    model = models.Host
+
+    def get_success_url(self):
+        return reverse_lazy('projects:vulns:host-list')
