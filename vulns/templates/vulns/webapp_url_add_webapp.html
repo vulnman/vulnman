@@ -8,8 +8,8 @@ Create Web Application
 <ol class="breadcrumb">
   <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
     <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'projects:vulns:host-list' project.pk %}">Hosts</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'projects:vulns:host-detail' project.pk form.instance.hostname.host.pk %}">{{ form.instance.hostname.host }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:vulns:host-list' %}">Hosts</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:vulns:host-detail' form.instance.hostname.host.pk %}">{{ form.instance.hostname.host }}</a></li>
     <li class="breadcrumb-item active">Add web application</li>
 </ol>
 {% endblock %}

@@ -78,7 +78,7 @@ class VulnDelete(generic.ProjectDeleteView):
     http_method_names = ["post"]
 
     def get_success_url(self):
-        return reverse_lazy('projects:vulns:vuln-list', kwargs={'project_pk': self.kwargs.get('project_pk')})
+        return reverse_lazy('projects:vulns:vuln-list')
 
     def get_queryset(self):
         return models.Vulnerability.objects.filter(project=self.get_project())
@@ -121,8 +121,7 @@ class WebApplicationUrlPathAddWebApp(generic.ProjectUpdateView):
     template_name = "vulns/webapp_url_add_webapp.html"
 
     def get_success_url(self):
-        return reverse_lazy('projects:vulns:host-detail', kwargs={'project_pk': self.get_project().pk,
-                                                                  'pk': self.get_object().hostname.host.pk})
+        return reverse_lazy('projects:vulns:host-detail', kwargs={'pk': self.get_object().hostname.host.pk})
 
 
 class HostEdit(generic.ProjectUpdateWithInlinesView):

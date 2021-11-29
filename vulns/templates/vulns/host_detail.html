@@ -8,7 +8,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
         <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'projects:vulns:host-list' project.pk %}">Hosts</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:vulns:host-list' %}">Hosts</a></li>
         <li class="breadcrumb-item active">{{ host }}</li>
     </ol>
 {% endblock %}
@@ -40,7 +40,7 @@
                     <i class="fa fa-ellipsis-v"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
-                    <li><a class="dropdown-item" href="{% url 'projects:vulns:host-edit' project.pk host.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                    <li><a class="dropdown-item" href="{% url 'projects:vulns:host-edit' host.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
                 </ul>
             </div>
         </div>
@@ -118,7 +118,7 @@
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end"
                                             aria-labelledby="webapp-{{ webapp.pk }}-action-dropdown">
-                                            <li><a class="dropdown-item" href="{% url 'projects:vulns:webapp-url-add-webapp' project.pk webapp_url.pk %}">Add
+                                            <li><a class="dropdown-item" href="{% url 'projects:vulns:webapp-url-add-webapp' webapp_url.pk %}">Add
                                                 Webapp</a></li>
                                         </ul>
                                     </div>

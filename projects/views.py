@@ -170,7 +170,7 @@ class ReportUpdate(generic.ProjectUpdateView):
         return super().form_invalid(form)
 
     def get_success_url(self):
-        return reverse_lazy('projects:report-list', kwargs={'project_pk': self.kwargs.get('project_pk')})
+        return reverse_lazy('projects:report-list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
