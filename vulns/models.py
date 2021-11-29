@@ -26,6 +26,13 @@ class Host(models.Model):
             return "-"
         return ', '.join(self.hostname_set.values_list('name', flat=True))
 
+    def get_host_icon(self):
+        for key, value in settings.HOST_OS_ICONS.items():
+            for match in value.get('matches', []):
+                if match in self.os:
+                    return value.get('icon')
+        return ""
+
     class Meta:
         unique_together = [('ip', 'project')]
 
@@ -149,3 +156,21 @@ class VulnerabilityTemplate(models.Model):
 
     class Meta:
         unique_together = [('name',)]
+
+
+class WebApplicationUrlPath(models.Model):
+    uuid = models.UUIDField(default=uuid4, primary_key=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    path = models.CharField(max_length=512, unique=True)
+    full_url = models.URLField(max_length=512, unique=True)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    hostname = models.ForeignKey(Hostname, on_delete=models.CASCADE)
+    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
+    description = models.TextField(null=True, blank=True)
+    status_code = models.IntegerField(default=200)
+    web_application = models.ForeignKey('webapps.WebApplication', on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.path

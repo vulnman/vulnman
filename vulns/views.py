@@ -113,3 +113,20 @@ class VulnerabilityTemplateAutocomplete(LoginRequiredMixin, autocomplete.Select2
         if self.q:
             queryset = queryset.filter(Q(name__contains=self.q) | Q(description__contains=self.q))
         return queryset
+
+
+class WebApplicationUrlPathAddWebApp(generic.ProjectUpdateView):
+    model = models.WebApplicationUrlPath
+    form_class = forms.WebApplicationUrlPathForm
+    template_name = "vulns/webapp_url_add_webapp.html"
+
+    def get_success_url(self):
+        return reverse_lazy('projects:vulns:host-detail', kwargs={'project_pk': self.get_project().pk,
+                                                                  'pk': self.get_object().hostname.host.pk})
+
+
+class HostEdit(generic.ProjectUpdateWithInlinesView):
+    template_name = "vulns/host_create.html"
+    form_class = forms.HostForm
+    model = models.Host
+    inlines = [forms.HostnameInline]

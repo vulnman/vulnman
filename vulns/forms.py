@@ -41,3 +41,9 @@ class ProofOfConceptInline(NamedInlineFormSetFactory):
     model = models.ProofOfConcept
     exclude = ["uuid", "vuln", "creator"]
     factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 4}
+
+
+class WebApplicationUrlPathForm(forms.ModelForm):
+    class Meta:
+        model = models.WebApplicationUrlPath
+        fields = ["web_application"]

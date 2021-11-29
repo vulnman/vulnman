@@ -10,8 +10,15 @@ urlpatterns = [
     path('hosts/', views.HostList.as_view(), name="host-list"),
     path('hosts/create/', views.HostCreate.as_view(), name="host-create"),
     path('hosts/<str:pk>/', views.HostDetail.as_view(), name="host-detail"),
+    path('hosts/<str:pk>/edit/', views.HostEdit.as_view(), name="host-edit"),
+
+    # web applications
+    path('webapps/paths/<str:pk>/add-webapp/', views.WebApplicationUrlPathAddWebApp.as_view(),
+         name="webapp-url-add-webapp"),
 
     path('<str:pk>/', views.VulnDetail.as_view(), name="vuln-detail"),
     path('<str:pk>/delete/', views.VulnDelete.as_view(), name="vuln-delete"),
     path('<str:pk>/update/', views.VulnUpdate.as_view(), name="vuln-update"),
+
+
 ]

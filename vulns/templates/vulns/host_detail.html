@@ -1,20 +1,24 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ host }}
+    {{ host }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'projects:vulns:host-list' project.pk %}">Hosts</a></li>
-    <li class="breadcrumb-item active">{{ host }}</li>
-</ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:vulns:host-list' project.pk %}">Hosts</a></li>
+        <li class="breadcrumb-item active">{{ host }}</li>
+    </ol>
 {% endblock %}
 
 {% block content %}
-    <h3 class="text-center">{{ host }}</h3>
+    {% if host.get_host_icon %}
+        <h3 class="text-center"><i class="{{ host.get_host_icon }}"></i> {{ host }}</h3>
+    {% else %}
+        <h3 class="text-center">{{ host }}</h3>
+    {% endif %}
     <div class="row">
         <div class="col-sm-12">
             <div class="clearfix">
@@ -28,29 +32,107 @@
         </div>
     </div>
     <hr/>
+    <div class="clearfix">
+        <div class="float-end">
+            <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="host-action-dropdown"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
+                    <li><a class="dropdown-item" href="{% url 'projects:vulns:host-edit' project.pk host.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <p><strong>OS: </strong>{{ host.os }}</p>
     <p><strong>Hostnames: </strong>{{ host.get_hostnames }}</p>
     <p><strong>Vulnerabilities: </strong>{{ host.vulnerability_set.count }}</p>
-    <h3>Services</h3>
-    <hr/>
-    <table class="table table-bordered table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Service</th>
-                <th>Name</th>
-                <th>Banner</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for service in host.service_set.all %}
-                <tr>
-                    <td>{{ service }}</td>
-                    <td>{{ service.name }}</td>
-                    <td>{{ service.banner }}</td>
-                    <td>{{ service.status }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+    <ul class="nav nav-tabs nav-fill" role="tablist">
+        <li class="nav-item" role="presentation"><a class="nav-link active" data-bs-toggle="tab" href="#services"
+                                                    aria-controls="services">Services</a></li>
+        <li class="nav-item" role="presentation"><a class="nav-link" data-bs-toggle="tab" href="#webapps"
+                                                    aria-controls="webapps">Web Applications</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="services" class="tab-pane fade show active" role="tabpanel">
+            <div class="container-fluid mt-3">
+                <h3>Services</h3>
+                <hr/>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Name</th>
+                        <th>Banner</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for service in host.service_set.all %}
+                        <tr>
+                            <td>{{ service }}</td>
+                            <td>{{ service.name }}</td>
+                            <td>{{ service.banner }}</td>
+                            <td>{{ service.status }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="webapps" class="tab-pane fade" role="tabpanel">
+            <div class="container-fluid mt-3">
+                <h3>Web Application Sitemap</h3>
+                <hr/>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Hostname</th>
+                        <th>Path</th>
+                        <th>Status Code</th>
+                        <th>Web Application</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for service in host.service_set.all %}
+                        {% for webapp_url in service.webapplicationurlpath_set.all %}
+                            <tr>
+                                <td>{{ webapp_url.hostname.name }}</td>
+                                <td>{{ webapp_url.path }}</td>
+                                <td>{{ webapp_url.status_code }}</td>
+                                {% if webapp_url.web_application %}
+                                    <td>{{ webapp_url.web_application }}</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                                <td>
+                                    <div class="dropdown">
+                                        <a class="btn btn-sm btn-secondary dropdown-toggle" href="#" role="button"
+                                           id="webapp-{{ webapp.pk }}-action-dropdown"
+                                           data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-ellipsis-v"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end"
+                                            aria-labelledby="webapp-{{ webapp.pk }}-action-dropdown">
+                                            <li><a class="dropdown-item" href="{% url 'projects:vulns:webapp-url-add-webapp' project.pk webapp_url.pk %}">Add
+                                                Webapp</a></li>
+                                        </ul>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
 {% endblock %}

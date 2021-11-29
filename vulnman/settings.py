@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'vulns.apps.VulnsConfig',
     'dashboard.apps.DashboardConfig',
     'credentials.apps.CredentialsConfig',
-    'tools.apps.ToolsConfig'
+    'tools.apps.ToolsConfig',
+    'webapps.apps.WebappsConfig'
 ]
 
 MIDDLEWARE = [
@@ -184,7 +185,14 @@ VULNMAN_CSS_THEME = "flatly"
 
 EXTERNAL_TOOLS = {
     "nmap": "tools.parsers.nmap.NmapParser",
-    "gobuster-vhost": "tools.parsers.gobuster.GobusterVhost"
+    "gobuster-vhost": "tools.parsers.gobuster.GobusterVhost",
+    "gobuster-dir": "tools.parsers.gobuster.GobusterDir"
+}
+
+HOST_OS_ICONS = {
+    "linux": {
+        "icon": "fa fa-linux", "matches": ["Ubuntu", "Fedora", "Arch-Linux"]
+    }
 }
 
 try:
