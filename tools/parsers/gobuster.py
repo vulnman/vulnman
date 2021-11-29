@@ -15,7 +15,7 @@ class GobusterVhost(ToolResultParser):
                     print("Could not resolve subdomain %s" % subdomain)
                     continue
                 host, _created = Host.objects.get_or_create(ip=host_ip, project=project, defaults={'creator': creator})
-                Hostname.objects.get_or_create(host=host, name=subdomain)
+                self._get_or_create_hostname(subdomain, host)
 
 
 class GobusterDir(ToolResultParser):
