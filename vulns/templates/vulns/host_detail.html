@@ -41,6 +41,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
                     <li><a class="dropdown-item" href="{% url 'projects:vulns:host-edit' host.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ host.pk }}"><i class="fa fa-trash"></i> Delete</a></li>
                 </ul>
             </div>
         </div>
@@ -133,6 +134,6 @@
         </div>
 
     </div>
-
+    {% include 'modals/delete_object.html' with obj=host %}
 
 {% endblock %}
