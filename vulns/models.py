@@ -19,7 +19,7 @@ class Host(models.Model):
         return str(self.ip)
 
     def get_absolute_url(self):
-        return reverse_lazy('projects:vulns:host-detail', kwargs={'project_pk': self.project.pk, 'pk': self.pk})
+        return reverse_lazy('projects:vulns:host-detail', kwargs={'pk': self.pk})
 
     def get_hostnames(self):
         if not self.hostname_set.exists():
@@ -102,10 +102,10 @@ class Vulnerability(models.Model):
         return settings.SEVERITY_COLORS[self.get_severities()[0]]
 
     def get_absolute_url(self):
-        return reverse_lazy('projects:vulns:vuln-detail', kwargs={'project_pk': self.project.pk, 'pk': self.pk})
+        return reverse_lazy('projects:vulns:vuln-detail', kwargs={'pk': self.pk})
 
     def get_absolute_delete_url(self):
-        return reverse_lazy('projects:vulns:vuln-delete', kwargs={'project_pk': self.project.pk, 'pk': self.pk})
+        return reverse_lazy('projects:vulns:vuln-delete', kwargs={'pk': self.pk})
 
     def get_references_as_list(self):
         return self.references.split("\n")
