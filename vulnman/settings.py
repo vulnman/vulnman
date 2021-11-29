@@ -186,16 +186,17 @@ VULNMAN_CSS_THEME = "flatly"
 EXTERNAL_TOOLS = {
     "nmap": "tools.parsers.nmap.NmapParser",
     "gobuster-vhost": "tools.parsers.gobuster.GobusterVhost",
-    "gobuster-dir": "tools.parsers.gobuster.GobusterDir"
+    "gobuster-dir": "tools.parsers.gobuster.GobusterDir",
+    "aiodnsbrute": "tools.parsers.aiodnsbrute.Aiodnsbrute",
 }
 
 HOST_OS_ICONS = {
     "linux": {
-        "icon": "fa fa-linux", "matches": ["Ubuntu", "Fedora", "Arch-Linux"]
+        "icon": "fa fa-linux", "matches": ["Ubuntu", "Fedora", "Arch-Linux", "Debian"]
     }
 }
 
 try:
     from local_settings import *
-except:
+except ImportError:
     pass

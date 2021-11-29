@@ -40,6 +40,13 @@
                     <i class="fa fa-ellipsis-v"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
+                    <li>
+                        <a class="dropdown-item" href="https://censys.io/ipv4/{{ host.ip }}" target="_blank" rel="noopener"><i class="fa fa-external-link"></i> Censys</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="https://www.shodan.io/search?query={{ host.ip }}" target="_blank" rel="noopener"><i class="fa fa-external-link"></i> Shodan</a>
+                    </li>
+                    <li class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{% url 'projects:vulns:host-edit' host.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ host.pk }}"><i class="fa fa-trash"></i> Delete</a></li>
                 </ul>
@@ -48,13 +55,15 @@
     </div>
     <p><strong>OS: </strong>{{ host.os }}</p>
     <p><strong>Hostnames: </strong>{{ host.get_hostnames }}</p>
-    <p><strong>Vulnerabilities: </strong>{{ host.vulnerability_set.count }}</p>
 
     <ul class="nav nav-tabs nav-fill" role="tablist">
         <li class="nav-item" role="presentation"><a class="nav-link active" data-bs-toggle="tab" href="#services"
                                                     aria-controls="services">Services</a></li>
         <li class="nav-item" role="presentation"><a class="nav-link" data-bs-toggle="tab" href="#webapps"
                                                     aria-controls="webapps">Web Applications</a></li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" data-bs-toggle="tab" href="#vulns" aria-controls="vulns">Vulnerabilities</a>
+        </li>
     </ul>
 
     <div class="tab-content">
@@ -128,6 +137,26 @@
                             </tr>
                         {% endfor %}
                     {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="vulns" class="tab-pane fade" role="tabpanel">
+            <div class="container-fluid mt-3">
+                <table class="table table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Severity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vuln in host.vulnerability_set.all %}
+                            <tr>
+                                <td><a href="{{ vuln.get_absolute_url }}">{{ vuln.name }}</a></td>
+                                <td>{{ vuln.cvss_base_score }} ({{ vuln.get_severities.0 }})</td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
