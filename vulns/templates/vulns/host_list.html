@@ -24,9 +24,21 @@ Hosts
 
     <div class="list-group mt-3">
         {% for host in hosts %}
-            <a href="{% url 'projects:vulns:host-detail' project.pk host.pk %}" style="color: {{ vuln.get_severity_colors.hex }}"
-               class="list-group-item list-group-item-action">
-                {{ host }}
+            <a href="{% url 'projects:vulns:host-detail' project.pk host.pk %}" class="list-group-item list-group-item-action">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="float-start">
+                            {{ host }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="float-start">
+                            <small><i>{{ host.get_hostnames }}</i></small>
+                        </div>
+                    </div>
+                </div>
             </a>
         {% empty %}
             <span class="list-group-item">No hosts yet!</span>
