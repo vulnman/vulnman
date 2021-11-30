@@ -1,16 +1,17 @@
-\chapter{Projectübersicht}
+\chapter{Project Overview}
 
-Die Firma { {{- project.customer -}} } beauftragte uns einen Penetrationstest für den Zeitraum
-vom { {{- project.start_date|date('d.M.Y') -}} } bis { {{- project.end_date|date('d.M.Y') -}} } durchzuführen.
-\\
-Der Scope wurde wie folgt festgelegt:
+{ {{- project.customer -}} } commissioned us to perform a penetration test in the period from
+{ {{- project.start_date|date('d.M.Y') -}} } to { {{- project.end_date|date('d.M.Y') -}} }.
+
+The scope was set as follows:
+
 \begin{itemize}
     {%- for scope in project.scope_set.all() %}
     \item {{ scope.name }}
     {%- endfor %}
 \end{itemize}
 
-Die Tabelle \ref{tbl:host-summary} zeigt eine Übersicht der Systeme, die während des Penetrationstests ermittelt werden konnten.
+The table \ref{tbl:host-summary} gives an overview of the systems identified during the penetration test.
 
 \begin{table}[ht]
     \renewcommand{\arraystretch}{1.5}
@@ -24,23 +25,24 @@ Die Tabelle \ref{tbl:host-summary} zeigt eine Übersicht der Systeme, die währe
         \hline
         {%- endfor -%}
     \end{tabularx}
-    \caption{Host Übersicht}
+    \caption{Host Overview}
     \label{tbl:host-summary}
 \end{table}
 
 {%- if project.has_vulns_with_severity('Critical') or project.has_vulns_with_severity('High') -%}
-Als Resultat, wurden Schwachstellen in den untersuchten Systemen gefunden, welche ein erhöhtes Risiko darstellen.
+As a result, vulnerabilities were found in the examined systems, which pose an increased risk.
 {%- endif -%}
 
-Die Grafik \ref{fig:bsi} zeigt die Klassifikation eines Penetrationstests nach dem Standardmodell des Bundesamtes für Sicherheit in der Informationstechnik.
+Figure \ref{fig:bsi} shows the classification of a penetration test according to the standard model of the German Federal Office for Information Security.
+
 
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.3]{bsi.jpg}
-\caption{BSI Klassifikation}
+\caption{BSI Classification}
 \label{fig:bsi}
 \end{figure}
 
-Die Kriterien werden nachfolgend erklärt.
+The criteria are explained below.
 
 TODO

@@ -1,4 +1,4 @@
-\chapter{Änderungsverzeichnis}
+\chapter{Changelog}
 
 
 \begin{table}[h]
@@ -6,7 +6,7 @@
     \centering
     \begin{tabularx}{\textwidth}{| X | X | X |}
         \hline
-        \textbf{Revision} & \textbf{Datum} & \textbf{Änderungen}     \\
+        \textbf{Revision} & \textbf{Date} & \textbf{Changes}     \\
         \hline
         {%- for report in project.report_set.all() -%}
         {{- report.revision -}} & {{- report.date_created| date('d.m.Y') -}} & {{- report.changes -}} \\
