@@ -15,7 +15,7 @@ Reports
 {% block content %}
     <div class="clearfix">
         <div class="float-end">
-            <a class="btn btn-primary" href="{% url 'projects:report-create' %}">
+            <a class="btn btn-primary" href="{% url 'projects:reporting:report-create' %}">
                 <i class="fa fa-plus"></i> New Report
             </a>
         </div>
@@ -26,12 +26,12 @@ Reports
         <div class="list-group-item list-group-item-action">
             <div class="clearfix">
                 <div class="float-start">
-                    <a href="{% url 'projects:report-detail' report.pk %}" target="_blank">
+                    <a href="{% url 'projects:reporting:report-detail' report.pk %}" target="_blank">
                         {{ report }}
                     </a>
                 </div>
                 <div class="float-end">
-                    <a href="{% url 'projects:report-update' report.pk %}" class="btn btn-info">
+                    <a href="{% url 'projects:reporting:report-update' report.pk %}" class="btn btn-info">
                         <i class="fa fa-edit"></i> Edit
                     </a>
                 </div>

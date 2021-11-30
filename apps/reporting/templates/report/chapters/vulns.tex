@@ -5,9 +5,9 @@ Im Rahmen der Untersuchung wurden Schwachstellen gefunden, die unter anderem ein
 aufweisen. Die gelisteten Handlungsempfehlungen sollten schnellstmöglich durchgeführt werden.
 
 {% elif project.has_vulns_with_severity('Medium') %}
-TODO
+TODO Only medium vulns found
 {% elif project.has_vulns_with_severity('Low') %}
-TODO
+TODO Only low severity vulns found
 {%- else %}
 Im Rahmen der Untersuchung konnten wir keine Schwachstellen identifizieren.
 {%- endif -%}
@@ -60,11 +60,9 @@ Die folgenden Schwachstellen sind nach Systemen gruppiert.
          {%- endfor %}
     \end{tabular}
 \end{table}
-
 \subsubsection{Handlungsempfehlung}
-
-{{- vuln.remediation|linebreaks -}}
-
+{{- vuln.remediation|linebreaks|latex_escape -}}
+\\
 {%- if vuln.proofofconcept_set.count() -%}
 \subsubsection{Proof Of Concept}
 {%- for proof in vuln.proofofconcept_set.all() -%}
