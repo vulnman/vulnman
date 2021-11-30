@@ -1,8 +1,8 @@
 from django.urls import path
-from tools import views
+from apps.external_tools import views
 
 
-app_name = "tools"
+app_name = "external-tools"
 
 
 urlpatterns = [

@@ -1,6 +1,6 @@
 import socket
 from urllib.parse import urlparse
-from tools.result_parser import ToolResultParser
+from vulnman.utils.tools import ToolResultParser
 from vulns.models import Host, Hostname, Service, WebApplicationUrlPath
 
 

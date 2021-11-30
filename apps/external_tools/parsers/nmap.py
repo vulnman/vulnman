@@ -1,4 +1,4 @@
-from tools.result_parser import ToolResultParser
+from vulnman.utils.tools import ToolResultParser
 from libnmap.parser import NmapParser as LibNmapParser
 from vulns import models
 
