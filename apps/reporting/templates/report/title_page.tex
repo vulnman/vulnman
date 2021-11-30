@@ -8,9 +8,17 @@
 {% endif %}
 
 \author{
+    {%- if project.creator.profile.hide_name_in_report -%}
+    {{ project.creator.username }} \\
+    {%- else -%}
     {{ project.creator.first_name }} {{ project.creator.last_name }}    \\
+    {%- endif -%}
     {%- for member in project.projectmember_set.all() -%}
+    {%- if member.user.profile.hide_name_in_report -%}
     {{ member.user.first_name }} {{ member.user.last_name }}    \\
+    {%- else -%}
+    {{ member.user.username }} \\
+    {%- endif -%}
     {%- endfor -%}
 }
 
