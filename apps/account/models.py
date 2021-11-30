@@ -8,6 +8,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     pgp_fingerprint = models.CharField(max_length=256, null=True, blank=True, verbose_name="PGP-Fingerprint")
     position = models.CharField(max_length=32, default="Pentester", help_text="Position mentioned in report")
+    hide_name_in_report = models.BooleanField(default=False, help_text="Use username in report instead of real name")
 
 
 @receiver(post_save, sender=User)

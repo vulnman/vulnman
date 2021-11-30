@@ -14,7 +14,11 @@ Telefon: {{ contact.phone }}    \\
 
 
 \section{Fake Company}
+{%- if project.creator.profile.hide_name_in_report -%}
+Name: {{ project.creator.username }} ({{ project.creator.profile.position }}) \\
+{%- else -%}
 Name: {{ project.creator.first_name }} {{ project.creator.last_name }}  ({{ project.creator.profile.position }})  \\
+{%- endif -%}
 E-Mail: {{ project.creator.email }}  \\
 {%- if project.creator.profile.pgp_fingerprint -%}
 PGP-Fingerprint: {{ project.creator.profile.pgp_fingerprint }}  \\
