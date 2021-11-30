@@ -15,9 +15,6 @@ urlpatterns = [
     # vulns app
     path('vulns/', include('vulns.urls')),
 
-    # credentials
-    path('credentials/', include('credentials.urls')),
-
     # tools
     path('tools/', include('apps.external_tools.urls')),
 
