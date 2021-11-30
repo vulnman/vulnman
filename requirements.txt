@@ -12,3 +12,4 @@ django-querysetsequence
 djangorestframework
 python-libnmap
 martor
+Pillow
