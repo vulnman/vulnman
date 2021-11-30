@@ -53,14 +53,14 @@ INSTALLED_APPS = [
     'extra_views',
     'rest_framework',
     'vulns.apps.VulnsConfig',
-    'dashboard.apps.DashboardConfig',
-    'credentials.apps.CredentialsConfig',
     # apps already restructured
     'apps.account.apps.AccountConfig',
     'apps.webapps.apps.WebappsConfig',
     'apps.external_tools.apps.ExternalToolsConfig',
     'apps.reporting.apps.ReportingConfig',
     'apps.projects.apps.ProjectsConfig',
+    'apps.dashboard.apps.DashboardConfig',
+    'apps.networking.apps.NetworkingConfig'
 ]
 
 MIDDLEWARE = [
