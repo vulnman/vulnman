@@ -1,7 +1,7 @@
 from django.contrib.auth import PermissionDenied
 from django.forms import ModelForm
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
-from projects.models import Project
+from apps.projects.models import Project
 
 
 class ProjectMixin(LoginRequiredMixin, UserPassesTestMixin):

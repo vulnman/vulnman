@@ -1,5 +1,5 @@
 from django import forms
-from projects import models
+from apps.projects import models
 from vulnman.forms import DateInput
 from extra_views import InlineFormSetFactory
 
@@ -18,18 +18,6 @@ class ProjectContactForm(forms.ModelForm):
     class Meta:
         model = models.ProjectContact
         exclude = ["pk", "project"]
-
-
-class ReportForm(forms.ModelForm):
-    class Meta:
-        model = models.Report
-        exclude = ["uuid", "project", "creator", "latex_source"]
-
-
-class ReportUpdateForm(forms.ModelForm):
-    class Meta:
-        model = models.Report
-        fields = ['latex_source']
 
 
 class ProjectContactInline(InlineFormSetFactory):

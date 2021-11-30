@@ -21,9 +21,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/', include('account.urls')),
-    path('api/', include('api.urls')),
-    path('projects/', include('projects.urls')),
+    path('account/', include('apps.account.urls')),
+    path('api/', include('apps.api.urls')),
+    path('projects/', include('apps.projects.urls')),
     path('vulnerability-templates/', include('vulns.non_project_urls')),
     path('', include('dashboard.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

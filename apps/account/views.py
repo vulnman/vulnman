@@ -1,6 +1,6 @@
 from django.contrib.auth import views
 from django.urls import reverse_lazy
-from account import forms
+from apps.account import forms
 from vulnman.mixins import ThemeMixin
 from vulnman.views import generic
 
