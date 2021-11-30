@@ -1,6 +1,6 @@
 from django.db.models import QuerySet
 from django.core.exceptions import ImproperlyConfigured
-from projects.mixins import ProjectMixin
+from apps.projects.mixins import ProjectMixin
 from vulnman.views.generic.vulnman import (
     VulnmanAuthDetailView, VulnmanAuthListView, VulnmanAuthCreateView, VulnmanAuthUpdateView, VulnmanAuthDeleteView,
     VulnmanAuthCreateWithInlinesView, VulnmanAuthUpdateWithInlinesView, VulnmanAuthTemplateView, VulnmanAuthFormView

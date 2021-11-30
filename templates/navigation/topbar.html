@@ -28,12 +28,12 @@
                            href="{% url 'projects:vulns:vuln-list' %}">Vulnerabilities</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:report-list' %}active{% endif %}"
-                           href="{% url 'projects:report-list' %}">Reports</a>
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:reporting:report-list' %}active{% endif %}"
+                           href="{% url 'projects:reporting:report-list' %}">Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:tools:tool-import' %}active{% endif %}"
-                           href="{% url 'projects:tools:tool-import' %}">Tool Import</a>
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:external-tools:tool-import' %}active{% endif %}"
+                           href="{% url 'projects:external-tools:tool-import' %}">Tool Import</a>
                     </li>
                 {% endif %}
             </ul>

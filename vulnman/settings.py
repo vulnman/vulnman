@@ -52,13 +52,15 @@ INSTALLED_APPS = [
     'django_tex',
     'extra_views',
     'rest_framework',
-    'account.apps.AccountConfig',
-    'projects.apps.ProjectsConfig',
     'vulns.apps.VulnsConfig',
     'dashboard.apps.DashboardConfig',
     'credentials.apps.CredentialsConfig',
-    'tools.apps.ToolsConfig',
-    'webapps.apps.WebappsConfig'
+    # apps already restructured
+    'apps.account.apps.AccountConfig',
+    'apps.webapps.apps.WebappsConfig',
+    'apps.external_tools.apps.ExternalToolsConfig',
+    'apps.reporting.apps.ReportingConfig',
+    'apps.projects.apps.ProjectsConfig',
 ]
 
 MIDDLEWARE = [
@@ -161,15 +163,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static_files")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-
 LATEX_INTERPRETER = 'latexmk -pdf'
 
 # for some reasons only works with os.path.join and not with pathlib
 LATEX_GRAPHICSPATH = [
-    os.path.join(BASE_DIR, "projects/templates/report/assets"),
+    os.path.join(BASE_DIR, "apps/reporting/templates/report/assets"),
     os.path.join(BASE_DIR, "uploads/proofs")
 ]
 
@@ -184,17 +182,18 @@ SEVERITY_COLORS = {
 VULNMAN_CSS_THEME = "flatly"
 
 EXTERNAL_TOOLS = {
-    "nmap": "tools.parsers.nmap.NmapParser",
-    "gobuster-vhost": "tools.parsers.gobuster.GobusterVhost",
-    "gobuster-dir": "tools.parsers.gobuster.GobusterDir",
-    "aiodnsbrute": "tools.parsers.aiodnsbrute.Aiodnsbrute",
+    "nmap": "apps.external_tools.parsers.nmap.NmapParser",
+    "gobuster-vhost": "apps.external_tools.parsers.gobuster.GobusterVhost",
+    "gobuster-dir": "apps.external_tools.parsers.gobuster.GobusterDir",
+    "aiodnsbrute": "apps.external_tools.parsers.aiodnsbrute.Aiodnsbrute",
 }
 
 HOST_OS_ICONS = {
     "linux": {
-        "icon": "fa fa-linux", "matches": ["Ubuntu", "Fedora", "Arch-Linux", "Debian"]
+        "icon": "fa fa-linux", "matches": ["Ubuntu", "Fedora", "Arch-Linux", "Debian", "Linux"]
     }
 }
+
 
 try:
     from local_settings import *

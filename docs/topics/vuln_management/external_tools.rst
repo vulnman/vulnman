@@ -7,7 +7,7 @@ Vulnman has support for external tool report imports.
 API
 ===
 
-.. automodule:: tools.result_parser
+.. automodule:: vulnman.utils.tools.ToolResultParser
    :members:
    :undoc-members:
 
@@ -34,7 +34,7 @@ This is the final plugin:
 .. code-block:: python
 
     import socket
-    from tools.result_parser import ToolResultParser
+    from vulnman.utils.tools import ToolResultParser
     from vulns.models import Host, Hostname
 
 
@@ -48,5 +48,6 @@ This is the final plugin:
                     except socket.error:
                         print("Could not resolve subdomain %s" % subdomain)
                         continue
-                    host, _created = Host.objects.get_or_create(ip=host_ip, project=project, defaults={'creator': creator})
-                    Hostname.objects.get_or_create(host=host, name=subdomain)
+                    host, _created = self._get_or_create_host(host_ip, project, creator)
+                    self._get_or_create_hostname(subdomain, host)
+
