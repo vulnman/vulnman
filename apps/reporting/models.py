@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from uuid import uuid4
 
@@ -22,3 +23,6 @@ class Report(models.Model):
 
     def __str__(self):
         return self.revision
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy('projects:reporting:report-delete', kwargs={'pk': self.pk})
