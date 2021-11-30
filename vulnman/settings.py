@@ -194,6 +194,7 @@ HOST_OS_ICONS = {
     }
 }
 
+REPORT_PENTEST_COMPANY = "Example IT-Sec Ltd."
 
 try:
     from local_settings import *

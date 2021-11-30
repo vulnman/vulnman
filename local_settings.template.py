@@ -11,3 +11,7 @@ DEBUG = False
 
 # CSS theme
 # VULNMAN_CSS_THEME = "flatly"
+
+# Pentest company name
+# This name is used in some parts of the reports. This usually is the name of your company.
+REPORT_PENTEST_COMPANY = "Example IT-Sec Ltd."
