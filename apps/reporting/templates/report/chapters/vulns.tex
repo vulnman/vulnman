@@ -1,18 +1,19 @@
-\chapter{Schwachstellen}
+\chapter{Vulnerabilities}
 
 {%- if project.has_vulns_with_severity('Critical') or project.has_vulns_with_severity('High') -%}
-Im Rahmen der Untersuchung wurden Schwachstellen gefunden, die unter anderem ein hohes Risiko
-aufweisen. Die gelisteten Handlungsempfehlungen sollten schnellstmöglich durchgeführt werden.
+In the course of the investigation, vulnerabilities were found that, among other things, pose a high risk of
+have been identified.
+The listed recommendations for action should be implemented as soon as possible.
 
 {% elif project.has_vulns_with_severity('Medium') %}
 TODO Only medium vulns found
 {% elif project.has_vulns_with_severity('Low') %}
 TODO Only low severity vulns found
 {%- else %}
-Im Rahmen der Untersuchung konnten wir keine Schwachstellen identifizieren.
+We were unable to identify any weaknesses during the investigation.
 {%- endif -%}
 
-Die folgenden Schwachstellen sind nach Systemen gruppiert.
+The following vulnerabilities are grouped by system.
 
 \clearpage
 
@@ -34,15 +35,15 @@ Die folgenden Schwachstellen sind nach Systemen gruppiert.
     \centering
     \begin{tabular}{| l | p{12cm} |}
         \hline
-        Beschreibung & {{- vuln.description -}}  \\
+        Description & {{- vuln.description -}}  \\
         \hline
         \multirow{2}{*}{CVSS} & {{- vuln.get_scores()[0] }} ({{- vuln.get_severities()[0] -}})   \\
         \cline{2-2}
         & {{- vuln.cvss_string -}}  \\
         \hline
-        Auswirkungen & {{- vuln.impact -}}   \\
+        Impact & {{- vuln.impact -}}   \\
         \hline
-        \multirow{ {{-vuln.get_references_as_list()|length -}} }{*}{Referenzen}
+        \multirow{ {{-vuln.get_references_as_list()|length -}} }{*}{References}
          {%- for reference in vuln.get_references_as_list() -%}
          {%- if loop.index == 1 -%}
          & {{ reference }} \\
@@ -60,7 +61,7 @@ Die folgenden Schwachstellen sind nach Systemen gruppiert.
          {%- endfor %}
     \end{tabular}
 \end{table}
-\subsubsection{Handlungsempfehlung}
+\subsubsection{Recommendation}
 {{- vuln.remediation|linebreaks|latex_escape -}}
 \\
 {%- if vuln.proofofconcept_set.count() -%}
