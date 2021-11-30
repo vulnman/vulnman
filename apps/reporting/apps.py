@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ToolsConfig(AppConfig):
+class ReportingConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'tools'
+    name = 'apps.reporting'
