@@ -31,9 +31,14 @@ Reports
                     </a>
                 </div>
                 <div class="float-end">
-                    <a href="{% url 'projects:reporting:report-update' report.pk %}" class="btn btn-info">
+                    <a href="{% url 'projects:reporting:report-update' report.pk %}" class="btn btn-sm btn-info">
                         <i class="fa fa-edit"></i> Edit
                     </a>
+                    {% if report.is_draft %}
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ report.pk }}">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -42,6 +47,12 @@ Reports
         <li class="list-group-item">No reports here!</li>
     {% endfor %}
     </div>
+
+    {% for report in reports %}
+        {% if report.is_draft %}
+        {% include 'modals/delete_object.html' with obj=report %}
+        {% endif %}
+    {% endfor %}
 
     {% include 'navigation/pagination.html' %}
 

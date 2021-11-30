@@ -78,3 +78,14 @@ class ReportUpdate(generic.ProjectUpdateView):
         context = super().get_context_data(**kwargs)
         context['SEVERITY_COLORS'] = settings.SEVERITY_COLORS
         return context
+
+
+class ReportDraftDelete(generic.ProjectDeleteView):
+    model = models.Report
+    http_method_names = ["post"]
+
+    def get_success_url(self):
+        return reverse_lazy('projects:reporting:report-list')
+
+    def get_queryset(self):
+        return models.Report.objects.filter(project=self.get_project(), is_draft=True, pk=self.kwargs.get('pk'))
