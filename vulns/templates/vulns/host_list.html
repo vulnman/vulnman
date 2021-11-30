@@ -29,6 +29,11 @@ Hosts
                     <div class="col-sm-12">
                         <div class="float-start">
                             {{ host }}
+                            {% if host.is_online %}
+                                <i class="fa fa-circle text-success"></i>
+                            {% else %}
+                                <i class="fa fa-circle text-danger"></i>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

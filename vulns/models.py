@@ -14,7 +14,7 @@ class Host(models.Model):
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
     os = models.CharField(max_length=28, default="unknown", verbose_name="OS")
-    status = models.CharField(max_length=12, default="up")
+    is_online = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.ip)
@@ -65,7 +65,7 @@ class Service(models.Model):
     port = models.IntegerField()
     protocol = models.CharField(max_length=12, default="tcp")
     banner = models.CharField(max_length=256, blank=True, null=True)
-    status = models.CharField(max_length=24, default="up")
+    status = models.CharField(max_length=24, default="open")
 
     def __str__(self):
         return "%s/%s" % (self.port, self.protocol)
