@@ -9,12 +9,16 @@ Vulnman is a vulnerability management web application written in Python using th
 
 ## Features
 - Multiple Projects
+  - Manage found Hosts, Services, Webapps, ...
 - Report generation (requires LaTeX environment on host)
     - PDF export
     - Multiple revisions with changelogs
     - Edit raw LaTeX source, if needed
 - Vulnerability Management
-- Populate vulnerability values using searchable vulnerability templates
+  - Project Dashboard with charts
+  - Vulnerability Templates
+  - CVSS Calculator
+  - Write vulnerability information Markdown
 - Import vulnerability templates from CSV files
 
 
@@ -39,4 +43,4 @@ The documentation files can be found under `_build/html`.
 - Forkawesome 1.1.7
 - Django latest
 - chart.js 3.6.0
-
+- Codemirror 5.64.0
