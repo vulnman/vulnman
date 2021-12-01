@@ -101,6 +101,16 @@ class VulnerabilityTemplateCreate(generic.VulnmanCreateView):
         return super().form_valid(form)
 
 
+class VulnerabilityTemplateUpdate(generic.VulnmanUpdateView):
+    model = models.VulnerabilityTemplate
+    form_class = forms.VulnerabilityTemplateForm
+    template_name = "vulns/vulnerability_template_create.html"
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super().form_valid(form)
+
+
 class VulnerabilityTemplateDetail(generic.VulnmanDetailView):
     model = models.VulnerabilityTemplate
     template_name = "vulns/vulnerability_template_detail.html"

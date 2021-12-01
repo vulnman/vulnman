@@ -10,7 +10,6 @@ class VulnerabilityForm(forms.ModelForm):
         exclude = ["uuid", "creator", "project", "cvss_base_score"]
         widgets = {
             'vulnerability_template': autocomplete.ModelSelect2(url='vulns:vuln-template-autocomplete'),
-
         }
 
     def __init__(self, project, *args, **kwargs):
