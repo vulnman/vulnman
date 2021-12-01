@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  vulnman-web:
+    build:
+      context: './'
+    volumes:
+      - './local_settings.py:/app/local_settings.py'
+      - '/tmp/volumes/vulnman/static:/app/static_files'
+    environment:
+      DJANGO_SUPERUSER_PASSWORD: dontusethispassword
+      DJANGO_SUPERUSER_USERNAME: vulnmanadmin
+      DJANGO_SUPERUSER_EMAIL: admin@example.com
+
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - '/tmp/volumes/vulnman/db:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_PASSWORD: dontusethispassword
+      POSTGRES_USER: vulnman_db_user
+      POSTGRES_DB: vulnman
+
+  nginx:
+    image: lscr.io/linuxserver/nginx
+    container_name: nginx
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - '/tmp/volumes/nginx/config:/config'
+      - './docker/nginx.conf:/config/nginx/site-confs/default'
+      - '/tmp/volumes/vulnman/static:/config/www/static'
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - vulnman-web
