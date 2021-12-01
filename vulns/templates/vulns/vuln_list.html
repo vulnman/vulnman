@@ -36,14 +36,6 @@ Vulnerabilities
                         <p>{{ vuln.host }}</p>
                     </div>
                 </div>
-                <div class="float-end">
-                    <a href="{% url 'projects:vulns:vuln-update' vuln.pk %}" class="btn btn-sm btn-info">
-                        <i class="fa fa-edit"></i> Edit
-                    </a>
-                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ vuln.pk }}">
-                        <i class="fa fa-trash"></i> Delete
-                    </button>
-                </div>
             </div>
         {% empty %}
             <span class="list-group-item">No vulnerabilities yet!</span>
