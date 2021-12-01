@@ -100,8 +100,27 @@ Paste the following content into the `/etc/nginx/sites-enabled/vulnman.conf` fil
 
 
 Run using Docker Compose
-################
+########################
 
-.. code-block::
+Adjust the credentials and paths in the docker-compose.yml file.
+
+For the docker image to work, you need to add the following content to your local_settings.py file.
+
+.. code-block:: python
+
+    DATABASES = {
+      'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': 'db',
+        'NAME': 'vulnman',
+        'USER': 'vulnman_db_user',
+        'PASSWORD': 'dontusethispassword',
+      }
+    }
+
+
+you can start all containers with the following command:
+
+.. code-block:: bash
 
     sudo docker-compose up --build

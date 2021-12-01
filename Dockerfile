@@ -6,7 +6,7 @@ WORKDIR /app
 
 RUN chmod +x /app/docker-entrypoint.sh
 
-RUN pip install -r requirements.txt && pip install psycopg2-binary && python manage.py create_secret_key
+RUN pip install -r requirements.txt && pip install psycopg2-binary && apt install texlive-latex-extra latexmk && python manage.py create_secret_key
 
 VOLUME ["/app/vulnman/secret_key.py"]
 
