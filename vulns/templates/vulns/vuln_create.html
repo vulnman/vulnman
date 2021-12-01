@@ -12,6 +12,7 @@
     </style>
         <script src="{% static 'js/cvss.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/cvss.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.64.0/codemirror.min.css" />
 {% endblock  %}
 
 {% block breadcrumbs %}
@@ -32,18 +33,41 @@
 {% block extra_scripts %}
     {{ form.media }}
     {% include 'forms/dynamic_formset.html' with single_inline=proofs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.64.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.64.0/mode/markdown/markdown.min.js"></script>
     <script>
+      let cm_description = CodeMirror.fromTextArea(document.getElementById('id_description'), {
+        lineNumbers: true, mode: "markdown"
+      });
+      let cm_impact = CodeMirror.fromTextArea(document.getElementById('id_impact'), {
+          lineNumbers: true, mode: "markdown"
+      })
+      let cm_remediation = CodeMirror.fromTextArea(document.getElementById('id_remediation'), {
+          lineNumbers: true, mode: "markdown"
+      })
+    </script>
+
+    <script>
+        /* This seems required to allow the form to be submitted */
+        $('#id_description').val("1");
+        $('#id_impact').val("1");
+        $('#id_remediation').val("1");
         document.querySelector("#id_vulnerability_template").onchange=function() {
             let selected_item = $(this).find("option:selected");
             let api_url = "/api/vulns/vulnerability-templates/" + selected_item.val() + "/";
             $.get(api_url, function(data){
                 $('#id_name').val(data.name);
-                $('#id_description').val(data.description);
-                $('#id_remediation').val(data.remediation);
                 $('#id_references').val(data.references);
+                /* This seems required to allow the form to be submitted */
+                $('#id_description').val(data.description);
                 $('#id_impact').val(data.impact);
+                $('#id_remediation').val(data.remediation);
+                cm_description.setValue(data.description);
+                cm_impact.setValue(data.impact);
+                cm_remediation.setValue(data.remediation);
             })
 }   </script>
+
     <script>
     cvss_string = document.getElementById("id_cvss_string");
     var el = document.createElement("div");

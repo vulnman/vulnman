@@ -79,7 +79,7 @@ class Vulnerability(models.Model):
     vulnerability_template = models.ForeignKey('vulns.VulnerabilityTemplate', on_delete=models.SET_NULL,
                                                null=True, blank=True)
     name = models.CharField(max_length=128)
-    description = models.TextField()
+    description = models.TextField(help_text="Markdown supported")
     cvss_string = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
     cvss_base_score = models.FloatField(null=True, blank=True)
     impact = models.TextField()
