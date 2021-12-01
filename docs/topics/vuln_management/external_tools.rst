@@ -4,6 +4,15 @@ External Tools
 Vulnman has support for external tool report imports.
 
 
+Current Available Tools
+=======================
+
+- gobuster-vhost
+- gobuster-dir
+- nmap
+- aiodnsbrute
+
+
 API
 ===
 
