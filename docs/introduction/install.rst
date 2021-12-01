@@ -99,6 +99,9 @@ Paste the following content into the `/etc/nginx/sites-enabled/vulnman.conf` fil
     }
 
 
-Run using Docker
+Run using Docker Compose
 ################
-TODO
+
+.. code-block::
+
+    sudo docker-compose up --build
