@@ -149,7 +149,6 @@ class VulnerabilityTemplate(models.Model):
     description = models.TextField(blank=True, null=True)
     remediation = models.TextField()
     impact = models.TextField()
-    exploitation = models.CharField(max_length=64)
     references = models.TextField()
 
     def __str__(self):
