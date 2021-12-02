@@ -1,0 +1,25 @@
+name: Question
+description: 'Have a question?'
+labels: ["T: question", "P: default"]
+
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question?
+        **Please have a look at the documentation before submitting this ticket**
+  - type: textarea
+    id: the-question
+    attributes:
+      label: What is the question?
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional Information
+      description: If there are some information you want to share about the issue
+    validations:
+      required: false
