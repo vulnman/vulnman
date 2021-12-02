@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create Methodology
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'methodology:methodology-list' %}">Methodologies</a></li>
+        <li class="breadcrumb-item"><a href="{{ form.instance.methodology.get_absolute_url }}">{{ form.instance.methodology }}</a></li>
+      <li class="breadcrumb-item active">Edit {{ form.instance }}</li>
+    </ol>
+    <hr/>
+{% endblock %}
+
+{% block content %}
+    <div class="mt-3">
+        {% include 'forms/simple.html' with method="POST" %}
+    </div>
+{% endblock %}
