@@ -23,10 +23,11 @@ class VulnmanTestMixin(object):
         url = self.get_url(endpoint)
         response = self.client.get(url, follow=True)
         login_url = self.get_url(settings.LOGIN_URL)
-        print(login_url)
-        print(response.redirect_chain[0])
         self.assertEqual(len(response.redirect_chain), 1)
         self.assertEqual(str(login_url) in str(response.redirect_chain[0][0]), True)
         self.client.force_login(self.user1)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def _create_instance(self, obj_class, **kwargs):
+        return G(obj_class, **kwargs)

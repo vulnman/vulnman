@@ -4,6 +4,7 @@ from vulnman.utils.tools import ToolResultParser
 from vulns.models import Host, Hostname, Service, WebApplicationUrlPath
 
 
+# vhost plugin
 class GobusterVhost(ToolResultParser):
     def parse(self, result, project, creator):
         for line in result.split("\n"):
@@ -18,6 +19,7 @@ class GobusterVhost(ToolResultParser):
                 self._get_or_create_hostname(subdomain, host)
 
 
+# dir plugin
 class GobusterDir(ToolResultParser):
     def parse(self, result, project, creator):
         for line in result.split("\n"):

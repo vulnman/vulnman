@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load methodologies %}
+
+{% block title %}
+    {{ methodology }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'methodology:methodology-list' %}">Methodologies</a></li>
+        <li class="breadcrumb-item active">{{ methodology }}</li>
+    </ol>
+    <hr/>
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-center">{{ methodology }}</h3>
+    <small><i class="text-center"><p>{{ methodology.description }}</p></i></small>
+    <hr/>
+    <div class="clearfix">
+        <div class="float-start">
+            <form class="form-inline form">
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label for="id_target_ip" class="col-form-label">Target IP:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="id_target_ip" class="form-control" name="target_ip"
+                               value="{{ request.GET.target_ip }}">
+                    </div>
+                    <div class="col-auto">
+                        <label for="id_target_domain" class="col-form-label">Target Domain:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="id_target_domain" class="form-control"
+                               value="{{ request.GET.target_domain }}" name="target_domain">
+                    </div>
+                    <div class="col-auto">
+                        <label for="id_target_port" class="col-form-label">Target Port:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="id_target_domain" class="form-control"
+                               value="{{ request.GET.target_port }}" name="target_port">
+                    </div>
+                    <div class="col-auto">
+                        <label for="id_target_scheme" class="col-form-label">Target Scheme:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="id_target_scheme" class="form-control"
+                               value="{{ request.GET.target_scheme }}" name="target_scheme">
+                    </div>
+                    <div class="col-auto">
+                        <input type="submit" class="btn btn-primary" value="Parse">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="float-end">
+            <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="host-action-dropdown"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
+                    <li><a class="dropdown-item" href="{% url 'methodology:methodology-update' methodology.pk %}"><i
+                            class="fa fa-edit"></i>
+                        Edit</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal"
+                           data-bs-target="#delete-modal-{{ methodology.pk }}"><i
+                            class="fa fa-trash"></i> Delete</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="list-group mt-3">
+        {% for item in methodology.suggestedcommand_set.all %}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="clearfix">
+                            <div class="float-start">
+                                <h4>{{ item.name }}</h4>
+                            </div>
+                            <div class="float-end">
+                                <a href="{% url 'methodology:suggested-command-update' item.pk %}">
+                                    <i class="fa fa-edit"></i> Edit</a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12">
+                        <pre class="code">
+                            {{ item|parse_command:request }}
+                        </pre>
+                        </div>
+                    </div>
+            </li>
+        {% endfor %}
+    </div>
+
+
+    {% include 'modals/delete_object.html' with obj=methodology %}
+{% endblock %}

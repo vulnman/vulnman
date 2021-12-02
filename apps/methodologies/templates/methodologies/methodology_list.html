@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Methodologies
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item active">Methodologies</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+    <div class="clearfix">
+        <div class="float-end">
+            <a class="btn btn-primary" href="{% url 'methodology:methodology-create' %}">
+                <i class="fa fa-plus"></i> New Methodology
+            </a>
+        </div>
+    </div>
+
+    <div class="list-group mt-3">
+    {% for methodology in methodologies %}
+        <a class="list-group-item list-group-item-action" href="{{ methodology.get_absolute_url }}">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="clearfix">
+                        <div class="float-start">
+                            {{ methodology }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="clearfix">
+                        <div class="float-start">
+                            <small class="text-muted"><i>Last updated: {{ methodology.date_updated|timesince }} ago</i></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    {% empty %}
+        <li class="list-group-item">No methodologies here!</li>
+    {% endfor %}
+    </div>
+
+    {% include 'navigation/pagination.html' %}
+{% endblock %}
