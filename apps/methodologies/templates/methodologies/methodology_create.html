@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create Methodology
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'methodology:methodology-list' %}">Methodologies</a></li>
+      <li class="breadcrumb-item active">Create</li>
+    </ol>
+    <hr/>
+{% endblock %}
+
+{% block content %}
+    <div class="mt-3">
+        {% include 'forms/formset.html' with method="POST" %}
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {% include 'forms/dynamic_formset.html' %}
+{% endblock  %}
