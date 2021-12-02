@@ -3,6 +3,44 @@ Welcome to Vulnman's documentation!
 
 Vulnman is a vulnerability management application written in `Django <https://www.djangoproject.com/>`_.
 
+It provides a web interface to create pentesting projects, manage the associated hosts, services and applications, vulnerabilities and reports.
+
+The reports are generated using `LaTeX <https://www.latex-project.org/>`_ and are served as PDF.
+
+.. warning::
+
+    This project is in an very early stage. You may not want to use it in production.
+
+
+Features
+========
+- Multiple Projects
+
+  - Manage found Hosts, Services, Webapps, ...
+- Report generation (requires LaTeX environment on host)
+
+  - PDF export
+
+  - Multiple revisions with changelogs
+
+  - Edit raw LaTeX source, if needed
+
+- Vulnerability Management
+
+  - Project Dashboard with charts
+
+  - Vulnerability Templates
+
+  - CVSS Calculator
+
+  - Write vulnerability information Markdown
+
+- Import vulnerability templates from CSV files
+
+- Command Builder
+
+    - Organize your commonly used commands and build them to match your target
+
 
 .. toctree::
    :maxdepth: 9

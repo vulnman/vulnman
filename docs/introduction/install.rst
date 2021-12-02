@@ -1,3 +1,5 @@
+.. _introduction-install:
+
 ************
 Installation
 ************
@@ -6,7 +8,7 @@ Requirements
 ############
 
 .. note::
-    The current default template requires german language support, so you need to install ``latex-babel-german``.
+    It is assumed, that you already have a working python environment.
 
 
 Fedora
@@ -102,9 +104,10 @@ Paste the following content into the `/etc/nginx/sites-enabled/vulnman.conf` fil
 Run using Docker Compose
 ########################
 
-Adjust the credentials and paths in the docker-compose.yml file.
+Adjust the credentials and paths in the ``docker-compose.yml`` file.
 
-For the docker image to work, you need to add the following content to your local_settings.py file.
+For the docker image to work, you need to setup PostgreSQL in your :ref:`local_settings.py<introduction-configuration>` file.
+
 
 .. code-block:: python
 
@@ -119,7 +122,7 @@ For the docker image to work, you need to add the following content to your loca
     }
 
 
-you can start all containers with the following command:
+You can start all containers with the following command:
 
 .. code-block:: bash
 
