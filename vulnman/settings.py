@@ -29,7 +29,7 @@ except ImportError:
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'apps.reporting.apps.ReportingConfig',
     'apps.projects.apps.ProjectsConfig',
     'apps.dashboard.apps.DashboardConfig',
-    'apps.networking.apps.NetworkingConfig'
+    'apps.networking.apps.NetworkingConfig',
+    'apps.methodologies.apps.MethodologiesConfig',
 ]
 
 MIDDLEWARE = [
@@ -93,7 +94,7 @@ TEMPLATES = [
     {
         'NAME': 'tex',
         'BACKEND': 'django_tex.engine.TeXEngine',
-        'APP_DIRS': True,
+        'APP_DIRS': True
     },
 ]
 
@@ -168,7 +169,8 @@ LATEX_INTERPRETER = 'latexmk -pdf'
 # for some reasons only works with os.path.join and not with pathlib
 LATEX_GRAPHICSPATH = [
     os.path.join(BASE_DIR, "apps/reporting/templates/report/assets"),
-    os.path.join(BASE_DIR, "uploads/proofs")
+    os.path.join(BASE_DIR, "uploads/proofs"),
+    os.path.join(BASE_DIR, "templates/report/assets")
 ]
 
 SEVERITY_COLORS = {
@@ -188,6 +190,8 @@ EXTERNAL_TOOLS = {
     "aiodnsbrute": "apps.external_tools.parsers.aiodnsbrute.Aiodnsbrute",
 }
 
+CUSTOM_EXTERNAL_TOOLS = {}
+
 HOST_OS_ICONS = {
     "linux": {
         "icon": "fa fa-linux", "matches": ["Ubuntu", "Fedora", "Arch-Linux", "Debian", "Linux"]
@@ -196,7 +200,11 @@ HOST_OS_ICONS = {
 
 REPORT_PENTEST_COMPANY = "Example IT-Sec Ltd."
 
+
 try:
     from local_settings import *
 except ImportError:
     pass
+
+# update the default EXTERNAL_TOOLS dict with a custom one provided by the user
+EXTERNAL_TOOLS.update(CUSTOM_EXTERNAL_TOOLS)
