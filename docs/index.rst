@@ -39,7 +39,7 @@ Features
 
 - Command Builder
 
-    - Organize your commonly used commands and build them to match your target
+  - Organize your commonly used commands and build them to match your target
 
 
 .. toctree::
