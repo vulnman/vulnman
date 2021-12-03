@@ -95,7 +95,10 @@ TEMPLATES = [
         'NAME': 'tex',
         'BACKEND': 'django_tex.engine.TeXEngine',
         'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'environment': 'apps.reporting.environment.tex_report_env',
+        }
     },
 ]
 
