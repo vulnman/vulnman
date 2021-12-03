@@ -1,0 +1,8 @@
+{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+{% endif %}
+  {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>

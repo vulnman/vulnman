@@ -17,6 +17,13 @@
             {% if not TEMPLATE_HIDE_BREADCRUMBS %}
             <hr/>
             {% endif %}
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        {% include 'message.html' %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
             {% block content %}
             {% endblock content %}
         </div>

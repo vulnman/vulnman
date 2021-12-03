@@ -11,6 +11,7 @@ class ProjectCreateView(ProjectMixin, VulnmanAuthCreateView):
     """
     Create an object with relation to a project
     """
+
     def form_valid(self, form):
         form.instance.creator = self.request.user
         form.instance.project = self.get_project()
