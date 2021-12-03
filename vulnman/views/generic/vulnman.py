@@ -1,5 +1,6 @@
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 from vulnman import mixins
 
@@ -12,16 +13,16 @@ class VulnmanDetailView(mixins.ThemeMixin, generic.DetailView):
     pass
 
 
-class VulnmanUpdateView(mixins.ThemeMixin, generic.UpdateView):
-    pass
+class VulnmanUpdateView(mixins.ThemeMixin, SuccessMessageMixin, generic.UpdateView):
+    success_message = "Object updated successfully"
 
 
 class VulnmanDeleteView(mixins.ThemeMixin, generic.DeleteView):
     pass
 
 
-class VulnmanCreateView(mixins.ThemeMixin, generic.CreateView):
-    pass
+class VulnmanCreateView(mixins.ThemeMixin, SuccessMessageMixin, generic.CreateView):
+    success_message = "Object created successfully"
 
 
 class VulnmanAuthListView(LoginRequiredMixin, VulnmanListView):
@@ -44,14 +45,18 @@ class VulnmanAuthCreateView(LoginRequiredMixin, VulnmanCreateView):
     pass
 
 
-class VulnmanAuthCreateWithInlinesView(LoginRequiredMixin, mixins.ThemeMixin, CreateWithInlinesView):
+class VulnmanAuthCreateWithInlinesView(LoginRequiredMixin, mixins.ThemeMixin, SuccessMessageMixin,
+                                       CreateWithInlinesView):
+    success_message = "Object created successfully"
+
     def form_valid(self, form):
         form.instance.creator = self.request.user
         return super().form_valid(form)
 
 
-class VulnmanAuthUpdateWithInlinesView(LoginRequiredMixin, mixins.ThemeMixin, UpdateWithInlinesView):
-    pass
+class VulnmanAuthUpdateWithInlinesView(LoginRequiredMixin, mixins.ThemeMixin, SuccessMessageMixin,
+                                       UpdateWithInlinesView):
+    success_message = "Object updated successfully"
 
 
 class VulnmanAuthTemplateView(LoginRequiredMixin, mixins.ThemeMixin, generic.TemplateView):
