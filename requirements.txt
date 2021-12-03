@@ -12,3 +12,4 @@ Pillow
 markdown
 bleach
 gunicorn
+drf-yasg

@@ -13,11 +13,11 @@ class VulnmanTestMixin(object):
     def _create_user(self, username, password, is_staff=False):
         return User.objects.create_user(username, password=password, is_staff=is_staff)
 
-    def _create_project(self, name, customer="testcustomer"):
-        return Project.objects.create(name=name, customer=customer)
+    def _create_project(self, name, customer="testcustomer", creator=None):
+        return Project.objects.create(name=name, customer=customer, creator=creator)
 
-    def get_url(self, endpoint):
-        return reverse_lazy(endpoint)
+    def get_url(self, endpoint, **kwargs):
+        return reverse_lazy(endpoint, kwargs=kwargs)
 
     def _test_unauth_access(self, endpoint):
         url = self.get_url(endpoint)
