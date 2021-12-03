@@ -1,6 +1,6 @@
 \chapter{Contacts}
 
-
+{%- if project.projectcontact_set.count() > 0 -%}
 \section{ {{- project.customer -}} }
 {%- for contact in project.projectcontact_set.all() -%}
 Name: {{ contact.first_name }} {{ contact.last_name }}  \\
@@ -11,7 +11,7 @@ Phone: {{ contact.phone }}    \\
 \\
 {%- endfor -%}
 \\
-
+{%- endif -%}
 
 \section{ {{- REPORT_PENTEST_COMPANY -}} }
 {%- if project.creator.profile.hide_name_in_report -%}
