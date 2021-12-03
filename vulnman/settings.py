@@ -52,8 +52,10 @@ INSTALLED_APPS = [
     'django_tex',
     'extra_views',
     'rest_framework',
+    'drf_yasg',
     'vulns.apps.VulnsConfig',
     # apps already restructured
+    'apps.api.apps.ApiConfig',
     'apps.account.apps.AccountConfig',
     'apps.webapps.apps.WebappsConfig',
     'apps.external_tools.apps.ExternalToolsConfig',
@@ -201,17 +203,24 @@ EXTERNAL_TOOLS = {
     "aiodnsbrute": "apps.external_tools.parsers.aiodnsbrute.Aiodnsbrute",
 }
 
-CUSTOM_EXTERNAL_TOOLS = {}
-
 HOST_OS_ICONS = {
     "linux": {
         "icon": "fa fa-linux", "matches": ["Ubuntu", "Fedora", "Arch-Linux", "Debian", "Linux"]
     }
 }
 
+# Reporting
 REPORT_PENTEST_COMPANY = "Example IT-Sec Ltd."
-
+CUSTOM_EXTERNAL_TOOLS = {}
 REPORT_TEMPLATE = "report/document.tex"
+
+
+# API Settings
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
 
 
 try:
