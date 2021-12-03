@@ -56,11 +56,14 @@ First Steps
 
     introduction/install
     introduction/configuration
+    introduction/maintenance
 
 :doc:`introduction/install`
     Install instructions for Vulnman.
 :doc:`introduction/configuration`
     List of settings.
+:doc:`introduction/maintenance`
+    Common tasks to keep vulnman up to date
 
 
 Vulnerability Management
