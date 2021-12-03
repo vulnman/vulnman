@@ -12,7 +12,7 @@ class Report(models.Model):
     custom_title = models.CharField(max_length=64, help_text="Overwrite Project Title", null=True, blank=True)
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     changes = models.CharField(max_length=128)
-    latex_source = models.TextField(null=True, blank=True)
+    raw_source = models.TextField(null=True, blank=True)
     pdf_source = models.BinaryField(null=True, blank=True)
     is_draft = models.BooleanField(default=False)
     include_watermark = models.BooleanField(default=True)
