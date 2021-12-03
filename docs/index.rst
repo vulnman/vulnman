@@ -1,7 +1,7 @@
 Welcome to Vulnman's documentation!
 ===================================
 
-Vulnman is a vulnerability management application written in `Django <https://www.djangoproject.com/>`_.
+Vulnman is a vulnerability management application written using `Django <https://www.djangoproject.com/>`_.
 
 It provides a web interface to create pentesting projects, manage the associated hosts, services and applications, vulnerabilities and reports.
 
