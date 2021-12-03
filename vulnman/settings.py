@@ -204,8 +204,8 @@ HOST_OS_ICONS = {
 
 REPORT_PENTEST_COMPANY = "Example IT-Sec Ltd."
 
-REPORT_TEMPLATE = "reports/default_html/report.html"
-REPORT_TEMPLATE_TYPE = "html"
+REPORT_TEMPLATE = "report/document.tex"
+
 
 try:
     from local_settings import *
