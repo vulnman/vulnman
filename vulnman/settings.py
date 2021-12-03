@@ -168,6 +168,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static_files")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# Set this to True to avoid transmitting the CSRF cookie over HTTP accidentally.
+CSRF_COOKIE_SECURE = True
+
+# Set this to True to avoid transmitting the session cookie over HTTP accidentally.
+SESSION_COOKIE_SECURE = True
+
 LATEX_INTERPRETER = 'latexmk -pdf'
 
 # for some reasons only works with os.path.join and not with pathlib
