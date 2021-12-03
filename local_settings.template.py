@@ -47,3 +47,6 @@
 
 # Path to the latex interpreter used to generate the reports
 # LATEX_INTERPRETER = 'latexmk -pdf'
+
+# Report Template
+# REPORT_TEMPLATE = "custom/report/document.tex"

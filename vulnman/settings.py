@@ -94,6 +94,7 @@ TEMPLATES = [
     {
         'NAME': 'tex',
         'BACKEND': 'django_tex.engine.TeXEngine',
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True
     },
 ]
@@ -170,7 +171,7 @@ LATEX_INTERPRETER = 'latexmk -pdf'
 LATEX_GRAPHICSPATH = [
     os.path.join(BASE_DIR, "apps/reporting/templates/report/assets"),
     os.path.join(BASE_DIR, "uploads/proofs"),
-    os.path.join(BASE_DIR, "templates/report/assets")
+    os.path.join(BASE_DIR, "templates/custom/report/assets")
 ]
 
 SEVERITY_COLORS = {
@@ -200,6 +201,7 @@ HOST_OS_ICONS = {
 
 REPORT_PENTEST_COMPANY = "Example IT-Sec Ltd."
 
+REPORT_TEMPLATE = "report/document.tex"
 
 try:
     from local_settings import *

@@ -28,7 +28,7 @@ class ReportDetail(generic.ProjectDetailView):
 
 
 class ReportCreate(generic.ProjectCreateView):
-    report_template_name = "report/document.tex"
+    report_template_name = settings.REPORT_TEMPLATE
     template_name = "reporting/report_create.html"
     form_class = forms.ReportForm
 
@@ -56,7 +56,7 @@ class ReportCreate(generic.ProjectCreateView):
 
 class ReportUpdate(generic.ProjectUpdateView):
     template_name = "reporting/report_update.html"
-    report_template_name = "report/document.tex"
+    report_template_name = settings.REPORT_TEMPLATE
     form_class = forms.ReportUpdateForm
 
     def get_queryset(self):
