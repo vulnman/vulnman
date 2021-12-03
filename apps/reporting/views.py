@@ -48,8 +48,8 @@ class ReportCreate(generic.ProjectCreateView):
         context = self.get_context_data()
         context['report'] = form.instance
         pdf_source = compile_template_to_pdf(self.report_template_name, context)
-        latex_source = render_template_with_context(self.report_template_name, context)
-        form.instance.latex_source = latex_source
+        raw_source = render_template_with_context(self.report_template_name, context)
+        form.instance.raw_source = raw_source
         form.instance.pdf_source = pdf_source
         return super().form_valid(form)
 
