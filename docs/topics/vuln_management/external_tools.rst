@@ -7,10 +7,15 @@ Vulnman has support for external tool report imports.
 Current Available Tools
 =======================
 
-- `gobuster-vhost <https://github.com/OJ/gobuster#vhost-mode-options>`_
-- `gobuster-dir <https://github.com/OJ/gobuster#dir-mode-options>`_
-- `nmap <https://github.com/nmap/nmap>`_
-- `aiodnsbrute <https://github.com/blark/aiodnsbrute>`_
+.. autoclass:: apps.external_tools.parsers.subfinder.Subfinder
+
+.. autoclass:: apps.external_tools.parsers.gobuster.GobusterVhost
+
+.. autoclass:: apps.external_tools.parsers.gobuster.GobusterDir
+
+.. autoclass:: apps.external_tools.parsers.nmap.NmapParser
+
+.. autoclass:: apps.external_tools.parsers.aiodnsbrute.Aiodnsbrute
 
 
 API

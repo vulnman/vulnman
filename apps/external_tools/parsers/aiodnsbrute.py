@@ -2,6 +2,10 @@ from vulnman.utils.tools import ToolResultParser
 
 
 class Aiodnsbrute(ToolResultParser):
+    """
+    Example command:
+    ``aiodnsbrute -w wordlist.txt example.com | tee aiodnsbrute.txt``
+    """
     def parse(self, result, project, creator):
         for line in result.split("\n"):
             if "[+]" in line:
