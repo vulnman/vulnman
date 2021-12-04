@@ -201,6 +201,7 @@ EXTERNAL_TOOLS = {
     "gobuster-vhost": "apps.external_tools.parsers.gobuster.GobusterVhost",
     "gobuster-dir": "apps.external_tools.parsers.gobuster.GobusterDir",
     "aiodnsbrute": "apps.external_tools.parsers.aiodnsbrute.Aiodnsbrute",
+    "subfinder": "apps.external_tools.parsers.subfinder.Subfinder"
 }
 
 HOST_OS_ICONS = {

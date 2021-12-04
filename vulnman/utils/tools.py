@@ -1,3 +1,4 @@
+import socket
 from apps.networking.models import Host, Hostname, Service
 
 
@@ -47,3 +48,15 @@ class ToolResultParser(object):
         """
         return Service.objects.get_or_create(host=host, name=name, port=port, protocol=protocol, status=status,
                                              banner=banner)
+
+    def _resolve(self, hostname: str):
+        """
+        resolve a hostname and return ip as string
+
+        :param hostname: hostname
+        :return: str: ip
+        """
+        try:
+            return socket.gethostbyname(hostname)
+        except socket.gaierror:
+            return None
