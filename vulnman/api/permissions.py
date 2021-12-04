@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 
-class HasProjectPermission(permissions.BasePermission):
+class IsCreatorPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         # Read permissions are allowed to any request,
@@ -9,3 +9,8 @@ class HasProjectPermission(permissions.BasePermission):
         # if request.method in permissions.SAFE_METHODS:
         #    return True
         return obj.creator == request.user
+
+
+class HasProjectPermission(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.project.creator == request.user
