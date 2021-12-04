@@ -8,7 +8,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
         <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'projects:vulns:host-list' %}">Hosts</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:networking:host-list' %}">Hosts</a></li>
         <li class="breadcrumb-item active">{{ host }}</li>
     </ol>
 {% endblock %}
@@ -47,7 +47,7 @@
                         <a class="dropdown-item" href="https://www.shodan.io/search?query={{ host.ip }}" target="_blank" rel="noopener"><i class="fa fa-external-link"></i> Shodan</a>
                     </li>
                     <li class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="{% url 'projects:vulns:host-edit' host.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                    <li><a class="dropdown-item" href="{% url 'projects:networking:host-edit' host.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ host.pk }}"><i class="fa fa-trash"></i> Delete</a></li>
                 </ul>
             </div>
