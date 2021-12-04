@@ -1,7 +1,7 @@
 import socket
 from urllib.parse import urlparse
 from vulnman.utils.tools import ToolResultParser
-from vulns.models import Host, Hostname, Service, WebApplicationUrlPath
+from vulns.models import WebApplicationUrlPath
 
 
 # vhost plugin
@@ -15,7 +15,7 @@ class GobusterVhost(ToolResultParser):
                 except socket.error:
                     print("Could not resolve subdomain %s" % subdomain)
                     continue
-                host, _created = Host.objects.get_or_create(ip=host_ip, project=project, defaults={'creator': creator})
+                host, _created = self._get_or_create_host(host_ip, project, creator)
                 self._get_or_create_hostname(subdomain, host)
 
 
@@ -30,17 +30,15 @@ class GobusterDir(ToolResultParser):
                 parsed = urlparse(url_path[0])
                 try:
                     host_ip = socket.gethostbyname(parsed.hostname)
-                    host, _created = Host.objects.get_or_create(
-                        ip=host_ip, project=project, defaults={'creator': creator})
-                    hostname, _created = Hostname.objects.get_or_create(host=host, name=parsed.hostname)
+                    host, _created = self._get_or_create_host(host_ip, project, creator)
+                    hostname, _created = self._get_or_create_hostname(parsed.hostname, host)
                     if not parsed.port:
                         if parsed.scheme == "https":
-                            service, _created = Service.objects.get_or_create(host=host, name="https", port=443)
+                            service, _created = self._get_or_create_service(host, "https", 443)
                         else:
-                            service, _created = Service.objects.get_or_create(host=host, name="http", port=80)
+                            service, _created = self._get_or_create_service(host, "http", 80)
                     else:
-                        service, _created = Service.objects.get_or_create(
-                            host=host, name=parsed.scheme, port=parsed.port)
+                        service, _created = self._get_or_create_service(host, parsed.scheme, parsed.port)
                     status_code = url_path[-3].replace(")", "")
                     webapp_url, _created = WebApplicationUrlPath.objects.get_or_create(
                         service=service, hostname=hostname, project=project, status_code=status_code,

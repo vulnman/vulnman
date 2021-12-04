@@ -26,3 +26,10 @@ class Report(models.Model):
 
     def get_absolute_delete_url(self):
         return reverse_lazy('projects:reporting:report-delete', kwargs={'pk': self.pk})
+
+
+class ReportShareToken(models.Model):
+    uuid = models.UUIDField(default=uuid4, primary_key=True)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    share_token = models.CharField(max_length=512)
+    date_expires = models.DateTimeField()

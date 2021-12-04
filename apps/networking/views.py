@@ -1,3 +1,36 @@
-from django.shortcuts import render
+from django.urls import reverse_lazy
+from vulnman.views import generic
+from apps.networking import models
+from apps.networking import forms
 
-# Create your views here.
+
+class HostList(generic.ProjectListView):
+    template_name = "networking/host_list.html"
+    context_object_name = "hosts"
+    model = models.Host
+
+
+class HostCreate(generic.ProjectCreateWithInlinesView):
+    template_name = "networking/host_create.html"
+    form_class = forms.HostForm
+    model = models.Host
+    inlines = [forms.HostnameInline]
+
+
+class HostDetail(generic.ProjectDetailView):
+    template_name = "networking/host_detail.html"
+    context_object_name = "host"
+    model = models.Host
+
+
+class HostEdit(generic.ProjectUpdateWithInlinesView):
+    template_name = "networking/host_create.html"
+    form_class = forms.HostForm
+    model = models.Host
+    inlines = [forms.HostnameInline]
+
+
+class HostDelete(generic.ProjectDeleteView):
+    http_method_names = ["post"]
+    model = models.Host
+    success_url = reverse_lazy('projects:networking:host-list')

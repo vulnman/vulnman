@@ -17,7 +17,6 @@ class ReportList(generic.ProjectListView):
 
 
 class ReportDetail(generic.ProjectDetailView):
-    template_name = "report/document.tex"
     context_object_name = "report"
 
     def get_queryset(self):

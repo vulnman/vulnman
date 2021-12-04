@@ -1,4 +1,4 @@
-from vulns.models import Host, Hostname, Service
+from apps.networking.models import Host, Hostname, Service
 
 
 class ToolResultParser(object):
@@ -35,7 +35,7 @@ class ToolResultParser(object):
         """
         return Hostname.objects.get_or_create(host=host, name=name)
 
-    def _get_or_create_service(self, host, name, port, protocol="tcp", status="up"):
+    def _get_or_create_service(self, host, name, port, protocol="tcp", status="up", banner=None):
         """
 
         :param host: the host this service is running on
@@ -45,4 +45,5 @@ class ToolResultParser(object):
         :param status: status of the service (default: "up")
         :return: instance of :class:`~vulns.models.Host`
         """
-        return Service.objects.get_or_create(host=host, name=name, port=port, protocol=protocol, status=status)
+        return Service.objects.get_or_create(host=host, name=name, port=port, protocol=protocol, status=status,
+                                             banner=banner)

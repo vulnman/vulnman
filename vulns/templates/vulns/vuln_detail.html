@@ -45,6 +45,10 @@
         </div>
     </div>
 
+    {% if vuln.service %}
+    <p><strong>Affected Service: </strong>{{ vuln.service }}</p>
+    {% endif %}
+    <p><strong>Affected Host: </strong><a href="{{ vuln.host.get_absolute_url }}">{{ vuln.host }}</a></p>
     <p><strong>Description: </strong>
         {% if vuln.template %}
         {{ vuln.template.description | md_to_html }}

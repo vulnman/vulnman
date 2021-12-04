@@ -2,6 +2,7 @@ from django import forms
 from dal import autocomplete
 from vulnman.forms import NamedInlineFormSetFactory
 from vulns import models
+from apps.networking.models import Service
 
 
 class VulnerabilityForm(forms.ModelForm):
@@ -15,25 +16,14 @@ class VulnerabilityForm(forms.ModelForm):
     def __init__(self, project, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['host'].queryset = project.host_set.all()
+        self.fields['service'].queryset = Service.objects.filter(host__project=project)
         self.fields['vulnerability_template'].widget.attrs = {'data-theme': 'bootstrap5'}
-
-
-class HostForm(forms.ModelForm):
-    class Meta:
-        model = models.Host
-        exclude = ["uuid", "project", "creator"]
 
 
 class VulnerabilityTemplateForm(forms.ModelForm):
     class Meta:
         model = models.VulnerabilityTemplate
         exclude = ["uuid", "creator"]
-
-
-class HostnameInline(NamedInlineFormSetFactory):
-    model = models.Hostname
-    exclude = ["uuid", "host"]
-    factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 4}
 
 
 class ProofOfConceptInline(NamedInlineFormSetFactory):

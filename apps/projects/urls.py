@@ -12,6 +12,9 @@ urlpatterns = [
     # reporting urls
     path('reporting/', include('apps.reporting.urls')),
 
+    # networking
+    path('networking/', include('apps.networking.urls')),
+
     # vulns app
     path('vulns/', include('vulns.urls')),
 

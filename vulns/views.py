@@ -8,25 +8,6 @@ from vulns import models
 from vulns.utils import cvsslib
 
 
-class HostList(generic.ProjectListView):
-    template_name = "vulns/host_list.html"
-    context_object_name = "hosts"
-    model = models.Host
-
-
-class HostCreate(generic.ProjectCreateWithInlinesView):
-    template_name = "vulns/host_create.html"
-    form_class = forms.HostForm
-    model = models.Host
-    inlines = [forms.HostnameInline]
-
-
-class HostDetail(generic.ProjectDetailView):
-    template_name = "vulns/host_detail.html"
-    context_object_name = "host"
-    model = models.Host
-
-
 class VulnCreate(generic.ProjectCreateWithInlinesView):
     model = models.Vulnerability
     inlines = [forms.ProofOfConceptInline]
@@ -36,6 +17,8 @@ class VulnCreate(generic.ProjectCreateWithInlinesView):
     def form_valid(self, form):
         if form.instance.cvss_string:
             form.instance.cvss_base_score = cvsslib.get_scores_by_vector(form.instance.cvss_string)[0]
+        if form.instance.service:
+            form.instance.host = form.instance.service.host
         return super().form_valid(form)
 
     def get_form_kwargs(self):
@@ -53,6 +36,8 @@ class VulnUpdate(generic.ProjectUpdateWithInlinesView):
     def form_valid(self, form):
         if form.instance.cvss_string:
             form.instance.cvss_base_score = cvsslib.get_scores_by_vector(form.instance.cvss_string)[0]
+        if form.instance.service:
+            form.instance.host = form.instance.service.host
         return super().form_valid(form)
 
     def get_form_kwargs(self):
@@ -132,18 +117,3 @@ class WebApplicationUrlPathAddWebApp(generic.ProjectUpdateView):
 
     def get_success_url(self):
         return reverse_lazy('projects:vulns:host-detail', kwargs={'pk': self.get_object().hostname.host.pk})
-
-
-class HostEdit(generic.ProjectUpdateWithInlinesView):
-    template_name = "vulns/host_create.html"
-    form_class = forms.HostForm
-    model = models.Host
-    inlines = [forms.HostnameInline]
-
-
-class HostDelete(generic.ProjectDeleteView):
-    http_method_names = ["post"]
-    model = models.Host
-
-    def get_success_url(self):
-        return reverse_lazy('projects:vulns:host-list')

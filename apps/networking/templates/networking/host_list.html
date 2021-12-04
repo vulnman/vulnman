@@ -16,7 +16,7 @@ Hosts
 
     <div class="clearfix">
         <div class="float-end">
-            <a class="btn btn-primary" href="{% url 'projects:vulns:host-create' %}">
+            <a class="btn btn-primary" href="{% url 'projects:networking:host-create' %}">
                 <i class="fa fa-plus"></i> Create Host
             </a>
         </div>
@@ -24,7 +24,7 @@ Hosts
 
     <div class="list-group mt-3">
         {% for host in hosts %}
-            <a href="{% url 'projects:vulns:host-detail' host.pk %}" class="list-group-item list-group-item-action">
+            <a href="{% url 'projects:networking:host-detail' host.pk %}" class="list-group-item list-group-item-action">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="float-start">
