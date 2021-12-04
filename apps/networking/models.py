@@ -54,6 +54,10 @@ class Hostname(models.Model):
         verbose_name_plural = "Hostnames"
         unique_together = [('host', 'name')]
 
+    @property
+    def project(self):
+        return self.host.project
+
 
 class Service(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True)
@@ -68,3 +72,7 @@ class Service(models.Model):
 
     def __str__(self):
         return "%s/%s" % (self.port, self.protocol)
+
+    @property
+    def project(self):
+        return self.host.project
