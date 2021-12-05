@@ -19,3 +19,5 @@ Built In Themes
 - `darkly <https://bootswatch.com/darkly>`_
 
 - `zephyr <https://bootswatch.com/zephyr>`_
+
+- `spacelab <https://bootswatch.com/spacelab>`_

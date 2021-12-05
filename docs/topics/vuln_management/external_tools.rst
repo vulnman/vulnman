@@ -13,6 +13,8 @@ Current Available Tools
 
 .. autoclass:: apps.external_tools.parsers.gobuster.GobusterDir
 
+.. autoclass:: apps.external_tools.parsers.gobuster.GobusterDNS
+
 .. autoclass:: apps.external_tools.parsers.nmap.NmapParser
 
 .. autoclass:: apps.external_tools.parsers.aiodnsbrute.Aiodnsbrute
