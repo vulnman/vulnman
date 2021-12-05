@@ -1,4 +1,5 @@
 import socket
+import re
 from urllib.parse import urlparse
 from vulnman.utils.tools import ToolResultParser
 from vulns.models import WebApplicationUrlPath
@@ -48,3 +49,17 @@ class GobusterDir(ToolResultParser):
                     continue
             except Exception as e:
                 print(e)
+
+
+# dns
+class GobusterDNS(ToolResultParser):
+    """
+    Example Command:
+    ``gobuster dns -w subdomains.txt -d example.com | tee gobuster-dns.txt``
+    """
+    def parse(self, result, project, creator):
+        for item in re.findall(r"(Found: )(.*)", result):
+            ip = self._resolve(item[1])
+            if ip:
+                host, _created = self._get_or_create_host(ip, project, creator)
+                _hostname, _created = self._get_or_create_hostname(item[1], host)
