@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Projects
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project }}</a></li>
+        <li class="breadcrumb-item active">Project Members</li>
+    </ol>
+    <hr/>
+{% endblock %}
+
+{% block content %}
+    <div class="clearfix">
+        <div class="float-end">
+            <a class="btn btn-primary" href="{% url 'projects:project-add-member' %}"><i
+                    class="fa fa-plus"></i> Add Members</a>
+        </div>
+    </div>
+
+    <div class="list-group mt-3">
+        {% for member in project_members %}
+            <a class="list-group-item list-group-item-action" href="#">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="clearfix">
+                            <div class="float-start">
+                                {{ member.user.username }}
+                            </div>
+                            <div class="float-end">
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#delete-modal-{{ member.pk }}">
+                                    <i class="fa fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="clearfix">
+                            <div class="float-start">
+                                <small class="text-muted"><i>{{ member.role }}</i></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% include "modals/delete_object.html" with obj=member %}
+        {% empty %}
+            <li class="list-group-item">No members here!</li>
+        {% endfor %}
+    </div>
+
+    {% include 'navigation/pagination.html' %}
+{% endblock %}

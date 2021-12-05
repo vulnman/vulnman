@@ -1,9 +1,10 @@
 from django.http import Http404
 from django.utils.translation import gettext as _
 from django.urls import reverse_lazy
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils import timezone
-from django.db.models import Count
+from django.db.models import Count, Q
 from apps.projects import models
 from apps.projects import forms
 from vulnman.views import generic
@@ -14,7 +15,7 @@ class ProjectList(generic.VulnmanAuthListView):
     context_object_name = "projects"
 
     def get_queryset(self):
-        return models.Project.objects.filter(creator=self.request.user)
+        return models.Project.objects.filter(Q(creator=self.request.user) | Q(projectmember__user=self.request.user))
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -86,7 +87,7 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
         return context
 
     def get_queryset(self):
-        return models.Project.objects.filter(creator=self.request.user)
+        return models.Project.objects.filter(Q(creator=self.request.user) | Q(projectmember__user=self.request.user))
 
 
 class ProjectUpdate(generic.VulnmanAuthUpdateWithInlinesView):
@@ -102,3 +103,29 @@ class ProjectUpdate(generic.VulnmanAuthUpdateWithInlinesView):
         return models.Project.objects.filter(creator=self.request.user)
 
 
+class ProjectMemberCreate(generic.ProjectCreateView):
+    template_name = "projects/project_add_member.html"
+    form_class = forms.ProjectAddMemberForm
+
+    def get_success_url(self):
+        return reverse_lazy('projects:project-detail', kwargs={'pk': self.get_project().pk})
+
+    def form_valid(self, form):
+        if User.objects.filter(email=form.cleaned_data.get('email')).exists():
+            user = User.objects.get(email=form.cleaned_data.get('email'))
+            form.instance.user = user
+            form.instance.project = self.get_project()
+            return super().form_valid(form)
+        return self.form_invalid(form)
+
+
+class ProjectMemberList(generic.ProjectListView):
+    template_name = "projects/project_member_list.html"
+    model = models.ProjectMember
+    context_object_name = "project_members"
+
+
+class ProjectMemberDelete(generic.ProjectDeleteView):
+    http_method_names = ["post"]
+    model = models.ProjectMember
+    success_url = reverse_lazy("projects:project-member-list")

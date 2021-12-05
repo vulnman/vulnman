@@ -22,8 +22,19 @@
     <hr/>
     <div class="clearfix">
         <div class="float-end">
-            <a href="{% url 'projects:project-update' project.pk %}" class="btn btn-primary">
-                <i class="fa fa-edit"></i> Edit Project</a>
+            <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="host-action-dropdown"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
+                    <li><a class="dropdown-item" href="{% url 'projects:project-member-list' %}">
+                        <i class="fa fa-user-circle"></i> Members</a></li>
+                    <div class="dropdown-divider"></div>
+                    <li><a class="dropdown-item" href="{% url 'projects:project-update' project.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ vuln.pk }}"><i class="fa fa-trash"></i> Delete</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 

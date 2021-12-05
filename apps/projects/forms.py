@@ -30,3 +30,11 @@ class ScopeInline(InlineFormSetFactory):
     model = models.Scope
     exclude = ["uuid", "project", "creator"]
     factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 10}
+
+
+class ProjectAddMemberForm(forms.ModelForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = models.ProjectMember
+        exclude = ["user", "project"]
