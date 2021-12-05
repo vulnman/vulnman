@@ -38,6 +38,7 @@ class Host(models.Model):
 
     class Meta:
         unique_together = [('ip', 'project')]
+        ordering = ["-date_updated"]
 
 
 class Hostname(models.Model):
