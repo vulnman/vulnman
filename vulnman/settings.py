@@ -201,6 +201,7 @@ EXTERNAL_TOOLS = {
     "nmap": "apps.external_tools.parsers.nmap.NmapParser",
     "gobuster-vhost": "apps.external_tools.parsers.gobuster.GobusterVhost",
     "gobuster-dir": "apps.external_tools.parsers.gobuster.GobusterDir",
+    "gobuster-dns": "apps.external_tools.parsers.gobuster.GobusterDNS",
     "aiodnsbrute": "apps.external_tools.parsers.aiodnsbrute.Aiodnsbrute",
     "subfinder": "apps.external_tools.parsers.subfinder.Subfinder",
     "fierce": "apps.external_tools.parsers.fierce.Fierce",
