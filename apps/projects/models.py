@@ -1,5 +1,6 @@
 from uuid import uuid4
 from django.db import models
+from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from apps.projects import constants
 
@@ -32,6 +33,9 @@ class ProjectMember(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=16, choices=constants.PROJECT_MEMBER_CHOICES)
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy("projects:project-member-delete", kwargs={'pk': self.pk})
 
     class Meta:
         unique_together = [('project', 'user')]
