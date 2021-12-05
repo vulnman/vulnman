@@ -17,6 +17,9 @@ Features
 - Multiple Projects
 
   - Manage found Hosts, Services, Webapps, ...
+
+  - Collaborate with other users on the same project with different permission roles
+
 - Report generation (requires LaTeX environment on host)
 
   - PDF export
@@ -75,6 +78,7 @@ Vulnerability Management
 
     topics/vuln_management/templates
     topics/vuln_management/external_tools
+    topics/vuln_management/reporting
 
 
 :doc:`topics/vuln_management/templates`
@@ -82,6 +86,9 @@ Vulnerability Management
 
 :doc:`topics/vuln_management/external_tools`
     Import external tool reports into vulnman
+
+:doc:`topics/vuln_management/reporting`
+    More information about the reporting feature
 
 
 Customization
