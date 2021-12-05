@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'apps.dashboard.apps.DashboardConfig',
     'apps.networking.apps.NetworkingConfig',
     'apps.methodologies.apps.MethodologiesConfig',
+    'apps.social.apps.SocialConfig',
 ]
 
 MIDDLEWARE = [
@@ -201,7 +202,9 @@ EXTERNAL_TOOLS = {
     "gobuster-vhost": "apps.external_tools.parsers.gobuster.GobusterVhost",
     "gobuster-dir": "apps.external_tools.parsers.gobuster.GobusterDir",
     "aiodnsbrute": "apps.external_tools.parsers.aiodnsbrute.Aiodnsbrute",
-    "subfinder": "apps.external_tools.parsers.subfinder.Subfinder"
+    "subfinder": "apps.external_tools.parsers.subfinder.Subfinder",
+    "fierce": "apps.external_tools.parsers.fierce.Fierce",
+    "infoga": "apps.external_tools.parsers.infoga.Infoga"
 }
 
 HOST_OS_ICONS = {

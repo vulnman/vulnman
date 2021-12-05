@@ -17,6 +17,10 @@ Current Available Tools
 
 .. autoclass:: apps.external_tools.parsers.aiodnsbrute.Aiodnsbrute
 
+.. autoclass:: apps.external_tools.parsers.fierce.Fierce
+
+.. autoclass:: apps.external_tools.parsers.infoga.Infoga
+
 
 API
 ===
