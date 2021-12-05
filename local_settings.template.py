@@ -58,7 +58,9 @@
 # ########
 
 # Set this to True to avoid transmitting the CSRF cookie over HTTP accidentally.
-CSRF_COOKIE_SECURE = True
+# Default: True
+# CSRF_COOKIE_SECURE = True
 
 # Set this to True to avoid transmitting the session cookie over HTTP accidentally.
-SESSION_COOKIE_SECURE = True
+# Default: True
+# SESSION_COOKIE_SECURE = True

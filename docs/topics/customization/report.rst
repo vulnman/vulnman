@@ -1,3 +1,5 @@
+.. _customization-report:
+
 ========================
 Custom Report generation
 ========================
