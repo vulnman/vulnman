@@ -22,5 +22,5 @@ class HostTestCases(APITestCase, VulnmanTestMixin):
         self.client.force_login(self.user1)
         # test if i can see only my hosts
         response = self.client.get(url)
-        self.assertEqual(len(response.json()), 1)
-        self.assertEqual(response.json()[0]["uuid"], serializers.HostSerializer(my_host).data["uuid"])
+        self.assertEqual(len(response.json()["results"]), 1)
+        self.assertEqual(response.json()["results"][0]["uuid"], serializers.HostSerializer(my_host).data["uuid"])
