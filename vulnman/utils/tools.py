@@ -1,5 +1,6 @@
 import socket
 from apps.networking.models import Host, Hostname, Service
+from vulns.models import Vulnerability
 
 
 class ToolResultParser(object):
@@ -36,18 +37,26 @@ class ToolResultParser(object):
         """
         return Hostname.objects.get_or_create(host=host, name=name)
 
-    def _get_or_create_service(self, host, name, port, protocol="tcp", status="up", banner=None):
+    def _get_or_create_service(self, host, name, port, protocol="tcp", status="open", banner=None):
         """
 
         :param host: the host this service is running on
         :param name: name of the service (e.g. "http")
         :param port: the port number
         :param protocol: protocol of the service (default: "tcp")
-        :param status: status of the service (default: "up")
+        :param status: status of the service (default: "open")
         :return: instance of :class:`~vulns.models.Host`
         """
         return Service.objects.get_or_create(host=host, name=name, port=port, protocol=protocol, status=status,
                                              banner=banner)
+
+    def _get_or_create_vulnerability(self, name, description, impact, remediation, references, project,
+                                     host=None, service=None, cvss_string=None, cvss_base_score=None):
+        return Vulnerability.objects.get_or_create(project=project, host=host, service=service, name=name,
+                                                   description=description,
+                                                   defaults={'impact': impact, 'remediation': remediation,
+                                                             'references': references, 'cvss_string': cvss_string,
+                                                             'cvss_base_score': cvss_base_score})
 
     def _resolve(self, hostname: str):
         """

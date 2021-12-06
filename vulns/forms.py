@@ -10,7 +10,7 @@ class VulnerabilityForm(forms.ModelForm):
         model = models.Vulnerability
         exclude = ["uuid", "creator", "project", "cvss_base_score"]
         widgets = {
-            'vulnerability_template': autocomplete.ModelSelect2(url='vulns:vuln-template-autocomplete'),
+            'vulnerability_template': autocomplete.ModelSelect2(url='findings:template-autocomplete'),
         }
 
     def __init__(self, project, *args, **kwargs):
@@ -18,12 +18,6 @@ class VulnerabilityForm(forms.ModelForm):
         self.fields['host'].queryset = project.host_set.all()
         self.fields['service'].queryset = Service.objects.filter(host__project=project)
         self.fields['vulnerability_template'].widget.attrs = {'data-theme': 'bootstrap5'}
-
-
-class VulnerabilityTemplateForm(forms.ModelForm):
-    class Meta:
-        model = models.VulnerabilityTemplate
-        exclude = ["uuid", "creator"]
 
 
 class ProofOfConceptInline(NamedInlineFormSetFactory):

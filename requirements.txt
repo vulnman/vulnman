@@ -7,7 +7,6 @@ django-autocomplete-light==3.5.1
 django-querysetsequence
 djangorestframework
 python-libnmap
-martor
 Pillow
 markdown
 bleach

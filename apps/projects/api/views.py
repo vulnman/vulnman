@@ -1,5 +1,5 @@
 from vulnman.api import viewsets
-from vulnman.api.permissions import IsCreatorPermission
+from vulnman.api.permission import IsCreatorPermission
 from rest_framework.permissions import IsAuthenticated
 from apps.projects.api import serializers
 from apps.projects import models

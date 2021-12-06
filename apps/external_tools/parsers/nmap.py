@@ -3,6 +3,10 @@ from libnmap.parser import NmapParser as LibNmapParser
 
 
 class NmapParser(ToolResultParser):
+    """
+    Example Command:
+    ``nmap -sV -sS -v example.com -oX nmap.xml``
+    """
     def parse(self, result, project, creator):
         nmap_result = LibNmapParser.parse_fromstring(result)
         for nmap_host in nmap_result.hosts:

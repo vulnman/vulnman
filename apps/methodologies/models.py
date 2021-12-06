@@ -30,7 +30,9 @@ class SuggestedCommand(models.Model):
     name = models.CharField(max_length=32)
     tool_name = models.CharField(max_length=128)
     description = models.CharField(max_length=256, blank=True, null=True)
-    command = models.TextField()
+    command = models.TextField(
+        help_text="The following placeholders are available: %target_ip%, %target_domain%, "
+                  "%target_port%, %target_scheme%")
     methodology = models.ForeignKey(Methodology, on_delete=models.CASCADE)
 
     def __str__(self):

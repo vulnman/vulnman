@@ -15,7 +15,7 @@ Vulnerability Templates
 
     <div class="clearfix">
         <div class="float-end">
-            <a class="btn btn-primary" href="{% url 'vulns:vuln-template-create' %}">
+            <a class="btn btn-primary" href="{% url 'findings:template-create' %}">
                 <i class="fa fa-plus"></i> Create Vulnerability Template
             </a>
         </div>
@@ -25,12 +25,12 @@ Vulnerability Templates
         {% for template in vuln_templates %}
             <div class="list-group-item list-group-item-action">
                 <div class="float-start">
-                    <a href="{% url 'vulns:vuln-template-detail' template.pk %}">
+                    <a href="{% url 'findings:template-detail' template.pk %}">
                         {{ template }}
                     </a>
                 </div>
                 <div class="float-end">
-                    <a href="{% url 'vulns:vuln-template-update' template.pk %}" class="btn btn-info">
+                    <a href="{% url 'findings:template-update' template.pk %}" class="btn btn-info">
                         <i class="fa fa-edit"></i> Edit
                     </a>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ template.pk }}">
