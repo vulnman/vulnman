@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{% static 'css/select2-bootstrap-5-theme.min.css' %}" />
     <script src="{% static 'js/cvss.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/cvss.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/codemirror.min.css'%} " />
     <style>
         .select2-container--bootstrap5 .select2-selection {
             min-height: 40px;
@@ -33,8 +32,6 @@
 {% block extra_scripts %}
     {{ form.media }}
     {% include 'forms/dynamic_formset.html' with single_inline=proofs %}
-    <script src="{% static 'js/codemirror/codemirror.min.js' %}"></script>
-    <script src="{% static 'js/codemirror/markdown.min.js' %}"></script>
     <script>
       let cm_description = CodeMirror.fromTextArea(document.getElementById('id_description'), {
         lineNumbers: true, mode: "markdown"
@@ -49,8 +46,9 @@
 
     <script>
         /* This seems required to allow the form to be submitted */
-        $('#id_description').val("1");
-        $('#id_remediation').val("1");
+        $('#id_description').val("-");
+        $('#id_remediation').val("-");
+        $('#id_impact').val("-");
         document.querySelector("#id_vulnerability_template").onchange=function() {
             let selected_item = $(this).find("option:selected");
             let api_url = "/api/findings/templates/" + selected_item.val() + "/";

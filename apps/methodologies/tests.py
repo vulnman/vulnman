@@ -13,4 +13,5 @@ class MethodologyTestCase(TestCase, VulnmanTestMixin):
         self.assertEqual(models.Methodology.objects.first().creator, self.user1)
 
     def test_methodology_listview(self):
-        self._test_unauth_access("methodology:methodology-list")
+        url = self.get_url("methodology:methodology-list")
+        self._test_unauthenticated_aceess(url, expected_status_code=200)

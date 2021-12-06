@@ -1,5 +1,3 @@
-from django.http import Http404
-from django.utils.translation import gettext as _
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -15,27 +13,17 @@ class ProjectList(generic.VulnmanAuthListView):
     context_object_name = "projects"
 
     def get_queryset(self):
-        return models.Project.objects.filter(Q(creator=self.request.user) | Q(projectmember__user=self.request.user))
+        qs = models.Project.objects.filter(Q(creator=self.request.user) | Q(projectmember__user=self.request.user))
+        if not self.request.GET.get('archived'):
+            qs = qs.filter(is_archived=False)
+        else:
+            qs = qs.filter(is_archived=True)
+        return qs
 
     def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
-        allow_empty = self.get_allow_empty()
-        if not allow_empty:
-            # When pagination is enabled and object_list is a queryset,
-            # it's better to do a cheap query than to load the unpaginated
-            # queryset in memory.
-            if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
-                is_empty = not self.object_list.exists()
-            else:
-                is_empty = not self.object_list
-            if is_empty:
-                raise Http404(_('Empty list and “%(class_name)s.allow_empty” is False.') % {
-                    'class_name': self.__class__.__name__,
-                })
         if self.request.session.get('project_pk'):
             del self.request.session['project_pk']
-        context = self.get_context_data()
-        return self.render_to_response(context)
+        return super().get(request, *args, **kwargs)
 
 
 class ProjectCreate(generic.VulnmanAuthCreateWithInlinesView):

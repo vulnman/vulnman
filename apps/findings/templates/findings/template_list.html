@@ -29,23 +29,11 @@ Vulnerability Templates
                         {{ template }}
                     </a>
                 </div>
-                <div class="float-end">
-                    <a href="{% url 'findings:template-update' template.pk %}" class="btn btn-info">
-                        <i class="fa fa-edit"></i> Edit
-                    </a>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ template.pk }}">
-                        <i class="fa fa-trash"></i> Delete
-                    </button>
-                </div>
             </div>
         {% empty %}
             <span class="list-group-item">No templates yet!</span>
         {% endfor %}
     </div>
-
-    {% for template in vuln_templates %}
-        {#  include 'modals/delete_object.html' with obj=template #}
-    {% endfor %}
 
     {% include 'navigation/pagination.html' %}
 

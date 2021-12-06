@@ -15,6 +15,9 @@ urlpatterns = [
     # networking
     path('networking/', include('apps.networking.urls')),
 
+    # social
+    path('social/', include('apps.social.urls')),
+
     # vulns app
     path('vulns/', include('vulns.urls')),
 

@@ -19,6 +19,10 @@ class VulnerabilityForm(forms.ModelForm):
         self.fields['service'].queryset = Service.objects.filter(host__project=project)
         self.fields['vulnerability_template'].widget.attrs = {'data-theme': 'bootstrap5'}
 
+    class Media:
+        css = {"all": ['/static/css/codemirror.min.css']}
+        js = ["/static/js/codemirror/codemirror.min.js", "/static/js/codemirror/markdown.min.js"]
+
 
 class ProofOfConceptInline(NamedInlineFormSetFactory):
     model = models.ProofOfConcept

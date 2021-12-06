@@ -98,7 +98,7 @@
                 <p><strong>References: </strong></p>
                 <ul>
                     {% for reference in vuln.get_references_as_list %}
-                        <li><a href="{{ reference }}" rel="noopener">{{ reference }}</a></li>
+                        <li>{{ reference }}</li>
                     {% endfor %}
                 </ul>
             </div>
