@@ -1,7 +1,5 @@
 from django.urls import reverse_lazy
-from django.db.models import Q
-from django.contrib.auth.mixins import LoginRequiredMixin
-from dal import autocomplete
+
 from vulnman.views import generic
 from vulns import forms
 from vulns import models
@@ -56,7 +54,7 @@ class VulnList(generic.ProjectListView):
 
 
 class VulnDetail(generic.ProjectDetailView):
-    template_name = "vulns/vuln_detail.html"
+    template_name = "findings/vuln_detail.html"
     context_object_name = "vuln"
     model = models.Vulnerability
     allowed_project_roles = ["pentester", "read-only"]
@@ -72,47 +70,6 @@ class VulnDelete(generic.ProjectDeleteView):
 
     def get_queryset(self):
         return models.Vulnerability.objects.filter(project=self.get_project())
-
-
-class VulnerabilityTemplateList(generic.VulnmanListView):
-    model = models.VulnerabilityTemplate
-    paginate_by = 20
-    template_name = "vulns/vulnerability_template_list.html"
-    context_object_name = "vuln_templates"
-
-
-class VulnerabilityTemplateCreate(generic.VulnmanCreateView):
-    model = models.VulnerabilityTemplate
-    form_class = forms.VulnerabilityTemplateForm
-    template_name = "vulns/vulnerability_template_create.html"
-
-    def form_valid(self, form):
-        form.instance.creator = self.request.user
-        return super().form_valid(form)
-
-
-class VulnerabilityTemplateUpdate(generic.VulnmanUpdateView):
-    model = models.VulnerabilityTemplate
-    form_class = forms.VulnerabilityTemplateForm
-    template_name = "vulns/vulnerability_template_create.html"
-
-    def form_valid(self, form):
-        form.instance.creator = self.request.user
-        return super().form_valid(form)
-
-
-class VulnerabilityTemplateDetail(generic.VulnmanDetailView):
-    model = models.VulnerabilityTemplate
-    template_name = "vulns/vulnerability_template_detail.html"
-    context_object_name = "vuln_template"
-
-
-class VulnerabilityTemplateAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        queryset = models.VulnerabilityTemplate.objects.all()
-        if self.q:
-            queryset = queryset.filter(Q(name__contains=self.q) | Q(description__contains=self.q))
-        return queryset
 
 
 class WebApplicationUrlPathAddWebApp(generic.ProjectUpdateView):

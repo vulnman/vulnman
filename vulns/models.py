@@ -11,7 +11,7 @@ class Vulnerability(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    vulnerability_template = models.ForeignKey('vulns.VulnerabilityTemplate', on_delete=models.SET_NULL,
+    vulnerability_template = models.ForeignKey('findings.Template', on_delete=models.SET_NULL,
                                                null=True, blank=True)
     name = models.CharField(max_length=128)
     description = models.TextField(help_text="Markdown supported")
@@ -74,27 +74,6 @@ class ProofOfConcept(models.Model):
     class Meta:
         verbose_name_plural = "Proof of Concepts"
         verbose_name = "Proof of Concept"
-
-
-class VulnerabilityTemplate(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    name = models.CharField(max_length=128)
-    description = models.TextField(blank=True, null=True)
-    remediation = models.TextField()
-    impact = models.TextField()
-    references = models.TextField()
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse_lazy('vulns:vuln-template-detail', kwargs={'pk': self.pk})
-
-    class Meta:
-        unique_together = [('name',)]
 
 
 class WebApplicationUrlPath(models.Model):

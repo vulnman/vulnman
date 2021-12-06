@@ -2,22 +2,18 @@ from vulnman.tests.mixins import VulnmanTestMixin
 from rest_framework import status
 from rest_framework.test import APITestCase
 from apps.projects import models
-from apps.projects.api import serializers
 
 
 class ProjectAPITestCase(APITestCase, VulnmanTestMixin):
     def setUp(self) -> None:
         self.init_mixin()
 
-    def test_unauth_read_access(self):
-        urls = ["api:projects:project-list"]
-        for url in urls:
-            response = self.client.get(self.get_url(url))
-            self.assertEqual(response.status_code, 403)
-
     def test_project_list(self):
-        self.client.force_login(self.user1)
         url = self.get_url('api:projects:project-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+        # test logged in
+        self.client.force_login(self.user1)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # test other users project is hidden from us
@@ -29,7 +25,7 @@ class ProjectAPITestCase(APITestCase, VulnmanTestMixin):
         project = self._create_project("myproject", creator=self.user1)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()[0], serializers.ProjectSerializer(project).data)
+        self.assertEqual(response.json()[0]["name"], project.name)
 
     def test_project_create(self):
         url = self.get_url("api:projects:project-list")
@@ -53,7 +49,7 @@ class ProjectAPITestCase(APITestCase, VulnmanTestMixin):
         self.client.force_login(self.user1)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), serializers.ProjectSerializer(project).data)
+        self.assertEqual(response.json()["uuid"], str(project.pk))
         # receive project from other user
         self.client.force_login(self.user2)
         response = self.client.get(url)

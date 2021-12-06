@@ -1,7 +1,6 @@
-import re
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
-from vulns import models
+from apps.findings import models
 
 
 class Command(BaseCommand):
@@ -78,11 +77,10 @@ class Command(BaseCommand):
                             self.find_external_reference(root, reference.get('External_Reference_ID'))
                         )
                 references = '\n'.join(references)
-                if models.VulnerabilityTemplate.objects.filter(name=name).exists():
+                if models.Template.objects.filter(name=name).exists():
                     self.stdout.write(self.style.WARNING('Template "%s" already exists!' % name))
                     continue
-                models.VulnerabilityTemplate.objects.create(name=name, description=description,
-                                                            references=references, remediation=mitigation,
-                                                            impact=impact)
+                models.Template.objects.create(name=name, description=description,
+                                               references=references, remediation=mitigation)
                 import_counter += 1
         self.stdout.write(self.style.SUCCESS('Successfully imported/updated "%s" templates' % import_counter))

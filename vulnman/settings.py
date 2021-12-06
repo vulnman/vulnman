@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'apps.networking.apps.NetworkingConfig',
     'apps.methodologies.apps.MethodologiesConfig',
     'apps.social.apps.SocialConfig',
+    'apps.findings.apps.FindingsConfig'
 ]
 
 MIDDLEWARE = [
@@ -205,7 +206,8 @@ EXTERNAL_TOOLS = {
     "aiodnsbrute": "apps.external_tools.parsers.aiodnsbrute.Aiodnsbrute",
     "subfinder": "apps.external_tools.parsers.subfinder.Subfinder",
     "fierce": "apps.external_tools.parsers.fierce.Fierce",
-    "infoga": "apps.external_tools.parsers.infoga.Infoga"
+    "infoga": "apps.external_tools.parsers.infoga.Infoga",
+    "nuclei": "apps.external_tools.parsers.nuclei.Nuclei",
 }
 
 HOST_OS_ICONS = {
@@ -224,7 +226,12 @@ REPORT_TEMPLATE = "report/document.tex"
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 50
+    # 'DEFAULT_RENDERER_CLASSES': [
+    #    'rest_framework.renderers.JSONRenderer'
+    # ]
 }
 
 

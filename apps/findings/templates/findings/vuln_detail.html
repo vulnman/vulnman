@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load markdown %}
+
+{% block title %}
+{{ project.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:vulns:vuln-list' %}">Vulnerabilities</a></li>
+    <li class="breadcrumb-item active">{{ vuln }}</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-center">{{ vuln.name }}</h3>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="d-flex justify-content-between">
+                <div class="float-start">
+                    <small class="text-muted">Created: {{ vuln.date_created|date }}</small>
+                </div>
+                <small class="justify-content-center" style="color: #{{ vuln.get_severity_colors.hex }}"><strong>Score: </strong>{{ vuln.get_scores.0 }} ({{ vuln.get_severities.0 }})</small>
+
+                <div class="float-end">
+                    <small class="text-muted">Created by: {{ vuln.creator }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+
+    <div class="clearfix">
+        <div class="float-end">
+            <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="host-action-dropdown"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
+                    <li><a class="dropdown-item" href="{% url 'projects:vulns:vuln-update' vuln.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ vuln.pk }}"><i class="fa fa-trash"></i> Delete</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Tab View -->
+        <!-- Tab NAV -->
+    <ul class="nav nav-tabs nav-fill" role="tablist">
+        <li class="nav-item" role="presentation"><a class="nav-link active" data-bs-toggle="tab" href="#info"
+                                                    aria-controls="info">Information</a></li>
+        <li class="nav-item" role="presentation"><a class="nav-link" data-bs-toggle="tab" href="#details"
+                                                    aria-controls="details">Details</a></li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" data-bs-toggle="tab" href="#proofs" aria-controls="proofs">Proof of Concepts</a>
+        </li>
+    </ul>
+        <!-- Tab Content -->
+    <div class="tab-content">
+        <!-- Info -->
+        <div id="info" class="tab-pane fade show active" role="tabpanel">
+            <div class="container-fluid mt-3">
+                <p><strong>Affected Host: </strong></p>
+                <p><a href="{{ vuln.host.get_absolute_url }}">{{ vuln.host }}</a></p>
+
+                {% if vuln.service %}
+                    <p><strong>Affected Service: </strong></p>
+                    <p>{{ vuln.service }}</p>
+                {% endif %}
+
+                <p><strong>Description: </strong></p>
+                {% if vuln.template %}
+                    <p>{{ vuln.template.description | md_to_html }}</p>
+                {% else %}
+                    <p>{{ vuln.description | md_to_html }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Details -->
+        <div id="details" class="tab-pane fade" role="tabpanel">
+            <div class="container-fluid mt-3">
+                <p><strong>CVSS-Vector: </strong></p>
+                <p>{{ vuln.cvss_string }}</p>
+
+                <p><strong>Impact: </strong></p>
+                <p>{{ vuln.impact | md_to_html }}</p>
+
+                <p><strong>Remediation: </strong></p>
+                {% if vuln.template %}
+                    <p>{{ vuln.template.remediation | md_to_html }}</p>
+                {% else %}
+                    <p>{{ vuln.remediation | md_to_html }}</p>
+                {% endif %}
+
+                <p><strong>References: </strong></p>
+                <ul>
+                    {% for reference in vuln.get_references_as_list %}
+                        <li><a href="{{ reference }}" rel="noopener">{{ reference }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Proofs -->
+        <div id="proofs" class="tab-pane fade" role="tabpanel">
+            <div class="container-fluid mt-3">
+                <p><strong>Proof of concept(s): </strong></p>
+                    {% for proof in vuln.proofofconcept_set.all %}
+                        {% if proof.image %}
+                            <figure class="figure">
+                                <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
+                                <figcaption class="figure-caption">{{ proof.name }}</figcaption>
+                            </figure>
+                        {% endif %}
+                        <p>{{ proof.description|linebreaksbr }}</p>
+                        {% empty %}
+                        <p>No proofs yet!</p>
+                    {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% include 'modals/delete_object.html' with obj=vuln %}
+{% endblock %}

@@ -10,7 +10,7 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'vulns:vuln-template-list' %}">Vulnerability Templates</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'findings:template-list' %}">Vulnerability Templates</a></li>
     <li class="breadcrumb-item active">Create</li>
 </ol>
 {% endblock %}
@@ -29,9 +29,6 @@
       let cm_description = CodeMirror.fromTextArea(document.getElementById('id_description'), {
         lineNumbers: true, mode: "markdown"
       });
-      let cm_impact = CodeMirror.fromTextArea(document.getElementById('id_impact'), {
-          lineNumbers: true, mode: "markdown"
-      })
       let cm_remediation = CodeMirror.fromTextArea(document.getElementById('id_remediation'), {
           lineNumbers: true, mode: "markdown"
       })
