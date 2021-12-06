@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from uuid import uuid4
 
@@ -19,7 +20,14 @@ class Employee(models.Model):
         unique_together = [("project", "email")]
 
     def __str__(self):
+        if self.first_name and self.last_name:
+            return "%s %s" % (self.first_name, self.last_name)
+        elif self.last_name:
+            return self.last_name
         return self.email
+
+    def get_absolute_url(self):
+        return reverse_lazy('projects:social:employee-detail', kwargs={'pk': self.pk})
 
 
 class Credential(models.Model):
@@ -29,8 +37,8 @@ class Credential(models.Model):
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
     username = models.CharField(max_length=256)
-    cleartext_password = models.CharField(max_length=255)
-    hashed_password = models.CharField(max_length=512)
+    cleartext_password = models.CharField(max_length=255, blank=True, null=True)
+    hashed_password = models.CharField(max_length=512, blank=True, null=True)
     location_found = models.CharField(max_length=512)
     valid_services = models.ManyToManyField('networking.Service')
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)

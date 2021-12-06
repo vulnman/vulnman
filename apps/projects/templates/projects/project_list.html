@@ -6,13 +6,19 @@ Projects
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li class="breadcrumb-item active">Projects</li>
+    {% if request.GET.archived %}
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+    <li class="breadcrumb-item active">Archive</li>
+    {% else %}
+    <li class="breadcrumb-item active">Projects</li>
+    {% endif %}
 </ol>
 {% endblock %}
 
 {% block content %}
     <div class="clearfix">
         <div class="float-end">
+            <a class="btn btn-primary" href="{% url 'projects:project-list' %}?archived=1">Show Archived</a>
             <a class="btn btn-primary" href="{% url 'projects:project-create' %}"><i class="fa fa-plus"></i> New Project</a>
         </div>
     </div>

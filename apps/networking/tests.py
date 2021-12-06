@@ -8,11 +8,9 @@ class HostTestCase(TestCase, VulnmanTestMixin):
     def setUp(self) -> None:
         self.init_mixin()
 
-    def test_unauth_listview(self):
-        self._test_unauth_access("projects:networking:host-list", expected_status_code=403)
-
     def test_listview(self):
         url = self.get_url("projects:networking:host-list")
+        self._test_unauthenticated_aceess(url)
         my_host = self._create_instance(models.Host, project__creator=self.user1)
         not_my_host = self._create_instance(models.Host, project__creator=self.user2)
         self.assertEqual(models.Host.objects.count(), 2)
@@ -50,9 +48,9 @@ class HostTestCase(TestCase, VulnmanTestMixin):
         self.assertEqual(project.projectmember_set.count(), 1)
 
     def test_createview(self):
-        self._test_unauth_access("projects:networking:host-create", 403)
-        project = self._create_project("testcaseproject", creator=self.user1)
         url = self.get_url("projects:networking:host-create")
+        self._test_unauthenticated_aceess(url)
+        project = self._create_project("testcaseproject", creator=self.user1)
         payload = {"ip": "12.12.12.12", "is_online": True, "os": "unknown",
                    "hostname_set-TOTAL_FORMS": "1", "hostname_set-0-uuid": "", "hostname_set-0-host": "",
                    "hostname_set-0-name": "testhost.example.com", "hostname_set-0-DELETE": "",

@@ -34,8 +34,8 @@ class ProjectMemberTests(TestCase, VulnmanTestMixin):
         self.init_mixin()
 
     def test_listview(self):
-        self._test_unauth_access("projects:project-member-list", expected_status_code=403)
         url = self.get_url("projects:project-member-list")
+        self._test_unauthenticated_aceess(url)
         # test as creator
         project = self._create_project("testcaseproject", creator=self.user1)
         new_user = self._create_user("memberuser", "changeme")

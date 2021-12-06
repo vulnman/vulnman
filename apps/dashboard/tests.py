@@ -7,4 +7,5 @@ class ProjectDashboardTestCase(TestCase, VulnmanTestMixin):
         self.init_mixin()
 
     def test_status_code(self):
-        self._test_unauth_access("dashboard:dashboard")
+        url = self.get_url("dashboard:dashboard")
+        self._test_unauthenticated_aceess(url, expected_status_code=200)

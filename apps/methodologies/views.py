@@ -8,12 +8,14 @@ class MethodologyList(generic.VulnmanAuthListView):
     template_name = "methodologies/methodology_list.html"
     model = models.Methodology
     context_object_name = "methodologies"
+    extra_context = {'TEMPLATE_HIDE_BREADCRUMBS': True}
 
 
 class MethodologyDetail(generic.VulnmanAuthDetailView):
     template_name = "methodologies/methodology_detail.html"
     model = models.Methodology
     context_object_name = "methodology"
+    extra_context = {'TEMPLATE_HIDE_BREADCRUMBS': True}
 
 
 class MethodologyUpdate(generic.VulnmanAuthUpdateWithInlinesView):
@@ -21,6 +23,7 @@ class MethodologyUpdate(generic.VulnmanAuthUpdateWithInlinesView):
     model = models.Methodology
     inlines = [forms.SuggestedCommandInline]
     form_class = forms.MethodologyForm
+    extra_context = {'TEMPLATE_HIDE_BREADCRUMBS': True}
 
 
 class MethodologyDelete(generic.VulnmanAuthDeleteView):
@@ -34,12 +37,14 @@ class MethodologyCreate(generic.VulnmanAuthCreateWithInlinesView):
     form_class = forms.MethodologyForm
     inlines = [forms.SuggestedCommandInline]
     model = models.Methodology
+    extra_context = {'TEMPLATE_HIDE_BREADCRUMBS': True}
 
 
 class SuggestedCommandUpdate(generic.VulnmanAuthUpdateView):
     template_name = "methodologies/suggested_command_update.html"
     form_class = forms.SuggestedCommandForm
     model = models.SuggestedCommand
+    extra_context = {'TEMPLATE_HIDE_BREADCRUMBS': True}
 
     def get_success_url(self):
         return reverse_lazy('methodology:methodology-detail', kwargs={'pk': self.get_object().methodology.pk})

@@ -15,6 +15,7 @@ class Project(models.Model):
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     customer = models.CharField(max_length=64)
     report_default_title = models.CharField(max_length=64, default="Pentest Report")
+    is_archived = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
