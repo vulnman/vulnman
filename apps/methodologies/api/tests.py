@@ -16,5 +16,5 @@ class MethodologyAPITestCase(APITestCase, VulnmanTestMixin):
         obj = self._create_instance(models.Methodology)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()), 1)
-        self.assertEqual(response.json()[0]["uuid"], str(obj.pk))
+        self.assertEqual(len(response.json()["results"]), 1)
+        self.assertEqual(response.json()["results"][0]["uuid"], str(obj.pk))

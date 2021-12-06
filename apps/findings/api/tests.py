@@ -17,7 +17,7 @@ class TemplateAPITestCase(APITestCase, VulnmanTestMixin):
         self.client.force_login(self.user1)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(len(response.json()["results"]), 1)
 
     def test_detail(self):
         template = self._create_instance(models.Template, creator=self.user1)

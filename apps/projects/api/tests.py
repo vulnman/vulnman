@@ -20,12 +20,12 @@ class ProjectAPITestCase(APITestCase, VulnmanTestMixin):
         self._create_project("testproject", creator=self.user2)
         response = self.client.get(url)
         self.assertEqual(models.Project.objects.count(), 1)
-        self.assertEqual(response.data, [])
+        self.assertEqual(response.data["results"], [])
         # test if we see our project
         project = self._create_project("myproject", creator=self.user1)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()[0]["name"], project.name)
+        self.assertEqual(response.json()["results"][0]["name"], project.name)
 
     def test_project_create(self):
         url = self.get_url("api:projects:project-list")
