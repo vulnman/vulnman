@@ -40,6 +40,23 @@ class Credential(models.Model):
     cleartext_password = models.CharField(max_length=255, blank=True, null=True)
     hashed_password = models.CharField(max_length=512, blank=True, null=True)
     location_found = models.CharField(max_length=512)
-    valid_services = models.ManyToManyField('networking.Service')
-    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
+    valid_services = models.ManyToManyField('networking.Service', blank=True)
+    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = "Credentials"
+        verbose_name = "Credential"
+        ordering = ["-date_updated"]
+
+    def get_valid_services(self):
+        values = []
+        for service in self.valid_services.all():
+            values.append("%s (%s)" % (service.host, service))
+        return values
+
+    def get_absolute_update_url(self):
+        return reverse_lazy('projects:social:credential-update', kwargs={'pk': self.pk})
+
+    #def get_absolute_delete_url(self):
+    #    return reverse_lazy('projects:social')

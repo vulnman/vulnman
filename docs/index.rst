@@ -44,6 +44,8 @@ Features
 
   - Organize your commonly used commands and build them to match your target
 
+- Track credentials found during an engagement
+
 
 .. toctree::
    :maxdepth: 9
