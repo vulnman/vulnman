@@ -32,8 +32,8 @@
                            href="{% url 'projects:reporting:report-list' %}">Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:social:employee-list' %}active{% endif %}"
-                            href="{% url 'projects:social:employee-list' %}">Emploees</a>
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:social:credential-list' %}active{% endif %}"
+                            href="{% url 'projects:social:credential-list' %}">Credentials</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.view_name == 'projects:external-tools:tool-import' %}active{% endif %}"

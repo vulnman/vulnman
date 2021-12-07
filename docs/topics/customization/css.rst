@@ -16,8 +16,8 @@ Built In Themes
 
 - `flatly <https://bootswatch.com/flatly>`_ (default)
 
-- `darkly <https://bootswatch.com/darkly>`_
-
 - `zephyr <https://bootswatch.com/zephyr>`_
 
 - `spacelab <https://bootswatch.com/spacelab>`_
+
+- `bootstrap-dark <https://github.com/vinorodrigues/bootstrap-dark-5>`_

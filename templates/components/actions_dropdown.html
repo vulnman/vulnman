@@ -1,0 +1,19 @@
+<div class="dropdown">
+    {% if btn_small %}
+    <a class="btn btn-sm btn-secondary dropdown-toggle" href="#" role="button" id="action-dropdown"
+       data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-ellipsis-v"></i>
+    </a>
+    {% else %}
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="action-dropdown"
+       data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-ellipsis-v"></i>
+    </a>
+    {% endif %}
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="action-dropdown">
+        <li><a class="dropdown-item" href="{{ obj.get_absolute_update_url }}"><i class="fa fa-edit"></i> Edit</a></li>
+        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ obj.pk }}"><i class="fa fa-trash"></i> Delete</a></li>
+    </ul>
+</div>
+
+{% include 'modals/delete_object.html' %}
