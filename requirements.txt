@@ -12,3 +12,4 @@ markdown
 bleach
 gunicorn
 drf-yasg
+django-oauth-toolkit

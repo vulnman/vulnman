@@ -65,7 +65,8 @@ INSTALLED_APPS = [
     'apps.networking.apps.NetworkingConfig',
     'apps.methodologies.apps.MethodologiesConfig',
     'apps.social.apps.SocialConfig',
-    'apps.findings.apps.FindingsConfig'
+    'apps.findings.apps.FindingsConfig',
+    'apps.agents.apps.AgentsConfig'
 ]
 
 MIDDLEWARE = [
@@ -228,11 +229,20 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 50
+    'PAGE_SIZE': 50,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    )
     # 'DEFAULT_RENDERER_CLASSES': [
     #    'rest_framework.renderers.JSONRenderer'
     # ]
 }
+
+#OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+#    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'},
+#    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore'
+#}
 
 
 try:

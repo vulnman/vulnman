@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from apps.projects import constants
+from vulnman.models import VulnmanModel
 
 
 class Project(models.Model):
@@ -70,3 +71,11 @@ class Scope(models.Model):
     class Meta:
         unique_together = [('project', 'name')]
         verbose_name_plural = "Scopes"
+
+
+class CommandHistoryItem(VulnmanModel):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    command = models.TextField()
+    exit_code = models.IntegerField(blank=True, null=True)
+    output = models.TextField(blank=True, null=True)
+    agent = models.ForeignKey('agents.Agent', on_delete=models.SET_NULL, null=True, blank=True)
