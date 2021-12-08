@@ -1,6 +1,8 @@
 {% load widget_tweaks %}
 
-{% if method %}
+<div class="card">
+    <div class="card-body">
+        {% if method %}
 <form method="{{ method }}" {% if enctype %}enctype="multipart/form-data"{% endif %}>
     {% csrf_token %}
 {% else %}
@@ -26,3 +28,5 @@
         </div>
     </div>
   </form>
+    </div>
+</div>

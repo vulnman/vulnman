@@ -22,6 +22,8 @@ class GobusterVhost(ToolResultParser):
 
 # dir plugin
 class GobusterDir(ToolResultParser):
+    tool_name = "gobuster dir"
+
     def parse(self, result, project, creator):
         for line in result.split("\n"):
             if "Status:" not in line and "Size:" not in line:
@@ -40,7 +42,7 @@ class GobusterDir(ToolResultParser):
                             service, _created = self._get_or_create_service(host, "http", 80)
                     else:
                         service, _created = self._get_or_create_service(host, parsed.scheme, parsed.port)
-                    status_code = url_path[-3].replace(")", "")
+                    status_code = re.search(r"(Status: )([\d]+)", line).group(2)
                     webapp_url, _created = WebApplicationUrlPath.objects.get_or_create(
                         service=service, hostname=hostname, project=project, status_code=status_code,
                         full_url=url_path[0], path=parsed.path, defaults={'creator': creator})
