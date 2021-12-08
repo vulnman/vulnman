@@ -1,7 +1,9 @@
 {% load widget_tweaks %}
 {% load verbose_name %}
 
-{% if method %}
+<div class="card">
+    <div class="card-body">
+        {% if method %}
     <form method="{{ method }}" {% if enctype %}enctype="multipart/form-data"{% endif %}>
     {% csrf_token %}
 {% else %}
@@ -44,3 +46,6 @@
 </div>
 </form>
 
+
+    </div>
+</div>

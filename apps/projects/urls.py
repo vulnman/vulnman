@@ -18,6 +18,9 @@ urlpatterns = [
     # social
     path('social/', include('apps.social.urls')),
 
+    # command
+    path('methodologies/', include('apps.methodologies.urls.projects')),
+
     # vulns app
     path('vulns/', include('vulns.urls')),
 

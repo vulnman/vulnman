@@ -10,6 +10,7 @@ The reports are generated using `LaTeX <https://www.latex-project.org/>`_ and ar
 .. warning::
 
     This project is in an very early stage. You may not want to use it in production.
+    The Web-UI will be polished once a backend functionality is more stable and complete.
 
 
 Features
@@ -62,6 +63,7 @@ First Steps
     introduction/install
     introduction/configuration
     introduction/maintenance
+    introduction/web_interface
 
 :doc:`introduction/install`
     Install instructions for Vulnman.
@@ -69,6 +71,8 @@ First Steps
     List of settings.
 :doc:`introduction/maintenance`
     Common tasks to keep vulnman up to date
+:doc:`introduction/web_interface`
+    Introduce how to use the web interface
 
 
 Vulnerability Management
@@ -108,6 +112,20 @@ Customization
 
 :doc:`topics/customization/css`
     How to customize CSS theme
+
+
+Advanced Topics
+===============
+
+.. toctree::
+    :caption: Advanced Topics
+    :hidden:
+
+    topics/agents
+
+:doc:`topics/agents`
+    Talk about vulnman agents
+
 
 
 Misc
