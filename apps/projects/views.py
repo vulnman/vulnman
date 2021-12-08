@@ -32,6 +32,7 @@ class ProjectCreate(generic.VulnmanAuthCreateWithInlinesView):
     model = models.Project
     inlines = [forms.ScopeInline, forms.ProjectContactInline]
     success_url = reverse_lazy("projects:project-list")
+    extra_context = {"TEMPLATE_HIDE_BREADCRUMBS": True}
 
 
 class ProjectDetail(generic.VulnmanAuthDetailView):

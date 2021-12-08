@@ -1,5 +1,6 @@
 import binascii
 import os
+from django.urls import reverse_lazy
 from django.db import models
 from django.contrib.auth.models import User
 from vulnman.models import VulnmanModel
@@ -22,3 +23,6 @@ class Agent(Token):
     @classmethod
     def generate_key(cls):
         return binascii.hexlify(os.urandom(32)).decode()
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy('agents:agent-delete', kwargs={'pk': self.pk})

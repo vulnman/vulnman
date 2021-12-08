@@ -1,4 +1,5 @@
 import socket
+from django.core.exceptions import ImproperlyConfigured
 from apps.networking.models import Host, Hostname, Service
 from vulns.models import Vulnerability
 
@@ -7,6 +8,14 @@ class ToolResultParser(object):
     """
     This is the parent class for all external tool importers.
     """
+    tool_name = None
+
+    def get_tool_name(self):
+        if not self.tool_name:
+            return "Invalid Name!"
+            # raise ImproperlyConfigured("Plugin does not have a tool name set!")
+        return self.tool_name
+
     def parse(self, result, project, creator):
         """
         This method is called when a tool report is imported

@@ -17,3 +17,13 @@ This page shows the project name, customer and some charts about your assessment
 
   Dashboard using the ``bootstrap-dark`` theme
 
+
+Credentials
+===========
+You can manage credentials found during an assessment from within the web interface
+
+.. figure:: ../assets/webui/credentials.png
+    :width: 800
+    :alt: Credentials view
+
+    Credentials view using the ``flatly`` theme

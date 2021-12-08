@@ -29,3 +29,7 @@ urlpatterns = [
     path('agents/', include('apps.agents.api.urls')),
 ]
 
+urlpatterns += [
+    path('v1/', include('apps.api.v1.urls'))
+]
+

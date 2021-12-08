@@ -11,7 +11,9 @@
     </a>
     {% endif %}
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="action-dropdown">
+        {% if not hide_edit %}
         <li><a class="dropdown-item" href="{{ obj.get_absolute_update_url }}"><i class="fa fa-edit"></i> Edit</a></li>
+        {% endif %}
         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ obj.pk }}"><i class="fa fa-trash"></i> Delete</a></li>
     </ul>
 </div>
