@@ -6,5 +6,5 @@ app_name = "methodology"
 
 
 urlpatterns = [
-    path("commands/queue/", views.CommandQueue.as_view(), name="command-queue"),
+    # path("commands/queue/", views.CommandQueue.as_view(), name="command-queue"),
 ]

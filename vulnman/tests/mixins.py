@@ -45,3 +45,100 @@ class VulnmanTestMixin(object):
         self.login_with_project(foreign_user, project)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
+
+
+class VulnmanAPITestMixin(VulnmanTestMixin):
+    def _check_creator_read_only(self, url, obj_class):
+        # TODO: use this one
+        # TODO: check same for projects
+        new_user = self._create_user("temporaryuser", "changeme")
+        payload = {"creator": new_user.username}
+        self.client.force_login(new_user)
+        response = self.client.patch(url, payload)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(obj_class.objects.filter(creator=new_user).count(), 0)
+
+    def _test_project_updateview(self, lazy_url, payload, obj_class, project_creator_field="project__creator"):
+        project_field = project_creator_field.split("__")[-2]
+        project_data = {project_field: self._create_project("testprojectupdateviewtemp")}
+        # test unauthenticated denied
+        temporary_object = self._create_instance(obj_class, **project_data)
+        url = self.get_url(lazy_url, pk=temporary_object.pk)
+        self.client.logout()
+        response = self.client.patch(url, payload)
+        self.assertEqual(response.status_code, 403)
+        response = self.client.put(url, payload)
+        self.assertEqual(response.status_code, 403)
+
+        # test as temporary user
+        new_user = self._create_user("temporaryuserupdateview", "changeme")
+        self.client.force_login(new_user)
+        response = self.client.patch(url, payload)
+        self.assertEqual(response.status_code, 404)
+        filter_data = {project_creator_field: new_user}
+        self.assertEqual(obj_class.objects.filter(**filter_data).count(), 0)
+
+        # test as creator user
+        my_object = self._create_instance(obj_class, **filter_data)
+        self.client.force_login(new_user)
+        url = self.get_url(lazy_url, pk=my_object.pk)
+        response = self.client.patch(url, payload)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(obj_class.objects.filter(**payload).count(), 1)
+
+    def _test_project_listview(self, lazy_url, obj_class, project_creator_field="project__creator"):
+        # test unauthenticated denied
+        url = self.get_url(lazy_url)
+        self.client.logout()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+        # test my object
+        my_object_data = {project_creator_field: self.user1}
+        my_object = self._create_instance(obj_class, **my_object_data)
+        self.client.force_login(self.user1)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["uuid"], str(my_object.pk))
+        # test other object
+        self.client.force_login(self.user2)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
+
+    def _test_project_createview(self, lazy_url, payload, obj_class, project_creator_field="project__creator"):
+        url = self.get_url(lazy_url)
+        self.client.logout()
+        response = self.client.post(url, payload)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(obj_class.objects.count(), 0)
+        project1 = self._create_project("testprojectcreateview", creator=self.user1)
+        project2 = self._create_project("testprojectcreateview", creator=self.user2)
+        # test my object
+        project_field = project_creator_field.split("__")[-2]
+        payload[project_field] = str(project1.pk)
+        filter_data = {project_field: str(project1.pk)}
+        self.client.force_login(self.user1)
+        response = self.client.post(url, payload)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(obj_class.objects.filter(**filter_data).count(), 1)
+        # test to create object to foreign project
+        payload[project_field] = str(project2.pk)
+        response = self.client.post(url, payload)
+        self.assertEqual(response.status_code, 403)
+
+    def _test_project_deleteview(self, lazy_url, obj_class, project_creator_field="project__creator"):
+        data = {project_creator_field: self.user1}
+        my_object = self._create_instance(obj_class, **data)
+        url = self.get_url(lazy_url, pk=my_object.pk)
+        self.client.logout()
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 403)
+        # test delete foreign objects
+        self.client.force_login(self.user2)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 404)
+        # test my object delete
+        self.client.force_login(self.user1)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 204)

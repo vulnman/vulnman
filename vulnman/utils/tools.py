@@ -44,7 +44,7 @@ class ToolResultParser(object):
         :param host: the host this hostname belongs to
         :return: instance of :class:`~vulns.models.Hostname`
         """
-        return Hostname.objects.get_or_create(host=host, name=name)
+        return Hostname.objects.get_or_create(host=host, name=name, project=host.project)
 
     def _get_or_create_service(self, host, name, port, protocol="tcp", status="open", banner=None):
         """
@@ -57,7 +57,7 @@ class ToolResultParser(object):
         :return: instance of :class:`~vulns.models.Host`
         """
         return Service.objects.get_or_create(host=host, name=name, port=port, protocol=protocol, status=status,
-                                             banner=banner)
+                                             banner=banner, project=host.project)
 
     def _get_or_create_vulnerability(self, name, description, impact, remediation, references, project,
                                      host=None, service=None, cvss_string=None, cvss_base_score=None):

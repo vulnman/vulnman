@@ -18,6 +18,15 @@ class HostCreate(generic.ProjectCreateWithInlinesView):
     inlines = [forms.HostnameInline]
     allowed_project_roles = ["pentester"]
 
+    def forms_valid(self, form, inlines):
+        response = self.form_valid(form)
+        for formset in inlines:
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.project = self.get_project()
+                instance.save()
+        return response
+
 
 class HostDetail(generic.ProjectDetailView):
     template_name = "networking/host_detail.html"

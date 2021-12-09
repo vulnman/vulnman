@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from uuid import uuid4
+from vulnman.models import VulnmanModel
 
 """
 class Finding(models.Model):
@@ -57,11 +58,7 @@ class ProofOfConcept(models.Model):
 """
 
 
-class Template(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+class Template(VulnmanModel):
     name = models.CharField(max_length=128)
     description = models.TextField(help_text="Markdown supported!")
     remediation = models.TextField(help_text="Markdown supported")

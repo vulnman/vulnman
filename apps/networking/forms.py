@@ -11,5 +11,5 @@ class HostForm(forms.ModelForm):
 
 class HostnameInline(NamedInlineFormSetFactory):
     model = models.Hostname
-    exclude = ["uuid", "host"]
+    exclude = ["uuid", "host", "project", "creator"]
     factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 4}
