@@ -18,6 +18,7 @@ class Employee(models.Model):
 
     class Meta:
         unique_together = [("project", "email")]
+        ordering = ["-date_updated"]
 
     def __str__(self):
         if self.first_name and self.last_name:

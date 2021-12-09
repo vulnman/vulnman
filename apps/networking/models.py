@@ -3,15 +3,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.conf import settings
+from apps.projects.models import Project
+from vulnman.models import VulnmanProjectModel
 
 
-class Host(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
+class Host(VulnmanProjectModel):
     ip = models.GenericIPAddressField(verbose_name="IP")
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
     os = models.CharField(max_length=28, default="unknown", verbose_name="OS")
     is_online = models.BooleanField(default=True)
 
@@ -41,10 +38,7 @@ class Host(models.Model):
         ordering = ["-date_updated"]
 
 
-class Hostname(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
+class Hostname(VulnmanProjectModel):
     name = models.CharField(max_length=128)
     host = models.ForeignKey(Host, on_delete=models.CASCADE)
 
@@ -54,16 +48,10 @@ class Hostname(models.Model):
     class Meta:
         verbose_name_plural = "Hostnames"
         unique_together = [('host', 'name')]
-
-    @property
-    def project(self):
-        return self.host.project
+        ordering = ["-date_updated"]
 
 
-class Service(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
+class Service(VulnmanProjectModel):
     host = models.ForeignKey(Host, on_delete=models.CASCADE)
     name = models.CharField(max_length=16)
     port = models.IntegerField()
@@ -74,6 +62,8 @@ class Service(models.Model):
     def __str__(self):
         return "%s/%s" % (self.port, self.protocol)
 
-    @property
-    def project(self):
-        return self.host.project
+    class Meta:
+        verbose_name_plural = "Services"
+        verbose_name = "Service"
+        unique_together = [("host", "port", "protocol")]
+        ordering = ["-date_updated"]

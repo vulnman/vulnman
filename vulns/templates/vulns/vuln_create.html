@@ -51,7 +51,7 @@
         $('#id_impact').val("-");
         document.querySelector("#id_vulnerability_template").onchange=function() {
             let selected_item = $(this).find("option:selected");
-            let api_url = "/api/findings/templates/" + selected_item.val() + "/";
+            let api_url = "/api/v1/vulnerabilities/templates/" + selected_item.val() + "/";
             $.get(api_url, function(data){
                 $('#id_name').val(data.name);
                 $('#id_references').val(data.references);

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'extra_views',
     'rest_framework',
     'drf_yasg',
+    'dry_rest_permissions',
     'vulns.apps.VulnsConfig',
     # apps already restructured
     'apps.api.apps.ApiConfig',
@@ -66,7 +67,8 @@ INSTALLED_APPS = [
     'apps.methodologies.apps.MethodologiesConfig',
     'apps.social.apps.SocialConfig',
     'apps.findings.apps.FindingsConfig',
-    'apps.agents.apps.AgentsConfig'
+    'apps.agents.apps.AgentsConfig',
+    'apps.commands.apps.CommandsConfig'
 ]
 
 MIDDLEWARE = [
@@ -232,7 +234,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 50,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-    )
+    ),
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning'
     # 'DEFAULT_RENDERER_CLASSES': [
     #    'rest_framework.renderers.JSONRenderer'
     # ]

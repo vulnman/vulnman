@@ -21,7 +21,7 @@ class MethodologyDetail(generic.VulnmanAuthDetailView):
 class MethodologyUpdate(generic.VulnmanAuthUpdateWithInlinesView):
     template_name = "methodologies/methodology_create.html"
     model = models.Methodology
-    inlines = [forms.SuggestedCommandInline]
+    inlines = [forms.TaskInline]
     form_class = forms.MethodologyForm
     extra_context = {'TEMPLATE_HIDE_BREADCRUMBS': True}
 
@@ -35,29 +35,10 @@ class MethodologyDelete(generic.VulnmanAuthDeleteView):
 class MethodologyCreate(generic.VulnmanAuthCreateWithInlinesView):
     template_name = "methodologies/methodology_create.html"
     form_class = forms.MethodologyForm
-    inlines = [forms.SuggestedCommandInline]
+    inlines = [forms.TaskInline]
     model = models.Methodology
     extra_context = {'TEMPLATE_HIDE_BREADCRUMBS': True}
 
-
-class SuggestedCommandUpdate(generic.VulnmanAuthUpdateView):
-    template_name = "methodologies/suggested_command_update.html"
-    form_class = forms.SuggestedCommandForm
-    model = models.SuggestedCommand
-    extra_context = {'TEMPLATE_HIDE_BREADCRUMBS': True}
-
-    def get_success_url(self):
-        return reverse_lazy('methodology:methodology-detail', kwargs={'pk': self.get_object().methodology.pk})
-
-
-class CommandQueue(generic.ProjectFormView):
-    template_name = "methodologies/command_queue.html"
-    form_class = forms.QueueCommandForm
-
     def form_valid(self, form):
+        form.instance.creator = self.request.user
         return super().form_valid(form)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['project'] = self.get_project()
-        return kwargs
