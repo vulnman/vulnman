@@ -1,68 +1,96 @@
+import cvss
 from django.db import models
+from django.conf import settings
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
-from uuid import uuid4
-from vulnman.models import VulnmanModel
-
-"""
-class Finding(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    name = models.CharField(max_length=128)
-    template = models.ForeignKey('vulns.VulnerabilityTemplate', on_delete=models.SET_NULL, null=True, blank=True)
-    description = models.TextField(help_text="Markdown supported")
-    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
-    service = models.ForeignKey('networking.Service', on_delete=models.CASCADE, null=True, blank=True)
-    host = models.ForeignKey('networking.Host', on_delete=models.CASCADE, null=True, blank=True)
-    cvss_score = models.FloatField(default=0.0)
-
-    cvss_vector = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
-    is_fixed = models.BooleanField(default=False)
-    references = models.TextField(blank=True, null=True)
-    remediation = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ['-cvss_score']
-
-# class HTTPFinding(Finding):
-#    url = models.URLField()
-#    parameter = models.CharField()
-#    request = models.TextField()
+from vulnman.models import VulnmanModel, VulnmanProjectModel
+from apps.findings import constants
 
 
 def project_pocs_path(instance, filename):
     return "uploads/proofs/projects/%s/%s" % (instance.pk, filename)
 
 
-class ProofOfConcept(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+class Vulnerability(VulnmanProjectModel):
+    name = models.CharField(max_length=128)
+    description = models.TextField(help_text="Markdown supported!")
+    service = models.ForeignKey('networking.Service', on_delete=models.CASCADE, null=True, blank=True)
+    host = models.ForeignKey('networking.Host', on_delete=models.CASCADE, blank=True, null=True)
+    cvss_score = models.FloatField(default=0.0)
+    cvss_vector = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
+    resolution = models.TextField(blank=True, null=True, help_text="Markdown supported")
+    is_fixed = models.BooleanField(default=False)
+    ease_of_resolution = models.CharField(choices=constants.FINDINGS_EASE_OF_RESOLUTIONS, max_length=32)
+
+    def __str__(self):
+        return self.name
+
+    def get_scores(self):
+        if not self.cvss_vector:
+            return [0.0, 0.0, 0.0]
+        return cvss.CVSS3(self.cvss_vector).scores()
+
+    def get_severities(self):
+        if not self.cvss_vector:
+            return ["None", "None", "None"]
+        return cvss.CVSS3(self.cvss_vector).severities()
+
+    def get_severity_colors(self):
+        return settings.SEVERITY_COLORS[self.get_severities()[0]]
+
+    def get_absolute_url(self):
+        return reverse_lazy('projects:findings:vulnerability-detail', kwargs={'pk': self.pk})
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy('projects:findings:vulnerability-delete', kwargs={'pk': self.pk})
+
+    class Meta:
+        ordering = ['-cvss_score']
+        verbose_name_plural = "Vulnerabilities"
+        verbose_name = "Vulnerability"
+
+
+class ProofOfConcept(VulnmanProjectModel):
     name = models.CharField(max_length=64)
     image = models.ImageField(blank=True, upload_to=project_pocs_path, null=True)
-    finding = models.ForeignKey(Finding, on_delete=models.CASCADE)
+    finding = models.ForeignKey(Vulnerability, on_delete=models.CASCADE)
     description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = "Proof of Concepts"
+        verbose_name = "Proof of Concept"
+        ordering = ["-date_updated"]
+
+
+"""
+# class HTTPFinding(Finding):
+#    url = models.URLField()
+#    parameter = models.CharField()
+#    request = models.TextField()
+"""
+
+
+class Finding(VulnmanProjectModel):
+    name = models.CharField(max_length=128)
+    data = models.TextField()
+    host = models.ForeignKey('networking.Host', on_delete=models.CASCADE, null=True, blank=True)
+    service = models.ForeignKey('networking.Service', on_delete=models.CASCADE, null=True, blank=True)
+    hostname = models.ForeignKey('networking.Hostname', on_delete=models.CASCADE, null=True, blank=True)
+    additional_information = models.TextField(blank=True, null=True)
+    steps_to_reproduce = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name_plural = "Proof of Concepts"
-        verbose_name = "Proof of Concept"
-"""
+        ordering = ["-date_updated"]
 
 
 class Template(VulnmanModel):
     name = models.CharField(max_length=128)
     description = models.TextField(help_text="Markdown supported!")
-    remediation = models.TextField(help_text="Markdown supported")
-    references = models.TextField(null=True, blank=True)
+    resolution = models.TextField(help_text="Markdown supported")
+    ease_of_resolution = models.CharField(choices=constants.FINDINGS_EASE_OF_RESOLUTIONS, max_length=32)
 
     def __str__(self):
         return self.name
@@ -73,3 +101,18 @@ class Template(VulnmanModel):
 
     def get_absolute_url(self):
         return reverse_lazy('findings:template-detail', kwargs={'pk': self.pk})
+
+
+class Reference(VulnmanModel):
+    name = models.CharField(max_length=128)
+    vulnerability = models.ForeignKey(Vulnerability, on_delete=models.CASCADE, null=True, blank=True)
+    template = models.ForeignKey(Template, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class VulnerabilityDetails(VulnmanProjectModel):
+    vulnerability = models.OneToOneField(Vulnerability, on_delete=models.CASCADE)
+    template = models.ForeignKey(Template, on_delete=models.CASCADE, null=True, blank=True)
+    data = models.TextField(help_text="Markdown supported!")

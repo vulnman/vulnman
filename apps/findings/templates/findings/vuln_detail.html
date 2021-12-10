@@ -9,7 +9,7 @@
 <ol class="breadcrumb">
   <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
     <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'projects:vulns:vuln-list' %}">Vulnerabilities</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:findings:vulnerability-list' %}">Vulnerabilities</a></li>
     <li class="breadcrumb-item active">{{ vuln }}</li>
 </ol>
 {% endblock %}
@@ -40,7 +40,7 @@
                     <i class="fa fa-ellipsis-v"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
-                    <li><a class="dropdown-item" href="{% url 'projects:vulns:vuln-update' vuln.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                    <li><a class="dropdown-item" href="{% url 'projects:findings:vulnerability-update' vuln.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ vuln.pk }}"><i class="fa fa-trash"></i> Delete</a></li>
                 </ul>
             </div>

@@ -16,7 +16,8 @@ class NmapParser(ToolResultParser):
                 pass
             for nmap_service in nmap_host.services:
                 _service, _created = self._get_or_create_service(host, nmap_service.service, nmap_service.port,
+                                                                 project, creator,
                                                                  protocol=nmap_service.protocol,
                                                                  banner=nmap_service.banner, status=nmap_service.state)
             for nmap_hostname in nmap_host.hostnames:
-                _hostname, _created = self._get_or_create_hostname(nmap_hostname, host)
+                _hostname, _created = self._get_or_create_hostname(nmap_hostname, host, project, creator)

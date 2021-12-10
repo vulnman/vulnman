@@ -68,19 +68,17 @@ class Command(BaseCommand):
                         new_mitigation = "%s\n%s" % (desc, mitigation.find('Effectiveness_Notes', self.namespaces).text)
                     mitigations.append(new_mitigation)
                 mitigation = '\n'.join(mitigations)
-                references = ["CWE-%s" % cwe_id]
+                if models.Template.objects.filter(name=name).exists():
+                    self.stdout.write(self.style.WARNING('Template "%s" already exists!' % name))
+                    continue
+                template = models.Template.objects.create(name=name, description=description, resolution=mitigation,
+                                                          ease_of_resolution="undetermined")
+                models.Reference.objects.create(name="CWE-%s" % cwe_id, template=template)
                 if weakness.find('References', self.namespaces):
                     for reference in weakness.findall('.//References/Reference', self.namespaces):
                         if not reference.get('External_Reference_ID'):
                             continue
-                        references.append(
-                            self.find_external_reference(root, reference.get('External_Reference_ID'))
-                        )
-                references = '\n'.join(references)
-                if models.Template.objects.filter(name=name).exists():
-                    self.stdout.write(self.style.WARNING('Template "%s" already exists!' % name))
-                    continue
-                models.Template.objects.create(name=name, description=description,
-                                               references=references, remediation=mitigation)
+                        models.Reference.objects.create(name=self.find_external_reference(
+                            root, reference.get("External_Reference_ID")), template=template)
                 import_counter += 1
         self.stdout.write(self.style.SUCCESS('Successfully imported/updated "%s" templates' % import_counter))

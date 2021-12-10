@@ -26,11 +26,12 @@ class Nuclei(ToolResultParser):
                 if ip:
                     host, _created = self._get_or_create_host(ip, project, creator)
                     if parsed_url.port:
-                        service, _created = self._get_or_create_service(host, parsed_url.scheme, parsed_url.port)
+                        service, _created = self._get_or_create_service(host, parsed_url.scheme, parsed_url.port,
+                                                                        project, creator)
                     elif parsed_url.scheme and parsed_url.scheme == "https":
-                        service, _created = self._get_or_create_service(host, "https", 443)
+                        service, _created = self._get_or_create_service(host, "https", 443, project, creator)
                     else:
-                        service, _created = self._get_or_create_service(host, "http", 80)
+                        service, _created = self._get_or_create_service(host, "http", 80, project, creator)
                     # TODO: import curl-command
                     self._get_or_create_vulnerability(
                         name, description, "Imported from nuclei", "Imported from nuclei",

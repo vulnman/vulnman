@@ -49,11 +49,11 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
         # this one is ugly. use API!!!
         context = super().get_context_data(**kwargs)
         context['severity_vulns_count'] = [
-            self.get_object().vulnerability_set.filter(cvss_base_score__gte=9.0, cvss_base_score__lte=10.0).count(),
-            self.get_object().vulnerability_set.filter(cvss_base_score__gte=7.0, cvss_base_score__lte=8.9).count(),
-            self.get_object().vulnerability_set.filter(cvss_base_score__gte=4.0, cvss_base_score__lte=6.9).count(),
-            self.get_object().vulnerability_set.filter(cvss_base_score__gte=0.1, cvss_base_score__lte=3.9).count(),
-            self.get_object().vulnerability_set.filter(cvss_base_score=0.0).count()
+            self.get_object().vulnerability_set.filter(cvss_score__gte=9.0, cvss_score__lte=10.0).count(),
+            self.get_object().vulnerability_set.filter(cvss_score__gte=7.0, cvss_score__lte=8.9).count(),
+            self.get_object().vulnerability_set.filter(cvss_score__gte=4.0, cvss_score__lte=6.9).count(),
+            self.get_object().vulnerability_set.filter(cvss_score__gte=0.1, cvss_score__lte=3.9).count(),
+            self.get_object().vulnerability_set.filter(cvss_score=0.0).count()
         ]
         context['severity_labels'] = list(settings.SEVERITY_COLORS.keys())
         context['severity_background_colors'] = []

@@ -2,6 +2,7 @@ from django.test import TestCase
 from vulnman.tests.mixins import VulnmanTestMixin
 from apps.external_tools.parsers.gobuster import GobusterDir
 from apps.networking.models import Service
+from apps.findings.models import Finding
 
 
 class GobusterDirTestCase(TestCase, VulnmanTestMixin):
@@ -35,5 +36,5 @@ http://testphp.vulnweb.com/cart.php             (Status: 200) [Size: 4903]
         gobuster = GobusterDir().parse(results, project, self.user1)
         self.assertEqual(project.host_set.count(), 1)
         self.assertEqual(Service.objects.filter(port=80).count(), 1)
-        self.assertEqual(project.webapplicationurlpath_set.filter(status_code=200).count(), 1)
-        self.assertEqual(project.webapplicationurlpath_set.filter(status_code=301).count(), 1)
+        self.assertEqual(Finding.objects.count(), 2)
+        self.assertEqual(Finding.objects.filter(data__contains="admin").count(), 1)

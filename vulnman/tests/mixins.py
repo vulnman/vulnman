@@ -106,10 +106,11 @@ class VulnmanAPITestMixin(VulnmanTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
 
-    def _test_project_createview(self, lazy_url, payload, obj_class, project_creator_field="project__creator"):
+    def _test_project_createview(self, lazy_url, payload, obj_class, project_creator_field="project__creator",
+                                 format='json'):
         url = self.get_url(lazy_url)
         self.client.logout()
-        response = self.client.post(url, payload)
+        response = self.client.post(url, payload, format=format)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(obj_class.objects.count(), 0)
         project1 = self._create_project("testprojectcreateview", creator=self.user1)
@@ -119,12 +120,12 @@ class VulnmanAPITestMixin(VulnmanTestMixin):
         payload[project_field] = str(project1.pk)
         filter_data = {project_field: str(project1.pk)}
         self.client.force_login(self.user1)
-        response = self.client.post(url, payload)
+        response = self.client.post(url, payload, format=format)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(obj_class.objects.filter(**filter_data).count(), 1)
         # test to create object to foreign project
         payload[project_field] = str(project2.pk)
-        response = self.client.post(url, payload)
+        response = self.client.post(url, payload, format=format)
         self.assertEqual(response.status_code, 403)
 
     def _test_project_deleteview(self, lazy_url, obj_class, project_creator_field="project__creator"):

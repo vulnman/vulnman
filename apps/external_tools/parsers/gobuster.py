@@ -2,7 +2,6 @@ import socket
 import re
 from urllib.parse import urlparse
 from vulnman.utils.tools import ToolResultParser
-from vulns.models import WebApplicationUrlPath
 
 
 # vhost plugin
@@ -17,7 +16,7 @@ class GobusterVhost(ToolResultParser):
                     print("Could not resolve subdomain %s" % subdomain)
                     continue
                 host, _created = self._get_or_create_host(host_ip, project, creator)
-                self._get_or_create_hostname(subdomain, host)
+                self._get_or_create_hostname(subdomain, host, project, creator)
 
 
 # dir plugin
@@ -34,18 +33,19 @@ class GobusterDir(ToolResultParser):
                 try:
                     host_ip = socket.gethostbyname(parsed.hostname)
                     host, _created = self._get_or_create_host(host_ip, project, creator)
-                    hostname, _created = self._get_or_create_hostname(parsed.hostname, host)
+                    hostname, _created = self._get_or_create_hostname(parsed.hostname, host, project, creator)
                     if not parsed.port:
                         if parsed.scheme == "https":
-                            service, _created = self._get_or_create_service(host, "https", 443)
+                            service, _created = self._get_or_create_service(host, "https", 443, project, creator)
                         else:
-                            service, _created = self._get_or_create_service(host, "http", 80)
+                            service, _created = self._get_or_create_service(host, "http", 80, project, creator)
                     else:
-                        service, _created = self._get_or_create_service(host, parsed.scheme, parsed.port)
-                    status_code = re.search(r"(Status: )([\d]+)", line).group(2)
-                    webapp_url, _created = WebApplicationUrlPath.objects.get_or_create(
-                        service=service, hostname=hostname, project=project, status_code=status_code,
-                        full_url=url_path[0], path=parsed.path, defaults={'creator': creator})
+                        service, _created = self._get_or_create_service(host, parsed.scheme, parsed.port,
+                                                                        project, creator)
+                    reproduce = "curl %s" % url_path[0]
+                    self._get_or_create_finding("Found Web Path", parsed.path, project, creator,
+                                                additional_information=line.replace("\n", ""), reproduce=reproduce,
+                                                host=host, service=service, hostname=hostname)
                 except socket.error:
                     print("Could not resolve subdomain %s" % parsed.hostname)
                     continue
@@ -64,4 +64,4 @@ class GobusterDNS(ToolResultParser):
             ip = self._resolve(item[1])
             if ip:
                 host, _created = self._get_or_create_host(ip, project, creator)
-                _hostname, _created = self._get_or_create_hostname(item[1], host)
+                _hostname, _created = self._get_or_create_hostname(item[1], host, project, creator)
