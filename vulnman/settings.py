@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     # apps already restructured
     'apps.api.apps.ApiConfig',
     'apps.account.apps.AccountConfig',
-    'apps.webapps.apps.WebappsConfig',
     'apps.external_tools.apps.ExternalToolsConfig',
     'apps.reporting.apps.ReportingConfig',
     'apps.projects.apps.ProjectsConfig',

@@ -23,6 +23,8 @@ Current Available Tools
 
 .. autoclass:: apps.external_tools.parsers.infoga.Infoga
 
+.. autoclass:: apps.external_tools.parsers.burpsuite.BurpSuiteProXML
+
 
 API
 ===

@@ -55,8 +55,8 @@ class ToolResultParser(object):
         :param status: status of the service (default: "open")
         :return: instance of :class:`~vulns.models.Host`
         """
-        return Service.objects.get_or_create(host=host, name=name, port=port, protocol=protocol, status=status,
-                                             banner=banner, project=project, defaults={"creator": creator})
+        return Service.objects.get_or_create(host=host, name=name, port=port, protocol=protocol, project=project,
+                                             defaults={"creator": creator, "status": status, "banner": banner})
 
     def _get_or_create_finding(self, name, data, project, creator, additional_information=None, reproduce=None,
                                host=None, service=None, hostname=None):

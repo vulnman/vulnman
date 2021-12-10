@@ -3,6 +3,7 @@ import base64
 import re
 from urllib.parse import urlparse
 from vulnman.utils.tools import ToolResultParser
+from vulnman.utils.markdown import html_to_md
 
 
 SEVERITY_MAP = {
@@ -15,6 +16,9 @@ SEVERITY_MAP = {
 
 
 class BurpSuiteProXML(ToolResultParser):
+    """
+    Plugin to parse BurpSuite Pro XML reports
+    """
     def parse(self, result, project, creator):
         root = ET.fromstring(result)
         for issue in root.findall("issue"):
@@ -38,22 +42,21 @@ class BurpSuiteProXML(ToolResultParser):
             }
             if "parameter" in issue.find("location").text:
                 issue_detail_dict["parameter"] = re.search(r"(\[)(.*)(\s)", issue.find('location').text).group(2)
-            issue_detail_str = "The vulnerability was found at %s" % issue.find("location").text
             if issue.find("issueBackground") is not None:
-                description += issue.find("issueBackground").text.replace("<p>", "").replace(
-                    "<br>", "\n").replace("</p>", "\n")
+                description += html_to_md(issue.find("issueBackground").text.replace("<p>", "").replace(
+                    "<br>", "\n").replace("</p>", "\n"))
             if issue.find("remediationBackground") is not None:
-                resolution += issue.find("remediationBackground").text.replace("<p>", "").replace(
-                    "<br>", "\n").replace("</p>", "\n")
+                resolution += html_to_md(issue.find("remediationBackground").text.replace("<p>", "").replace(
+                    "<br>", "\n").replace("</p>", "\n"))
             if issue.find("remediationDetail") is not None:
-                resolution += issue.find("remediationDetail").text.replace("<p>", "").replace(
-                    "<br>", "\n").replace("</p>", "\n")
+                resolution += html_to_md(issue.find("remediationDetail").text.replace("<p>", "").replace(
+                    "<br>", "\n").replace("</p>", "\n"))
             if issue.find("issueDetail") is not None:
-                issue_detail_dict["data"] = issue.find("issueDetail").text.replace("<p>", "").replace(
-                    "<br>", "\n").replace("</p>", "\n")
+                issue_detail_dict["data"] = html_to_md(issue.find("issueDetail").text.replace("<p>", "").replace(
+                    "<br>", "\n").replace("</p>", "\n"))
             cvss_score = SEVERITY_MAP.get(issue.find("severity").text)
-            vulnerability, created = self._get_or_create_vulnerability(name, description, cvss_score,
-                                                                       resolution, project, creator,
+            vulnerability, created = self._get_or_create_vulnerability(name, html_to_md(description), cvss_score,
+                                                                       html_to_md(resolution), project, creator,
                                                                        host=host, service=service,
                                                                        details_data=issue_detail_dict)
             # TODO: handle references

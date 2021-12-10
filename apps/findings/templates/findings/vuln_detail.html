@@ -83,24 +83,35 @@
         <div id="details" class="tab-pane fade" role="tabpanel">
             <div class="container-fluid mt-3">
                 <p><strong>CVSS-Vector: </strong></p>
+                {% if vuln.cvss_string %}
                 <p>{{ vuln.cvss_string }}</p>
-
-                <p><strong>Impact: </strong></p>
-                <p>{{ vuln.impact | md_to_html }}</p>
-
-                <p><strong>Remediation: </strong></p>
-                {% if vuln.template %}
-                    <p>{{ vuln.template.remediation | md_to_html }}</p>
                 {% else %}
-                    <p>{{ vuln.remediation | md_to_html }}</p>
+                    <p>-</p>
+                {% endif %}
+                {% if vuln.vulnerabilitydetails %}
+                    <p><strong>Details</strong></p>
+                    <p>{{ vuln.vulnerabilitydetails.data|md_to_html }}</p>
+                    {% if vuln.vulnerabilitydetails.path %}
+                        <p><strong>Path</strong></p>
+                        <p>{{ vuln.vulnerabilitydetails.path }}</p>
+                    {% endif %}
+                    {% if vuln.vulnerabilitydetails.parameter %}
+                        <p><strong>Parameter</strong></p>
+                        <p>{{ vuln.vulnerabilitydetails.parameter }}</p>
+                    {% endif %}
                 {% endif %}
 
-                <p><strong>References: </strong></p>
-                <ul>
-                    {% for reference in vuln.get_references_as_list %}
-                        <li>{{ reference }}</li>
-                    {% endfor %}
-                </ul>
+                <p><strong>Resolution: </strong></p>
+                <p>{{ vuln.resolution | md_to_html }}</p>
+
+                {% if vuln.reference_set.all %}
+                    <p><strong>References: </strong></p>
+                    <ul>
+                        {% for reference in vuln.get_references_as_list %}
+                            <li>{{ reference }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
         </div>
 

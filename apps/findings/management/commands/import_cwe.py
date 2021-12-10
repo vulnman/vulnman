@@ -20,7 +20,7 @@ class Command(BaseCommand):
         elif reference.find('Title', self.namespaces):
             return "'%s' by %s" % (reference.find('Title', self.namespaces).text,
                                    reference.find('Author', self.namespaces).text)
-        return reference.text
+        return reference.text.replace("\n", "").replace("\t", "").lstrip()
 
     def handle(self, *args, **options):
         import_counter = 0
@@ -78,7 +78,8 @@ class Command(BaseCommand):
                     for reference in weakness.findall('.//References/Reference', self.namespaces):
                         if not reference.get('External_Reference_ID'):
                             continue
-                        models.Reference.objects.create(name=self.find_external_reference(
-                            root, reference.get("External_Reference_ID")), template=template)
+                        name = self.find_external_reference(root, reference.get("External_Reference_ID"))
+                        if len(name) > 1:
+                            models.Reference.objects.create(name=name, template=template)
                 import_counter += 1
         self.stdout.write(self.style.SUCCESS('Successfully imported/updated "%s" templates' % import_counter))
