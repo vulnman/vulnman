@@ -1,7 +1,6 @@
 import socket
-from django.core.exceptions import ImproperlyConfigured
 from apps.networking.models import Host, Hostname, Service
-from vulns.models import Vulnerability
+from apps.findings.models import Finding, Vulnerability
 
 
 class ToolResultParser(object):
@@ -37,16 +36,16 @@ class ToolResultParser(object):
         """
         return Host.objects.get_or_create(ip=ip, project=project, defaults={'creator': creator})
 
-    def _get_or_create_hostname(self, name, host):
+    def _get_or_create_hostname(self, name, host, project, creator):
         """
         get or create a :class:`~vulns.models.Hostname`
         :param name: hostname
         :param host: the host this hostname belongs to
         :return: instance of :class:`~vulns.models.Hostname`
         """
-        return Hostname.objects.get_or_create(host=host, name=name, project=host.project)
+        return Hostname.objects.get_or_create(host=host, name=name, project=project, defaults={"creator": creator})
 
-    def _get_or_create_service(self, host, name, port, protocol="tcp", status="open", banner=None):
+    def _get_or_create_service(self, host, name, port, project, creator, protocol="tcp", status="open", banner=None):
         """
 
         :param host: the host this service is running on
@@ -57,15 +56,22 @@ class ToolResultParser(object):
         :return: instance of :class:`~vulns.models.Host`
         """
         return Service.objects.get_or_create(host=host, name=name, port=port, protocol=protocol, status=status,
-                                             banner=banner, project=host.project)
+                                             banner=banner, project=project, defaults={"creator": creator})
 
-    def _get_or_create_vulnerability(self, name, description, impact, remediation, references, project,
-                                     host=None, service=None, cvss_string=None, cvss_base_score=None):
-        return Vulnerability.objects.get_or_create(project=project, host=host, service=service, name=name,
-                                                   description=description,
-                                                   defaults={'impact': impact, 'remediation': remediation,
-                                                             'references': references, 'cvss_string': cvss_string,
-                                                             'cvss_base_score': cvss_base_score})
+    def _get_or_create_finding(self, name, data, project, creator, additional_information=None, reproduce=None,
+                               host=None, service=None, hostname=None):
+        return Finding.objects.get_or_create(project=project, name=name, data=data,
+                                             additional_information=additional_information,
+                                             steps_to_reproduce=reproduce, hostname=hostname, service=service,
+                                             host=host, defaults={"creator": creator})
+
+    #def _get_or_create_vulnerability(self, name, description, impact, remediation, references, project,
+    #                                 host=None, service=None, cvss_string=None, cvss_base_score=None):
+    #    return Vulnerability.objects.get_or_create(project=project, host=host, service=service, name=name,
+    #                                               description=description,
+    #                                               defaults={'impact': impact, 'remediation': remediation,
+    #                                                         'references': references, 'cvss_string': cvss_string,
+    #                                                         'cvss_base_score': cvss_base_score})
 
     def _resolve(self, hostname: str):
         """

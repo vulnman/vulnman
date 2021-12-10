@@ -21,8 +21,11 @@ urlpatterns = [
     # command
     path('methodologies/', include('apps.methodologies.urls.projects')),
 
+    # findings
+    path('findings/', include('apps.findings.urls.projects')),
+
     # vulns app
-    path('vulns/', include('vulns.urls')),
+    # path('vulns/', include('vulns.urls')),
 
     # tools
     path('tools/', include('apps.external_tools.urls')),

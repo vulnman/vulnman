@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'dry_rest_permissions',
-    'vulns.apps.VulnsConfig',
+    # 'vulns.apps.VulnsConfig',
     # apps already restructured
     'apps.api.apps.ApiConfig',
     'apps.account.apps.AccountConfig',

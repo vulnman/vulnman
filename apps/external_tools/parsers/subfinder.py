@@ -11,4 +11,4 @@ class Subfinder(ToolResultParser):
             resolved_ip = self._resolve(line)
             if resolved_ip:
                 host, _created = self._get_or_create_host(resolved_ip, project, creator)
-                _hostname, _created = self._get_or_create_hostname(line.replace("\n", ""), host)
+                _hostname, _created = self._get_or_create_hostname(line.replace("\n", ""), host, project, creator)

@@ -25,7 +25,7 @@
                     <li class="nav-item">
 
                         <a class="nav-link {% if request.resolver_match.view_name == 'projects:vulns:vuln-list' %}active{% endif %}"
-                           href="{% url 'projects:vulns:vuln-list' %}">Vulnerabilities</a>
+                           href="{% url 'projects:findings:vulnerability-list' %}">Vulnerabilities</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.view_name == 'projects:reporting:report-list' %}active{% endif %}"
