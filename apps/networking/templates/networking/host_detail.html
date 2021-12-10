@@ -59,8 +59,8 @@
     <ul class="nav nav-tabs nav-fill" role="tablist">
         <li class="nav-item" role="presentation"><a class="nav-link active" data-bs-toggle="tab" href="#services"
                                                     aria-controls="services">Services</a></li>
-        <li class="nav-item" role="presentation"><a class="nav-link" data-bs-toggle="tab" href="#webapps"
-                                                    aria-controls="webapps">Web Applications</a></li>
+        <li class="nav-item" role="presentation"><a class="nav-link" data-bs-toggle="tab" href="#findings"
+                                                    aria-controls="findings">Findings</a></li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" data-bs-toggle="tab" href="#vulns" aria-controls="vulns">Vulnerabilities</a>
         </li>
@@ -93,49 +93,31 @@
                 </table>
             </div>
         </div>
-        <div id="webapps" class="tab-pane fade" role="tabpanel">
+        <div id="findings" class="tab-pane fade" role="tabpanel">
             <div class="container-fluid mt-3">
-                <h3>Web Application Sitemap</h3>
+                <h3>Findings</h3>
                 <hr/>
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
                     <tr>
+                        <th>Name</th>
+                        <th>Data</th>
+                        <th>Service</th>
                         <th>Hostname</th>
-                        <th>Path</th>
-                        <th>Status Code</th>
-                        <th>Web Application</th>
+                        <th>Steps to reproduce</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for service in host.service_set.all %}
-                        {% for webapp_url in service.webapplicationurlpath_set.all %}
-                            <tr>
-                                <td>{{ webapp_url.hostname.name }}</td>
-                                <td>{{ webapp_url.path }}</td>
-                                <td>{{ webapp_url.status_code }}</td>
-                                {% if webapp_url.web_application %}
-                                    <td>{{ webapp_url.web_application }}</td>
-                                {% else %}
-                                    <td>-</td>
-                                {% endif %}
-                                <td>
-                                    <div class="dropdown">
-                                        <a class="btn btn-sm btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="webapp-{{ webapp.pk }}-action-dropdown"
-                                           data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fa fa-ellipsis-v"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end"
-                                            aria-labelledby="webapp-{{ webapp.pk }}-action-dropdown">
-                                            <li><a class="dropdown-item" href="{% url 'projects:vulns:webapp-url-add-webapp' webapp_url.pk %}">Add
-                                                Webapp</a></li>
-                                        </ul>
-                                    </div>
-
-                                </td>
-                            </tr>
-                        {% endfor %}
+                    {% for finding in host.finding_set.all %}
+                        <tr>
+                            <td>{{ finding.name }}</td>
+                            <td>{{ finding.data }}</td>
+                            <td>{{ finding.service }}</td>
+                            <td>{{ finding.hostname }}</td>
+                            <td>{{ finding.steps_to_reproduce }}</td>
+                            <td>{% include 'components/actions_dropdown.html' with obj=finding btn_small=True %}</td>
+                        </tr>
                     {% endfor %}
                     </tbody>
                 </table>

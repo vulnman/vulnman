@@ -26,14 +26,24 @@ class Vulnerability(VulnmanProjectModel):
         return self.name
 
     def get_scores(self):
+        if self.cvss_score:
+            return [self.cvss_score, self.cvss_score, self.cvss_score]
         if not self.cvss_vector:
             return [0.0, 0.0, 0.0]
         return cvss.CVSS3(self.cvss_vector).scores()
 
     def get_severities(self):
-        if not self.cvss_vector:
-            return ["None", "None", "None"]
-        return cvss.CVSS3(self.cvss_vector).severities()
+        if self.cvss_vector:
+            return cvss.CVSS3(self.cvss_vector).severities()
+        if self.cvss_score >= 9.0:
+            return ["Critical", "Critical", "Critical"]
+        elif self.cvss_score >= 7.0:
+            return ["High", "High", "High"]
+        elif self.cvss_score >= 4.0:
+            return ["Medium", "Medium", "Medium"]
+        elif self.cvss_score >= 0.1:
+            return ["Low", "Low", "Low"]
+        return ["None", "None", "None"]
 
     def get_severity_colors(self):
         return settings.SEVERITY_COLORS[self.get_severities()[0]]

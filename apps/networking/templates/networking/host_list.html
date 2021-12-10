@@ -22,33 +22,39 @@ Hosts
         </div>
     </div>
 
-    <div class="list-group mt-3">
-        {% for host in hosts %}
-            <a href="{% url 'projects:networking:host-detail' host.pk %}" class="list-group-item list-group-item-action">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="float-start">
-                            {{ host }}
-                            {% if host.is_online %}
-                                <i class="fa fa-circle text-success"></i>
-                            {% else %}
-                                <i class="fa fa-circle text-danger"></i>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="float-start">
-                            <small><i>{{ host.get_hostnames }}</i></small>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        {% empty %}
-            <span class="list-group-item">No hosts yet!</span>
-        {% endfor %}
-    </div>
+    <table class="table table-striped table-hover table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>IP</th>
+                <th>Operating System</th>
+                <th>Hostnames</th>
+                <th>Services</th>
+                <th>Findings</th>
+                <th>Vulnerabilities</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for host in hosts %}
+                <tr>
+                    <td><a href="{{ host.get_absolute_url }}">{{ host.ip }}</a></td>
+                    <td>{{ host.os }}</td>
+                    <td>{{ host.get_hostnames }}</td>
+                    <td>{{ host.service_set.count }}</td>
+                    <td>{{ host.finding_set.count }}</td>
+                    <td>{{ host.vulnerability_set.count }}</td>
+                    <td>
+                        {% if host.is_online %}
+                        <i class="fa fa-circle text-success"></i>
+                        {% else %}
+                            <i class="fa fa-circle text-danger"></i>
+                        {% endif %}
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     {% include 'navigation/pagination.html' %}
 
