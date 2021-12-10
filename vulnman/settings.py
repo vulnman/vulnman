@@ -211,6 +211,7 @@ EXTERNAL_TOOLS = {
     "fierce": "apps.external_tools.parsers.fierce.Fierce",
     "infoga": "apps.external_tools.parsers.infoga.Infoga",
     "nuclei": "apps.external_tools.parsers.nuclei.Nuclei",
+    "burpsuite-pro": "apps.external_tools.parsers.burpsuite.BurpSuiteProXML"
 }
 
 HOST_OS_ICONS = {

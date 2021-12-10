@@ -1,6 +1,6 @@
 import socket
 from apps.networking.models import Host, Hostname, Service
-from apps.findings.models import Finding, Vulnerability
+from apps.findings.models import Finding, Vulnerability, VulnerabilityDetails
 
 
 class ToolResultParser(object):
@@ -65,13 +65,31 @@ class ToolResultParser(object):
                                              steps_to_reproduce=reproduce, hostname=hostname, service=service,
                                              host=host, defaults={"creator": creator})
 
-    #def _get_or_create_vulnerability(self, name, description, impact, remediation, references, project,
-    #                                 host=None, service=None, cvss_string=None, cvss_base_score=None):
-    #    return Vulnerability.objects.get_or_create(project=project, host=host, service=service, name=name,
-    #                                               description=description,
-    #                                               defaults={'impact': impact, 'remediation': remediation,
-    #                                                         'references': references, 'cvss_string': cvss_string,
-    #                                                         'cvss_base_score': cvss_base_score})
+    def _get_or_create_vulnerability(self, name, description, cvss_score, resolution, project,
+                                     creator, ease_of_resolution="undetermined", host=None, service=None,
+                                     details_data=None):
+        if details_data:
+            filter_data = {}
+            for key, value in details_data.items():
+                filter_data["vulnerabilitydetails__%s" % key] = value
+            filter_data.update({"name": name, "description": description,
+                                "project": project, "host": host, "service": service})
+            if Vulnerability.objects.filter(**filter_data).exists():
+                vulnerability = Vulnerability.objects.get(**filter_data)
+                return vulnerability, False
+            else:
+                vulnerability = Vulnerability.objects.create(creator=creator, ease_of_resolution=ease_of_resolution,
+                                                             cvss_score=cvss_score, resolution=resolution,
+                                                             project=project, name=name, description=description,
+                                                             host=host, service=service)
+                details = VulnerabilityDetails.objects.create(vulnerability=vulnerability, project=project,
+                                                              creator=creator, **details_data)
+                return vulnerability, True
+
+        return Vulnerability.objects.get_or_create(project=project, host=host, service=service, name=name,
+                                                   description=description, resolution=resolution,
+                                                   defaults={"creator": creator, "cvss_score": cvss_score,
+                                                             "ease_of_resolution": ease_of_resolution})
 
     def _resolve(self, hostname: str):
         """
