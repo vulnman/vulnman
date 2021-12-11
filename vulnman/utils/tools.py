@@ -1,6 +1,7 @@
 import socket
 from apps.networking.models import Host, Hostname, Service
 from apps.findings.models import Finding, Vulnerability, VulnerabilityDetails
+from apps.findings.constants import VULNERABILITY_SEVERITY_MAP
 
 
 class ToolResultParser(object):
@@ -55,8 +56,9 @@ class ToolResultParser(object):
         :param status: status of the service (default: "open")
         :return: instance of :class:`~vulns.models.Host`
         """
-        return Service.objects.get_or_create(host=host, name=name, port=port, protocol=protocol, project=project,
-                                             defaults={"creator": creator, "status": status, "banner": banner})
+        return Service.objects.get_or_create(host=host, port=port, protocol=protocol, project=project,
+                                             defaults={"creator": creator, "status": status, "banner": banner,
+                                                       "name": name})
 
     def _get_or_create_finding(self, name, data, project, creator, additional_information=None, reproduce=None,
                                host=None, service=None, hostname=None):
@@ -102,3 +104,7 @@ class ToolResultParser(object):
             return socket.gethostbyname(hostname)
         except socket.gaierror:
             return None
+
+    def _get_score_by_severity(self, severity):
+        severity = severity.lower()
+        return VULNERABILITY_SEVERITY_MAP.get(severity)

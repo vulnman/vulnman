@@ -36,6 +36,7 @@ class CredentialCreate(generic.ProjectCreateView):
     template_name = "social/credential_create.html"
     allowed_project_roles = ["pentester"]
     form_class = forms.CredentialForm
+    success_url = reverse_lazy("projects:social:credential-list")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

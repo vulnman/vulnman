@@ -43,7 +43,7 @@ class Vulnerability(VulnmanProjectModel):
             return ["Medium", "Medium", "Medium"]
         elif self.cvss_score >= 0.1:
             return ["Low", "Low", "Low"]
-        return ["None", "None", "None"]
+        return ["Information", "Information", "Information"]
 
     def get_severity_colors(self):
         return settings.SEVERITY_COLORS[self.get_severities()[0]]
