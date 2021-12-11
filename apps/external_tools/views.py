@@ -8,11 +8,16 @@ from apps.external_tools import forms
 class ToolImportReport(generic.ProjectFormView):
     form_class = forms.ToolReportImportForm
     template_name = "external_tools/tool_import_report.html"
+    valid_report_content_types = ["application/json"]
 
     def form_valid(self, form):
         tool = form.cleaned_data['tool']
         tool_module = import_string(settings.EXTERNAL_TOOLS[tool])
         if "text/" in form.cleaned_data['file'].content_type:
+            content = form.cleaned_data['file'].read().decode()
+            tool_instance = tool_module()
+            tool_instance.parse(content, self.get_project(), self.request.user)
+        elif form.cleaned_data["file"].content_type in self.valid_report_content_types:
             content = form.cleaned_data['file'].read().decode()
             tool_instance = tool_module()
             tool_instance.parse(content, self.get_project(), self.request.user)

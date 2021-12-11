@@ -8,5 +8,10 @@ FINDINGS_EASE_OF_RESOLUTIONS = [
 ]
 
 VULNERABILITY_SEVERITY_MAP = {
-    ""
+    "critical": 9.0,
+    "high": 7.0,
+    "medium": 4.0,
+    "low": 2.0,
+    "info": 0.0,
+    "information": 0.0
 }

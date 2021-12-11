@@ -5,7 +5,9 @@ from apps.findings.api.v1 import views as findings_views
 from apps.methodologies.api.v1 import views as methodologies_views
 from apps.agents.api.v1 import views as agent_views
 from apps.commands.api.v1 import views as commands_views
+from apps.social.api.v1 import views as social_views
 from apps.api.swagger import swagger_urls
+
 
 
 app_name = "v1"
@@ -21,6 +23,7 @@ router.register("vulnerabilities/templates", findings_views.TemplateViewSet, bas
 router.register("vulnerabilities/vulns", findings_views.VulnerabilityViewSet, basename="vulnerability")
 router.register("methodologies", methodologies_views.MethodologyViewSet, basename="methodology")
 router.register("commands/templates", commands_views.CommandTemplateViewSet, basename="command-template")
+router.register("credentials", social_views.CredentialViewSet, basename="credential")
 
 # Agent URLs
 router.register("agents/queues", agent_views.AgentQueueViewSet, basename="agent-queue")

@@ -195,7 +195,8 @@ SEVERITY_COLORS = {
     'High': {'hex': 'd13c0f', 'chart_border': 'rgba(209, 60, 15, 1)', 'chart': 'rgba(209, 60, 15, 0.2)'},
     'Medium': {'hex': 'e8971e', 'chart_border': 'rgba(232, 151, 30, 1)', 'chart': 'rgba(232, 151, 30, 0.2)'},
     'Low': {'hex': 'f5ee20', 'chart_border': 'rgba(245, 238, 32, 1)', 'chart': 'rgba(245, 238, 32, 0.2)'},
-    'None': {'hex': '0acc2a', 'chart_border': 'rgba(10, 204, 42, 1)', 'chart': 'rgba(10, 204, 42, 0.2)'}
+    'None': {'hex': '0acc2a', 'chart_border': 'rgba(10, 204, 42, 1)', 'chart': 'rgba(10, 204, 42, 0.2)'},
+    'Information': {'hex': '0acc2a', 'chart_border': 'rgba(10, 204, 42, 1)', 'chart': 'rgba(10, 204, 42, 0.2)'},
 }
 
 VULNMAN_CSS_THEME = "flatly"
@@ -210,7 +211,8 @@ EXTERNAL_TOOLS = {
     "fierce": "apps.external_tools.parsers.fierce.Fierce",
     "infoga": "apps.external_tools.parsers.infoga.Infoga",
     "nuclei": "apps.external_tools.parsers.nuclei.Nuclei",
-    "burpsuite-pro": "apps.external_tools.parsers.burpsuite.BurpSuiteProXML"
+    "burpsuite-pro": "apps.external_tools.parsers.burpsuite.BurpSuiteProXML",
+    "testssl": "apps.external_tools.parsers.testssl.TestSSL",
 }
 
 HOST_OS_ICONS = {

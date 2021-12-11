@@ -122,10 +122,12 @@ Advanced Topics
     :hidden:
 
     topics/agents
+    topics/advanced/rest_api
 
 :doc:`topics/agents`
     Talk about vulnman agents
-
+:doc:`topics/advanced/rest_api`
+    More about the REST-API
 
 
 Misc

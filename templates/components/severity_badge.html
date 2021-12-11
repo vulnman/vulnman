@@ -1,0 +1,73 @@
+<style>
+    .severity-critical {
+        --label-r: 156;
+        --label-g: 23;
+        --label-b: 32;
+        --label-h: 4;
+        --label-s: 74;
+        --label-l: 35;
+    }
+
+    .severity-high {
+        --label-r: 209;
+        --label-g: 60;
+        --label-b: 15;
+        --label-h: 14;
+        --label-s: 86;
+        --label-l: 43;
+    }
+
+    .severity-medium {
+        --label-r: 232;
+        --label-g: 151;
+        --label-b: 30;
+        --label-h: 36;
+        --label-s: 81;
+        --label-l: 51;
+    }
+
+    .severity-low {
+        --label-r: 245;
+        --label-g: 238;
+        --label-b: 32;
+        --label-h: 58;
+        --label-s: 91;
+        --label-l: 54;
+    }
+
+    .severity-information {
+        --label-r: 10;
+        --label-g: 204;
+        --label-b: 42;
+        --label-h: 130;
+        --label-s: 90;
+        --label-l: 42;
+    }
+
+    .severity-badge {
+
+        --lightness-threshold: 0.6;
+        --background-alpha: 0.18;
+        --border-alpha: 0.3;
+        --border-threshold: 0.96;
+        --perceived-lightness: calc(((var(--label-r) * 0.2126) + (var(--label-g) * 0.7152) + (var(--label-b) * 0.0722)) / 255);
+        --lightness-switch: max(0, min(calc((var(--perceived-lightness) - var(--lightness-threshold)) * -1000), 1));
+        --lighten-by: calc(((var(--lightness-threshold) - var(--perceived-lightness)) * 100) * var(--lightness-switch));
+
+        border-radius: 2em;
+        background: rgba(var(--label-r), var(--label-g), var(--label-b), var(--background-alpha));
+        border: 1px solid;
+        color: hsl(var(--label-h), calc(var(--label-s) * 1%), calc((var(--label-l) + var(--lighten-by)) * 1%));
+        border-color: hsla(var(--label-h), calc(var(--label-s) * 1%), calc((var(--label-l) + var(--lighten-by)) * 1%), var(--border-alpha));
+        display: inline-block;
+        padding: 0 7px;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 18px;
+        text-decoration: none;
+        box-sizing: border-box;
+        margin-left: 5px;
+    }
+</style>
+
+<span class="badge severity-badge severity-{{ obj.get_severities.0|lower }}">{{ obj.get_severities.0 }}</span>
