@@ -15,6 +15,11 @@ Hosts
 {% block content %}
 
     <div class="clearfix">
+        <div class="float-start">
+            <a class="btn btn-hover" id="host-bulk-delete" data-bs-toggle="modal" data-bs-target="#host-bulk-delete-modal">
+                <i class="fa fa-trash"></i>
+            </a>
+        </div>
         <div class="float-end">
             <a class="btn btn-primary" href="{% url 'projects:networking:host-create' %}">
                 <i class="fa fa-plus"></i> Create Host
@@ -22,9 +27,10 @@ Hosts
         </div>
     </div>
 
-    <table class="table table-striped table-hover table-bordered mt-3">
+    <table class="table table-striped table-hover table-bordered mt-3" id="host-table">
         <thead>
             <tr>
+                <th><input type="checkbox" class="checkbox" id="check-all-hosts"></th>
                 <th>IP</th>
                 <th>Operating System</th>
                 <th>Hostnames</th>
@@ -37,6 +43,7 @@ Hosts
         <tbody>
             {% for host in hosts %}
                 <tr>
+                    <td><input type="checkbox" class="checkbox" value="{{ host.pk }}"></td>
                     <td><a href="{{ host.get_absolute_url }}">{{ host.ip }}</a></td>
                     <td>{{ host.os }}</td>
                     <td>{{ host.get_hostnames }}</td>
@@ -57,5 +64,69 @@ Hosts
     </table>
 
     {% include 'navigation/pagination.html' %}
+
+    <div class="modal fade" id="host-bulk-delete-modal" tabindex="-1" aria-labelledby="host-bulk-delete" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Bulk Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    Some hosts and all their child objects are going to be deleted. Are you sure?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="delete_hosts()">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+
+    $("#check-all-hosts").change(function() {
+        if (this.checked) {
+            $("#host-table input:checkbox").each(function() {
+                this.checked=true;
+            });
+        } else {
+            $("#host-table input:checkbox").each(function() {
+                this.checked=false;
+            });
+        }
+    });
+
+    $(document).ready(function(){
+        $("#host-table input:checkbox").each(function(){
+            this.checked=false;
+        });
+    });
+
+    function delete_hosts(){
+        let all_checked = $('#host-table input:checkbox:checked');
+        all_checked.each(function(index, item){
+            let checkbox = $(this);
+           $.ajax({
+               url: "/api/v1/hosts/" + checkbox.val() + "/",
+               beforeSend: function(xhr){
+                 xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+               },
+               type: "DELETE",
+               success: function(result){
+                   checkbox.closest("tr").remove();
+                   let is_last_item = (index === all_checked.length - 1);
+                   if( is_last_item ){
+                       location.reload();
+                   }
+               }
+           });
+        });
+    }
+
+</script>
 
 {% endblock %}

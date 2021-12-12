@@ -199,7 +199,7 @@ SEVERITY_COLORS = {
     'Information': {'hex': '0acc2a', 'chart_border': 'rgba(10, 204, 42, 1)', 'chart': 'rgba(10, 204, 42, 0.2)'},
 }
 
-VULNMAN_CSS_THEME = "flatly"
+VULNMAN_CSS_THEME = "vulnman-dark"
 
 EXTERNAL_TOOLS = {
     "nmap": "apps.external_tools.parsers.nmap.NmapParser",
