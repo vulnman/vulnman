@@ -13,11 +13,8 @@ To change the CSS theme you need to change ``VULNMAN_CSS_THEME`` setting in your
 
 Built In Themes
 ===============
+- `vulnman-dark <https://github.com/blockomat2100/vulnman-css-theme>`_ (default)
 
 - `flatly <https://bootswatch.com/flatly>`_ (default)
-
-- `zephyr <https://bootswatch.com/zephyr>`_
-
-- `spacelab <https://bootswatch.com/spacelab>`_
 
 - `bootstrap-dark <https://github.com/vinorodrigues/bootstrap-dark-5>`_
