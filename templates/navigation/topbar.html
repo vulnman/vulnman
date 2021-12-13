@@ -36,6 +36,10 @@
                             href="{% url 'projects:social:credential-list' %}">Credentials</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:methodology:project-methodology-list' %}active{% endif %}"
+                            href="{% url 'projects:methodology:project-methodology-list' %}">Tasks</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.view_name == 'projects:external-tools:tool-import' %}active{% endif %}"
                            href="{% url 'projects:external-tools:tool-import' %}">Tool Import</a>
                     </li>

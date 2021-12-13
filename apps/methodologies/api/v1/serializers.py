@@ -32,3 +32,12 @@ class MethodologySerializer(serializers.ModelSerializer):
         else:
             methodology = models.Methodology.objects.create(**validated_data)
         return methodology
+
+
+class ProjectTaskStatusUpdateSerializer(serializers.ModelSerializer):
+    creator = serializers.StringRelatedField()
+
+    class Meta:
+        model = models.ProjectTask
+        fields = ["status", "creator"]
+        read_only_fields = ["creator"]

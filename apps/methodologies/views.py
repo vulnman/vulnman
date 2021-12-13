@@ -42,3 +42,55 @@ class MethodologyCreate(generic.VulnmanAuthCreateWithInlinesView):
     def form_valid(self, form):
         form.instance.creator = self.request.user
         return super().form_valid(form)
+
+
+class ProjectMethodologyList(generic.ProjectListView):
+    template_name = "methodologies/project_methodology_list.html"
+    context_object_name = "methodologies"
+    allowed_project_roles = ["pentester"]
+
+    def get_queryset(self):
+        return models.ProjectMethodology.objects.filter(project=self.get_project())
+
+
+class ProjectMethodologyDetail(generic.ProjectDetailView):
+    template_name = "methodologies/project_methodology_detail.html"
+    context_object_name = "methodology"
+    allowed_project_roles = ["pentester"]
+
+    def get_queryset(self):
+        return models.ProjectMethodology.objects.filter(project=self.get_project(), pk=self.kwargs.get('pk'))
+
+
+class ProjectMethodologyCreate(generic.ProjectCreateWithInlinesView):
+    template_name = "methodologies/project_methodology_create.html"
+    form_class = forms.ProjectMethodologyForm
+    inlines = [forms.ProjectTaskInline]
+    model = models.ProjectMethodology
+
+    def forms_valid(self, form, inlines):
+        response = self.form_valid(form)
+        for formset in inlines:
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.project = self.get_project()
+                instance.creator = self.request.user
+                instance.save()
+        return response
+
+
+class ProjectMethodologyDelete(generic.ProjectDeleteView):
+    http_method_names = ["post"]
+    model = models.ProjectMethodology
+    success_url = reverse_lazy('projects:methodology:project-methodology-list')
+    allowed_project_roles = ["pentester"]
+
+    def get_queryset(self):
+        return models.ProjectMethodology.objects.filter(project=self.get_project(), pk=self.kwargs.get('pk'))
+
+
+class ProjectMethodologyUpdate(generic.ProjectUpdateWithInlinesView):
+    template_name = "methodologies/project_methodology_create.html"
+    form_class = forms.ProjectMethodologyForm
+    inlines = [forms.ProjectTaskInline]
+    model = models.ProjectMethodology

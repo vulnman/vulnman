@@ -22,6 +22,7 @@ router.register("hostnames", networking_views.HostnameViewSet, basename="hostnam
 router.register("vulnerabilities/templates", findings_views.TemplateViewSet, basename="vulnerability-template")
 router.register("vulnerabilities/vulns", findings_views.VulnerabilityViewSet, basename="vulnerability")
 router.register("methodologies", methodologies_views.MethodologyViewSet, basename="methodology")
+router.register("project-tasks", methodologies_views.ProjectTaskViewSet, basename="project-task")
 router.register("commands/templates", commands_views.CommandTemplateViewSet, basename="command-template")
 router.register("credentials", social_views.CredentialViewSet, basename="credential")
 
