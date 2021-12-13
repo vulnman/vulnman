@@ -24,6 +24,7 @@ router.register("vulnerabilities/vulns", findings_views.VulnerabilityViewSet, ba
 router.register("methodologies", methodologies_views.MethodologyViewSet, basename="methodology")
 router.register("project-tasks", methodologies_views.ProjectTaskViewSet, basename="project-task")
 router.register("commands/templates", commands_views.CommandTemplateViewSet, basename="command-template")
+router.register("commands/histories", commands_views.CommandHistoryViewSet, basename="command-history")
 router.register("credentials", social_views.CredentialViewSet, basename="credential")
 
 # Agent URLs
