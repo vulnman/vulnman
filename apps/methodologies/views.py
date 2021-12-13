@@ -68,6 +68,11 @@ class ProjectMethodologyCreate(generic.ProjectCreateWithInlinesView):
     inlines = [forms.ProjectTaskInline]
     model = models.ProjectMethodology
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["from_template_form"] = forms.CreateProjectMethodologyFromTemplateForm()
+        return context
+
     def forms_valid(self, form, inlines):
         response = self.form_valid(form)
         for formset in inlines:
@@ -94,3 +99,21 @@ class ProjectMethodologyUpdate(generic.ProjectUpdateWithInlinesView):
     form_class = forms.ProjectMethodologyForm
     inlines = [forms.ProjectTaskInline]
     model = models.ProjectMethodology
+
+
+class ProjectMethodologyFromTemplateCreate(generic.ProjectFormView):
+    http_method_names = ["post"]
+    form_class = forms.CreateProjectMethodologyFromTemplateForm
+    allowed_project_roles = ["pentester"]
+    success_url = reverse_lazy("projects:methodology:project-methodology-list")
+
+    def form_valid(self, form):
+        methodology = form.cleaned_data["template"]
+        project_methodology = models.ProjectMethodology.objects.create(
+            name=methodology.name, description=methodology.description, project=self.get_project(),
+            creator=self.request.user)
+        for task in methodology.task_set.all():
+            project_task = models.ProjectTask.objects.create(name=task.name, project=self.get_project(),
+                                                             methodology=project_methodology,
+                                                             creator=self.request.user, description=task.description)
+        return super().form_valid(form)

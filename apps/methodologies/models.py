@@ -21,6 +21,9 @@ class Methodology(VulnmanModel):
     def get_absolute_delete_url(self):
         return reverse_lazy('methodology:methodology-delete', kwargs={'pk': self.pk})
 
+    def get_absolute_update_url(self):
+        return reverse_lazy('methodology:methodology-update', kwargs={'pk': self.pk})
+
     class Meta:
         ordering = ["-date_updated"]
 

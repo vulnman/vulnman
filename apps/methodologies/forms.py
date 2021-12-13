@@ -25,3 +25,10 @@ class ProjectTaskInline(InlineFormSetFactory):
     model = models.ProjectTask
     exclude = ["uuid", "creator", "project", "methodology"]
     factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 50}
+
+
+class CreateProjectMethodologyFromTemplateForm(forms.Form):
+    template = forms.ModelChoiceField(queryset=models.Methodology.objects.all())
+
+    class Meta:
+        fields = ["template"]

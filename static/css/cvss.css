@@ -163,7 +163,8 @@
     display: block;
     margin: 1px;
     margin-top: 0px;
-    background-color: #f7f7f4;
+    /*background-color: #f7f7f4;*/
+    background-color: #222;
     vertical-align: middle;
     transition: background-color 0.3s ease-in-out;
 }
@@ -291,7 +292,8 @@
 }
 
 .cvssjs dl dd label.results:hover {
-    background-color: white;
+    /*background-color: white;*/
+    background-color: #18bc9c;
 }
 
 .cvssjs .results sub {
