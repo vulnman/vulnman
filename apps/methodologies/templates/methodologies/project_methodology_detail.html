@@ -59,7 +59,7 @@
                 <div class="card-header">
                     <h3>To Do</h3>
                 </div>
-                <div class="card-body droppable" ondragover="allowDrop(event)" ondrop="drop(event)" id="todo">
+                <div class="card-body droppable" ondragover="allowDrop(event)" ondrop="drop(event, this)" id="todo">
                     {% for task in methodology.get_tasks_todo %}
                         <div class="card draggable mt-3" draggable="true" ondragstart="dragStart(event)"
                              id="{{ task.pk }}">
@@ -78,7 +78,7 @@
                 <div class="card-header">
                     <h3>In Progress</h3>
                 </div>
-                <div class="card-body droppable" ondragover="allowDrop(event)" ondrop="drop(event)" id="progress">
+                <div class="card-body droppable" ondragover="allowDrop(event)" ondrop="drop(event, this)" id="progress">
                     {% for task in methodology.get_tasks_progress %}
                         <div class="card draggable mt-3" draggable="true" ondragstart="dragStart(event)"
                              id="{{ task.pk }}">
@@ -96,7 +96,7 @@
                 <div class="card-header">
                     <h3>Done</h3>
                 </div>
-                <div class="card-body droppable" ondragover="allowDrop(event)" ondrop="drop(event)" id="done">
+                <div class="card-body droppable" ondragover="allowDrop(event)" ondrop="drop(event, this)" id="done">
                     {% for task in methodology.get_tasks_done %}
                         <div class="card draggable mt-3" draggable="true" ondragstart="dragStart(event)"
                              id="{{ task.pk }}">
@@ -116,7 +116,7 @@
 {% block extra_scripts %}
     <script>
         const dragStart = (event) => {
-            event.dataTransfer.setData("element_id", event.target.id);
+            event.dataTransfer.setData("text", event.target.id);
         }
 
         const allowDrop = (event) => {
@@ -124,15 +124,13 @@
             event.currentTarget.style.background = '#7f8082';
         }
 
-        const drop = (event) => {
+        const drop = (event, el) => {
             event.preventDefault();
-            const data = event.dataTransfer.getData("element_id");
+            const data = event.dataTransfer.getData("text");
             const element = document.getElementById(data);
             $('.droppable').css("background-color", "");
-            console.log(event.target.id);
-
             try {
-                event.target.appendChild(element);
+                el.appendChild(element)
                 $.ajax({
                     url: "/api/v1/project-tasks/" + data + "/status/",
                     beforeSend: function (xhr) {
@@ -141,7 +139,7 @@
                     type: "PATCH",
                     data: {"status": event.target.id.replace("#", "")},
                     success: function (result) {
-                        location.reload();
+                        // location.reload();
                     }
                 });
             } catch (error) {
