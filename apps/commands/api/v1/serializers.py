@@ -18,3 +18,12 @@ class CommandHistoryItemSerializer(serializers.ModelSerializer):
         model = models.CommandHistoryItem
         fields = '__all__'
         read_only_fields = ["creator", "uuid", "project", "agent", "date_created", "date_updated"]
+
+
+class CommandHistoryPushSerializer(serializers.ModelSerializer):
+    creator = serializers.StringRelatedField()
+
+    class Meta:
+        model = models.CommandHistoryItem
+        fields = ["command", "output", "exit_code", "project", "creator"]
+        read_only_fields = ["creator"]
