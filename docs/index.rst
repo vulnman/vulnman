@@ -53,6 +53,19 @@ Features
    :caption: Contents:
 
 
+Installation
+============
+
+.. toctree::
+    :caption: Installation
+    :hidden:
+
+    topics/components/server/installation
+
+:doc:`topics/components/server/installation`
+    Install instructions for the vulnman server.
+
+
 First Steps
 ===========
 
@@ -60,19 +73,26 @@ First Steps
     :caption: First Steps
     :hidden:
 
-    introduction/install
     introduction/configuration
-    introduction/maintenance
-    introduction/web_interface
+    introduction/update
 
-:doc:`introduction/install`
-    Install instructions for Vulnman.
 :doc:`introduction/configuration`
     List of settings.
-:doc:`introduction/maintenance`
+:doc:`introduction/update`
     Common tasks to keep vulnman up to date
-:doc:`introduction/web_interface`
-    Introduce how to use the web interface
+
+
+Component Usage
+===============
+
+.. toctree::
+    :caption: Component Usage
+    :hidden:
+
+    topics/components/server/usage
+
+:doc:`topics/components/server/usage`
+    How to use the vulnman server
 
 
 Vulnerability Management
@@ -121,10 +141,10 @@ Advanced Topics
     :caption: Advanced Topics
     :hidden:
 
-    topics/agents
+    topics/components/agents/usage
     topics/advanced/rest_api
 
-:doc:`topics/agents`
+:doc:`topics/components/agents/usage`
     Talk about vulnman agents
 :doc:`topics/advanced/rest_api`
     More about the REST-API

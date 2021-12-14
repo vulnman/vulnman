@@ -9,12 +9,12 @@ Vulnman is a vulnerability management web application written in Python using th
 
 
 ## Features
-Features are listed in the [documentation](https://blockomat2100.github.io/vulnman).
+Features are listed in the [documentation](https://vulnman.github.io/vulnman).
 
 ## Documentation
 
 ### Online
-The documentation can be found under [https://blockomat2100.github.io/vulnman](https://blockomat2100.github.io/vulnman).
+The documentation can be found under [https://vulnman.github.io/vulnman](https://vulnman.github.io/vulnman).
 
 *Note: The documentation is in a really early state!*
 
