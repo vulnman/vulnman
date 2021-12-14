@@ -14,7 +14,7 @@ Arch-Linux
 
 .. code-block:: bash
 
-    git clone https://vulnman.github.com/vulnman-cli.git
+    git clone https://github.com/vulnman/vulnman-cli.git
     cd vulnman-cli
     python setup.py install
 
