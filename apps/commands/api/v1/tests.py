@@ -38,3 +38,12 @@ class CommandTemplateTestCase(APITestCase, VulnmanAPITestMixin):
         self.client.force_login(self.user1)
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
+
+
+class CommandHistoryAPITestCase(APITestCase, VulnmanAPITestMixin):
+    def setUp(self):
+        self.init_mixin()
+
+    def test_history_push(self):
+        payload = {"command": "ping -c 1 1.1.1", "output": "test", "exit_code": 0}
+        self._test_project_createview("api:v1:command-history-push", payload, models.CommandHistoryItem)

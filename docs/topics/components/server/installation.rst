@@ -1,11 +1,11 @@
-.. _introduction-install:
+.. _server-install:
 
-************
-Installation
-************
+==============
+Install Server
+==============
 
 Requirements
-############
+============
 
 .. note::
     It is assumed, that you already have a working python environment.
@@ -32,7 +32,7 @@ Arch-Linux
 
 
 Run without Docker
-##################
+==================
 
 Prepare
 *******
@@ -102,7 +102,7 @@ Paste the following content into the `/etc/nginx/sites-enabled/vulnman.conf` fil
 
 
 Run using Docker Compose
-########################
+========================
 
 Adjust the credentials and paths in the ``docker-compose.yml`` file.
 

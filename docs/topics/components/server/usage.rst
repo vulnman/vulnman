@@ -1,28 +1,31 @@
-=============
+==============
+Vulnman Server
+==============
+
+This section will give a quick usage overview of the vulnman server.
+
+
 Web Interface
 =============
 
-This section will give a quick usage overview of the web interface.
-
-
 Dashboard
-=========
+*********
 
 Every project has a simple dashboard page.
 This page shows the project name, customer and some charts about your assessments progress.
 
-.. figure:: ../assets/webui/dashboard.png
+.. figure:: ../../../assets/webui/dashboard.png
   :width: 800
   :alt: Dashboard
 
-  Dashboard using the ``bootstrap-dark`` theme
+  Simple project dashboard
 
 
 Credentials
-===========
+***********
 You can manage credentials found during an assessment from within the web interface
 
-.. figure:: ../assets/webui/credentials.png
+.. figure:: ../../../assets/webui/credentials.png
     :width: 800
     :alt: Credentials view
 

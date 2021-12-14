@@ -7,6 +7,7 @@
 
 {% block extra_head %}
     <script src="{% static 'js/chart.min.js' %}"></script>
+    {% include 'components/timeline/style.html' %}
 {% endblock extra_head %}
 
 {% block breadcrumbs %}
@@ -107,6 +108,22 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <hr/>
+                <ul class="timeline">
+                    {% for command in project.get_latest_command_history %}
+                        {% if forloop.counter0|divisibleby:2 %}
+                            {% include 'components/timeline/item.html' with invert=True title=command.command icon=command.get_timeline_icon date_created=command.date_updated %}
+                        {% else %}
+                            {% include 'components/timeline/item.html' with title=command.title icon=command.get_timeline_icon date_created=command.date_updated %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>

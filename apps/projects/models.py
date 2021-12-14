@@ -39,6 +39,9 @@ class Project(models.Model):
             return True
         return False
 
+    def get_latest_command_history(self):
+        return self.commandhistoryitem_set.order_by("-date_updated")[:10]
+
     class Meta:
         ordering = ["-date_updated"]
 

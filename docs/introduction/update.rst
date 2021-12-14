@@ -1,12 +1,12 @@
-.. _introduction-maintenance:
+.. _introduction-update:
 
-===========
-Maintenance
-===========
+========
+Updating
+========
 
 
-How to update vulnman
-=====================
+Vulnman Server
+==============
 
 To update `vulnman` you just need to follow the steps in this section.
 
