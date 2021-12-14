@@ -8,7 +8,9 @@ class TestSSL(ToolResultParser):
     Example Command:
     ``testssl --json example.com:443``
     """
-    def parse(self, result, project, creator):
+    tool_name = "testssl"
+
+    def parse(self, result, project, creator, command=None):
         j = json.loads(result)
         service_name = "unknown"
         for item in j:
@@ -23,16 +25,20 @@ class TestSSL(ToolResultParser):
                 continue
             if len(item["ip"].split("/")) == 2 and item["ip"].split("/")[-1]:
                 host_ip = item["ip"].split("/")[1]
-                host, _created = self._get_or_create_host(host_ip, project, creator)
-                hostname, _created = self._get_or_create_hostname(item["ip"].split("/")[0], host, project, creator)
-                service, _created = self._get_or_create_service(host, service_name, item["port"], project, creator)
+                host, _created = self._get_or_create_host(host_ip, project, creator, command=command)
+                hostname, _created = self._get_or_create_hostname(item["ip"].split("/")[0], host, project, creator,
+                                                                  command=command)
+                service, _created = self._get_or_create_service(host, service_name, item["port"], project, creator,
+                                                                command=command)
                 vulnerability, _created = self._get_or_create_vulnerability(
                     item["id"], item["finding"],
                     self._get_score_by_severity(item["severity"]), "Disable cipher",
-                    project, creator, host=host, service=service)
+                    project, creator, host=host, service=service, command=command)
                 for ref in item.get("cve", "").split(" "):
                     if ref:
-                        Reference.objects.create(vulnerability=vulnerability, creator=creator, name=ref)
+                        Reference.objects.create(vulnerability=vulnerability, creator=creator, name=ref,
+                                                 command=command)
                 for ref in item.get("cwe", "").split(" "):
                     if ref:
-                        Reference.objects.create(vulnerability=vulnerability, creator=creator, name=ref)
+                        Reference.objects.create(vulnerability=vulnerability, creator=creator, name=ref,
+                                                 command=command)

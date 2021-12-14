@@ -19,21 +19,22 @@ class BurpSuiteProXML(ToolResultParser):
     """
     Plugin to parse BurpSuite Pro XML reports
     """
-    def parse(self, result, project, creator):
+    def parse(self, result, project, creator, command=None):
         root = ET.fromstring(result)
         for issue in root.findall("issue"):
             host_ip = issue.find("host").get("ip")
-            host, _created = self._get_or_create_host(host_ip, project, creator)
+            host, _created = self._get_or_create_host(host_ip, project, creator, command=command)
             host_url = issue.find("host").text
             parsed_url = urlparse(host_url)
             if parsed_url.port:
                 service, _created = self._get_or_create_service(
-                    host, parsed_url.scheme, parsed_url.port, project, creator)
+                    host, parsed_url.scheme, parsed_url.port, project, creator, command=command)
             elif parsed_url.scheme == "https":
-                service, _created = self._get_or_create_service(host, "https", 443, project, creator)
+                service, _created = self._get_or_create_service(host, "https", 443, project, creator, command=command)
             else:
-                service, _created = self._get_or_create_service(host, "http", 80, project, creator)
-            hostname, _created = self._get_or_create_hostname(parsed_url.hostname, host, project, creator)
+                service, _created = self._get_or_create_service(host, "http", 80, project, creator, command=command)
+            hostname, _created = self._get_or_create_hostname(parsed_url.hostname, host, project, creator,
+                                                              command=command)
             name = issue.find("name").text
             description = ""
             resolution = ""
@@ -57,7 +58,7 @@ class BurpSuiteProXML(ToolResultParser):
             cvss_score = SEVERITY_MAP.get(issue.find("severity").text)
             vulnerability, created = self._get_or_create_vulnerability(name, html_to_md(description), cvss_score,
                                                                        html_to_md(resolution), project, creator,
-                                                                       host=host, service=service,
+                                                                       host=host, service=service, command=command,
                                                                        details_data=issue_detail_dict)
             # TODO: handle references
             # TODO: handle request and response details

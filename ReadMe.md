@@ -1,6 +1,6 @@
 # Vulnman
 
-Vulnman is a vulnerability management web application written in Python using the powerful django framework.
+Vulnman is a vulnerability and pentesting management web application written in Python using the powerful django framework.
 
 **This project is in an early stage! You may not want to use it at the moment!**
 

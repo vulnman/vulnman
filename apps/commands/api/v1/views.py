@@ -49,9 +49,9 @@ class CommandHistoryViewSet(VulnmanModelViewSet):
             if instance.command.startswith(plugin.get_tool_name()):
                 plugin_exists = True
                 if instance.agent:
-                    plugin.parse(instance.output, instance.project, instance.agent.user)
+                    plugin.parse(instance.output, instance.project, instance.agent.user, command=instance)
                 else:
-                    plugin.parse(instance.output, instance.project, instance.creator)
+                    plugin.parse(instance.output, instance.project, instance.creator, command=instance)
                 break
         if plugin_exists:
             print("Plugin found")

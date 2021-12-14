@@ -120,7 +120,7 @@
                         {% if forloop.counter0|divisibleby:2 %}
                             {% include 'components/timeline/item.html' with invert=True title=command.command icon=command.get_timeline_icon date_created=command.date_updated %}
                         {% else %}
-                            {% include 'components/timeline/item.html' with title=command.title icon=command.get_timeline_icon date_created=command.date_updated %}
+                            {% include 'components/timeline/item.html' with title=command.command icon=command.get_timeline_icon date_created=command.date_updated %}
                         {% endif %}
                     {% endfor %}
                 </ul>

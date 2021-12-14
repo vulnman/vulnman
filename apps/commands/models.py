@@ -45,3 +45,6 @@ class CommandHistoryItem(VulnmanProjectModel):
         if self.exit_code == 0:
             return "fa-check"
         return "fa-exclamation"
+
+    def __str__(self):
+        return self.command

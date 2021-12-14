@@ -13,7 +13,7 @@ class VulnerabilityDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.VulnerabilityDetails
         exclude = ["template", "project", "vulnerability"]
-        read_only_fields = ["uuid", "creator", "date_updated", "date_created"]
+        read_only_fields = ["uuid", "creator", "date_updated", "date_created", "command_created"]
 
 
 class VulnerabilitySerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class VulnerabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Vulnerability
         fields = '__all__'
-        read_only_fields = ["uuid", "creator", "date_updated", "date_created"]
+        read_only_fields = ["uuid", "creator", "date_updated", "date_created", "command_created"]
 
     def create(self, validated_data):
         if validated_data.get('vulnerabilitydetails'):
