@@ -17,7 +17,7 @@ class VulnerabilityForm(forms.ModelForm):
 
     class Meta:
         model = models.Vulnerability
-        exclude = ["uuid", "creator", "project", "cvss_score"]
+        exclude = ["uuid", "creator", "project", "cvss_score", "command_created"]
 
     field_order = ["template"]
 

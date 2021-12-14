@@ -30,6 +30,7 @@ class VulnmanModel(models.Model):
 
 class VulnmanProjectModel(VulnmanModel):
     project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
+    command_created = models.ForeignKey('commands.CommandHistoryItem', on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         abstract = True

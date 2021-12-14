@@ -6,14 +6,14 @@ class HostnameSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Hostname
         fields = '__all__'
-        read_only_fields = ["uuid", "creator", "date_updated", "date_created"]
+        read_only_fields = ["uuid", "creator", "date_updated", "date_created", "command_created"]
 
 
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Service
         fields = '__all__'
-        read_only_fields = ["uuid", "creator", "date_updated", "date_created"]
+        read_only_fields = ["uuid", "creator", "date_updated", "date_created", "command_created"]
 
 
 class HostSerializer(serializers.ModelSerializer):
@@ -24,4 +24,4 @@ class HostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Host
         fields = "__all__"
-        read_only_fields = ["creator", "uuid", "date_created", "date_updated"]
+        read_only_fields = ["creator", "uuid", "date_created", "date_updated", "command_created"]

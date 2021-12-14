@@ -61,9 +61,13 @@ Installation
     :hidden:
 
     topics/components/server/installation
+    topics/components/cli/installation
 
 :doc:`topics/components/server/installation`
     Install instructions for the vulnman server.
+
+:doc:`topics/components/cli/installation`
+    Describe steps to install the vulnman-cli
 
 
 First Steps

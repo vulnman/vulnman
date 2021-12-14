@@ -8,7 +8,9 @@ class Nuclei(ToolResultParser):
     Example Command:
     ``nuclei -json -o nuclei.txt -nc -u http://localhost -t nuclei-templates``
     """
-    def parse(self, result, project, creator):
+    tool_name = "nuclei"
+
+    def parse(self, result, project, creator, command=None):
         for line in result.split("\n"):
             try:
                 vuln_info = json.loads(line)
@@ -34,9 +36,7 @@ class Nuclei(ToolResultParser):
                         service, _created = self._get_or_create_service(host, "http", 80, project, creator)
                     # TODO: import curl-command
                     self._get_or_create_vulnerability(
-                        name, description, "Imported from nuclei", "Imported from nuclei",
-                        '\n'.join(references), project, host=host,
-                        cvss_string=vuln_info['info'].get('classification', {}).get('cvss-metrics'),
-                        cvss_base_score=vuln_info['info'].get('classification', {}).get('cvss-score'), service=service)
+                        name, description, vuln_info['info'].get('classification', {}).get('cvss-score'),
+                        "Imported from nuclei", project, creator, host=host, service=service, command=command)
             except json.JSONDecodeError:
                 print("Could not decode line: %s" % line)
