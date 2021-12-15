@@ -94,9 +94,12 @@ Component Usage
     :hidden:
 
     topics/components/server/usage
+    topics/components/cli/usage
 
 :doc:`topics/components/server/usage`
     How to use the vulnman server
+:doc:`topics/components/cli/usage`
+    How to use the vulnman cli
 
 
 Vulnerability Management
