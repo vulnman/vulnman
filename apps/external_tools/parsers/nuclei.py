@@ -36,7 +36,7 @@ class Nuclei(ToolResultParser):
                         service, _created = self._get_or_create_service(host, "http", 80, project, creator)
                     # TODO: import curl-command
                     self._get_or_create_vulnerability(
-                        name, description, vuln_info['info'].get('classification', {}).get('cvss-score'),
+                        name, description, vuln_info['info'].get('classification', {}).get('cvss-score', 0.0),
                         "Imported from nuclei", project, creator, host=host, service=service, command=command)
             except json.JSONDecodeError:
                 print("Could not decode line: %s" % line)

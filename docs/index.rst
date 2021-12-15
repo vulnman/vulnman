@@ -107,15 +107,11 @@ Vulnerability Management
     :hidden:
 
     topics/vuln_management/templates
-    topics/vuln_management/external_tools
     topics/vuln_management/reporting
 
 
 :doc:`topics/vuln_management/templates`
     Describe the usage of vulnerability templates
-
-:doc:`topics/vuln_management/external_tools`
-    Import external tool reports into vulnman
 
 :doc:`topics/vuln_management/reporting`
     More information about the reporting feature
@@ -147,11 +143,14 @@ Advanced Topics
 
     topics/components/agents/usage
     topics/advanced/rest_api
+    topics/advanced/plugin_system
 
 :doc:`topics/components/agents/usage`
     Talk about vulnman agents
 :doc:`topics/advanced/rest_api`
     More about the REST-API
+:doc:`topics/advanced/plugin_system`
+    Explain the plugin system used to process reports from external tools (e.g. nmap, nuclei, ...)
 
 
 Misc

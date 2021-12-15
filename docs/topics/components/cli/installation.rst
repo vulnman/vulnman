@@ -1,3 +1,5 @@
+.. _vulnman-cli-install:
+
 ===================
 Install Vulnman CLI
 ===================
@@ -16,6 +18,6 @@ Arch-Linux
 
     git clone https://github.com/vulnman/vulnman-cli.git
     cd vulnman-cli
-    python setup.py install
+    pip install .
 
 You can now run vulnman-cli by running ``vulnman-cli``.

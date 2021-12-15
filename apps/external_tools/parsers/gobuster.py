@@ -6,10 +6,13 @@ from vulnman.utils.tools import ToolResultParser
 
 # vhost plugin
 class GobusterVhost(ToolResultParser):
+    tool_name = "gobuster vhost"
+
     def parse(self, result, project, creator, command=None):
         for line in result.split("\n"):
             if "Found: " in line:
                 subdomain = line.split(" ")[1]
+                print(subdomain)
                 try:
                     host_ip = socket.gethostbyname(subdomain)
                 except socket.error:

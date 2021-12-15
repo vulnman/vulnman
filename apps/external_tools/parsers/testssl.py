@@ -36,9 +36,7 @@ class TestSSL(ToolResultParser):
                     project, creator, host=host, service=service, command=command)
                 for ref in item.get("cve", "").split(" "):
                     if ref:
-                        Reference.objects.create(vulnerability=vulnerability, creator=creator, name=ref,
-                                                 command=command)
+                        Reference.objects.create(vulnerability=vulnerability, creator=creator, name=ref)
                 for ref in item.get("cwe", "").split(" "):
                     if ref:
-                        Reference.objects.create(vulnerability=vulnerability, creator=creator, name=ref,
-                                                 command=command)
+                        Reference.objects.create(vulnerability=vulnerability, creator=creator, name=ref)
