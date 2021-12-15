@@ -1,3 +1,5 @@
+.. _web-interface:
+
 ==============
 Vulnman Server
 ==============
