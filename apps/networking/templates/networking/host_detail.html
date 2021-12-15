@@ -112,7 +112,7 @@
                     {% for finding in host.finding_set.all %}
                         <tr>
                             <td>{{ finding.name }}</td>
-                            <td>{{ finding.data }}</td>
+                            <td>{{ finding.data | linebreaksbr }}</td>
                             <td>{{ finding.service }}</td>
                             <td>{{ finding.hostname }}</td>
                             <td>{{ finding.steps_to_reproduce }}</td>

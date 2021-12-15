@@ -66,4 +66,4 @@ class Service(VulnmanProjectModel):
         verbose_name_plural = "Services"
         verbose_name = "Service"
         unique_together = [("host", "port", "protocol")]
-        ordering = ["-date_updated"]
+        ordering = ["port"]
