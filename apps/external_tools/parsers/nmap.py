@@ -7,7 +7,9 @@ class NmapParser(ToolResultParser):
     Example Command:
     ``nmap -sV -sS -v example.com -oX nmap.xml``
     """
-    def parse(self, result, project, creator, command):
+    tool_name = "nmap"
+
+    def parse(self, result, project, creator, command=None):
         nmap_result = LibNmapParser.parse_fromstring(result)
         for nmap_host in nmap_result.hosts:
             host, _created = self._get_or_create_host(nmap_host.address, project, creator, command=command)

@@ -2,15 +2,9 @@ from django.db import models
 from vulnman.models import VulnmanProjectModel
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
-from uuid import uuid4
 
 
-class Employee(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
+class Employee(VulnmanProjectModel):
     first_name = models.CharField(max_length=128, blank=True, null=True)
     last_name = models.CharField(max_length=128, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)

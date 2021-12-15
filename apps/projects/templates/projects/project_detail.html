@@ -118,9 +118,9 @@
                 <ul class="timeline">
                     {% for command in project.get_latest_command_history %}
                         {% if forloop.counter0|divisibleby:2 %}
-                            {% include 'components/timeline/item.html' with invert=True title=command.command icon=command.get_timeline_icon date_created=command.date_updated %}
+                            {% include 'components/timeline/item.html' with invert=True title=command.command icon=command.get_timeline_icon date_created=command.date_updated user=command.creator %}
                         {% else %}
-                            {% include 'components/timeline/item.html' with title=command.command icon=command.get_timeline_icon date_created=command.date_updated %}
+                            {% include 'components/timeline/item.html' with title=command.command icon=command.get_timeline_icon date_created=command.date_updated user=command.creator %}
                         {% endif %}
                     {% endfor %}
                 </ul>

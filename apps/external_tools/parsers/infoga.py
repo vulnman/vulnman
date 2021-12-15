@@ -13,4 +13,4 @@ class Infoga(ToolResultParser):
     def parse(self, result, project, creator, command=None):
         for item in re.findall(r"(Email: )(.*\s)(\()(\d.*)(\))", result):
             employee, _created = Employee.objects.get_or_create(email=item[1], project=project, creator=creator,
-                                                                command=command)
+                                                                command_created=command)

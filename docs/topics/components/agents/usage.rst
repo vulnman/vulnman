@@ -6,7 +6,7 @@ Vulnman-Agents allow your pentest automation to scale.
 
 There are some scenarios where you may want to run different command from different hosts.
 
-You can also define a set of commands that you usually run at the enumeration phase and queue them to be executed and parsed by the :ref:`Plugin System<>`.
+You can also define a set of commands that you usually run at the enumeration phase and queue them to be executed and parsed by the :ref:`Plugin System<plugin-system>`.
 
 There is a `vulnman-agent <https://github.com/blockomat2100/vulnman-agent>`_ in development which does exactly that.
 
