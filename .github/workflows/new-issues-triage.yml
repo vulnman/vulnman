@@ -14,7 +14,7 @@ jobs:
           column: Needs triage
           repo-token: ${{ secrets.VULNMAN_ISSUE_TOKEN }}
   move-by-priority-label:
-    if: github.event.label.name == 'P: major'
+    if: "${{ github.event.label.name == 'P: major' }}"
     runs-on: ubuntu-latest
     steps:
       - uses: alex-page/github-project-automation-plus@v0.8.1
