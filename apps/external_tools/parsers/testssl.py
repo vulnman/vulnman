@@ -30,10 +30,11 @@ class TestSSL(ToolResultParser):
                                                                   command=command)
                 service, _created = self._get_or_create_service(host, service_name, item["port"], project, creator,
                                                                 command=command)
-                vulnerability, _created = self._get_or_create_vulnerability(
-                    item["id"], item["finding"],
-                    self._get_score_by_severity(item["severity"]), "Disable cipher",
-                    project, creator, host=host, service=service, command=command)
+                vulnerability, created = self._get_or_create_vulnerability(
+                    item["id"], item["finding"], self._get_score_by_severity(item["severity"]), project, creator,
+                    host=host, service=service, command=command, detail_data=item["finding"])
+                if created:
+                    self._create_vulnerability_details(vulnerability, item["finding"])
                 for ref in item.get("cve", "").split(" "):
                     if ref:
                         Reference.objects.create(vulnerability=vulnerability, creator=creator, name=ref)

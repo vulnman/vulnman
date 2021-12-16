@@ -29,8 +29,10 @@
       let cm_description = CodeMirror.fromTextArea(document.getElementById('id_description'), {
         lineNumbers: true, mode: "markdown"
       });
-      let cm_remediation = CodeMirror.fromTextArea(document.getElementById('id_remediation'), {
+      let cm_resolution = CodeMirror.fromTextArea(document.getElementById('id_resolution'), {
           lineNumbers: true, mode: "markdown"
       })
+      $('#id_description').val("-");
+      $('#id_resolution').val("-");
     </script>
 {% endblock %}
