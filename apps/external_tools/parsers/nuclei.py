@@ -11,6 +11,9 @@ class Nuclei(ToolResultParser):
     tool_name = "nuclei"
 
     def parse(self, result, project, creator, command=None):
+        # TODO: handle curl-command
+        # TODO: handle references
+        # TODO: handle matched-at
         for line in result.split("\n"):
             try:
                 vuln_info = json.loads(line)

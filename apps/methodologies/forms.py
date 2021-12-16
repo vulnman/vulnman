@@ -18,12 +18,12 @@ class TaskInline(InlineFormSetFactory):
 class ProjectMethodologyForm(forms.ModelForm):
     class Meta:
         model = models.ProjectMethodology
-        exclude = ["creator", "uuid", "project"]
+        exclude = ["creator", "uuid", "project",  "command_created"]
 
 
 class ProjectTaskInline(InlineFormSetFactory):
     model = models.ProjectTask
-    exclude = ["uuid", "creator", "project", "methodology"]
+    exclude = ["uuid", "creator", "project", "methodology",  "command_created"]
     factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 50}
 
 
