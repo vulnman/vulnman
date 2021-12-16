@@ -24,7 +24,9 @@ class Nuclei(ToolResultParser):
                 if not name:
                     name = vuln_info['info']['template-id']
                 if vuln_info.get('matcher-name'):
-                    name = "%s: %s" % (name, vuln_info['matcher-name'])
+                    vuln_value = vuln_info["matcher-name"]
+                else:
+                    vuln_value = vuln_info["matched-at"]
                 references = vuln_info['info'].get('reference')
                 if not references:
                     references = []
@@ -37,9 +39,11 @@ class Nuclei(ToolResultParser):
                         service, _created = self._get_or_create_service(host, "https", 443, project, creator)
                     else:
                         service, _created = self._get_or_create_service(host, "http", 80, project, creator)
-                    # TODO: import curl-command
-                    self._get_or_create_vulnerability(
-                        name, description, vuln_info['info'].get('classification', {}).get('cvss-score', 0.0),
-                        "Imported from nuclei", project, creator, host=host, service=service, command=command)
+                    cvss_score = vuln_info['info'].get('classification', {}).get('cvss-score', 0.0)
+                    vulnerability, created = self._get_or_create_vulnerability(
+                        name, description, cvss_score, project, creator, detail_data=vuln_value, command=command,
+                        service=service, host=host)
+                    if created:
+                        self._create_vulnerability_details(vulnerability, vuln_value)
             except json.JSONDecodeError:
                 print("Could not decode line: %s" % line)
