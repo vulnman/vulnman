@@ -20,5 +20,5 @@ jobs:
       - uses: alex-page/github-project-automation-plus@v0.8.1
         with:
           project: Issue Triage
-          column: High Priority
+          column: High priority
           repo-token: ${{ secrets.VULNMAN_ISSUE_TOKEN }}
