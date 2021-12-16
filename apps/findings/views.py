@@ -91,8 +91,8 @@ class VulnUpdate(generic.ProjectUpdateWithInlinesView):
     allowed_project_roles = ["pentester"]
 
     def form_valid(self, form):
-        if form.instance.cvss_string:
-            form.instance.cvss_base_score = cvss.get_scores_by_vector(form.instance.cvss_string)[0]
+        if form.instance.cvss_vector:
+            form.instance.cvss_score = cvss.get_scores_by_vector(form.instance.cvss_vector)[0]
         if form.instance.service:
             form.instance.host = form.instance.service.host
         return super().form_valid(form)
