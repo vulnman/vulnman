@@ -1,0 +1,34 @@
+name: Move labeled issues in Triage Project
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  new-issue-project-triage:
+    if: "${{ github.event.label.name != 'P: major' && github.event.label.name != 'P: low' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.8.1
+        with:
+          project: Issue Triage
+          column: Needs triage
+          repo-token: ${{ secrets.VULNMAN_ISSUE_TOKEN }}
+  move-by-priority-high-label:
+    if: "${{ github.event.label.name == 'P: major' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.8.1
+        with:
+          project: Issue Triage
+          column: High priority
+          repo-token: ${{ secrets.VULNMAN_ISSUE_TOKEN }}
+  move-by-priority-low-label:
+    if: "${{ github.event.label.name == 'P: low' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.8.1
+        with:
+          project: Issue Triage
+          column: Low priority
+          repo-token: ${{ secrets.VULNMAN_ISSUE_TOKEN }}
