@@ -12,7 +12,7 @@ class TemplateForm(forms.ModelForm):
 
 
 class VulnerabilityForm(forms.ModelForm):
-    template = forms.ModelChoiceField(queryset=models.Template.objects.all(),
+    template = forms.ModelChoiceField(queryset=models.Template.objects.all(), required=False,
                                       widget=autocomplete.ModelSelect2(url="findings:template-autocomplete"))
 
     class Meta:
