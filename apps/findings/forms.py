@@ -34,5 +34,5 @@ class VulnerabilityForm(forms.ModelForm):
 
 class ProofOfConceptInline(NamedInlineFormSetFactory):
     model = models.ProofOfConcept
-    exclude = ["uuid", "vulnerability", "creator"]
+    exclude = ["uuid", "vulnerability", "creator", "command_created"]
     factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 4}
