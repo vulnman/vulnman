@@ -69,10 +69,10 @@ class ToolResultParser(object):
                                                        "name": name, 'command_created': command})
 
     def _get_or_create_finding(self, name, data, project, creator, additional_information=None, reproduce=None,
-                               host=None, service=None, hostname=None, command=None):
+                               host=None, service=None, hostname=None, command=None, finding_type=None):
         return Finding.objects.get_or_create(project=project, name=name, data=data,
                                              additional_information=additional_information,
-                                             hostname=hostname, service=service,
+                                             hostname=hostname, service=service, finding_type=finding_type,
                                              host=host, defaults={"creator": creator, 'command_created': command,
                                                                   'steps_to_reproduce': reproduce})
 

@@ -15,3 +15,9 @@ VULNERABILITY_SEVERITY_MAP = {
     "info": 0.0,
     "information": 0.0
 }
+
+FINDINGS_TYPES = [
+    ("undefined", "Undefined"),
+    ("tech", "Technology"),
+    ("url", "URL")
+]

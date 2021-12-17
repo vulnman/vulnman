@@ -50,6 +50,7 @@ class GobusterDir(ToolResultParser):
                                                                         project, creator, command=command)
                     reproduce = "curl %s" % url_path[0]
                     self._get_or_create_finding("Found Web Path", parsed.path, project, creator,
+                                                finding_type="url",
                                                 additional_information=line.replace("\n", ""), reproduce=reproduce,
                                                 host=host, service=service, hostname=hostname, command=command)
                 except socket.error:
