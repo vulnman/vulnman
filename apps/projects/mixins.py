@@ -30,7 +30,7 @@ class ProjectMixin(LoginRequiredMixin, UserPassesTestMixin):
 
     def form_valid(self, form):
         if not isinstance(form, ModelForm):
-            print("no modelform")
+            # Not a ModelForm do not save the form
             return super().form_valid(form)
         form.instance.project.save()
         return super().form_valid(form)

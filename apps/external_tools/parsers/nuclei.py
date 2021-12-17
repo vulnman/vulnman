@@ -24,22 +24,23 @@ class Nuclei(ToolResultParser):
                 if not name:
                     name = vuln_info['info']['template-id']
                 if vuln_info.get('matcher-name'):
-                    name = "%s: %s" % (name, vuln_info['matcher-name'])
+                    vuln_value = vuln_info["matcher-name"]
+                    name = "%s: %s" % (name, vuln_info["matcher-name"])
+                else:
+                    vuln_value = vuln_info["matched-at"]
                 references = vuln_info['info'].get('reference')
                 if not references:
                     references = []
                 if ip:
                     host, _created = self._get_or_create_host(ip, project, creator)
-                    if parsed_url.port:
-                        service, _created = self._get_or_create_service(host, parsed_url.scheme, parsed_url.port,
-                                                                        project, creator)
-                    elif parsed_url.scheme and parsed_url.scheme == "https":
-                        service, _created = self._get_or_create_service(host, "https", 443, project, creator)
-                    else:
-                        service, _created = self._get_or_create_service(host, "http", 80, project, creator)
-                    # TODO: import curl-command
-                    self._get_or_create_vulnerability(
-                        name, description, vuln_info['info'].get('classification', {}).get('cvss-score', 0.0),
-                        "Imported from nuclei", project, creator, host=host, service=service, command=command)
+                    hostname, _created = self._get_or_create_hostname(parsed_url.hostname, host, project,
+                                                                      creator, command=command)
+                    service, _created = self.get_or_create_service_from_url(vuln_info['host'], host, project, creator)
+                    cvss_score = vuln_info['info'].get('classification', {}).get('cvss-score', 0.0)
+                    vulnerability, created = self._get_or_create_vulnerability(
+                        name, description, cvss_score, project, creator, detail_data=vuln_value, command=command,
+                        service=service, host=host)
+                    if created:
+                        self._create_vulnerability_details(vulnerability, vuln_value, site=parsed_url.geturl())
             except json.JSONDecodeError:
                 print("Could not decode line: %s" % line)
