@@ -88,6 +88,7 @@ class Finding(VulnmanProjectModel):
     hostname = models.ForeignKey('networking.Hostname', on_delete=models.CASCADE, null=True, blank=True)
     additional_information = models.TextField(blank=True, null=True)
     steps_to_reproduce = models.TextField(blank=True, null=True)
+    finding_type = models.CharField(max_length=32, choices=constants.FINDINGS_TYPES, default="undefined")
 
     def __str__(self):
         return self.name
