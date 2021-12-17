@@ -1,5 +1,6 @@
 import re
 import socket
+from urllib.parse import urlparse
 from django.db.models import Q
 from difflib import SequenceMatcher
 from apps.networking.models import Host, Hostname, Service
@@ -79,7 +80,9 @@ class ToolResultParser(object):
                               parameter=None, path=None, site=None):
         vulnerability_details = VulnerabilityDetails.objects.filter(data=vulnerability_data, method=method,
                                                                     parameter=parameter, path=path, site=site,
-                                                                    project=project)
+                                                                    project=project, vulnerability__host=host,
+                                                                    vulnerability__service=service,
+                                                                    vulnerability__name=name)
         if not vulnerability_details.exists():
             return None
             #try:
@@ -100,7 +103,7 @@ class ToolResultParser(object):
                                                    method=method, path=path, parameter=parameter, site=site)
         if possible_vuln:
             return possible_vuln, False
-        vulnerability_template = self._get_vulnerability_template_or_none(name)
+        vulnerability_template = self._get_vulnerability_template_or_none(name, detail_data)
         if vulnerability_template:
             if hasattr(vulnerability_template, 'vulnerabilitydetails'):
                 possible_vuln = self._vulnerability_exists(
@@ -131,37 +134,6 @@ class ToolResultParser(object):
                                                    parameter=parameter, parameters=parameters, request=request,
                                                    response=response, query_parameters=query_params, site=site)
 
-    def _get_or_create_vulnerability2(self, name, description, cvss_score, resolution, project,
-                                      creator, ease_of_resolution="undetermined", host=None, service=None, command=None,
-                                      details_data=None):
-        template = self._get_vulnerability_template_or_none(name)
-        if template:
-            pass
-        if details_data:
-            filter_data = {}
-            for key, value in details_data.items():
-                filter_data["vulnerabilitydetails__%s" % key] = value
-            filter_data.update({"name": name, "description": description,
-                                "project": project, "host": host, "service": service})
-            if Vulnerability.objects.filter(**filter_data).exists():
-                vulnerability = Vulnerability.objects.get(**filter_data)
-                return vulnerability, False
-            else:
-                vulnerability = Vulnerability.objects.create(creator=creator, ease_of_resolution=ease_of_resolution,
-                                                             cvss_score=cvss_score, resolution=resolution,
-                                                             project=project, name=name, description=description,
-                                                             host=host, service=service, command_created=command)
-                details = VulnerabilityDetails.objects.create(vulnerability=vulnerability, project=project,
-                                                              command_created=command,
-                                                              creator=creator, **details_data)
-                return vulnerability, True
-
-        return Vulnerability.objects.get_or_create(project=project, host=host, service=service, name=name,
-                                                   description=description, resolution=resolution,
-                                                   defaults={"creator": creator, "cvss_score": cvss_score,
-                                                             'command_created': command,
-                                                             "ease_of_resolution": ease_of_resolution})
-
     def _resolve(self, hostname: str):
         """
         resolve a hostname and return ip as string
@@ -178,7 +150,7 @@ class ToolResultParser(object):
         severity = severity.lower()
         return VULNERABILITY_SEVERITY_MAP.get(severity)
 
-    def _get_vulnerability_template_or_none(self, name, similarity=0.7):
+    def _get_vulnerability_template_or_none(self, name, details=None, similarity=0.7):
         # replace special chars with spaces to tokenize them
         # name = re.sub(r"[^a-zA-Z0-9\n\.]", r" ", name.lower())
         name = name.lower()
@@ -207,3 +179,14 @@ class ToolResultParser(object):
             ratios.sort(key=lambda x: x[0])
             return ratios[0][1]
         return None
+
+    def get_or_create_service_from_url(self, url, host, project, creator):
+        parsed = urlparse(url)
+        if parsed.port:
+            service, created = self._get_or_create_service(host, parsed.scheme, parsed.port,
+                                                            project, creator)
+        elif parsed.scheme and parsed.scheme == "https":
+            service, created = self._get_or_create_service(host, "https", 443, project, creator)
+        else:
+            service, created = self._get_or_create_service(host, "http", 80, project, creator)
+        return service, created

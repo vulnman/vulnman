@@ -48,3 +48,8 @@ class CommandHistoryItem(VulnmanProjectModel):
 
     def __str__(self):
         return self.command
+
+    def get_items_created_count(self):
+        count = self.service_set.count() + self.host_set.count() + self.finding_set.count() + \
+                self.vulnerability_set.count()
+        return count
