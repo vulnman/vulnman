@@ -124,7 +124,7 @@ class Reference(VulnmanModel):
 
 class VulnerabilityDetails(VulnmanProjectModel):
     vulnerability = models.OneToOneField(Vulnerability, on_delete=models.CASCADE)
-    template = models.ForeignKey(Template, on_delete=models.CASCADE, null=True, blank=True)
+    template = models.OneToOneField(Template, on_delete=models.CASCADE, null=True, blank=True)
     data = models.TextField(help_text="Markdown supported!")
     request = models.TextField(blank=True, null=True)
     response = models.TextField(blank=True, null=True)
