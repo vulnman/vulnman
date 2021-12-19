@@ -30,7 +30,7 @@ class ProjectCreate(generic.VulnmanAuthCreateWithInlinesView):
     template_name = "projects/project_create.html"
     form_class = forms.ProjectForm
     model = models.Project
-    inlines = [forms.ScopeInline, forms.ProjectContactInline]
+    inlines = [forms.ScopeInline]
     success_url = reverse_lazy("projects:project-list")
     extra_context = {"TEMPLATE_HIDE_BREADCRUMBS": True}
 
@@ -82,7 +82,7 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
 class ProjectUpdate(generic.VulnmanAuthUpdateWithInlinesView):
     template_name = "projects/project_update.html"
     form_class = forms.ProjectForm
-    inlines = [forms.ScopeInline, forms.ProjectContactInline]
+    inlines = [forms.ScopeInline]
     model = models.Project
 
     def get_success_url(self):

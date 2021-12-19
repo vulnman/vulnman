@@ -38,11 +38,12 @@ class BurpSuiteProXML(ToolResultParser):
             name = issue.find("name").text
             description = ""
             resolution = ""
-            issue_detail_dict = {
-                "path": issue.find("path").text, "site": issue.find("host").text
-            }
+            parameter = None
+            path = issue.find("path").text
+            site = issue.find("host").text
+            data = None
             if "parameter" in issue.find("location").text:
-                issue_detail_dict["parameter"] = re.search(r"(\[)(.*)(\s)", issue.find('location').text).group(2)
+                parameter = re.search(r"(\[)(.*)(\s)", issue.find('location').text).group(2)
             if issue.find("issueBackground") is not None:
                 description += html_to_md(issue.find("issueBackground").text.replace("<p>", "").replace(
                     "<br>", "\n").replace("</p>", "\n"))
@@ -53,12 +54,18 @@ class BurpSuiteProXML(ToolResultParser):
                 resolution += html_to_md(issue.find("remediationDetail").text.replace("<p>", "").replace(
                     "<br>", "\n").replace("</p>", "\n"))
             if issue.find("issueDetail") is not None:
-                issue_detail_dict["data"] = html_to_md(issue.find("issueDetail").text.replace("<p>", "").replace(
+                data = html_to_md(issue.find("issueDetail").text.replace("<p>", "").replace(
                     "<br>", "\n").replace("</p>", "\n"))
+            else:
+                data = description
             cvss_score = SEVERITY_MAP.get(issue.find("severity").text)
             vulnerability, created = self._get_or_create_vulnerability(name, html_to_md(description), cvss_score,
-                                                                       html_to_md(resolution), project, creator,
-                                                                       host=host, service=service, command=command,
-                                                                       details_data=issue_detail_dict)
+                                                                       project, creator,
+                                                                       resolution=html_to_md(resolution),
+                                                                       detail_data=data,
+                                                                       path=path, site=site, parameter=parameter,
+                                                                       host=host, service=service, command=command)
+            if created:
+                self._create_vulnerability_details(vulnerability, data, path=path, site=site, parameter=parameter)
             # TODO: handle references
             # TODO: handle request and response details

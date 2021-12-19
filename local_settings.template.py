@@ -49,7 +49,19 @@
 # LATEX_INTERPRETER = 'latexmk -pdf'
 
 # Report Template
-# REPORT_TEMPLATE = "custom/report/document.tex"
+# REPORT_TEMPLATE = "custom/report.html"
+
+# Custom CSS styles for your report
+# REPORT_TEMPLATE_STYLESHEETS = [
+#     os.path.join("/storage/apps/reporting/templates/report/html_default/report.css"),
+# ]
+
+# Overwrite the default text for different report sections
+# CUSTOM_REPORT_SECTIONS = {
+#   "methodology": "/storage/reporting/sections/methodology.md
+# }
+
+
 
 # ########
 # Security

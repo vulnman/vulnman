@@ -32,7 +32,7 @@ http://testphp.vulnweb.com/cart.php             (Status: 200) [Size: 4903]
 2021/12/08 12:50:55 Finished
 ===============================================================
 """
-        project = self._create_project("testproject", creator=self.user1)
+        project = self._create_project(creator=self.user1)
         gobuster = GobusterDir().parse(results, project, self.user1)
         self.assertEqual(project.host_set.count(), 1)
         self.assertEqual(Service.objects.filter(port=80).count(), 1)

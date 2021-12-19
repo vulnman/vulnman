@@ -5,6 +5,7 @@ from django_tex.response import PDFResponse
 from django_tex.shortcuts import compile_template_to_pdf
 from django_tex.core import render_template_with_context, run_tex
 from apps.reporting import models, forms
+from apps.reporting.utils.converter import HTMLConverter
 
 
 class ReportList(generic.ProjectListView):
@@ -36,7 +37,11 @@ class ReportCreate(generic.ProjectCreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['SEVERITY_COLORS'] = settings.SEVERITY_COLORS
-        context['REPORT_PENTEST_COMPANY'] = settings.REPORT_PENTEST_COMPANY
+        context['REPORT_COMPANY_INFORMATION'] = settings.REPORT_COMPANY_INFORMATION
+        context['REPORT_SECTIONS'] = {}
+        for key, value in settings.REPORT_SECTIONS.items():
+            with open(value, "r") as f:
+                context['REPORT_SECTIONS'][key] = f.read()
         return context
 
     def get_success_url(self):
@@ -48,8 +53,12 @@ class ReportCreate(generic.ProjectCreateView):
         form.save()
         context = self.get_context_data()
         context['report'] = form.instance
-        pdf_source = compile_template_to_pdf(self.report_template_name, context)
-        raw_source = render_template_with_context(self.report_template_name, context)
+        if self.report_template_name.endswith(".html"):
+            converter = HTMLConverter(self.report_template_name, context)
+            raw_source, pdf_source = converter.convert()
+        else:
+            pdf_source = compile_template_to_pdf(self.report_template_name, context)
+            raw_source = render_template_with_context(self.report_template_name, context)
         form.instance.raw_source = raw_source
         form.instance.pdf_source = pdf_source
         return super().form_valid(form)

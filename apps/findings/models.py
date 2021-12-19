@@ -21,6 +21,7 @@ class Vulnerability(VulnmanProjectModel):
     resolution = models.TextField(blank=True, null=True, help_text="Markdown supported")
     is_fixed = models.BooleanField(default=False)
     ease_of_resolution = models.CharField(choices=constants.FINDINGS_EASE_OF_RESOLUTIONS, max_length=32)
+    cve_id = models.CharField(max_length=28, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -72,14 +73,6 @@ class ProofOfConcept(VulnmanProjectModel):
         ordering = ["-date_updated"]
 
 
-"""
-# class HTTPFinding(Finding):
-#    url = models.URLField()
-#    parameter = models.CharField()
-#    request = models.TextField()
-"""
-
-
 class Finding(VulnmanProjectModel):
     name = models.CharField(max_length=128)
     data = models.TextField()
@@ -102,6 +95,7 @@ class Template(VulnmanModel):
     description = models.TextField(help_text="Markdown supported!")
     resolution = models.TextField(help_text="Markdown supported")
     ease_of_resolution = models.CharField(choices=constants.FINDINGS_EASE_OF_RESOLUTIONS, max_length=32)
+    cve_id = models.CharField(max_length=28, null=True, blank=True)
 
     def __str__(self):
         return self.name

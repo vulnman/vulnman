@@ -50,7 +50,7 @@ class HostTestCase(TestCase, VulnmanTestMixin):
     def test_createview(self):
         url = self.get_url("projects:networking:host-create")
         self._test_unauthenticated_aceess(url)
-        project = self._create_project("testcaseproject", creator=self.user1)
+        project = self._create_project(creator=self.user1)
         payload = {"ip": "12.12.12.12", "is_online": True, "os": "unknown",
                    "hostname_set-TOTAL_FORMS": "1", "hostname_set-0-uuid": "", "hostname_set-0-host": "",
                    "hostname_set-0-name": "testhost.example.com", "hostname_set-0-DELETE": "",
