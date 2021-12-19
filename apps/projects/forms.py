@@ -14,18 +14,6 @@ class ProjectForm(forms.ModelForm):
         }
 
 
-class ProjectContactForm(forms.ModelForm):
-    class Meta:
-        model = models.ProjectContact
-        exclude = ["pk", "project"]
-
-
-class ProjectContactInline(InlineFormSetFactory):
-    model = models.ProjectContact
-    exclude = ["project"]
-    factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 5}
-
-
 class ScopeInline(InlineFormSetFactory):
     model = models.Scope
     exclude = ["uuid", "project", "creator"]

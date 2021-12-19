@@ -1,0 +1,10 @@
+{% load markdown %}
+<article id="project-summary" class="chapter">
+    <h2 class="chapter-title" id="assessment-overview-title">Assessment Overview</h2>
+</article>
+
+<article>
+    <section id="assessment-overview-section" class="page-content pt-1">
+        {% include_markdown_from_trusted_source REPORT_SECTIONS.assessment_overview %}
+    </section>
+</article>

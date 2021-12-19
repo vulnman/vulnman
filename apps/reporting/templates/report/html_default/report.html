@@ -1,0 +1,62 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="report.css" rel="stylesheet">
+    <title>Report</title>
+    <meta name="description" content="{{ report.title }}">
+</head>
+
+<body>
+<article id="cover">
+    {% if report.custom_title %}
+        <h1>
+            {{ report.custom_title }} <br/>
+            {{ project.client.name }}
+        </h1>
+    {% else %}
+        <h1>
+            {{ project.report_default_title }} <br/>
+            {{ project.client.name }}
+        </h1>
+    {% endif %}
+    <address>
+        {{ REPORT_COMPANY_INFORMATION.name }}
+        {{ REPORT_COMPANY_INFORMATION.street }}
+        {{ REPORT_COMPANY_INFORMATION.zip }}
+    </address>
+    <address>
+        {{ REPORT_COMPANY_INFORMATION.contact }}
+        {{ REPORT_COMPANY_INFORMATION.homepage }}
+    </address>
+</article>
+
+<!--
+<article id="contents">
+    <h2>Table of contents</h2>
+    <h3>Assessment Information</h3>
+    <ul>
+        <li><a href="#contacts-title"></a></li>
+        <li><a href="#assessment-overview-title"></a></li>
+    </ul>
+
+
+    <h3>Vulnerabilities</h3>
+    <ul>
+        {# for host in project.host_set.all #}
+        <li><a href="#vulnerabilities-host-{# host.pk #}-title"></a></li>
+        {# endfor #}
+    </ul>
+</article>
+-->
+{% include "report/html_default/chapters/01_assessment_information.html" %}
+
+{% include 'report/html_default/chapters/02_assessment_overview.html' %}
+
+{% include 'report/html_default/chapters/03_methodology.html' %}
+
+{% include "report/html_default/chapters/06_vulnerability_overview.html" %}
+
+{% include "report/html_default/chapters/07_vulnerability_listing.html" %}
+
+</body>
+</html>

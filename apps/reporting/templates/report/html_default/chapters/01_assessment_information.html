@@ -1,0 +1,59 @@
+<article id="assessment-information" class="chapter">
+    <h2 class="chapter-title" id="assessment-information-title">Assessment Information</h2>
+</article>
+
+<article>
+    <section id="contacts-customer-section" class="page-content pt-1">
+        <section class="row">
+            <section class="border-right-1 col">
+                <h4>{{ REPORT_COMPANY_INFORMATION.name }}</h4>
+                {% if project.creator.profile.hide_name_in_report %}
+                    <p><strong>Name: </strong>{{ project.creator.username }} ({{ project.creator.profile.position }})
+                    </p>
+                {% else %}
+                    <p><strong>Name: </strong>{{ project.creator.first_name }} {{ project.creator.last_name }}
+                        ({{ project.creator.profile.positon }})</p>
+                {% endif %}
+                <p><strong>E-Mail: </strong>{{ project.creator.email }}</p>
+                {% if project.creator.profile.pgp_fingerprint %}
+                    <p><strong>PGP-Fingerprint: </strong>{{ project.creator.profile.pgp_fingerprint }}</p>
+                {% endif %}
+            </section>
+            <section class="col">
+                <h4>Client Information</h4>
+                <p>{{ project.client.name }}</p>
+                <p>{{ project.client.street }}</p>
+                <p>{{ project.client.zip }} {{ project.client.city }}, {{ project.client.country }}</p>
+
+                <section>
+                    <h5>Contact Information</h5>
+                    {% for contact in project.client.clientcontact_set.all %}
+                        <p><strong>Name: </strong>{{ contact.first_name }} {{ contact.last_name }}</p>
+                        <p><strong>E-Mail: </strong>{{ contact.email }}</p>
+                        {% if contact.phone %}
+                            <p><strong>Phone: </strong>{{ contact.phone }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </section>
+            </section>
+        </section>
+
+    </section>
+    <hr/>
+    <section>
+        <h4>Assessment Information</h4>
+        <p><strong>Timeframe</strong></p>
+        <p>{{ project.start_date|date }} - {{ project.end_date|date }}</p>
+
+        <p><strong>Scope</strong></p>
+        <ul>
+            {% for item in project.scope_set.all %}
+                <li>{{ item.name }}</li>
+            {% endfor %}
+        </ul>
+
+        <p><strong>Report Date</strong></p>
+        <p>{{ report.date_created|date }}</p>
+    </section>
+
+</article>
