@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from uuid import uuid4
+from vulnman.models import VulnmanProjectModel
 
 
 class Report(models.Model):
@@ -33,3 +34,18 @@ class ReportShareToken(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
     share_token = models.CharField(max_length=512)
     date_expires = models.DateTimeField()
+
+"""
+class ReportSection(VulnmanProjectModel):
+    name = models.CharField(max_length=64)
+    text = models.TextField(help_text="Markdown supported!")
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        unique_together = [('project', 'name')]
+        verbose_name_plural = "Report Sections"
+        verbose_name = "Report Section"
+"""

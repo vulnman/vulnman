@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse_lazy
-from apps.projects.models import Project
+from apps.projects.models import Project, Client
 from ddf import G
 
 
@@ -14,8 +15,11 @@ class VulnmanTestMixin(object):
         email = "%s@example.com" % username
         return User.objects.create_user(username, password=password, is_staff=is_staff, email=email)
 
-    def _create_project(self, name, customer="testcustomer", creator=None):
-        return Project.objects.create(name=name, customer=customer, creator=creator)
+    def _create_project(self, client=None, creator=None):
+        if not client:
+            client = self._create_instance(Client)
+        return Project.objects.create(creator=creator, client=client, start_date=timezone.now(),
+                                      end_date=timezone.now())
 
     def get_url(self, endpoint, **kwargs):
         return reverse_lazy(endpoint, kwargs=kwargs)
@@ -60,7 +64,7 @@ class VulnmanAPITestMixin(VulnmanTestMixin):
 
     def _test_project_updateview(self, lazy_url, payload, obj_class, project_creator_field="project__creator"):
         project_field = project_creator_field.split("__")[-2]
-        project_data = {project_field: self._create_project("testprojectupdateviewtemp")}
+        project_data = {project_field: self._create_project()}
         # test unauthenticated denied
         temporary_object = self._create_instance(obj_class, **project_data)
         url = self.get_url(lazy_url, pk=temporary_object.pk)
@@ -113,8 +117,8 @@ class VulnmanAPITestMixin(VulnmanTestMixin):
         response = self.client.post(url, payload, format=format)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(obj_class.objects.count(), 0)
-        project1 = self._create_project("testprojectcreateview", creator=self.user1)
-        project2 = self._create_project("testprojectcreateview", creator=self.user2)
+        project1 = self._create_project(creator=self.user1)
+        project2 = self._create_project(creator=self.user2)
         # test my object
         project_field = project_creator_field.split("__")[-2]
         payload[project_field] = str(project1.pk)

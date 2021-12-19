@@ -107,9 +107,7 @@
                 {% if vuln.reference_set.all %}
                     <p><strong>References: </strong></p>
                     <ul>
-                        {% for reference in vuln.get_references_as_list %}
-                            <li>{{ reference }}</li>
-                        {% endfor %}
+                        <li>{{ reference }}</li>
                     </ul>
                 {% endif %}
             </div>

@@ -9,4 +9,6 @@ You can :ref:`customize<customization-report>` the report template that is used 
 
 The following types of report templates are currently supported:
 
+- HTML (recommended)
+
 - LaTeX
