@@ -35,16 +35,12 @@ The following vulnerabilities are grouped by system.
     \centering
     \begin{tabular}{| l | p{12cm} |}
         \hline
-        Description & {{- vuln.description -}}  \\
-        \hline
         \multirow{2}{*}{CVSS} & {{- vuln.get_scores()[0] }} ({{- vuln.get_severities()[0] -}})   \\
         \cline{2-2}
-        & {{- vuln.cvss_string -}}  \\
+        & {{- vuln.cvss_vector -}}  \\
         \hline
-        Impact & {{- vuln.impact -}}   \\
-        \hline
-        \multirow{ {{-vuln.get_references_as_list()|length -}} }{*}{References}
-         {%- for reference in vuln.get_references_as_list() -%}
+        \multirow{ {{-vuln.reference_set.all()|length -}} }{*}{References}
+         {%- for reference in vuln.reference_set.all() -%}
          {%- if loop.index == 1 -%}
          & {{ reference }} \\
          {%- if loop.last -%}
@@ -61,9 +57,11 @@ The following vulnerabilities are grouped by system.
          {%- endfor %}
     \end{tabular}
 \end{table}
-\subsubsection{Recommendation}
-{{- vuln.remediation|md_to_tex -}}
-\\
+
+\subsubsection{Description}
+{{- vuln.description|md_to_tex|latex_escape -}}
+\subsubsection{Resolution}
+{{- vuln.resolution|md_to_tex|latex_escape -}}
 {%- if vuln.proofofconcept_set.count() -%}
 \subsubsection{Proof Of Concept}
 {%- for proof in vuln.proofofconcept_set.all() -%}

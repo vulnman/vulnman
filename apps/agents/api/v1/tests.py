@@ -30,7 +30,7 @@ class AgentAPITestCase(APITestCase, VulnmanAPITestMixin):
         self.assertEqual(len(response.json()['results']), 0)
 
     def test_queue_push(self):
-        project = self._create_project(name="queuepush", creator=self.user1)
+        project = self._create_project(creator=self.user1)
         payload = {"command": 'echo "1"', "project": str(project.pk)}
         url = self.get_url("api:v1:agent-queue-push")
         response = self.client.post(url, payload)

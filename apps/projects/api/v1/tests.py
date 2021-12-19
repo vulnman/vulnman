@@ -10,7 +10,7 @@ class ProjectViewSetTest(APITestCase, VulnmanAPITestMixin):
     def test_listview(self):
         url = self.get_url("api:v1:project-list")
         self.client.force_login(self.user1)
-        project = self._create_project("testlistview", creator=self.user1)
+        project = self._create_project(creator=self.user1)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
@@ -21,7 +21,7 @@ class ProjectViewSetTest(APITestCase, VulnmanAPITestMixin):
         self.assertEqual(response.json()["count"], 0)
 
     def test_detailview(self):
-        project = self._create_project("testlistview", creator=self.user1)
+        project = self._create_project(creator=self.user1)
         url = self.get_url("api:v1:project-detail", pk=project.pk)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
@@ -35,8 +35,10 @@ class ProjectViewSetTest(APITestCase, VulnmanAPITestMixin):
 
     def test_createview(self):
         url = self.get_url("api:v1:project-list")
+        client = self._create_instance(models.Client)
         self.client.force_login(self.user1)
-        payload = {"name": "testcreateview", "customer": "nonexistenttestcustomer"}
+        payload = {"client": client.uuid, "start_date": client.date_created.date(),
+                   "end_date": client.date_created.date()}
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(models.Project.objects.filter(creator=self.user1).count(), 1)
