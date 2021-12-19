@@ -15,7 +15,7 @@ class CredentialViewSetTestCase(APITestCase, VulnmanAPITestMixin):
         self._test_project_updateview("api:v1:credential-detail", payload, models.Credential)
 
     def test_createview(self):
-        project = self._create_project("testproject", creator=self.user1)
+        project = self._create_project(creator=self.user1)
         payload = {"username": "testuser", "cleartext_password": "password", "location_found": "webroot",
                    "project": str(project.pk)}
         self._test_project_createview("api:v1:credential-list", payload, models.Credential, format='json')

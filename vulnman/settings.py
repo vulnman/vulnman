@@ -222,10 +222,28 @@ HOST_OS_ICONS = {
 }
 
 # Reporting
-REPORT_PENTEST_COMPANY = "Example IT-Sec Ltd."
-CUSTOM_EXTERNAL_TOOLS = {}
-REPORT_TEMPLATE = "report/document.tex"
+REPORT_COMPANY_INFORMATION = {
+    "name": "Vulnman",
+    "street": "No Street 54",
+    "zip": "123456 Berlin, Germany",
+    "homepage": "https://vulnman.github.io/vulnman",
+    "contact": "contact@example.com"
+}
 
+CUSTOM_EXTERNAL_TOOLS = {}
+
+REPORT_TEMPLATE = "report/html_default/report.html"
+REPORT_TEMPLATE_STYLESHEETS = [
+    os.path.join(BASE_DIR, "apps/reporting/templates/report/html_default/report.css"),
+]
+
+REPORT_SECTION_DEFAULTS_DIR = os.path.join(BASE_DIR, "apps/reporting/templates/report/html_default/defaults")
+
+REPORT_SECTIONS = {
+    "assessment_overview": os.path.join(REPORT_SECTION_DEFAULTS_DIR, "02_assessment_overview.md"),
+    "methodology": os.path.join(REPORT_SECTION_DEFAULTS_DIR, "03_methodology.md")
+}
+CUSTOM_REPORT_SECTIONS = {}
 
 # API Settings
 REST_FRAMEWORK = {
@@ -243,12 +261,6 @@ REST_FRAMEWORK = {
     # ]
 }
 
-#OAUTH2_PROVIDER = {
-    # this is the list of available scopes
-#    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'},
-#    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore'
-#}
-
 
 try:
     from local_settings import *
@@ -257,3 +269,4 @@ except ImportError:
 
 # update the default EXTERNAL_TOOLS dict with a custom one provided by the user
 EXTERNAL_TOOLS.update(CUSTOM_EXTERNAL_TOOLS)
+REPORT_SECTIONS.update(CUSTOM_REPORT_SECTIONS)
