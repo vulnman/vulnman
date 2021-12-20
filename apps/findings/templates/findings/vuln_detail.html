@@ -104,6 +104,9 @@
                 <p><strong>Resolution: </strong></p>
                 <p>{{ vuln.resolution | md_to_html }}</p>
 
+                <p><strong>Steps to reproduce: </strong></p>
+                <p>{{ vuln.vulnerabilitydetails.steps_to_reproduce|md_to_html }}</p>
+
                 {% if vuln.reference_set.all %}
                     <p><strong>References: </strong></p>
                     <ul>

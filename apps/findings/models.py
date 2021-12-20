@@ -129,3 +129,8 @@ class VulnerabilityDetails(VulnmanProjectModel):
     path = models.CharField(max_length=256, blank=True, null=True)
     query_parameters = models.CharField(max_length=256, blank=True, null=True)
     site = models.CharField(max_length=256, blank=True, null=True)
+    steps_to_reproduce = models.TextField(null=True, blank=True, help_text="Markdown supported!")
+
+    class Meta:
+        verbose_name_plural = "Vulnerability Details"
+        verbose_name = "Vulnerability Details"
