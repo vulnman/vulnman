@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Reports
+    Reports
 {% endblock %}
 
 {% block breadcrumbs %}
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
-    <li class="breadcrumb-item active">Reports</li>
-</ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+        <li class="breadcrumb-item active">Reports</li>
+    </ol>
 {% endblock %}
 
 {% block content %}
@@ -22,36 +22,70 @@ Reports
     </div>
 
     <div class="list-group mt-3">
-    {% for report in reports %}
-        <div class="list-group-item list-group-item-action">
-            <div class="clearfix">
-                <div class="float-start">
-                    <a href="{% url 'projects:reporting:report-detail' report.pk %}" target="_blank">
-                        {{ report }}
-                    </a>
-                </div>
-                <div class="float-end">
-                    <a href="{% url 'projects:reporting:report-update' report.pk %}" class="btn btn-sm btn-info">
-                        <i class="fa fa-edit"></i> Edit
-                    </a>
-                    {% if report.is_draft %}
-                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ report.pk }}">
-                        <i class="fa fa-trash"></i> Delete
-                    </button>
-                    {% endif %}
+        {% for report in reports %}
+            <div class="list-group-item list-group-item-action">
+                <div class="clearfix">
+                    <div class="float-start">
+                        <a href="{% url 'projects:reporting:report-detail' report.pk %}" target="_blank">
+                            {{ report }}
+                        </a>
+                    </div>
+                    <div class="float-end">
+                        <div class="dropdown">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                               id="host-action-dropdown"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
+                                <li><a class="dropdown-item" data-bs-toggle="modal"
+                                       data-bs-target="#share-modal-{{ report.pk }}"><i class="fa fa-share"></i>
+                                    Share</a></li>
+                                <li><a class="dropdown-item"
+                                       href="{% url 'projects:reporting:report-update' report.pk %}"><i
+                                        class="fa fa-edit"></i> Edit</a></li>
+                                {% if report.is_draft %}
+                                    <li><a class="dropdown-item" data-bs-toggle="modal"
+                                           data-bs-target="#delete-modal-{{ report.pk }}"><i class="fa fa-trash"></i>
+                                        Delete</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    {% empty %}
-        <li class="list-group-item">No reports here!</li>
-    {% endfor %}
+        {% empty %}
+            <li class="list-group-item">No reports here!</li>
+        {% endfor %}
     </div>
 
     {% for report in reports %}
         {% if report.is_draft %}
-        {% include 'modals/delete_object.html' with obj=report %}
+            {% include 'modals/delete_object.html' with obj=report %}
         {% endif %}
+        <!-- Modal -->
+        <div class="modal fade" id="share-modal-{{ report.pk }}" tabindex="-1"
+             aria-labelledby="share-modal-{{ report.pk }}-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'projects:reporting:report-share' report.pk %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="share-modal-{{ report.pk }}-label">Share Report</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% include 'forms/simple.html' with without_form_tag=True form=report_share_form %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Share</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     {% endfor %}
 
     {% include 'navigation/pagination.html' %}

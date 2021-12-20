@@ -1,6 +1,7 @@
 from vulnman.views import generic
 from django.conf import settings
 from django.urls import reverse_lazy
+from django.contrib import messages
 from django_tex.response import PDFResponse
 from django_tex.shortcuts import compile_template_to_pdf
 from django_tex.core import render_template_with_context, run_tex
@@ -13,6 +14,11 @@ class ReportList(generic.ProjectListView):
     paginate_by = 20
     context_object_name = "reports"
     allowed_project_roles = ["read-only", "pentester"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["report_share_form"] = forms.ReportShareTokenForm()
+        return context
 
     def get_queryset(self):
         return models.Report.objects.filter(project=self.get_project()).order_by('-revision')
@@ -100,3 +106,40 @@ class ReportDraftDelete(generic.ProjectDeleteView):
 
     def get_queryset(self):
         return models.Report.objects.filter(project=self.get_project(), is_draft=True, pk=self.kwargs.get('pk'))
+
+
+class ReportSharedDetail(generic.VulnmanDetailView):
+    model = models.Report
+    context_object_name = "report"
+
+    def get_queryset(self):
+        report = models.Report.objects.filter(pk=self.kwargs.get('pk'))
+        try:
+            obj = report.get()
+            if obj.reportsharetoken.is_expired(self.kwargs.get('token')):
+                return models.Report.objects.none()
+        except models.Report.DoesNotExist:
+            return models.Report.objects.none()
+        return report
+
+    def render_to_response(self, context, **response_kwargs):
+        return PDFResponse(context['report'].pdf_source, filename="report.pdf")
+
+
+class ReportSharedTokenCreate(generic.ProjectCreateView):
+    model = models.ReportShareToken
+    form_class = forms.ReportShareTokenForm
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:reporting:report-list")
+
+    def form_valid(self, form):
+        report = models.Report.objects.filter(pk=self.kwargs.get('pk'), project=self.get_project())
+        if not report.exists():
+            return super().form_invalid(form)
+        form.instance.report = report.get()
+        response = super().form_valid(form)
+        messages.add_message(self.request, messages.SUCCESS, "Share Link: %s" % self.request.build_absolute_uri(
+            reverse_lazy(
+                "projects:reporting:report-shared-report-detail",
+                kwargs={"pk": self.kwargs.get('pk'), "token": report.get().reportsharetoken.share_token})))
+        return response

@@ -10,5 +10,7 @@ urlpatterns = [
     path('reports/create/', views.ReportCreate.as_view(), name="report-create"),
     path('reports/<str:pk>/', views.ReportDetail.as_view(), name="report-detail"),
     path('reports/<str:pk>/update/', views.ReportUpdate.as_view(), name="report-update"),
-    path('reports/<str:pk>/delete/', views.ReportDraftDelete.as_view(), name="report-delete")
+    path('reports/<str:pk>/delete/', views.ReportDraftDelete.as_view(), name="report-delete"),
+    path('reports/<str:pk>/share/', views.ReportSharedTokenCreate.as_view(), name="report-share"),
+    path('reports/<str:pk>/<str:token>/', views.ReportSharedDetail.as_view(), name="report-shared-report-detail")
 ]

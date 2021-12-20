@@ -58,7 +58,7 @@ class VulnList(generic.ProjectListView):
 
 class VulnCreate(generic.ProjectCreateWithInlinesView):
     model = models.Vulnerability
-    inlines = [forms.ProofOfConceptInline]
+    inlines = [forms.VulnerabilitydetailInline, forms.ProofOfConceptInline]
     form_class = forms.VulnerabilityForm
     template_name = "findings/vulnerability_create.html"
     allowed_project_roles = ["pentester"]
@@ -85,7 +85,7 @@ class VulnDetail(generic.ProjectDetailView):
 
 class VulnUpdate(generic.ProjectUpdateWithInlinesView):
     model = models.Vulnerability
-    inlines = [forms.ProofOfConceptInline]
+    inlines = [forms.VulnerabilitydetailInline, forms.ProofOfConceptInline]
     form_class = forms.VulnerabilityForm
     template_name = "findings/vulnerability_create.html"
     allowed_project_roles = ["pentester"]
