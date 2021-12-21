@@ -30,46 +30,53 @@ class Project(models.Model):
         return False
 
     def get_critical_vulnerabilities_count(self):
-        return self.vulnerability_set.filter(cvss_score__gte=9.0).count()
+        return self.get_critical_vulnerabilities(count=True)
 
-    def get_critical_vulnerabilities(self):
-        return self.vulnerability_set.filter(cvss_score__gte=9.0)
-
-    def get_high_vulnerabilities_count(self):
-        return self.get_high_vulnerabilities(True)
-
-    def get_high_vulnerabilities(self, count=False):
-        qs = self.vulnerability_set.filter(cvss_score__gte=7.0, cvss_score__lt=9.0)
+    def get_critical_vulnerabilities(self, count=False, include_excluded=False):
+        qs = self.vulnerability_set.filter(cvss_score__gte=9.0, exclude_from_report=include_excluded)
         if count:
             return qs.count()
         return qs
 
-    def get_medium_vulnerabilities(self, count=False):
-        qs = self.vulnerability_set.filter(cvss_score__gte=4.0, cvss_score__lt=7.0)
+    def get_high_vulnerabilities_count(self):
+        return self.get_high_vulnerabilities(count=True)
+
+    def get_high_vulnerabilities(self, count=False, include_excluded=False):
+        qs = self.vulnerability_set.filter(cvss_score__gte=7.0, cvss_score__lt=9.0,
+                                           exclude_from_report=include_excluded)
+        if count:
+            return qs.count()
+        return qs
+
+    def get_medium_vulnerabilities(self, count=False, include_excluded=False):
+        qs = self.vulnerability_set.filter(cvss_score__gte=4.0, cvss_score__lt=7.0,
+                                           exclude_from_report=include_excluded)
         if count:
             return qs.count()
         return qs
 
     def get_medium_vulnerabilities_count(self):
-        return self.get_medium_vulnerabilities(True)
+        return self.get_medium_vulnerabilities(count=True)
 
-    def get_low_vulnerabilities(self, count=False):
-        qs = self.vulnerability_set.filter(cvss_score__gte=0.1, cvss_score__lt=4.0)
+    def get_low_vulnerabilities(self, count=False, include_excluded=False):
+        qs = self.vulnerability_set.filter(cvss_score__gte=0.1, cvss_score__lt=4.0,
+                                           exclude_from_report=include_excluded)
         if count:
             return qs.count()
         return qs
 
     def get_low_vulnerabilities_count(self):
-        return self.get_low_vulnerabilities(True)
+        return self.get_low_vulnerabilities(count=True)
 
-    def get_informational_vulnerabilities(self, count=False):
-        qs = self.vulnerability_set.filter(models.Q(cvss_score=0.0) | models.Q(cvss_score__isnull=True))
+    def get_informational_vulnerabilities(self, count=False, include_excluded=False):
+        qs = self.vulnerability_set.filter(models.Q(cvss_score=0.0) | models.Q(cvss_score__isnull=True),
+                                           exclude_from_report=include_excluded)
         if count:
             return qs.count()
         return qs
 
     def get_informational_vulnerabilities_count(self):
-        return self.get_informational_vulnerabilities(True)
+        return self.get_informational_vulnerabilities(count=True)
 
     @staticmethod
     def has_read_permission(request):

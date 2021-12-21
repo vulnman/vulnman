@@ -1,10 +1,9 @@
-import re
 import socket
 from urllib.parse import urlparse
 from django.db.models import Q
 from difflib import SequenceMatcher
 from apps.networking.models import Host, Hostname, Service
-from apps.findings.models import Finding, Vulnerability, VulnerabilityDetails, Template
+from apps.findings.models import Finding, Vulnerability, Template, ProofOfConcept
 from apps.findings.constants import VULNERABILITY_SEVERITY_MAP
 
 
@@ -76,63 +75,21 @@ class ToolResultParser(object):
                                              host=host, defaults={"creator": creator, 'command_created': command,
                                                                   'steps_to_reproduce': reproduce})
 
-    def _vulnerability_exists(self, name, vulnerability_data, project, host=None, service=None, method=None,
-                              parameter=None, path=None, site=None):
-        vulnerability_details = VulnerabilityDetails.objects.filter(data=vulnerability_data, method=method,
-                                                                    parameter=parameter, path=path, site=site,
-                                                                    project=project, vulnerability__host=host,
-                                                                    vulnerability__service=service,
-                                                                    vulnerability__name=name)
-        if not vulnerability_details.exists():
-            return None
-            #try:
-            #    return Vulnerability.objects.get(name=name, host=host, service=service, project=project)
-            #except Vulnerability.DoesNotExist:
-            #    return None
-        try:
-            return Vulnerability.objects.get(name=name, host=host, service=service, project=project,
-                                             vulnerabilitydetails=vulnerability_details.get())
-        except Vulnerability.DoesNotExist:
-            return None
+    def _get_or_create_vulnerability(self, template, cvss_score, project, creator, command, service=None, host=None,
+                                     path=None, parameter=None, site=None, method=None, details=None,
+                                     original_name=None):
+        return Vulnerability.objects.get_or_create(template=template, project=project, service=service, host=host,
+                                                   path=path, parameter=parameter, site=site, method=method,
+                                                   details=details,
+                                                   defaults={"creator": creator, "command_created": command,
+                                                             "cvss_score": cvss_score,
+                                                             "original_name": original_name})
 
-    def _get_or_create_vulnerability(self, name, description, cvss_score, project, creator, resolution=None,
-                                     ease_of_resolution="undetermined", host=None, service=None, command=None,
-                                     cvss_vector=None,
-                                     path=None, site=None, detail_data=None, method=None, parameter=None):
-        possible_vuln = self._vulnerability_exists(name, detail_data, project, host=host, service=service,
-                                                   method=method, path=path, parameter=parameter, site=site)
-        if possible_vuln:
-            return possible_vuln, False
-        vulnerability_template = self._get_vulnerability_template_or_none(name, detail_data)
-        if vulnerability_template:
-            if hasattr(vulnerability_template, 'vulnerabilitydetails'):
-                possible_vuln = self._vulnerability_exists(
-                    vulnerability_template.name, detail_data, project, host=host, service=service,
-                    method=vulnerability_template.vulnerabilitydetails.method)
-                if possible_vuln:
-                    return possible_vuln, False
-            else:
-                possible_vuln = self._vulnerability_exists(
-                    vulnerability_template.name, detail_data, project, host=host, service=service)
-                if possible_vuln:
-                    return possible_vuln, False
-            vulnerability = Vulnerability.objects.create(
-                project=project, host=host, service=service, name=vulnerability_template.name,
-                description=vulnerability_template.description, resolution=vulnerability_template.resolution,
-                ease_of_resolution=vulnerability_template.ease_of_resolution,
-                command_created=command, creator=creator, cvss_score=cvss_score, cvss_vector=cvss_vector)
-            return vulnerability, True
-        return Vulnerability.objects.create(
-            project=project, host=host, service=service, name=name, description=description, resolution=resolution,
-            ease_of_resolution=ease_of_resolution, command_created=command, creator=creator,
-            cvss_score=cvss_score, cvss_vector=cvss_vector), True
-
-    def _create_vulnerability_details(self, vulnerability, data, method=None, path=None, parameter=None,
-                                      parameters=None, request=None, response=None, query_params=None, site=None):
-        return VulnerabilityDetails.objects.create(vulnerability=vulnerability, data=data, method=method, path=path,
-                                                   project=vulnerability.project, creator=vulnerability.creator,
-                                                   parameter=parameter, parameters=parameters, request=request,
-                                                   response=response, query_parameters=query_params, site=site)
+    def _create_proof_of_concept(self, vulnerability, name, project, creator, image=None, description=None,
+                                 command=None, is_code=False):
+        return ProofOfConcept.objects.create(finding=vulnerability, name=name, project=project, creator=creator,
+                                             is_code=is_code,
+                                             image=image, description=description, command_created=command)
 
     def _resolve(self, hostname: str):
         """
@@ -150,7 +107,9 @@ class ToolResultParser(object):
         severity = severity.lower()
         return VULNERABILITY_SEVERITY_MAP.get(severity)
 
-    def _get_vulnerability_template_or_none(self, name, details=None, similarity=0.7):
+    def _get_or_create_vulnerability_template(self, name, creator, ease_of_resolution=None,
+                                              description=None, resolution=None,
+                                              cve_id=None, similarity=0.8):
         # replace special chars with spaces to tokenize them
         # name = re.sub(r"[^a-zA-Z0-9\n\.]", r" ", name.lower())
         name = name.lower()
@@ -161,8 +120,6 @@ class ToolResultParser(object):
                 conditions = Q(name__contains=token)
             else:
                 conditions |= Q(name__contains=token)
-        if conditions is None:
-            return None
         templates = Template.objects.filter(conditions)
         ratios = []
         for template in templates:
@@ -177,14 +134,17 @@ class ToolResultParser(object):
         if ratios:
             # sort ratios list of tuples by ratios
             ratios.sort(key=lambda x: x[0])
-            return ratios[0][1]
-        return None
+            return ratios[0][1], False
+        if Template.objects.filter(name=name).exists():
+            return Template.objects.filter(name=name), False
+        return Template.objects.create(name=name, description=description, ease_of_resolution=ease_of_resolution,
+                                       resolution=resolution, cve_id=cve_id, creator=creator), True
 
     def get_or_create_service_from_url(self, url, host, project, creator):
         parsed = urlparse(url)
         if parsed.port:
             service, created = self._get_or_create_service(host, parsed.scheme, parsed.port,
-                                                            project, creator)
+                                                           project, creator)
         elif parsed.scheme and parsed.scheme == "https":
             service, created = self._get_or_create_service(host, "https", 443, project, creator)
         else:

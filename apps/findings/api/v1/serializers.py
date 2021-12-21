@@ -9,15 +9,8 @@ class TemplateSerializer(serializers.ModelSerializer):
         read_only_fields = ["uuid", "creator", "date_updated", "date_created"]
 
 
-class VulnerabilityDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.VulnerabilityDetails
-        exclude = ["template", "project", "vulnerability"]
-        read_only_fields = ["uuid", "creator", "date_updated", "date_created", "command_created"]
-
-
 class VulnerabilitySerializer(serializers.ModelSerializer):
-    details = VulnerabilityDetailSerializer(source='vulnerabilitydetails')
+    template = TemplateSerializer()
 
     class Meta:
         model = models.Vulnerability

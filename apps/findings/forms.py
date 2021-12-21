@@ -12,7 +12,7 @@ class TemplateForm(forms.ModelForm):
 
 
 class VulnerabilityForm(forms.ModelForm):
-    template = forms.ModelChoiceField(queryset=models.Template.objects.all(), required=False,
+    template = forms.ModelChoiceField(queryset=models.Template.objects.all(), required=True,
                                       widget=autocomplete.ModelSelect2(url="findings:template-autocomplete"))
 
     class Meta:
@@ -36,9 +36,3 @@ class ProofOfConceptInline(NamedInlineFormSetFactory):
     model = models.ProofOfConcept
     exclude = ["uuid", "vulnerability", "creator", "command_created", "project"]
     factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 4}
-
-
-class VulnerabilitydetailInline(NamedInlineFormSetFactory):
-    model = models.VulnerabilityDetails
-    exclude = ["uuid", "vulnerability", "creator", "command_created", "project", "template"]
-    factory_kwargs = {"extra": 1, "can_delete": False, "max_num": 1}
