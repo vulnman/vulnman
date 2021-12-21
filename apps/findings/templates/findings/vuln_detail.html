@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block content %}
-    <h3 class="text-center">{{ vuln.name }}</h3>
+    <h3 class="text-center">{{ vuln.template.name }}</h3>
     <div class="row">
         <div class="col-sm-12">
             <div class="d-flex justify-content-between">
@@ -63,6 +63,9 @@
         <!-- Info -->
         <div id="info" class="tab-pane fade show active" role="tabpanel">
             <div class="container-fluid mt-3">
+                {% if vuln.exclude_from_report %}
+                    <p class="alert alert-warning">Excluded From Report!</p>
+                {% endif %}
                 <p><strong>Affected Host: </strong></p>
                 <p><a href="{{ vuln.host.get_absolute_url }}">{{ vuln.host }}</a></p>
 
@@ -70,12 +73,19 @@
                     <p><strong>Affected Service: </strong></p>
                     <p>{{ vuln.service }}</p>
                 {% endif %}
-
+                {% if vuln.original_name %}
+                    <p><strong>Original Name: </strong></p>
+                    <p>{{ vuln.original_name }}</p>
+                {% endif %}
                 <p><strong>Description: </strong></p>
-                {% if vuln.template %}
-                    <p>{{ vuln.template.description | md_to_html }}</p>
-                {% else %}
-                    <p>{{ vuln.description | md_to_html }}</p>
+                <p>{{ vuln.template.description | md_to_html }}</p>
+
+                <p><strong>Resolution: </strong></p>
+                <p>{{ vuln.template.resolution | md_to_html }}</p>
+
+                {% if vuln.template.cve_id %}
+                <p><strong>CVE-ID</strong></p>
+                <p>{{ vuln.template.cve_id }}</p>
                 {% endif %}
             </div>
         </div>
@@ -88,24 +98,21 @@
                 {% else %}
                     <p>-</p>
                 {% endif %}
-                {% if vuln.vulnerabilitydetails %}
-                    <p><strong>Details</strong></p>
-                    <p>{{ vuln.vulnerabilitydetails.data|md_to_html }}</p>
-                    {% if vuln.vulnerabilitydetails.path %}
-                        <p><strong>Path</strong></p>
-                        <p>{{ vuln.vulnerabilitydetails.path }}</p>
-                    {% endif %}
-                    {% if vuln.vulnerabilitydetails.parameter %}
-                        <p><strong>Parameter</strong></p>
-                        <p>{{ vuln.vulnerabilitydetails.parameter }}</p>
-                    {% endif %}
+                <p><strong>Details</strong></p>
+                <p>{{ vuln.details|md_to_html }}</p>
+                {% if vuln.site %}
+                    <p><strong>Site</strong></p>
+                    <p>{{ vuln.site }}</p>
+                {% endif %}
+                {% if vuln.path %}
+                    <p><strong>Path</strong></p>
+                    <p>{{ vuln.path }}</p>
+                {% endif %}
+                {% if vuln.parameter %}
+                    <p><strong>Parameter</strong></p>
+                    <p>{{ vuln.parameter }}</p>
                 {% endif %}
 
-                <p><strong>Resolution: </strong></p>
-                <p>{{ vuln.resolution | md_to_html }}</p>
-
-                <p><strong>Steps to reproduce: </strong></p>
-                <p>{{ vuln.vulnerabilitydetails.steps_to_reproduce|md_to_html }}</p>
 
                 {% if vuln.reference_set.all %}
                     <p><strong>References: </strong></p>
@@ -127,7 +134,7 @@
                                 <figcaption class="figure-caption">{{ proof.name }}</figcaption>
                             </figure>
                         {% endif %}
-                        <p>{{ proof.description|linebreaksbr }}</p>
+                        <p>{{ proof.description|md_to_html}}</p>
                         {% empty %}
                         <p>No proofs yet!</p>
                     {% endfor %}

@@ -59,17 +59,17 @@ class ReportShareToken(models.Model):
             return not cls.objects.filter(pk=value.get("report"), date_expires__gt=timezone.now()).exists()
         return True
 
-"""
+
 class ReportSection(VulnmanProjectModel):
     name = models.CharField(max_length=64)
     text = models.TextField(help_text="Markdown supported!")
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    order = models.IntegerField()
     
     def __str__(self):
         return self.name
     
     class Meta:
-        unique_together = [('project', 'name')]
+        unique_together = [("report", "order")]
         verbose_name_plural = "Report Sections"
         verbose_name = "Report Section"
-"""

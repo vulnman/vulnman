@@ -7,8 +7,13 @@ class ReportShareTokenInline(admin.StackedInline):
     readonly_fields = ["share_token"]
 
 
+class ReportSectionInline(admin.StackedInline):
+    model = models.ReportSection
+    exclude = ["command_created"]
+
+
 class ReportAdmin(admin.ModelAdmin):
-    inlines = [ReportShareTokenInline]
+    inlines = [ReportSectionInline, ReportShareTokenInline]
 
 
 # Register your models here.

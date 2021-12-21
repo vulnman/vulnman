@@ -50,7 +50,7 @@ class TemplateAPITestCase(APITestCase, VulnmanTestMixin):
         # TODO: implement. should only the creator be allowed to delete a template?
         pass
 
-
+"""
 class VulnerabilityViewSetTestCase(APITestCase, VulnmanAPITestMixin):
     def setUp(self) -> None:
         self.init_mixin()
@@ -72,3 +72,4 @@ class VulnerabilityViewSetTestCase(APITestCase, VulnmanAPITestMixin):
 
     def test_deleteview(self):
         self._test_project_deleteview("api:v1:vulnerability-detail", models.Vulnerability)
+"""

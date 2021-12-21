@@ -59,13 +59,13 @@ class BurpSuiteProXML(ToolResultParser):
             else:
                 data = description
             cvss_score = SEVERITY_MAP.get(issue.find("severity").text)
-            vulnerability, created = self._get_or_create_vulnerability(name, html_to_md(description), cvss_score,
+            template, _created = self._get_or_create_vulnerability_template(
+                name, creator, description=html_to_md(description), ease_of_resolution="undetermined",
+                resolution=html_to_md(resolution))
+            vulnerability, created = self._get_or_create_vulnerability(template, cvss_score,
                                                                        project, creator,
-                                                                       resolution=html_to_md(resolution),
-                                                                       detail_data=data,
+                                                                       details=data, original_name=name,
                                                                        path=path, site=site, parameter=parameter,
                                                                        host=host, service=service, command=command)
-            if created:
-                self._create_vulnerability_details(vulnerability, data, path=path, site=site, parameter=parameter)
             # TODO: handle references
             # TODO: handle request and response details

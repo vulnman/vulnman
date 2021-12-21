@@ -1,10 +1,14 @@
 @page {
+      size: a4 portrait;
+    margin: 30mm 10mm 30mm 10mm;
   @top-left {
     background: #fbc847;
     content: counter(page);
     height: 1cm;
     text-align: center;
     width: 1cm;
+    margin-bottom: 1cm;
+
   }
   @top-center {
     background: #fbc847;
@@ -13,6 +17,7 @@
     height: .05cm;
     opacity: .5;
     width: 100%;
+    margin-bottom: 1cm;
   }
   @top-right {
     content: string(heading);
@@ -20,6 +25,8 @@
     height: 1cm;
     vertical-align: middle;
     width: 100%;
+        margin-bottom: 1cm;
+
   }
 }
 @page :blank {
@@ -90,57 +97,6 @@ h4 {
 }
 #cover address:first-of-type {
   padding-left: 3cm;
-}
-
-#contents {
-  break-before: right;
-  break-after: left;
-  page: no-chapter;
-}
-#contents h2 {
-  font-size: 20pt;
-  font-weight: 400;
-  margin-bottom: 3cm;
-}
-#contents h3 {
-  font-weight: 500;
-  margin: 3em 0 1em;
-}
-#contents h3::before {
-  background: #fbc847;
-  content: '';
-  display: block;
-  height: .08cm;
-  margin-bottom: .25cm;
-  width: 2cm;
-}
-#contents ul {
-  list-style: none;
-  padding-left: 0;
-}
-#contents ul li {
-  border-top: .25pt solid #c1c1c1;
-  margin: .25cm 0;
-  padding-top: .25cm;
-}
-#contents ul li::before {
-  color: #fbc847;
-  content: '• ';
-  font-size: 40pt;
-  line-height: 16pt;
-  vertical-align: bottom;
-}
-#contents ul li a {
-  color: inherit;
-  text-decoration-line: inherit;
-}
-#contents ul li a::before {
-  content: target-text(attr(href));
-}
-#contents ul li a::after {
-  color: #fbc847;
-  content: target-counter(attr(href), page);
-  float: right;
 }
 
 .columns section {
@@ -426,4 +382,49 @@ table.table-bordered td, table.table-bordered th {
 .col {
   flex: 1;
   padding: 1em;
+}
+
+.text-critical {
+  color: #9c1720;
+}
+
+.text-high {
+  color: #d13c0f;
+}
+
+.text-medium {
+  color: #e8971e;
+}
+
+.text-low {
+  color: #2075f5;
+}
+
+.text-info {
+  color: #059D1D;
+}
+
+.text-critical a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.text-high a {
+    color: inherit;
+  text-decoration: inherit;
+}
+
+.text-medium a {
+    color: inherit;
+  text-decoration: inherit;
+}
+
+.text-low a {
+    color: inherit;
+  text-decoration: inherit;
+}
+
+.text-info a {
+    color: inherit;
+  text-decoration: inherit;
 }

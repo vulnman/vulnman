@@ -5,7 +5,7 @@ from apps.findings import models
 
 class TemplateViewSet(VulnmanModelViewSet):
     serializer_class = serializers.TemplateSerializer
-    search_fields = ["name", "description", "resolution"]
+    search_fields = ["name", "description", "resolution", "cve_id"]
     queryset = models.Template.objects.all()
 
     def perform_create(self, serializer):
@@ -18,7 +18,8 @@ class VulnerabilityViewSet(VulnmanModelViewSet):
     ignore_fields_after_creation = ["project", "host", "service", "hostname"]
 
     def get_queryset(self):
-        return models.Vulnerability.objects.filter(project__creator=self.request.user)
+        return models.Vulnerability.objects.filter(
+            project__creator=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)

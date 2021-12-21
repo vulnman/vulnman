@@ -3,7 +3,6 @@ docs
 docker/Dockerfile
 .idea
 db.sqlite3
-*.xml
 local_settings.py
 static_files
 uploads

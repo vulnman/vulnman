@@ -2,19 +2,9 @@ from django.contrib import admin
 from apps.findings import models
 
 
-class VulnerabilityDetailsInline(admin.StackedInline):
-    model = models.VulnerabilityDetails
-    exclude = ["template"]
-
-
-class VulnerabilityReferenceInline(admin.StackedInline):
-    model = models.Reference
-    exclude = ["template"]
-
-
 class VulnerabilityProofsInline(admin.StackedInline):
     model = models.ProofOfConcept
-    exclude = ["template"]
+    exclude = ["template", "project", "command_created"]
 
 
 class TemplateReferenceInline(admin.StackedInline):
@@ -22,17 +12,13 @@ class TemplateReferenceInline(admin.StackedInline):
     exclude = ["vulnerability"]
 
 
-class TemplateDetailsInline(admin.StackedInline):
-    model = models.VulnerabilityDetails
-    exclude = ["vulnerability"]
-
-
 class VulnerabilityAdmin(admin.ModelAdmin):
-    inlines = [VulnerabilityDetailsInline, VulnerabilityReferenceInline, VulnerabilityProofsInline]
+    inlines = [VulnerabilityProofsInline]
+    exclude = ["command_created"]
 
 
 class TemplateAdmin(admin.ModelAdmin):
-    inlines = [TemplateDetailsInline, TemplateReferenceInline]
+    inlines = [TemplateReferenceInline]
 
 
 admin.site.register(models.Vulnerability, VulnerabilityAdmin)
