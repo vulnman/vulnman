@@ -15,3 +15,5 @@ drf-yasg==1.20.0
 django-dry-rest-permissions==1.2.0
 markdownify==0.10.0
 weasyprint==53.4
+django-crispy-forms==1.13.0
+crispy-bootstrap5

@@ -18,6 +18,7 @@ class ReportList(generic.ProjectListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["report_share_form"] = forms.ReportShareTokenForm()
+        context["report_create_form"] = forms.ReportForm()
         return context
 
     def get_queryset(self):
@@ -37,7 +38,7 @@ class ReportDetail(generic.ProjectDetailView):
 
 class ReportCreate(generic.ProjectCreateView):
     report_template_name = settings.REPORT_TEMPLATE
-    template_name = "reporting/report_create.html"
+    http_method_names = ["post"]
     form_class = forms.ReportForm
 
     def get_context_data(self, **kwargs):

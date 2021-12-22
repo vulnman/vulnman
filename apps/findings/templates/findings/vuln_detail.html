@@ -128,12 +128,15 @@
             <div class="container-fluid mt-3">
                 <p><strong>Proof of concept(s): </strong></p>
                     {% for proof in vuln.proofofconcept_set.all %}
+                        <p><strong>Name:</strong></p>
+                        <p>{{ proof.name }}</p>
                         {% if proof.image %}
                             <figure class="figure">
                                 <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
                                 <figcaption class="figure-caption">{{ proof.name }}</figcaption>
                             </figure>
                         {% endif %}
+                        <p><strong>Description:</strong></p>
                         <p>{{ proof.description|md_to_html}}</p>
                         {% empty %}
                         <p>No proofs yet!</p>

@@ -1,51 +1,40 @@
-{% load widget_tweaks %}
+{% load crispy_forms_tags %}
 {% load verbose_name %}
 
-<div class="card">
-    <div class="card-body">
-        {% if method %}
-    <form method="{{ method }}" {% if enctype %}enctype="multipart/form-data"{% endif %}>
-    {% csrf_token %}
+{% if fileupload %}
+<form enctype="multipart/form-data" method="post">
 {% else %}
-    <form method="get">
+<form method="post">
 {% endif %}
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-text mb-3">{{ title }}</h4>
+            <hr/>
+            {% crispy form %}
+        </div>
+    </div>
+    {% for inline in inlines %}
+        <div class="card mt-3">
+            <div class="card-body">
+                <h4 class="card-text mb-3">{{ inline.model|verbose_name_plural }}</h4>
+                <hr/>
+                <div id="{{ inline.prefix }}-container">
+                    {% crispy inline %}
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary float-end" id="{{ inline.prefix }}-add_more">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
 
-{% for hidden in form.hidden_fields %}
-    {{ hidden }}
-{% endfor %}
-{% for field in form.visible_fields %}
-    {% include 'forms/field.html' %}
-{% endfor %}
-
-<!-- inlines -->
-{% for formset in inlines %}
-     <h4 class="mt-4">{{ formset.model|verbose_name_plural }}</h4>
-    <hr/>
-    <div id="{{ formset.prefix }}">
-    {% for form in formset.forms %}
-        <div id="{{ form.prefix }}-row">
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in form.visible_fields %}
-            {% include 'forms/field.html' %}
-        {% endfor %}
+        <div id="{{ inline.prefix }}_empty_form" style="display:none">
+            <hr class="mt-4 mb-4"/>
+            {% crispy inline.empty_form inline.helper %}
         </div>
     {% endfor %}
-    </div>
-            {{ formset.management_form }}
-
-{% endfor %}
-
-<div class="form-group mt-3">
-    <div class="clearfix">
-        <div class="float-right">
-            <button type="submit" class="btn btn-success">Submit</button>
-        </div>
-    </div>
-</div>
+    <input type="submit" class="btn btn-primary form-control mt-3" value="Submit">
 </form>
 
-
-    </div>
-</div>
+{% include 'forms/crispy_formset_scripts.html' %}

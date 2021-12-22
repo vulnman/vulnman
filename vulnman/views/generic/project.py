@@ -80,6 +80,15 @@ class ProjectCreateWithInlinesView(ProjectMixin, VulnmanAuthCreateWithInlinesVie
         form.instance.creator = self.request.user
         return super().form_valid(form)
 
+    def forms_valid(self, form, inlines):
+        response = self.form_valid(form)
+        for formset in inlines:
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.project = self.get_project()
+                instance.save()
+        return response
+
 
 class ProjectUpdateWithInlinesView(ProjectMixin, VulnmanAuthUpdateWithInlinesView):
     pass
