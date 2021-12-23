@@ -124,3 +124,7 @@ class Reference(VulnmanModel):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = "References"
+        verbose_name = "Reference"

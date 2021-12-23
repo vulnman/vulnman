@@ -8,7 +8,7 @@
 
     <style>
         .CodeMirror {
-            color: #B1B1B1 !important;
+            color: #B1B1B1;
             background-color: #222222 !important;
             border: 1px solid #515151 !important;
         }
@@ -27,7 +27,7 @@
 
 
 {% block content %}
-    {% crispy form %}
+    {% include 'forms/formset.html' with title="Vulnerability Template" %}
 {% endblock %}
 
 {% block extra_scripts %}
@@ -40,7 +40,7 @@
         });
         let cm_resolution = CodeMirror.fromTextArea(document.getElementById('id_resolution'), {
             mode: "markdown"
-        })
+        });
         $('#id_description').val("-");
         $('#id_resolution').val("-");
     </script>

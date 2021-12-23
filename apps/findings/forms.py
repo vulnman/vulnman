@@ -146,3 +146,22 @@ class ProofOfConceptInline(NamedInlineFormSetFactory):
         for form in formset.forms:
             form.fields["image"].label = ""
         return formset
+
+
+class ReferenceInline(NamedInlineFormSetFactory):
+    model = models.Reference
+    fields = ["name"]
+    factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 4}
+
+    def construct_formset(self):
+        formset = super().construct_formset()
+        formset.helper = FormHelper()
+        formset.helper.form_tag = False
+        formset.helper.disable_csrf = True
+        formset.helper.render_unmentioned_fields = True
+        formset.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12 col-md-12")
+            )
+        )
+        return formset
