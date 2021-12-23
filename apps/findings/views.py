@@ -8,9 +8,10 @@ from apps.findings import forms
 from apps.findings.utils import cvss
 
 
-class TemplateCreate(generic.VulnmanAuthCreateView):
+class TemplateCreate(generic.VulnmanAuthCreateWithInlinesView):
     model = models.Template
     form_class = forms.TemplateForm
+    inlines = [forms.ReferenceInline]
     template_name = "findings/template_create.html"
 
     def form_valid(self, form):

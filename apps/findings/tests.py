@@ -21,7 +21,11 @@ class TemplateTestCase(TestCase, VulnmanTestMixin):
     def test_creatview(self):
         url = self.get_url("findings:template-create")
         payload = {"name": "test vulnerability", "description": "lorem ipsum", "resolution": "fix it",
-                   "ease_of_resolution": "undetermined"}
+                   "ease_of_resolution": "undetermined", "reference_set-TOTAL_FORMS": "1", "reference_set-0-uuid": "",
+                   "reference_set-0-template": "",
+                   "reference_set-0-name": "CWE-1234", "reference_set-0-DELETE": "",
+                   "reference_set-MAX_NUM_FORMS": "4",
+                   "reference_set-INITIAL_FORMS": "0", "reference_set-MIN_NUM_FORMS": "0"}
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(models.Template.objects.count(), 0)
@@ -29,6 +33,7 @@ class TemplateTestCase(TestCase, VulnmanTestMixin):
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(models.Template.objects.count(), 1)
+        self.assertEqual(models.Reference.objects.count(), 1)
         self.assertEqual(models.Template.objects.filter(name="test vulnerability").count(), 1)
         self.assertEqual(models.Template.objects.filter(creator=self.user1).count(), 1)
 

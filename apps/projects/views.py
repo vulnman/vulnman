@@ -80,7 +80,7 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
 
 
 class ProjectUpdate(generic.VulnmanAuthUpdateWithInlinesView):
-    template_name = "projects/project_update.html"
+    template_name = "projects/project_create.html"
     form_class = forms.ProjectForm
     inlines = [forms.ScopeInline]
     model = models.Project

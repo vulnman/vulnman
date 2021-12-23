@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'dry_rest_permissions',
+    'crispy_forms',
+    "crispy_bootstrap5",
     # apps
     'apps.api.apps.ApiConfig',
     'apps.account.apps.AccountConfig',
@@ -259,6 +261,9 @@ REST_FRAMEWORK = {
     #    'rest_framework.renderers.JSONRenderer'
     # ]
 }
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 
 try:
