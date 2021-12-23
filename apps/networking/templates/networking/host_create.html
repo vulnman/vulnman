@@ -15,9 +15,5 @@ Create Host
 
 
 {% block content %}
-    {% include 'forms/formset.html' with method="post" %}
+    {% include 'forms/formset.html' with title="Host" %}
 {% endblock %}
-
-{% block extra_scripts %}
-    {% include 'forms/dynamic_formset.html' %}
-{% endblock  %}

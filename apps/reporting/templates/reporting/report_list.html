@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}
     Reports
@@ -15,7 +16,7 @@
 {% block content %}
     <div class="clearfix">
         <div class="float-end">
-            <a class="btn btn-primary" href="{% url 'projects:reporting:report-create' %}">
+            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-create-modal">
                 <i class="fa fa-plus"></i> New Report
             </a>
         </div>
@@ -87,6 +88,22 @@
             </div>
         </div>
     {% endfor %}
+
+    <!-- Report Create Modal -->
+    <div class="modal fade" id="report-create-modal" tabindex="-1" aria-labelledby="report-create-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="report-create-modal-label">Create Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% crispy report_create_form %}
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     {% include 'navigation/pagination.html' %}
 

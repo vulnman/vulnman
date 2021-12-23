@@ -14,10 +14,6 @@ Create Project
 
 {% block content %}
     <div class="mt-3">
-        {% include 'forms/formset.html' with method="POST" %}
+        {% include 'forms/formset.html' with title="Project" %}
     </div>
 {% endblock %}
-
-{% block extra_scripts %}
-    {% include 'forms/dynamic_formset.html' with single_inline=proofs %}
-{% endblock  %}
