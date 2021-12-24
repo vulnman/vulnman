@@ -1,11 +1,12 @@
 from django.urls import reverse_lazy
-from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils import timezone
-from django.db.models import Count, Q
+from django.db.models import Count
+from guardian.shortcuts import get_objects_for_user
 from apps.projects import models
 from apps.projects import forms
 from vulnman.views import generic
+from vulnman.mixins.permission import NonObjectPermissionRequiredMixin
 
 
 class ProjectList(generic.VulnmanAuthListView):
@@ -13,7 +14,7 @@ class ProjectList(generic.VulnmanAuthListView):
     context_object_name = "projects"
 
     def get_queryset(self):
-        qs = models.Project.objects.filter(Q(creator=self.request.user) | Q(projectmember__user=self.request.user))
+        qs = get_objects_for_user(self.request.user, "view_project", models.Project, use_groups=True)
         if not self.request.GET.get('archived'):
             qs = qs.filter(is_archived=False)
         else:
@@ -26,13 +27,14 @@ class ProjectList(generic.VulnmanAuthListView):
         return super().get(request, *args, **kwargs)
 
 
-class ProjectCreate(generic.VulnmanAuthCreateWithInlinesView):
+class ProjectCreate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthCreateWithInlinesView):
     template_name = "projects/project_create.html"
     form_class = forms.ProjectForm
     model = models.Project
     inlines = [forms.ScopeInline]
     success_url = reverse_lazy("projects:project-list")
     extra_context = {"TEMPLATE_HIDE_BREADCRUMBS": True}
+    permission_required = "projects.add_project"
 
 
 class ProjectDetail(generic.VulnmanAuthDetailView):
@@ -76,7 +78,8 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
         return context
 
     def get_queryset(self):
-        return models.Project.objects.filter(Q(creator=self.request.user) | Q(projectmember__user=self.request.user))
+        return get_objects_for_user(self.request.user, "view_project",
+                                    models.Project.objects.filter(pk=self.kwargs.get('pk')))
 
 
 class ProjectUpdate(generic.VulnmanAuthUpdateWithInlinesView):
@@ -90,31 +93,3 @@ class ProjectUpdate(generic.VulnmanAuthUpdateWithInlinesView):
 
     def get_queryset(self):
         return models.Project.objects.filter(creator=self.request.user)
-
-
-class ProjectMemberCreate(generic.ProjectCreateView):
-    template_name = "projects/project_add_member.html"
-    form_class = forms.ProjectAddMemberForm
-
-    def get_success_url(self):
-        return reverse_lazy('projects:project-detail', kwargs={'pk': self.get_project().pk})
-
-    def form_valid(self, form):
-        if User.objects.filter(email=form.cleaned_data.get('email')).exists():
-            user = User.objects.get(email=form.cleaned_data.get('email'))
-            form.instance.user = user
-            form.instance.project = self.get_project()
-            return super().form_valid(form)
-        return self.form_invalid(form)
-
-
-class ProjectMemberList(generic.ProjectListView):
-    template_name = "projects/project_member_list.html"
-    model = models.ProjectMember
-    context_object_name = "project_members"
-
-
-class ProjectMemberDelete(generic.ProjectDeleteView):
-    http_method_names = ["post"]
-    model = models.ProjectMember
-    success_url = reverse_lazy("projects:project-member-list")

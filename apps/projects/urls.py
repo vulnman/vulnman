@@ -31,9 +31,7 @@ urlpatterns = [
     path('tools/', include('apps.external_tools.urls')),
 
     # project members
-    path('members/', views.ProjectMemberList.as_view(), name="project-member-list"),
-    path('members/create/', views.ProjectMemberCreate.as_view(), name="project-add-member"),
-    path('members/<str:pk>/delete/', views.ProjectMemberDelete.as_view(), name="project-member-delete"),
+    # TODO
 
     # single project
     path('<str:pk>/', views.ProjectDetail.as_view(), name="project-detail"),

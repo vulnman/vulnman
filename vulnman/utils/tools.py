@@ -112,7 +112,6 @@ class ToolResultParser(object):
                                               cve_id=None, similarity=0.8):
         # replace special chars with spaces to tokenize them
         # name = re.sub(r"[^a-zA-Z0-9\n\.]", r" ", name.lower())
-        name = name.lower()
         name_tokens = name.lower().split(" ")
         conditions = None
         for token in name_tokens:
@@ -128,7 +127,7 @@ class ToolResultParser(object):
                 template_name = template.name.lower().rsplit("(", 1)[-1].replace(")", "").replace("'", "")
             else:
                 template_name = template.name.lower()
-            sim_ratio = SequenceMatcher(None, name, template_name).ratio()
+            sim_ratio = SequenceMatcher(None, name.lower(), template_name).ratio()
             if sim_ratio >= similarity:
                 ratios.append((sim_ratio, template))
         if ratios:

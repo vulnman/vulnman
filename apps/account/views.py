@@ -1,4 +1,5 @@
 from django.contrib.auth import views
+from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from apps.account import forms
 from vulnman.mixins import ThemeMixin
@@ -25,3 +26,14 @@ class ProfileEdit(generic.VulnmanAuthUpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user.profile
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["email"] = self.request.user.email
+        return initial
+
+    def form_valid(self, form):
+        if not User.objects.filter(email=form.cleaned_data["email"]).exists():
+            self.request.user.email = form.cleaned_data["email"]
+            self.request.user.save()
+        return super().form_valid(form)

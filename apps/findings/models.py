@@ -29,8 +29,10 @@ class Vulnerability(VulnmanProjectModel):
     site = models.CharField(max_length=256, blank=True, null=True)
     # general
     is_fixed = models.BooleanField(default=False)
+    false_positive = models.BooleanField(default=False)
+    verified = models.BooleanField(default=False)
     original_name = models.CharField(max_length=128, null=True, blank=True)
-    exclude_from_report = models.BooleanField(default=False)
+    active = models.BooleanField(default=False)
 
     def __str__(self):
         return self.template.name
@@ -128,3 +130,24 @@ class Reference(VulnmanModel):
     class Meta:
         verbose_name_plural = "References"
         verbose_name = "Reference"
+
+
+"""
+class Technology(VulnmanModel):
+    name = models.CharField(max_length=128)
+    description = models.TextField(null=True, blank=True)
+    maintained = models.BooleanField(blank=True, null=True)
+    homepage = models.URLField(blank=True, null=True)
+    icon = models.CharField(max_length=28, blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = "Technologies"
+        verbose_name = "Technology"
+        ordering = ["-date_updated"]
+        unique_together = [('name',)]
+
+
+class Product(VulnmanProjectModel):
+    # a product that we pentest
+    name = models.CharField(max_length=128)
+"""

@@ -61,6 +61,14 @@
 #   "methodology": "/storage/reporting/sections/methodology.md
 # }
 
+# Add information about your company that is displayed in the report
+# REPORT_COMPANY_INFORMATION = {
+#     "name": "Vulnman",
+#     "street": "No Street 54",
+#     "zip": "123456 Berlin, Germany",
+#     "homepage": "https://vulnman.github.io/vulnman",
+#     "contact": "contact@example.com"
+# }
 
 
 # ########

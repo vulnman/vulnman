@@ -11,5 +11,4 @@ class ClientAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Project)
-admin.site.register(models.ProjectMember)
 admin.site.register(models.Client, ClientAdmin)
