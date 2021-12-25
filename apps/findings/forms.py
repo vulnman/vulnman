@@ -51,7 +51,7 @@ class VulnerabilityForm(forms.ModelForm):
     class Meta:
         model = models.Vulnerability
         fields = ["template", "service", "host", "details", "cvss_vector", "request", "response", "method",
-                  "parameter", "parameters", "path", "query_parameters", "site", "is_fixed", "exclude_from_report"]
+                  "parameter", "parameters", "path", "query_parameters", "site", "is_fixed", "active", "verified"]
 
     def __init__(self, project, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -91,9 +91,11 @@ class VulnerabilityForm(forms.ModelForm):
                     bootstrap5.FloatingField("query_parameters"), css_class="col-sm-12 col-md-6",
                 ),
                 layout.Div(bootstrap5.Field("is_fixed"),
-                           css_class="col-sm-12 col-md-3 form-check-form-check-inline form-switch"),
-                layout.Div(bootstrap5.Field("exclude_from_report"),
-                           css_class="col-sm-12 col-md-3 form-check-form-check-inline form-switch"),
+                           css_class="col-sm-12 col-md-2 form-check-form-check-inline form-switch"),
+                layout.Div(bootstrap5.Field("active"),
+                           css_class="col-sm-12 col-md-2 form-check-form-check-inline form-switch"),
+                layout.Div(bootstrap5.Field("verified"),
+                           css_class="col-sm-12 col-md-2 form-check-form-check-inline form-switch"),
             ),
             layout.Row(
                 layout.Div(

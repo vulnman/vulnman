@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'dry_rest_permissions',
     'crispy_forms',
     "crispy_bootstrap5",
+    "guardian",
     # apps
     'apps.api.apps.ApiConfig',
     'apps.account.apps.AccountConfig',
@@ -80,6 +81,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 ROOT_URLCONF = 'vulnman.urls'
 

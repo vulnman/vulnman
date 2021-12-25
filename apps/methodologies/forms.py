@@ -14,6 +14,7 @@ class MethodologyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.form_tag = False
         self.helper.layout = layout.Layout(
             layout.Row(layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12"))
         )
@@ -32,7 +33,8 @@ class TaskInline(InlineFormSetFactory):
         formset.helper.render_unmentioned_fields = True
         formset.helper.layout = layout.Layout(
             layout.Row(
-                layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12 col-md-12")
+                layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12 col-md-12"),
+                layout.Div(bootstrap5.FloatingField("description"), css_class="col-sm-12 col-md-12")
             )
         )
         return formset
@@ -64,7 +66,8 @@ class ProjectTaskInline(InlineFormSetFactory):
         formset.helper.render_unmentioned_fields = True
         formset.helper.layout = layout.Layout(
             layout.Row(
-                layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12 col-md-12")
+                layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12 col-md-12"),
+                layout.Div(bootstrap5.FloatingField("description"), css_class="col-sm-12 col-md-12")
             )
         )
         return formset

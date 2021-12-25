@@ -11,8 +11,5 @@ Edit Profile
 {% endblock %}
 
 {% block content %}
-<h3>Edit Profile</h3>
-<hr/>
-
-{% include 'forms/simple.html' with method="post" %}
+    {% include 'forms/form_in_card.html' with title="Profile" %}
 {% endblock %}

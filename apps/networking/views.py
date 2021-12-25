@@ -32,7 +32,6 @@ class HostDetail(generic.ProjectDetailView):
     template_name = "networking/host_detail.html"
     context_object_name = "host"
     model = models.Host
-    allowed_project_roles = ["pentester", "read-only"]
 
 
 class HostEdit(generic.ProjectUpdateWithInlinesView):

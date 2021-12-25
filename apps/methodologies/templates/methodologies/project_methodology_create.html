@@ -28,11 +28,7 @@ Create Methodology
         <!-- Step1 -->
         <div id="step1" class="tab-pane fade show active" role="tabpanel">
             <div class="container-fluid mt-3">
-                <p>Create Methodology without template</p>
-
-                <div class="mt-3">
-                    {% include 'forms/formset.html' with method="POST" %}
-                </div>
+                {% include 'forms/formset.html' with title="Blank Methodology" %}
             </div>
         </div>
 
