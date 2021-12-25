@@ -6,7 +6,7 @@ The file name **must** end with `min.css`.
 
 Since `vulnman` is using [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/), you can use any bootstrap theme you want.
 
-To change the CSS theme you need to change `VULNMAN_CSS_THEME` setting in your [settings file](../../getting_started/configuration).
+To change the CSS theme you need to change `VULNMAN_CSS_THEME` setting in your [settings file](../../getting_started/configuration/index.md).
 
 
 ## Built In Themes

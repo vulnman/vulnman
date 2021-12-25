@@ -5,16 +5,16 @@ This section will give a short overview about the terminology used within the vu
 
 ## Components
 
-**Vulnman Server:**
-The [vulnman server](https://github.io/vulnman/vulnman) is the key part of the vulnman applications.
+`Vulnman Server`
+:   The [vulnman server](https://github.io/vulnman/vulnman) is the key part of the vulnman applications.
 It is the part between you and the database which stores all results behind the scenes.
 
-**Vulnman Cli:**
-The [vulnman cli](https://github.io/vulnman/vulnman-cli) is a command line interface that you can use like a terminal to send results
+`Vulnman Cli`
+:   The [vulnman cli](https://github.io/vulnman/vulnman-cli) is a command line interface that you can use like a terminal to send results
 of different command directly to your vulnman server.
 
-**Vulnman Agent:**
-TODO
+`Vulnman Agent`
+:   TODO
 
 
 ## Classes
