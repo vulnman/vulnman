@@ -28,8 +28,7 @@ markdown_extensions:
   toc:
 
 plugins:
-  - search
-
+  - search:
 
 nav:
   - "Home": "index.md"
@@ -43,6 +42,7 @@ nav:
       - "Upgrade":
            - "Vulnman Server": "getting_started/upgrade/server.md"
   - "Usage":
+      - "Permissions and Groups": "usage/permissions.md"
       - "Create Client": "usage/create_client.md"
       - "Import Vulnerability Templates": "usage/vulnerability_management/import_templates.md"
       - "Reporting": "usage/reporting.md"

@@ -36,7 +36,7 @@ This tutorial will create the gobuster dns plugin.
 First, you need to create a python package. This example uses the default location
 of the built-in parsers (`tools/parsers/`).
 
-Add your tool to your [settings file](../getting_started/configuration) file like shown below:
+Add your tool to your [settings file](../getting_started/configuration/index.md) file like shown below:
 
 ```python
 CUSTOM_EXTERNAL_TOOLS = {

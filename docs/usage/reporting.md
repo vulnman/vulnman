@@ -10,3 +10,8 @@ The following types of report templates are currently supported:
 - HTML (recommended)
 
 - LaTeX
+
+
+## Create Report through Web Interface
+
+![Report Modal](../static/create_report_dialog.png)

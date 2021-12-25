@@ -1,7 +1,7 @@
 # Customize Report
 
 ## Change Report Theme
-Change the `REPORT_TEMPLATE` setting in your [settings file](../../getting_started/configuration).
+Change the `REPORT_TEMPLATE` setting in your [settings file](../../getting_started/configuration/index.md).
 
 ## HTML Reports
 You can customize the default texts for some sections.
