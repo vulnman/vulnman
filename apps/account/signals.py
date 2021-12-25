@@ -1,5 +1,12 @@
 
 def populate_groups_and_permission(sender, **kwargs):
+    """
+    Permissions are handled AFTER migration so this is the way to make it work with the tests
+
+    :param sender:
+    :param kwargs:
+    :return:
+    """
     from django.contrib.auth.models import Group, Permission
     from django.contrib.contenttypes.models import ContentType
     from apps.projects.models import Project

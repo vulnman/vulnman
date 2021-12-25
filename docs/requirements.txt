@@ -1,3 +1,3 @@
-Sphinx
-sphinx-autobuild
-furo
+mkdocs==1.2.3
+markdown
+mkdocs-material==8.1.3

@@ -1,0 +1,58 @@
+site_name: Vulnman Documentation
+site_url: https://vulnman.github.io/vulnman
+repo_url: https://github.com/vulnman/vulnman.git
+repo_name: vulnman/vulnman
+edit_uri: ""
+
+
+theme:
+  name: material
+  # logo: static/logo.png
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+
+markdown_extensions:
+  admonition:
+  def_list:
+  meta:
+  toc:
+
+plugins:
+  - search
+
+
+nav:
+  - "Home": "index.md"
+  - "Getting Started":
+      - "Glossary": "getting_started/glossary.md"
+      - "Features": "getting_started/features.md"
+      - "Installation":
+          - "Vulnman Server": "getting_started/installation/server.md"
+          - "Vulnman CLI": "getting_started/installation/cli.md"
+      - "Configuration": "getting_started/configuration/index.md"
+      - "Upgrade":
+           - "Vulnman Server": "getting_started/upgrade/server.md"
+  - "Usage":
+      - "Create Client": "usage/create_client.md"
+      - "Import Vulnerability Templates": "usage/vulnerability_management/import_templates.md"
+      - "Reporting": "usage/reporting.md"
+      - "CLI": "usage/cli/index.md"
+  - "Advanced":
+      - "Customize":
+        - "CSS": "advanced/customize/css.md"
+        - "Report": "advanced/customize/report.md"
+      - "Plugin System": "advanced/plugin_system.md"
+      - "REST-API": "advanced/rest_api.md"
+      - "Agents": "advanced/agents/index.md"
+  - "Misc":
+      - "Other Products": "misc/products.md"
