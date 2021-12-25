@@ -17,3 +17,4 @@ markdownify==0.10.0
 weasyprint==53.4
 django-crispy-forms==1.13.0
 crispy-bootstrap5
+django-guardian==2.4.0

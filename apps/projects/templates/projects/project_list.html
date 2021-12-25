@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load guardian_tags %}
 
 {% block title %}
 Projects
@@ -19,7 +20,9 @@ Projects
     <div class="clearfix">
         <div class="float-end">
             <a class="btn btn-primary" href="{% url 'projects:project-list' %}?archived=1">Show Archived</a>
+            {% if perms.projects.add_project %}
             <a class="btn btn-primary" href="{% url 'projects:project-create' %}"><i class="fa fa-plus"></i> New Project</a>
+            {% endif %}
         </div>
     </div>
 

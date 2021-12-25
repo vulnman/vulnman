@@ -1,19 +1,27 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse_lazy
 from apps.projects.models import Project, Client
 from ddf import G
+from guardian.shortcuts import assign_perm
 
 
 class VulnmanTestMixin(object):
     def init_mixin(self):
         self.user1 = self._create_user("dummyuser1", "changeme")
         self.user2 = self._create_user("dummyuser2", "changeme")
+        self.pentester = self._create_user("pentester", "changeme")
+        self.manager = self._create_user("manager", "changeme")
+        self.manager.groups.add(Group.objects.get(name="management"))
+        self.pentester.groups.add(Group.objects.get(name="pentester"))
 
     def _create_user(self, username, password, is_staff=False):
         email = "%s@example.com" % username
         return User.objects.create_user(username, password=password, is_staff=is_staff, email=email)
+
+    def assign_perm(self, perm, user_or_group, obj=None):
+        assign_perm(perm, user_or_group=user_or_group, obj=obj)
 
     def _create_project(self, client=None, creator=None):
         if not client:
