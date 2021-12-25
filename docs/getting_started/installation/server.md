@@ -31,7 +31,7 @@ cd /opt/vulnman-server
 ### Configure Database
 The default settings will use a sqlite database.
 If you are fine with this you can continue with this tutorial.
-Otherwise, you may want to read how to [configure](../configuration) your installation.
+Otherwise, you may want to read how to [configure](../configuration/index.md) your installation.
 
 
 ### Initializing Database
@@ -94,12 +94,13 @@ server {
 
 Adjust the credentials and paths in the `docker-compose.yml` file.
 
-For the docker image to work, you need to set up vulnman to use a [postgres database](../configuration/#postgresql).
+For the docker image to work, you need to set up vulnman to use a [postgres database](../configuration/index.md#postgresql).
 
 
 
 You can start all containers with the following command:
 
-.. code-block:: bash
+```bash
+sudo docker-compose up --build
+```
 
-    sudo docker-compose up --build
