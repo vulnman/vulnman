@@ -1,0 +1,22 @@
+<article id="cover">
+    {% if report.custom_title %}
+        <h1>
+            {{ report.custom_title }} <br/>
+            {{ project.client.name }}
+        </h1>
+    {% else %}
+        <h1>
+            {{ project.report_default_title }} <br/>
+            {{ project.client.name }}
+        </h1>
+    {% endif %}
+    <address>
+        {{ REPORT_COMPANY_INFORMATION.name }}
+        {{ REPORT_COMPANY_INFORMATION.street }}
+        {{ REPORT_COMPANY_INFORMATION.zip }}
+    </address>
+    <address>
+        {{ REPORT_COMPANY_INFORMATION.contact }}
+        {{ REPORT_COMPANY_INFORMATION.homepage }}
+    </address>
+</article>

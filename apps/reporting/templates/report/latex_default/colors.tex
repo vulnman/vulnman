@@ -1,3 +1,0 @@
-{%- for severity in SEVERITY_COLORS.keys() -%}
-\definecolor{ {{- severity -}} }{HTML}{ {{- SEVERITY_COLORS.get(severity, {}).get('hex') -}} }
-{%- endfor -%}

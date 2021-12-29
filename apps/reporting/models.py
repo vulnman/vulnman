@@ -68,3 +68,7 @@ class ReportSection(VulnmanProjectModel):
         unique_together = [("report", "order")]
         verbose_name_plural = "Report Sections"
         verbose_name = "Report Section"
+
+    @property
+    def title(self):
+        return self.name

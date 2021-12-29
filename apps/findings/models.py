@@ -3,8 +3,10 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
+from taggit.managers import TaggableManager
 from vulnman.models import VulnmanModel, VulnmanProjectModel
 from apps.findings import constants
+from apps.tagging.models import UUIDTaggedItem
 
 
 def project_pocs_path(instance, filename):
@@ -33,6 +35,7 @@ class Vulnerability(VulnmanProjectModel):
     verified = models.BooleanField(default=False)
     original_name = models.CharField(max_length=128, null=True, blank=True)
     active = models.BooleanField(default=False)
+    tags = TaggableManager(through=UUIDTaggedItem)
 
     def __str__(self):
         return self.template.name
@@ -65,6 +68,10 @@ class Vulnerability(VulnmanProjectModel):
 
     def get_absolute_delete_url(self):
         return reverse_lazy('projects:findings:vulnerability-delete', kwargs={'pk': self.pk})
+
+    @property
+    def name(self):
+        return self.template.name
 
     class Meta:
         ordering = ['-cvss_score']

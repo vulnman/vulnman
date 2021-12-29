@@ -87,6 +87,14 @@
                 <p><strong>CVE-ID</strong></p>
                 <p>{{ vuln.template.cve_id }}</p>
                 {% endif %}
+
+
+                {% if vuln.reference_set.all %}
+                    <p><strong>References: </strong></p>
+                    <ul>
+                        <li>{{ reference }}</li>
+                    </ul>
+                {% endif %}
             </div>
         </div>
         <!-- Details -->
@@ -112,13 +120,13 @@
                     <p><strong>Parameter</strong></p>
                     <p>{{ vuln.parameter }}</p>
                 {% endif %}
-
-
-                {% if vuln.reference_set.all %}
-                    <p><strong>References: </strong></p>
-                    <ul>
-                        <li>{{ reference }}</li>
-                    </ul>
+                {% if vuln.request %}
+                    <p><strong>Request</strong></p>
+                    <p>{{ vuln.request|linebreaksbr }}</p>
+                {% endif %}
+                {% if vuln.response %}
+                    <p><strong>Response</strong></p>
+                    <p>{{ vuln.response|linebreaksbr|truncatechars:3000 }}</p>
                 {% endif %}
             </div>
         </div>

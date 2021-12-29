@@ -26,13 +26,7 @@ class BurpSuiteProXML(ToolResultParser):
             host, _created = self._get_or_create_host(host_ip, project, creator, command=command)
             host_url = issue.find("host").text
             parsed_url = urlparse(host_url)
-            if parsed_url.port:
-                service, _created = self._get_or_create_service(
-                    host, parsed_url.scheme, parsed_url.port, project, creator, command=command)
-            elif parsed_url.scheme == "https":
-                service, _created = self._get_or_create_service(host, "https", 443, project, creator, command=command)
-            else:
-                service, _created = self._get_or_create_service(host, "http", 80, project, creator, command=command)
+            service, _created = self.get_or_create_service_from_url(host_url, host, project, creator, command=command)
             hostname, _created = self._get_or_create_hostname(parsed_url.hostname, host, project, creator,
                                                               command=command)
             name = issue.find("name").text
@@ -59,13 +53,24 @@ class BurpSuiteProXML(ToolResultParser):
             else:
                 data = description
             cvss_score = SEVERITY_MAP.get(issue.find("severity").text)
-            template, _created = self._get_or_create_vulnerability_template(
+            template, created = self._get_or_create_vulnerability_template(
                 name, creator, description=html_to_md(description), ease_of_resolution="undetermined",
                 resolution=html_to_md(resolution))
+            if created:
+                # TODO: create references
+                pass
+            request = None
+            response = None
+            for request_response in issue.findall("requestresponse"):
+                try:
+                    request = base64.b64decode(request_response.find("request").text).decode()
+                    response = base64.b64decode(request_response.find("response").text).decode()
+                finally:
+                    break
             vulnerability, created = self._get_or_create_vulnerability(template, cvss_score,
                                                                        project, creator,
                                                                        details=data, original_name=name,
+                                                                       request=request, response=response,
                                                                        path=path, site=site, parameter=parameter,
                                                                        host=host, service=service, command=command)
             # TODO: handle references
-            # TODO: handle request and response details

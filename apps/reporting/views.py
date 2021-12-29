@@ -45,10 +45,7 @@ class ReportCreate(generic.ProjectCreateView):
         context = super().get_context_data(**kwargs)
         context['SEVERITY_COLORS'] = settings.SEVERITY_COLORS
         context['REPORT_COMPANY_INFORMATION'] = settings.REPORT_COMPANY_INFORMATION
-        context['REPORT_SECTIONS'] = {}
-        for key, value in settings.REPORT_SECTIONS.items():
-            with open(value, "r") as f:
-                context['REPORT_SECTIONS'][key] = f.read()
+        context['REPORT_SECTIONS'] = settings.REPORT_SECTIONS
         return context
 
     def get_success_url(self):

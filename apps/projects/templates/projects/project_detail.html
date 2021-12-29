@@ -19,8 +19,10 @@
 
 {% block content %}
     <h3 class="text-center">{{ project.name }}</h3>
-    <small><p class="text-center"><i>{{ project.customer }}</i></p></small>
+    <small><p class="text-center"><i>{{ project.client.name }}</i></p></small>
     <hr/>
+    {% if perms.projects.change_project %}
+
     <div class="clearfix">
         <div class="float-end">
             <div class="dropdown">
@@ -29,15 +31,12 @@
                     <i class="fa fa-ellipsis-v"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
-                    <li><a class="dropdown-item" href="#">
-                        <i class="fa fa-user-circle"></i> Members</a></li>
-                    <div class="dropdown-divider"></div>
                     <li><a class="dropdown-item" href="{% url 'projects:project-update' project.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
-                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ vuln.pk }}"><i class="fa fa-trash"></i> Delete</a></li>
                 </ul>
             </div>
         </div>
     </div>
+    {% endif %}
 
     <div class="container-fluid mt-3">
         <!-- Dashboard Charts Row 1 -->

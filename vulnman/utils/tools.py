@@ -77,10 +77,11 @@ class ToolResultParser(object):
 
     def _get_or_create_vulnerability(self, template, cvss_score, project, creator, command, service=None, host=None,
                                      path=None, parameter=None, site=None, method=None, details=None,
+                                     request=None, response=None,
                                      original_name=None):
         return Vulnerability.objects.get_or_create(template=template, project=project, service=service, host=host,
                                                    path=path, parameter=parameter, site=site, method=method,
-                                                   details=details,
+                                                   details=details, request=request, response=response,
                                                    defaults={"creator": creator, "command_created": command,
                                                              "cvss_score": cvss_score,
                                                              "original_name": original_name})
@@ -139,13 +140,13 @@ class ToolResultParser(object):
         return Template.objects.create(name=name, description=description, ease_of_resolution=ease_of_resolution,
                                        resolution=resolution, cve_id=cve_id, creator=creator), True
 
-    def get_or_create_service_from_url(self, url, host, project, creator):
+    def get_or_create_service_from_url(self, url, host, project, creator, command=None):
         parsed = urlparse(url)
         if parsed.port:
             service, created = self._get_or_create_service(host, parsed.scheme, parsed.port,
                                                            project, creator)
         elif parsed.scheme and parsed.scheme == "https":
-            service, created = self._get_or_create_service(host, "https", 443, project, creator)
+            service, created = self._get_or_create_service(host, "https", 443, project, creator, command=command)
         else:
-            service, created = self._get_or_create_service(host, "http", 80, project, creator)
+            service, created = self._get_or_create_service(host, "http", 80, project, creator, command=command)
         return service, created
