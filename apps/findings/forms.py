@@ -4,7 +4,6 @@ from dal import autocomplete
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_bootstrap5 import bootstrap5
-from crispy_forms.bootstrap import FormActions
 from vulnman.forms import NamedInlineFormSetFactory
 from apps.networking.models import Service
 
@@ -29,17 +28,11 @@ class TemplateForm(forms.ModelForm):
                     bootstrap5.FloatingField("cve_id"), css_class="col-sm-12 col-md-12"
                 ),
                 layout.Div(
-                    bootstrap5.FloatingField("description"), css_class="col-sm-12 col-md-12"
+                    bootstrap5.Field("description"), css_class="col-sm-12 col-md-12"
                 ),
                 layout.Div(
-                    bootstrap5.FloatingField("resolution"), css_class="col-sm-12 col-md-12"
+                    bootstrap5.Field("resolution"), css_class="col-sm-12 col-md-12"
                 ),
-            ),
-            layout.Row(
-                FormActions(
-                    layout.Submit('submit', 'Submit', css_class="btn-primary w-100"),
-                    wrapper_class="col-sm-12 col-md-6"
-                )
             )
         )
 
@@ -50,7 +43,7 @@ class VulnerabilityForm(forms.ModelForm):
 
     class Meta:
         model = models.Vulnerability
-        fields = ["template", "service", "host", "details", "cvss_vector", "request", "response", "method",
+        fields = ["template", "service", "host", "details", "cvss_vector", "request", "response", "method", "tags",
                   "parameter", "parameters", "path", "query_parameters", "site", "is_fixed", "active", "verified"]
 
     def __init__(self, project, *args, **kwargs):
@@ -105,6 +98,7 @@ class VulnerabilityForm(forms.ModelForm):
                     bootstrap5.FloatingField("details", css_class="mb-2 h-100"), css_class="col-sm-12 col-md-6 h-100",
                 ),
             ),
+            layout.Row(layout.Div(bootstrap5.FloatingField("tags"), css_class="col-sm-12")),
             layout.Row(
                 bootstrap5.Field("request", wrapper_class="col-sm-12 col-md-6"),
                 bootstrap5.Field("response", wrapper_class="col-sm-12 col-md-6"), css_class="mt-2"

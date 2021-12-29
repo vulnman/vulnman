@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     "crispy_bootstrap5",
     "guardian",
+    "taggit",
+    "django-split-settings",
     # apps
     'apps.api.apps.ApiConfig',
     'apps.account.apps.AccountConfig',
@@ -69,7 +71,8 @@ INSTALLED_APPS = [
     'apps.social.apps.SocialConfig',
     'apps.findings.apps.FindingsConfig',
     'apps.agents.apps.AgentsConfig',
-    'apps.commands.apps.CommandsConfig'
+    'apps.commands.apps.CommandsConfig',
+    'apps.tagging.apps.TaggingConfig'
 ]
 
 MIDDLEWARE = [
@@ -129,64 +132,12 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-LOGIN_URL = "account:login"
-LOGIN_REDIRECT_URL = "projects:project-list"
-LOGOUT_REDIRECT_URL = "account:login"
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "static"
-]
-
-STATIC_ROOT = os.path.join(BASE_DIR, "static_files")
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# Set this to True to avoid transmitting the CSRF cookie over HTTP accidentally.
-CSRF_COOKIE_SECURE = True
-
-# Set this to True to avoid transmitting the session cookie over HTTP accidentally.
-SESSION_COOKIE_SECURE = True
 
 LATEX_INTERPRETER = 'latexmk -pdf'
 
@@ -208,20 +159,6 @@ SEVERITY_COLORS = {
 
 VULNMAN_CSS_THEME = "vulnman-dark"
 
-EXTERNAL_TOOLS = {
-    "nmap": "apps.external_tools.parsers.nmap.NmapParser",
-    "gobuster-vhost": "apps.external_tools.parsers.gobuster.GobusterVhost",
-    "gobuster-dir": "apps.external_tools.parsers.gobuster.GobusterDir",
-    "gobuster-dns": "apps.external_tools.parsers.gobuster.GobusterDNS",
-    "aiodnsbrute": "apps.external_tools.parsers.aiodnsbrute.Aiodnsbrute",
-    "subfinder": "apps.external_tools.parsers.subfinder.Subfinder",
-    "fierce": "apps.external_tools.parsers.fierce.Fierce",
-    "infoga": "apps.external_tools.parsers.infoga.Infoga",
-    "nuclei": "apps.external_tools.parsers.nuclei.Nuclei",
-    "burpsuite-pro": "apps.external_tools.parsers.burpsuite.BurpSuiteProXML",
-    "testssl": "apps.external_tools.parsers.testssl.TestSSL",
-}
-
 HOST_OS_ICONS = {
     "linux": {
         "icon": "fa fa-linux", "matches": ["Ubuntu", "Fedora", "Arch-Linux", "Debian", "Linux"]
@@ -236,6 +173,8 @@ REPORT_COMPANY_INFORMATION = {
     "homepage": "https://vulnman.github.io/vulnman",
     "contact": "contact@example.com"
 }
+
+TAGGIT_CASE_INSENSITIVE = True
 
 CUSTOM_EXTERNAL_TOOLS = {}
 

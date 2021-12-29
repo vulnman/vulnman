@@ -1,3 +1,4 @@
+import os
 from weasyprint import HTML
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -20,19 +21,27 @@ class HTMLConverter(object):
         return raw_source, pdf_source
 
     def render_sections(self):
-        self.context["RENDERED_SECTIONS"] = {}
+        self.context["RENDERED_SECTIONS"] = []
         order = 0
-        for key, value in settings.REPORT_SECTIONS.items():
-            with open(value, "r") as f:
+        for section in settings.REPORT_SECTIONS:
+            if not section.get("content"):
+                # TODO: store html content, but prevent SSTI here!
+                self.context["RENDERED_SECTIONS"].append({"template": section["template"]})
+                continue
+            content_file = os.path.join(settings.REPORT_TEMPLATE_CONTENTS_DIR, section["content"])
+            with open(content_file, "r") as f:
                 rendered = self._render_markdown_section_context(f.read())
-                if not models.ReportSection.objects.filter(report=self.report, name=key).exists():
-                    section = models.ReportSection.objects.create(report=self.report, name=key, text=rendered,
-                                                                  order=order, project=self.report.project)
-                    self.context["RENDERED_SECTIONS"][key] = section
+                if not models.ReportSection.objects.filter(report=self.report, name=section["title"]).exists():
+                    report_section = models.ReportSection.objects.create(report=self.report, name=section["title"],
+                                                                         text=rendered, order=order,
+                                                                         project=self.report.project)
+                    report_section.template = section["template"]
+                    self.context["RENDERED_SECTIONS"].append(report_section)
                     order += 1
                 else:
-                    section = self.report.reportsection_set.get(name=key)
-                    self.context["RENDERED_SECTIONS"][key] = section
+                    report_section = self.report.reportsection_set.get(name=section["title"])
+                    report_section.template = section["template"]
+                    self.context["RENDERED_SECTIONS"].append(report_section)
 
     def _render_markdown_section_context(self, content):
         template = engines["django"].from_string(content)
