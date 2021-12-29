@@ -19,13 +19,4 @@ The documentation can be found under [https://vulnman.github.io/vulnman](https:/
 *Note: The documentation is in a really early state!*
 
 ### Build locally
-You can build the documentation locally using sphinx.
-
-```
-cd docs/
-pip install -r requirements.txt
-export PATH=$PATH:/home/user/.local/bin
-make html
-```
-
-The documentation files can be found under `_build/html`.
+You can build the documentation locally using mkdocs.
