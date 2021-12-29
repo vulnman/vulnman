@@ -65,3 +65,7 @@ class VulnmanAuthTemplateView(LoginRequiredMixin, mixins.ThemeMixin, generic.Tem
 
 class VulnmanAuthFormView(LoginRequiredMixin, mixins.ThemeMixin, generic.FormView):
     pass
+
+
+class VulnmanAuthRedirectView(LoginRequiredMixin, mixins.ThemeMixin, generic.RedirectView):
+    pass

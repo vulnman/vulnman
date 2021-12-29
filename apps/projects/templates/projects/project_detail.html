@@ -32,6 +32,8 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
                     <li><a class="dropdown-item" href="{% url 'projects:project-update' project.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#close-project-modal"><i class="fa fa-times"></i> Close</a></li>
+
                 </ul>
             </div>
         </div>
@@ -126,6 +128,28 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+<div class="modal fade" id="close-project-modal" tabindex="-1" aria-labelledby="close-project-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form method="post" action="{% url 'projects:project-close' project.pk %}">
+            {% csrf_token %}
+      <div class="modal-header">
+        <h5 class="modal-title" id="close-project-modal-label">Close Project</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          Do you really want to close this project?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Close</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 

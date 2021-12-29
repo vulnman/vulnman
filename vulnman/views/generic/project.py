@@ -3,7 +3,8 @@ from django.core.exceptions import ImproperlyConfigured
 from vulnman.mixins.project import ProjectMixin
 from vulnman.views.generic.vulnman import (
     VulnmanAuthDetailView, VulnmanAuthListView, VulnmanAuthCreateView, VulnmanAuthUpdateView, VulnmanAuthDeleteView,
-    VulnmanAuthCreateWithInlinesView, VulnmanAuthUpdateWithInlinesView, VulnmanAuthTemplateView, VulnmanAuthFormView
+    VulnmanAuthCreateWithInlinesView, VulnmanAuthUpdateWithInlinesView, VulnmanAuthTemplateView, VulnmanAuthFormView,
+    VulnmanAuthRedirectView
 )
 
 
@@ -101,3 +102,7 @@ class ProjectTemplateView(ProjectMixin, VulnmanAuthTemplateView):
 class ProjectFormView(ProjectMixin, VulnmanAuthFormView):
     def form_valid(self, form):
         return super().form_valid(form)
+
+
+class ProjectRedirectView(ProjectMixin, VulnmanAuthRedirectView):
+    pass

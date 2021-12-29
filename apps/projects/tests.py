@@ -38,6 +38,7 @@ class ProjectTests(TestCase, VulnmanTestMixin):
         client = self._create_instance(models.Client)
         payload = {"client": str(client.pk), "start_date": timezone.now().date(),
                    "end_date": timezone.now().date() + timezone.timedelta(days=1),
+                   "pentesters": "%s" % str(self.pentester.pk),
                    "scope_set-TOTAL_FORMS": "1", "scope_set-0-uuid": "",
                    "scope_set-0-project": "",
                    "scope_set-0-name": "Test Scope", "scope_set-0-DELETE": "",

@@ -58,9 +58,10 @@ class VulnerabilityTestCase(TestCase, VulnmanTestMixin):
     def test_listview(self):
         url = self.get_url("projects:findings:vulnerability-list")
         vulnerability = self._create_instance(models.Vulnerability, project__creator=self.user1)
+        self.assign_perm("projects.pentest_project", self.pentester, obj=vulnerability.project)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
-        self.login_with_project(self.user1, self.user1.project_set.first())
+        self.login_with_project(self.pentester, self.user1.project_set.first())
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context_data["vulns"]), 1)
@@ -68,10 +69,11 @@ class VulnerabilityTestCase(TestCase, VulnmanTestMixin):
 
     def test_detailview(self):
         vulnerability = self._create_instance(models.Vulnerability, project__creator=self.user1)
+        self.assign_perm("projects.pentest_project", self.pentester, obj=vulnerability.project)
         url = self.get_url("projects:findings:vulnerability-detail", pk=vulnerability.pk)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
-        self.login_with_project(self.user1, self.user1.project_set.first())
+        self.login_with_project(self.pentester, self.user1.project_set.first())
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context_data["vuln"].pk, vulnerability.pk)
@@ -81,11 +83,12 @@ class VulnerabilityTestCase(TestCase, VulnmanTestMixin):
 
     def test_deleteview(self):
         vulnerability = self._create_instance(models.Vulnerability, project__creator=self.user1)
+        self.assign_perm("projects.pentest_project", self.pentester, obj=vulnerability.project)
         url = self.get_url("projects:findings:vulnerability-delete", pk=vulnerability.pk)
         response = self.client.post(url)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(models.Vulnerability.objects.count(), 1)
-        self.login_with_project(self.user1, self.user1.project_set.first())
+        self.login_with_project(self.pentester, self.user1.project_set.first())
         response = self.client.post(url)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(models.Vulnerability.objects.count(), 0)
