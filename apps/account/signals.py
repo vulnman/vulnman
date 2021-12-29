@@ -5,7 +5,8 @@ GROUP_PERMISSION_MAP = {
             "projects.Project": ["add_project", "view_project", "change_project"],
             "projects.Client": ["view_client"]
         }
-    }
+    },
+    "pentester": {}
 }
 
 
@@ -23,7 +24,7 @@ def populate_groups_and_permission(sender, **kwargs):
 
     for group_key, group_value in GROUP_PERMISSION_MAP.items():
         group, _created = Group.objects.get_or_create(name=group_key)
-        for perm_key in group_value["permissions"]:
+        for perm_key in group_value.get("permissions", []):
             app_label, model_name = perm_key.split(".")
             model = apps.get_model(app_label, model_name)
             content_type = ContentType.objects.get_for_model(model)

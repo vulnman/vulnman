@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.conf import settings
 from django.utils import timezone
@@ -115,6 +116,17 @@ class ProjectUpdate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthUpdateW
         initial = super().get_initial()
         initial["pentesters"] = get_users_with_perms(self.get_object(), with_group_users=False)
         return initial
+
+
+class ProjectUpdateClose(generic.ProjectRedirectView):
+    http_method_names = ["post"]
+    url = reverse_lazy("projects:project-list")
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_project()
+        obj.is_archived = True
+        obj.save()
+        return super().post(request, *args, **kwargs)
 
 
 class ClientList(NonObjectPermissionRequiredMixin, generic.VulnmanAuthListView):

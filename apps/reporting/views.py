@@ -13,7 +13,6 @@ class ReportList(generic.ProjectListView):
     template_name = "reporting/report_list.html"
     paginate_by = 20
     context_object_name = "reports"
-    allowed_project_roles = ["read-only", "pentester"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -27,7 +26,6 @@ class ReportList(generic.ProjectListView):
 
 class ReportDetail(generic.ProjectDetailView):
     context_object_name = "report"
-    allowed_project_roles = ["pentester"]
 
     def get_queryset(self):
         return models.Report.objects.filter(project=self.get_project())

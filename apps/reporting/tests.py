@@ -13,8 +13,9 @@ class ReportViewsTestCase(TestCase, VulnmanTestMixin):
         url = self.get_url("projects:reporting:report-create")
         client = self._create_instance(Client, name="iamarandomclientfromthetestcase")
         project = self._create_project(creator=self.user1, client=client)
+        self.assign_perm("projects.pentest_project", self.pentester, obj=project)
         payload = {"revision": "0.1.0", "changes": "test123"}
-        self.login_with_project(self.user1, project)
+        self.login_with_project(self.pentester, project)
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(models.Report.objects.count(), 1)
