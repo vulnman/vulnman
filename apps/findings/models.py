@@ -1,4 +1,5 @@
 import cvss
+import base64
 from django.db import models
 from django.conf import settings
 from django.urls import reverse_lazy
@@ -90,6 +91,12 @@ class ProofOfConcept(VulnmanProjectModel):
         verbose_name_plural = "Proof of Concepts"
         verbose_name = "Proof of Concept"
         ordering = ["-date_updated"]
+
+    def base64_encoded_image(self):
+        if self.image:
+            with open(self.image.path, "rb") as image_f:
+                encoded = base64.b64encode(image_f.read())
+                return "data:image/png;base64, %s" % encoded.decode()
 
 
 class Finding(VulnmanProjectModel):

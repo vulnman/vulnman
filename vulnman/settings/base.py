@@ -39,8 +39,7 @@ ROOT_URLCONF = 'vulnman.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -52,13 +51,13 @@ TEMPLATES = [
         },
     },
     {
-        'NAME': 'tex',
-        'BACKEND': 'django_tex.engine.TeXEngine',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'environment': 'apps.reporting.environment.tex_report_env',
-        }
+        'NAME': 'report_templates',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            BASE_DIR / 'report_templates', BASE_DIR / 'vulnman/report_templates',
+            BASE_DIR / 'custom/report_templates'
+        ],
+        'APP_DIRS': False
     },
 ]
 
