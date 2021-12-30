@@ -74,6 +74,15 @@ class VulnCreate(generic.ProjectCreateWithInlinesView):
             form.instance.host = form.instance.service.host
         return super().form_valid(form)
 
+    def forms_valid(self, form, inlines):
+        response = self.form_valid(form)
+        for formset in inlines:
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.project = self.get_project()
+                instance.save()
+        return response
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['project'] = self.get_project()
@@ -107,6 +116,14 @@ class VulnUpdate(generic.ProjectUpdateWithInlinesView):
         kwargs['project'] = self.get_project()
         return kwargs
 
+    def forms_valid(self, form, inlines):
+        response = self.form_valid(form)
+        for formset in inlines:
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.project = self.get_project()
+                instance.save()
+        return response
 
 class VulnDelete(generic.ProjectDeleteView):
     model = models.Vulnerability
