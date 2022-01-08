@@ -8,3 +8,4 @@ static_files
 uploads
 venv
 __pycache__
+mkdocs.yml
