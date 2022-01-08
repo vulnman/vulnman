@@ -36,7 +36,7 @@ class Vulnerability(VulnmanProjectModel):
     verified = models.BooleanField(default=False)
     original_name = models.CharField(max_length=128, null=True, blank=True)
     active = models.BooleanField(default=False)
-    tags = TaggableManager(through=UUIDTaggedItem)
+    tags = TaggableManager(through=UUIDTaggedItem, blank=True)
 
     def __str__(self):
         return self.template.name
@@ -75,7 +75,7 @@ class Vulnerability(VulnmanProjectModel):
         return self.template.name
 
     class Meta:
-        ordering = ['-cvss_score']
+        ordering = ['-cvss_score', '-verified']
         verbose_name_plural = "Vulnerabilities"
         verbose_name = "Vulnerability"
 
