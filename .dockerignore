@@ -9,3 +9,6 @@ uploads
 venv
 __pycache__
 mkdocs.yml
+.git
+.gitignore
+docker-compose.yml

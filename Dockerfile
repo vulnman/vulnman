@@ -4,9 +4,8 @@ COPY . /app
 WORKDIR /app
 
 RUN pip install -r requirements.txt && \
-    pip install psycopg2-binary
-    # && \
-    #python manage.py create_secret_key
+    pip install psycopg2-binary && \
+    python manage.py create_secret_key
 
 
 COPY docker/docker-entrypoint.sh /app
