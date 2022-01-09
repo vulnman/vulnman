@@ -10,7 +10,7 @@ from extra_views import InlineFormSetFactory
 
 class ProjectForm(forms.ModelForm):
     pentesters = forms.ModelMultipleChoiceField(queryset=User.objects.filter(
-        groups__in=list(Group.objects.filter(name="pentester").values_list("pk", flat=True))))
+        groups__name="pentester"))
 
     class Meta:
         model = models.Project
