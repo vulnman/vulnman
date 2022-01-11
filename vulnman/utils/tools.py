@@ -81,8 +81,9 @@ class ToolResultParser(object):
                                      original_name=None):
         return Vulnerability.objects.get_or_create(template=template, project=project, service=service, host=host,
                                                    path=path, parameter=parameter, site=site, method=method,
-                                                   details=details, request=request, response=response,
+                                                   details=details,
                                                    defaults={"creator": creator, "command_created": command,
+                                                             "request": request, "response": response,
                                                              "cvss_score": cvss_score,
                                                              "original_name": original_name})
 

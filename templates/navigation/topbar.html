@@ -49,12 +49,6 @@
                     </li>
                     {% endif %}
                 {% endif %}
-                {% if perms.projects.view_client %}
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.view_name == 'clients:client-list' %}active{% endif %}"
-                           href="{% url 'clients:client-list' %}">Clients</a>
-                    </li>
-                {% endif %}
             </ul>
             <ul class="navbar-nav my-2 my-sm-0">
                 <li class="nav-item dropdown my-1 my-sm-0">
@@ -69,6 +63,10 @@
                                 Templates</a>
                             <a class="dropdown-item" href="{% url 'methodology:methodology-list' %}">Methodologies</a>
                             <a class="dropdown-item" href="{% url 'agents:agent-list' %}">Agents</a>
+                            {% if perms.projects.view_client %}
+                                <a class="dropdown-item" href="{% url 'clients:client-list' %}">Clients</a>
+                            {% endif %}
+                            <hr/>
                             <a class="dropdown-item" href="{% url 'account:profile-edit' %}">Edit Profile</a>
                             {% if request.user.is_staff %}
                                 <div class="dropdown-divider"></div>

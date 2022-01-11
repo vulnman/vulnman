@@ -41,25 +41,9 @@
 # Reporting
 # #########
 
-# Pentest company name
-# This name is used in some parts of the reports. This usually is the name of your company.
-# REPORT_PENTEST_COMPANY = "Example IT-Sec Ltd."
-
-# Path to the latex interpreter used to generate the reports
-# LATEX_INTERPRETER = 'latexmk -pdf'
-
 # Report Template
-# REPORT_TEMPLATE = "custom/report.html"
+# REPORTING_TEMPLATE = "custom.report_templates.bugbounty.BugBountyReportTemplate"
 
-# Custom CSS styles for your report
-# REPORT_TEMPLATE_STYLESHEETS = [
-#     os.path.join("/storage/apps/reporting/templates/report/html_default/report.css"),
-# ]
-
-# Overwrite the default text for different report sections
-# CUSTOM_REPORT_SECTIONS = {
-#   "methodology": "/storage/reporting/sections/methodology.md
-# }
 
 # Add information about your company that is displayed in the report
 # REPORT_COMPANY_INFORMATION = {
@@ -84,3 +68,12 @@
 # Set this to True to avoid transmitting the session cookie over HTTP accidentally.
 # Default: True
 # SESSION_COOKIE_SECURE = True
+
+
+######################
+# Celery Worker
+######################
+# Required for Docker!
+# CELERY_BROKER_URL = "redis://redis:6379"
+# CELERY_RESULT_BACKEND = "redis://redis:6379"
+

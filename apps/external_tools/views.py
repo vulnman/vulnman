@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.urls import reverse_lazy
-from django.utils.module_loading import import_string
 from vulnman.views import generic
 from apps.external_tools import forms
+from apps.external_tools import tasks
 
 
 class ToolImportReport(generic.ProjectFormView):
@@ -11,16 +11,13 @@ class ToolImportReport(generic.ProjectFormView):
     valid_report_content_types = ["application/json"]
 
     def form_valid(self, form):
-        tool = form.cleaned_data['tool']
-        tool_module = import_string(settings.EXTERNAL_TOOLS[tool])
+        plugin_name = form.cleaned_data['tool']
         if "text/" in form.cleaned_data['file'].content_type:
             content = form.cleaned_data['file'].read().decode()
-            tool_instance = tool_module()
-            tool_instance.parse(content, self.get_project(), self.request.user)
+            task_id = tasks.do_import_report.delay(plugin_name, content, self.get_project().pk, self.request.user.pk)
         elif form.cleaned_data["file"].content_type in self.valid_report_content_types:
             content = form.cleaned_data['file'].read().decode()
-            tool_instance = tool_module()
-            tool_instance.parse(content, self.get_project(), self.request.user)
+            task_id = tasks.do_import_report.delay(plugin_name, content, self.get_project().pk, self.request.user.pk)
         else:
             print("TODO: handle invalid content type: %s" % form.cleaned_data['file'].content_type)
         return super().form_valid(form)
