@@ -10,4 +10,6 @@ EXTERNAL_TOOLS = {
     "nuclei": "apps.external_tools.parsers.nuclei.Nuclei",
     "burpsuite-pro": "apps.external_tools.parsers.burpsuite.BurpSuiteProXML",
     "testssl": "apps.external_tools.parsers.testssl.TestSSL",
+    "generic-url": "apps.external_tools.parsers.generic.GenericURL",
+    "generic-domains": "apps.external_tools.parsers.generic.GenericDomains",
 }

@@ -2,6 +2,7 @@ version: '3'
 
 services:
   vulnman-web:
+    image: vulnman-web
     build:
       context: './'
     volumes:
@@ -11,6 +12,20 @@ services:
       DJANGO_SUPERUSER_PASSWORD: dontusethispassword
       DJANGO_SUPERUSER_USERNAME: vulnmanadmin
       DJANGO_SUPERUSER_EMAIL: admin@example.com
+    depends_on:
+      - db
+      - celery
+
+  celery:
+    build:
+      context: './'
+    image: vulnman-web
+    entrypoint: celery -A vulnman worker -l INFO
+    volumes:
+      - './local_settings.py:/app/local_settings.py'
+      - '/tmp/volumes/vulnman/static:/app/static_files'
+    depends_on:
+      - redis
 
   db:
     image: postgres:13.0-alpine
@@ -20,6 +35,9 @@ services:
       POSTGRES_PASSWORD: dontusethispassword
       POSTGRES_USER: vulnman_db_user
       POSTGRES_DB: vulnman
+
+  redis:
+    image: "redis:alpine"
 
   nginx:
     image: lscr.io/linuxserver/nginx

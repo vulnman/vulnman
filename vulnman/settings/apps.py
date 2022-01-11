@@ -18,7 +18,6 @@ INSTALLED_APPS = [
     'django_tex',
     'extra_views',
     'rest_framework',
-    'drf_yasg',
     'dry_rest_permissions',
     'crispy_forms',
     "crispy_bootstrap5",
