@@ -44,7 +44,7 @@ class VulnerabilityForm(forms.ModelForm):
 
     class Meta:
         model = models.Vulnerability
-        fields = ["template", "service", "host", "details", "cvss_vector", "request", "response", "method", "tags",
+        fields = ["template", "service", "host", "details", "cvss_vector", "request", "response", "method", "tags", "name",
                   "parameter", "parameters", "path", "query_parameters", "site", "is_fixed", "active", "verified"]
 
     def __init__(self, project, *args, **kwargs):
@@ -60,10 +60,13 @@ class VulnerabilityForm(forms.ModelForm):
             ),
             layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField("service"), css_class="col-sm-12 col-md-6",
+                    bootstrap5.FloatingField("name"), css_class="col-sm-12 col-md-6",
                 ),
                 layout.Div(
-                    bootstrap5.FloatingField("host"), css_class="col-sm-12 col-md-6",
+                    bootstrap5.FloatingField("service"), css_class="col-sm-12 col-md-3",
+                ),
+                layout.Div(
+                    bootstrap5.FloatingField("host"), css_class="col-sm-12 col-md-3",
                 ),
             ),
             layout.Row(
