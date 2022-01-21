@@ -18,6 +18,7 @@ class Vulnerability(VulnmanProjectModel):
     template = models.ForeignKey('findings.Template', on_delete=models.CASCADE)
     service = models.ForeignKey('networking.Service', on_delete=models.CASCADE, null=True, blank=True)
     host = models.ForeignKey('networking.Host', on_delete=models.CASCADE, blank=True, null=True)
+    name = models.CharField(max_length=128)
     details = models.TextField(help_text="Markdown supported!", null=True, blank=True)
     cvss_score = models.FloatField(default=0.0)
     cvss_vector = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
@@ -69,10 +70,6 @@ class Vulnerability(VulnmanProjectModel):
 
     def get_absolute_delete_url(self):
         return reverse_lazy('projects:findings:vulnerability-delete', kwargs={'pk': self.pk})
-
-    @property
-    def name(self):
-        return self.template.name
 
     class Meta:
         ordering = ['-cvss_score', '-verified']
