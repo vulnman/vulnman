@@ -11,7 +11,7 @@ from apps.reporting.utils.converter import HTMLConverter
 @shared_task
 def do_create_report(report_pk):
     report = Report.objects.get(pk=report_pk)
-    templates = Template.objects.filter(vulnerability__project=report.project, vulnerability__verified=True).distinct().order_by('-vulnerability__cvss_score')
+    templates = Template.objects.filter(vulnerability__project=report.project, vulnerability__verified=True).distinct()#.order_by('-vulnerability__cvss_score')
 
     context = {
         "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
