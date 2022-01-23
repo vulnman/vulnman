@@ -77,14 +77,17 @@ class ToolResultParser(object):
 
     def _get_or_create_vulnerability(self, template, cvss_score, project, creator, command, service=None, host=None,
                                      path=None, parameter=None, site=None, method=None, details=None,
-                                     request=None, response=None,
+                                     request=None, response=None, cve_id=None,
                                      original_name=None):
+        name = template.name
+        if original_name:
+            name = original_name
         return Vulnerability.objects.get_or_create(template=template, project=project, service=service, host=host,
                                                    path=path, parameter=parameter, site=site, method=method,
-                                                   details=details,
+                                                   details=details, name=name,
                                                    defaults={"creator": creator, "command_created": command,
                                                              "request": request, "response": response,
-                                                             "cvss_score": cvss_score,
+                                                             "cvss_score": cvss_score, 'cve_id': cve_id,
                                                              "original_name": original_name})
 
     def _create_proof_of_concept(self, vulnerability, name, project, creator, image=None, description=None,
