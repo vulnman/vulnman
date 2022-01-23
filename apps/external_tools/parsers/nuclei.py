@@ -31,6 +31,8 @@ class Nuclei(ToolResultParser):
                     name = "%s: %s" % (name, vuln_info["matcher-name"])
                 else:
                     vuln_value = vuln_info["matched-at"]
+                if vuln_info['info'].get('description'):
+                    vuln_value = description + "\n\n" + vuln_value
                 references = vuln_info['info'].get('reference')
                 if not references:
                     references = []
@@ -52,10 +54,11 @@ class Nuclei(ToolResultParser):
                             resolution="", cve_id=cve_id)
                         vulnerability, created = self._get_or_create_vulnerability(
                             template, cvss_score, project, creator, command, service=service, host=host,
-                            path=parsed_url.path, original_name=name,
+                            path=parsed_url.path, original_name=name, cve_id=cve_id,
+                            request=vuln_info.get('request'), response=vuln_info.get('response'),
                             site=parsed_url.geturl(), details=vuln_value)
                         if created and vuln_info.get('curl-command'):
-                            command_str = "```%s```" % vuln_info.get('curl-command')
+                            command_str = "```\n%s\n```" % vuln_info.get('curl-command')
                             self._create_proof_of_concept(vulnerability, "Reproduce", project, creator,
                                                           description=command_str, command=command, is_code=True)
             except json.JSONDecodeError:
