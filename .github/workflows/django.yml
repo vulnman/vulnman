@@ -23,11 +23,10 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Dependencies
       run: |
-        apt update && apt install -y rabbitmq-server && systemctl start rabbitmq-server
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Run celery worker for tests
-      run: celery -A vulnman worker -l info --detach
+    #- name: Run celery worker for tests
+    #  run: celery -A vulnman worker -l info --detach
     - name: Run Tests
       run: |
         pip install -r requirements-dev.txt
