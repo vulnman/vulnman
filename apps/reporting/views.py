@@ -49,7 +49,6 @@ class ReportCreate(generic.ProjectCreateView):
 
 class ReportUpdate(generic.ProjectUpdateView):
     template_name = "reporting/report_update.html"
-    report_template_name = settings.REPORTING_TEMPLATE
     form_class = forms.ReportUpdateForm
 
     def get_queryset(self):
@@ -58,10 +57,10 @@ class ReportUpdate(generic.ProjectUpdateView):
     def get_success_url(self):
         return reverse_lazy('projects:reporting:report-list')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['SEVERITY_COLORS'] = settings.SEVERITY_COLORS
-        return context
+    def form_valid(self, form):
+        form.save()
+        tasks.do_create_report.delay(form.instance.pk)
+        return super().form_valid(form)
 
 
 class ReportDraftDelete(generic.ProjectDeleteView):
