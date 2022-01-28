@@ -31,6 +31,7 @@ class Vulnerability(VulnmanProjectModel):
     path = models.CharField(max_length=256, blank=True, null=True)
     query_parameters = models.CharField(max_length=256, blank=True, null=True)
     site = models.CharField(max_length=256, blank=True, null=True)
+    cve_id = models.CharField(max_length=28, null=True, blank=True)
     # general
     is_fixed = models.BooleanField(default=False)
     false_positive = models.BooleanField(default=False)
@@ -160,6 +161,9 @@ class Template(VulnmanModel):
 
     def get_absolute_url(self):
         return reverse_lazy('findings:template-detail', kwargs={'pk': self.pk})
+
+    def get_risk_level(self):
+        return self.vulnerability_set.first().get_severities()[0]
 
 
 class Reference(VulnmanModel):

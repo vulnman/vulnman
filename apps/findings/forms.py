@@ -82,7 +82,8 @@ class VulnerabilityForm(forms.ModelForm):
     class Meta:
         model = models.Vulnerability
         fields = ["template", "service", "host", "details", "cvss_vector", "request", "response", "method", "tags", "name",
-                  "parameter", "parameters", "path", "query_parameters", "site", "is_fixed", "verified"]
+                  "parameter", "parameters", "path", "query_parameters", "site", "is_fixed", "verified", "cve_id"]
+
 
     def __init__(self, project, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -105,6 +106,11 @@ class VulnerabilityForm(forms.ModelForm):
                 layout.Div(
                     bootstrap5.FloatingField("host"), css_class="col-sm-12 col-md-3",
                 ),
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField('cve_id'), css_class="col-sm-12",
+                )
             ),
             layout.Row(
                 layout.Div(
@@ -133,14 +139,16 @@ class VulnerabilityForm(forms.ModelForm):
                 layout.Div(
                     bootstrap5.FloatingField("cvss_vector", css_class="mb-2"), css_class="col-sm-12 col-md-6 h-100",
                 ),
-                layout.Div(
-                    bootstrap5.FloatingField("details", css_class="mb-2 h-100"), css_class="col-sm-12 col-md-6 h-100",
-                ),
+                layout.Div(bootstrap5.FloatingField("tags"), css_class="col-sm-12 col-md-6")
             ),
-            layout.Row(layout.Div(bootstrap5.FloatingField("tags"), css_class="col-sm-12")),
             layout.Row(
                 bootstrap5.Field("request", wrapper_class="col-sm-12 col-md-6"),
                 bootstrap5.Field("response", wrapper_class="col-sm-12 col-md-6"), css_class="mt-2"
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.Field("details", css_class="mb-2 h-100"), css_class="col-sm-12 col-md-12",
+                ),
             )
         )
 
@@ -173,7 +181,7 @@ class ProofOfConceptInline(NamedInlineFormSetFactory):
             ),
             layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField("description"),
+                    bootstrap5.Field("description"),
                     css_class="col-sm-12"
                 )
             )

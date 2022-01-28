@@ -8,7 +8,7 @@ def bleach_md(markdown_content):
     allowed_attributes = {"code": ["class"], "a": "href"}
     if not markdown_content:
         return markdown_content
-    cleaned = bleach.clean(markdown.markdown(markdown_content),
+    cleaned = bleach.clean(markdown.markdown(markdown_content, extensions=['fenced_code', 'codehilite']),
                            tags=allowed_tags, attributes=allowed_attributes)
     return cleaned
 
