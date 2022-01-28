@@ -38,6 +38,43 @@ class TemplateForm(forms.ModelForm):
         )
 
 
+
+class TextProofForm(forms.ModelForm):
+    class Meta:
+        model = models.TextProof
+        fields = ["name", "description", "text"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
+                bootstrap5.Field("description", wrapper_class="col-sm-12"),
+                bootstrap5.Field("text", wrapper_class="col-sm-12")
+            )
+        )
+
+
+class ImageProofForm(forms.ModelForm):
+    class Meta:
+        model = models.ImageProof
+        fields = ["name", "description", "image"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
+                bootstrap5.Field("description", wrapper_class="col-sm-12"),
+                bootstrap5.Field("image", wrapper_class="col-sm-12")
+            )
+        )
+
+
+
+
 class VulnerabilityForm(forms.ModelForm):
     template = forms.ModelChoiceField(queryset=models.Template.objects.all(), required=True,
                                       widget=autocomplete.ModelSelect2(url="findings:template-autocomplete"))
@@ -45,7 +82,8 @@ class VulnerabilityForm(forms.ModelForm):
     class Meta:
         model = models.Vulnerability
         fields = ["template", "service", "host", "details", "cvss_vector", "request", "response", "method", "tags", "name",
-                  "parameter", "parameters", "path", "query_parameters", "site", "is_fixed", "active", "verified", "cve_id"]
+                  "parameter", "parameters", "path", "query_parameters", "site", "is_fixed", "verified", "cve_id"]
+
 
     def __init__(self, project, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -93,8 +131,6 @@ class VulnerabilityForm(forms.ModelForm):
                     bootstrap5.FloatingField("query_parameters"), css_class="col-sm-12 col-md-6",
                 ),
                 layout.Div(bootstrap5.Field("is_fixed"),
-                           css_class="col-sm-12 col-md-2 form-check-form-check-inline form-switch"),
-                layout.Div(bootstrap5.Field("active"),
                            css_class="col-sm-12 col-md-2 form-check-form-check-inline form-switch"),
                 layout.Div(bootstrap5.Field("verified"),
                            css_class="col-sm-12 col-md-2 form-check-form-check-inline form-switch"),

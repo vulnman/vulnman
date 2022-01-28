@@ -61,7 +61,7 @@ class VulnList(generic.ProjectListView):
 
 class VulnCreate(generic.ProjectCreateWithInlinesView):
     model = models.Vulnerability
-    inlines = [forms.ProofOfConceptInline]
+    inlines = []
     form_class = forms.VulnerabilityForm
     template_name = "findings/vulnerability_create.html"
     allowed_project_roles = ["pentester"]
@@ -89,16 +89,59 @@ class VulnCreate(generic.ProjectCreateWithInlinesView):
         return kwargs
 
 
+class AddTextProof(generic.ProjectCreateView):
+    http_method_names = ["post"]
+    model = models.TextProof
+    form_class = forms.TextProofForm
+
+    def form_valid(self, form):
+        vuln = self.get_project().vulnerability_set.filter(pk=self.kwargs.get('pk'))
+        #if not vuln.exists():
+        #    self.form.add_errors("name", "Vulnerability does not exist!")
+        #    return super().form_invalid(form)
+        form.instance.vulnerability = vuln.get()
+        form.instance.project = self.get_project()
+        self.success_url = vuln.get().get_absolute_url()
+        return super().form_valid(form)
+
+
+class AddImageProof(generic.ProjectCreateView):
+    http_method_names = ["post"]
+    model = models.ImageProof
+    form_class = forms.ImageProofForm
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
+
+
+    def form_valid(self, form):
+        vuln = self.get_project().vulnerability_set.filter(pk=self.kwargs.get('pk'))
+        if not vuln.exists():
+            self.form.add_errors("name", "Vulnerability does not exist!")
+            return super().form_invalid(form)
+        form.instance.vulnerability = vuln.get()
+        form.instance.project = self.get_project()
+        self.success_url = vuln.get().get_absolute_url()
+        return super().form_valid(form)
+
+
 class VulnDetail(generic.ProjectDetailView):
     template_name = "findings/vuln_detail.html"
     context_object_name = "vuln"
     model = models.Vulnerability
     allowed_project_roles = ["pentester", "read-only"]
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["text_proof_form"] = forms.TextProofForm()
+        context["image_proof_form"] = forms.ImageProofForm()
+        return context
+    
 
 class VulnUpdate(generic.ProjectUpdateWithInlinesView):
     model = models.Vulnerability
-    inlines = [forms.ProofOfConceptInline]
+    inlines = []
     form_class = forms.VulnerabilityForm
     template_name = "findings/vulnerability_create.html"
     allowed_project_roles = ["pentester"]

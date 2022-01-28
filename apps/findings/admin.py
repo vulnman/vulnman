@@ -7,13 +7,23 @@ class VulnerabilityProofsInline(admin.StackedInline):
     exclude = ["template", "project", "command_created"]
 
 
+class TextProofInline(admin.StackedInline):
+    model = models.TextProof
+    exclude = ["project", "command_created"]
+
+
+class ImageProofInline(admin.StackedInline):
+    model = models.ImageProof
+    exclude = ["project", "command_created"]
+
+
 class TemplateReferenceInline(admin.StackedInline):
     model = models.Reference
     exclude = ["vulnerability"]
 
 
 class VulnerabilityAdmin(admin.ModelAdmin):
-    inlines = [VulnerabilityProofsInline]
+    inlines = [VulnerabilityProofsInline, TextProofInline, ImageProofInline]
     exclude = ["command_created"]
 
 

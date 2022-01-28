@@ -38,9 +38,6 @@ class VulnmanProjectModel(VulnmanModel):
     @staticmethod
     def has_create_permission(request):
         project = request.data.get('project')
-        if not project:
-            # Workaround for swagger. No project will lead to exception anyways because NOT NULL
-            return True
         if project and Project.objects.filter(pk=project, creator=request.user).exists():
             return True
         return False
