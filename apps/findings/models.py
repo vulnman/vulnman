@@ -36,7 +36,6 @@ class Vulnerability(VulnmanProjectModel):
     false_positive = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
     original_name = models.CharField(max_length=128, null=True, blank=True)
-    active = models.BooleanField(default=False)
     tags = TaggableManager(through=UUIDTaggedItem, blank=True)
 
     def __str__(self):
@@ -71,13 +70,45 @@ class Vulnerability(VulnmanProjectModel):
     def get_absolute_delete_url(self):
         return reverse_lazy('projects:findings:vulnerability-delete', kwargs={'pk': self.pk})
 
+    @property
+    def proofs(self):
+        proofs = list(self.textproof_set.all()) + list(self.imageproof_set.all())
+        proofs.sort(key=lambda proof: proof.order or 0)
+        return proofs
+
     class Meta:
         ordering = ['-cvss_score', '-verified']
         verbose_name_plural = "Vulnerabilities"
         verbose_name = "Vulnerability"
 
 
+class Proof(VulnmanProjectModel):
+    name = models.CharField(max_length=128)
+    description = models.TextField(blank=True, null=True)
+    order = models.PositiveIntegerField(null=True)
+    vulnerability = models.ForeignKey(Vulnerability, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
+class TextProof(Proof):
+    text = models.TextField(help_text="Markdown supported!")
+
+
+class ImageProof(Proof):
+    caption = models.TextField(blank=True, null=True)
+    image = models.ImageField(max_length=256, upload_to=project_pocs_path)
+
+    def base64_encoded_image(self):
+        if self.image:
+            with open(self.image.path, "rb") as image_f:
+                encoded = base64.b64encode(image_f.read())
+                return "data:image/png;base64, %s" % encoded.decode()
+
+
 class ProofOfConcept(VulnmanProjectModel):
+    # TODO: deprecate
     name = models.CharField(max_length=64)
     image = models.ImageField(blank=True, upload_to=project_pocs_path, null=True)
     finding = models.ForeignKey(Vulnerability, on_delete=models.CASCADE)

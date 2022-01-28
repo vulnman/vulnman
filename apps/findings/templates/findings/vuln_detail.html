@@ -33,6 +33,14 @@
     <hr/>
 
     <div class="clearfix">
+        <div class="float-start">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-text-proof-modal">
+                Add Text Proof
+              </button>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-image-proof-modal">
+                Add Image Proof
+              </button>
+        </div>
         <div class="float-end">
             <div class="dropdown">
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="host-action-dropdown"
@@ -101,8 +109,8 @@
         <div id="details" class="tab-pane fade" role="tabpanel">
             <div class="container-fluid mt-3">
                 <p><strong>CVSS-Vector: </strong></p>
-                {% if vuln.cvss_string %}
-                <p>{{ vuln.cvss_string }}</p>
+                {% if vuln.cvss_vector %}
+                <p>{{ vuln.cvss_vector }}</p>
                 {% else %}
                     <p>-</p>
                 {% endif %}
@@ -134,21 +142,51 @@
         <!-- Proofs -->
         <div id="proofs" class="tab-pane fade" role="tabpanel">
             <div class="container-fluid mt-3">
-                <p><strong>Proof of concept(s): </strong></p>
-                    {% for proof in vuln.proofofconcept_set.all %}
-                        <p><strong>Name:</strong></p>
-                        <p>{{ proof.name }}</p>
-                        {% if proof.image %}
-                            <figure class="figure">
-                                <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
-                                <figcaption class="figure-caption">{{ proof.name }}</figcaption>
-                            </figure>
-                        {% endif %}
-                        <p><strong>Description:</strong></p>
-                        <p>{{ proof.description|md_to_html}}</p>
-                        {% empty %}
-                        <p>No proofs yet!</p>
-                    {% endfor %}
+                {% for proof in vuln.proofs %}
+                    <p><strong>{{ proof.name }}</strong></p>
+                    <p>{{ proof.text|md_to_html }}</p>
+                    {% if proof.image %}
+                    <p>{{ proof.description|md_to_html }}</p>
+                    <figure class="figure">
+                        <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
+                        <figcaption class="figure-caption">{{ proof.name }}</figcaption>
+                    </figure>
+                     {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" id="add-text-proof-modal" tabindex="-1" role="dialog" aria-labelledby="add-text-proof-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <form method="post" action="{% url 'projects:findings:vulnerability-add-text-proof' vuln.pk %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="add-text-proof-modal-label">Add Text Proof</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% include 'forms/simple.html' with without_form_tag=True form=text_proof_form %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="add-image-proof-modal" tabindex="-1" role="dialog" aria-labelledby="add-image-proof-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <form method="post" action="{% url 'projects:findings:vulnerability-add-image-proof' vuln.pk %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="add-image-proof-modal-label">Add Image Proof</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% include 'forms/simple.html' with without_form_tag=True form=image_proof_form%}
+                    </div>
+                </form>
             </div>
         </div>
     </div>
