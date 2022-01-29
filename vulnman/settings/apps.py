@@ -37,5 +37,6 @@ INSTALLED_APPS = [
     'apps.findings.apps.FindingsConfig',
     'apps.agents.apps.AgentsConfig',
     'apps.commands.apps.CommandsConfig',
-    'apps.tagging.apps.TaggingConfig'
+    'apps.tagging.apps.TaggingConfig',
+    'apps.assets.apps.AssetsConfig',
 ]

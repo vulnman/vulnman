@@ -32,7 +32,7 @@
     </div>
     <hr/>
 
-    <div class="clearfix">
+    <div class="clearfix mb-3">
         <div class="float-start">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-text-proof-modal">
                 Add Text Proof
@@ -67,13 +67,12 @@
         </li>
     </ul>
         <!-- Tab Content -->
-    <div class="tab-content">
+    <div class="tab-content card p-3">
         <!-- Info -->
         <div id="info" class="tab-pane fade show active" role="tabpanel">
             <div class="container-fluid mt-3">
-                {% if vuln.exclude_from_report %}
-                    <p class="alert alert-warning">Excluded From Report!</p>
-                {% endif %}
+                <p><strong>Template: </strong></p>
+                <p><a href="{{ vuln.template.get_absolute_url }}">{{ vuln.template.name }}</a></p>
                 <p><strong>Affected Host: </strong></p>
                 <p><a href="{{ vuln.host.get_absolute_url }}">{{ vuln.host }}</a></p>
 

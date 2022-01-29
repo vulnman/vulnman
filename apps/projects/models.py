@@ -14,13 +14,10 @@ class Project(models.Model):
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     report_default_title = models.CharField(max_length=64, default="Assessment Report", blank=True)
     is_archived = models.BooleanField(default=False)
+    name = models.CharField(max_length=128)
 
     def __str__(self):
         return self.name
-
-    @property
-    def name(self):
-        return "%s-%s-%s-%s" % (self.client.name, str(self.pk)[:18], self.start_date.month, self.start_date.year)
 
     def has_vulns_with_severity(self, severity):
         for vuln in self.vulnerability_set.all():

@@ -11,7 +11,14 @@ from apps.reporting.utils.converter import HTMLConverter
 @shared_task
 def do_create_report(report_pk):
     report = Report.objects.get(pk=report_pk)
-    templates = Template.objects.filter(vulnerability__project=report.project, vulnerability__verified=True).distinct()#.order_by('-vulnerability__cvss_score')
+    template_pks = Template.objects.filter(vulnerability__project=report.project, vulnerability__verified=True).order_by('-vulnerability__cvss_score').values_list("pk", flat=True)
+    unique_pks = []
+    for template_pk in template_pks:
+        if not template_pk in unique_pks:
+            unique_pks.append(template_pk)
+    templates = []
+    for pk in unique_pks:
+        templates.append(Template.objects.get(pk=pk))
 
     context = {
         "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,

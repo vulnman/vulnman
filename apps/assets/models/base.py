@@ -8,4 +8,3 @@ class BaseAsset(VulnmanProjectModel):
 
     class Meta:
         abstract = True
-        
