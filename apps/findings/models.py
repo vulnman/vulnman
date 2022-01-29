@@ -36,6 +36,7 @@ class Vulnerability(VulnmanProjectModel):
     is_fixed = models.BooleanField(default=False)
     false_positive = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
+    # TODO: deprecate original_name
     original_name = models.CharField(max_length=128, null=True, blank=True)
     tags = TaggableManager(through=UUIDTaggedItem, blank=True)
 
@@ -100,26 +101,6 @@ class TextProof(Proof):
 class ImageProof(Proof):
     caption = models.TextField(blank=True, null=True)
     image = models.ImageField(max_length=256, upload_to=project_pocs_path)
-
-    def base64_encoded_image(self):
-        if self.image:
-            with open(self.image.path, "rb") as image_f:
-                encoded = base64.b64encode(image_f.read())
-                return "data:image/png;base64, %s" % encoded.decode()
-
-
-class ProofOfConcept(VulnmanProjectModel):
-    # TODO: deprecate
-    name = models.CharField(max_length=64)
-    image = models.ImageField(blank=True, upload_to=project_pocs_path, null=True)
-    finding = models.ForeignKey(Vulnerability, on_delete=models.CASCADE)
-    description = models.TextField(blank=True, null=True)
-    is_code = models.BooleanField(default=False)
-
-    class Meta:
-        verbose_name_plural = "Proof of Concepts"
-        verbose_name = "Proof of Concept"
-        ordering = ["-date_updated"]
 
     def base64_encoded_image(self):
         if self.image:

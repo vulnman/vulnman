@@ -15,8 +15,8 @@ STATE_CHOICES = [
 
 
 class Service(BaseAsset):
-    port = models.PositiveIntegerField(validators=[MaxValueValidator(65535)], blank=True, null=True)
-    host = models.ForeignKey('apps.assets.Host', on_delete=models.PROTECT)
+    port = models.PositiveIntegerField(blank=True, null=True)
+    host = models.ForeignKey('assets.Host', on_delete=models.PROTECT)
     name = models.CharField(max_length=64, blank=True)
     protocol = models.CharField(max_length=12, default="tcp", choices=PROTOCOL_CHOICES)
     state = models.CharField(max_length=24, default="closed", choices=STATE_CHOICES)

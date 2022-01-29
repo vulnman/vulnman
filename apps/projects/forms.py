@@ -14,7 +14,7 @@ class ProjectForm(forms.ModelForm):
 
     class Meta:
         model = models.Project
-        fields = ["client", "start_date", "end_date", "pentesters"]
+        fields = ["client", "start_date", "end_date", "pentesters", "name"]
         widgets = {
             'start_date': DateInput(),
             'end_date': DateInput()
@@ -27,6 +27,9 @@ class ProjectForm(forms.ModelForm):
         self.helper.layout = layout.Layout(
             layout.Row(
                 layout.Div(bootstrap5.FloatingField("client"), css_class="col-sm-12"),
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12")
             ),
             layout.Row(
                 layout.Div(bootstrap5.FloatingField("start_date"), css_class="col-sm-12 col-md-6"),

@@ -153,44 +153,6 @@ class VulnerabilityForm(forms.ModelForm):
         )
 
 
-class ProofOfConceptInline(NamedInlineFormSetFactory):
-    model = models.ProofOfConcept
-    fields = ["name", "description", "image", "is_code"]
-    factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 4}
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def construct_formset(self):
-        formset = super().construct_formset()
-        formset.helper = FormHelper()
-        formset.helper.form_tag = False
-        formset.helper.disable_csrf = True
-        formset.helper.render_unmentioned_fields = True
-        formset.helper.layout = layout.Layout(
-            layout.Row(
-                layout.Div(
-                    bootstrap5.FloatingField("name"),
-                    css_class="col-sm-12 col-md-6"
-                ),
-                layout.Div(
-                    bootstrap5.FloatingField("image"), css_class="col-sm-12 col-md-4"
-                ),
-                layout.Div(bootstrap5.Field("is_code"),
-                           css_class="col-sm-12 col-md-2 form-check-form-check-inline form-switch"),
-            ),
-            layout.Row(
-                layout.Div(
-                    bootstrap5.Field("description"),
-                    css_class="col-sm-12"
-                )
-            )
-        )
-        for form in formset.forms:
-            form.fields["image"].label = ""
-        return formset
-
-
 class ReferenceInline(NamedInlineFormSetFactory):
     model = models.Reference
     fields = ["name"]
