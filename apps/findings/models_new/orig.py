@@ -3,58 +3,11 @@ import base64
 from django.db import models
 from django.conf import settings
 from django.urls import reverse_lazy
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.auth.models import User
+from taggit.managers import TaggableManager
 from vulnman.models import VulnmanModel, VulnmanProjectModel
 from apps.findings import constants
-
-
-SEVERITY_CHOICES = [
-    (4, "critical"),
-    (3, "high"),
-    (2, "medium"),
-    (1, "low"),
-    (0, "informational")
-]
-
-def get_severity_by_name(name):
-    for sev in SEVERITY_CHOICES:
-        if sev[1] == name:
-            return sev[0]
-    return None
-
-class VulnerabilityCategory(VulnmanModel):
-    name = models.CharField(max_length=128, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
-class VulnerabilityReference(VulnmanModel):
-    url = models.URLField()
-
-
-class CWEEntry(VulnmanModel):
-    entry = models.CharField(max_length=32, unique=True)
-
-    def __str__(self):
-        return self.entry
-    
-
-class BaseVulnerability(VulnmanModel):
-    severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES)
-    name = models.CharField(max_length=256)
-    # mitigation = models.TextField()
-    description = models.TextField()
-    recommendation = models.TextField()
-    vulnerability_id = models.CharField(max_length=256)
-    cwe_ids = models.ManyToManyField(CWEEntry)
-    categories = models.ManyToManyField(VulnerabilityCategory)
-    # references = models.ForeignKey(VulnerabiltiyReference)
-
-    class Meta:
-        abstract = True
+from apps.tagging.models import UUIDTaggedItem
 
 
 def project_pocs_path(instance, filename):
@@ -70,6 +23,8 @@ class Vulnerability(VulnmanProjectModel):
     cvss_score = models.FloatField(default=0.0)
     cvss_vector = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
     # usually web vulnerability require the following fields
+    request = models.TextField(blank=True, null=True)
+    response = models.TextField(blank=True, null=True)
     method = models.CharField(max_length=12, blank=True, null=True)
     parameter = models.CharField(max_length=128, blank=True, null=True)
     parameters = models.CharField(max_length=256, blank=True, null=True)
@@ -81,16 +36,12 @@ class Vulnerability(VulnmanProjectModel):
     is_fixed = models.BooleanField(default=False)
     false_positive = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
-    # generic assets
-    asset_webapp = models.ForeignKey('assets.WebApplication', on_delete=models.CASCADE, null=True, blank=True)
-    # asset_host = models.ForeignKey('assets.Host', on_delete=models.CASCADE)
+    # TODO: deprecate original_name
+    original_name = models.CharField(max_length=128, null=True, blank=True)
+    tags = TaggableManager(through=UUIDTaggedItem, blank=True)
 
     def __str__(self):
         return self.template.name
-
-    @property
-    def severity(self):
-        return self.template.get_severity_display()
 
     def get_scores(self):
         if self.cvss_score:
@@ -113,7 +64,7 @@ class Vulnerability(VulnmanProjectModel):
         return ["Information", "Information", "Information"]
 
     def get_severity_colors(self):
-        return settings.SEVERITY_COLORS[self.severity.capitalize()]
+        return settings.SEVERITY_COLORS[self.get_severities()[0]]
 
     def get_absolute_url(self):
         return reverse_lazy('projects:findings:vulnerability-detail', kwargs={'pk': self.pk})
@@ -126,11 +77,6 @@ class Vulnerability(VulnmanProjectModel):
         proofs = list(self.textproof_set.all()) + list(self.imageproof_set.all())
         proofs.sort(key=lambda proof: proof.order or 0)
         return proofs
-
-    @property
-    def asset(self):
-        if self.asset_webapp:
-            return self.asset_webapp
 
     class Meta:
         ordering = ['-cvss_score', '-verified']
@@ -180,20 +126,25 @@ class Finding(VulnmanProjectModel):
         ordering = ["-date_updated"]
 
 
-class Template(BaseVulnerability):
-    vulnerability_id = models.CharField(max_length=256, unique=True)
-
-    class Meta:
-        ordering = ['vulnerability_id']
+class Template(VulnmanModel):
+    name = models.CharField(max_length=128)
+    description = models.TextField(help_text="Markdown supported!")
+    resolution = models.TextField(help_text="Markdown supported")
+    ease_of_resolution = models.CharField(choices=constants.FINDINGS_EASE_OF_RESOLUTIONS, max_length=32)
+    cve_id = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVE ID")
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        unique_together = [('name',)]
+        ordering = ["-date_updated"]
 
     def get_absolute_url(self):
         return reverse_lazy('findings:template-detail', kwargs={'pk': self.pk})
 
     def get_risk_level(self):
-        return self.vulnerability_set.first().severity
+        return self.vulnerability_set.first().get_severities()[0]
 
 
 class Reference(VulnmanModel):

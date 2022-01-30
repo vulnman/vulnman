@@ -15,14 +15,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
-    'django_tex',
     'extra_views',
     'rest_framework',
     'dry_rest_permissions',
     'crispy_forms',
     "crispy_bootstrap5",
     "guardian",
-    "taggit",
     "split_settings",
     # apps
     'apps.api.apps.ApiConfig',
@@ -37,6 +35,5 @@ INSTALLED_APPS = [
     'apps.findings.apps.FindingsConfig',
     'apps.agents.apps.AgentsConfig',
     'apps.commands.apps.CommandsConfig',
-    'apps.tagging.apps.TaggingConfig',
     'apps.assets.apps.AssetsConfig',
 ]

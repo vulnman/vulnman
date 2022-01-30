@@ -45,10 +45,7 @@
 
 
     <p><strong>Description: </strong>{{ vuln_template.description | md_to_html }}</p>
-    <p><strong>Resolution: </strong>{{ vuln_template.resolution | md_to_html }}</p>
-    <p><strong>Ease of Resolution: </strong></p>
-    <p>{{ vuln_template.get_ease_of_resolution_display }}</p>
-
+    <p><strong>Resolution: </strong>{{ vuln_template.recommendation | md_to_html }}</p>
     {% if vuln_template.reference_set.count %}
     <h4>References</h4>
     <ul class="list-group">

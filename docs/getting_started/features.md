@@ -1,11 +1,10 @@
 # Features
 
 - Multiple Projects
-    - Manage found Hosts, Services, Vulnerabilities and other Findings during a scan
+    - Manage found hosts, services, vulnerabilities and other assets of your assessment
     - Collaborate with other users on the same project with different permission roles
 - Report generation
-    - HTML Report Templates (recommended)
-    - LaTeX Report Templates (requires LaTeX environment on host; some issues rendering Markdown!)
+    - HTML Report Templates
     - PDF export
     - Multiple revisions with changelogs
     - Edit Report after creation
@@ -13,12 +12,10 @@
     - Project Dashboard with charts
     - Vulnerability Templates
         - Import from CWE XML files
-        - Import from JSON files
+        - Import from YAML templates
     - CVSS Calculator
-    - Write vulnerability information Markdown
-- Command Builder
-    - Organize your commonly used commands and build them to match your target
+    - Markdown supported in most places
 - Track credentials found during an engagement
-- Command Line Interface to send commands directly to your vulnman server.
 - Manage Tasks during a pentest (create tasks from templates)
 - REST-API
+- Import results from tools like: Burp-Pro, nuclei, nmap, gobuster and more.

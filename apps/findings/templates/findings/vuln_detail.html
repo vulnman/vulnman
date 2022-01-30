@@ -22,7 +22,7 @@
                 <div class="float-start">
                     <small class="text-muted">Created: {{ vuln.date_created|date }}</small>
                 </div>
-                <small class="justify-content-center" style="color: #{{ vuln.get_severity_colors.hex }}"><strong>Score: </strong>{{ vuln.get_scores.0 }} ({{ vuln.get_severities.0 }})</small>
+                <small class="justify-content-center" style="color: #{{ vuln.get_severity_colors.hex }}"><strong>Score: </strong>{{ vuln.template.get_severity_display }}</small>
 
                 <div class="float-end">
                     <small class="text-muted">Created by: {{ vuln.creator }}</small>
@@ -73,22 +73,14 @@
             <div class="container-fluid mt-3">
                 <p><strong>Template: </strong></p>
                 <p><a href="{{ vuln.template.get_absolute_url }}">{{ vuln.template.name }}</a></p>
-                <p><strong>Affected Host: </strong></p>
-                <p><a href="{{ vuln.host.get_absolute_url }}">{{ vuln.host }}</a></p>
-
-                {% if vuln.service %}
-                    <p><strong>Affected Service: </strong></p>
-                    <p>{{ vuln.service }}</p>
-                {% endif %}
-                {% if vuln.original_name %}
-                    <p><strong>Original Name: </strong></p>
-                    <p>{{ vuln.original_name }}</p>
-                {% endif %}
+ 
+                <p><strong>Asset: </strong></p>
+                <p>{{ vuln.asset }} ({{vuln.asset.asset_type}})</p>
                 <p><strong>Description: </strong></p>
                 <p>{{ vuln.template.description | md_to_html }}</p>
 
-                <p><strong>Resolution: </strong></p>
-                <p>{{ vuln.template.resolution | md_to_html }}</p>
+                <p><strong>Recommendation: </strong></p>
+                <p>{{ vuln.template.recommendation | md_to_html }}</p>
 
                 {% if vuln.template.cve_id %}
                 <p><strong>CVE-ID</strong></p>
@@ -109,7 +101,7 @@
             <div class="container-fluid mt-3">
                 <p><strong>CVSS-Vector: </strong></p>
                 {% if vuln.cvss_vector %}
-                <p>{{ vuln.cvss_vector }}</p>
+                <p>{{ vuln.cvss_vector }} ({{vuln.get_scores.0}})</p>
                 {% else %}
                     <p>-</p>
                 {% endif %}
@@ -126,14 +118,6 @@
                 {% if vuln.parameter %}
                     <p><strong>Parameter</strong></p>
                     <p>{{ vuln.parameter }}</p>
-                {% endif %}
-                {% if vuln.request %}
-                    <p><strong>Request</strong></p>
-                    <p>{{ vuln.request|linebreaksbr }}</p>
-                {% endif %}
-                {% if vuln.response %}
-                    <p><strong>Response</strong></p>
-                    <p>{{ vuln.response|linebreaksbr|truncatechars:3000 }}</p>
                 {% endif %}
             </div>
         </div>

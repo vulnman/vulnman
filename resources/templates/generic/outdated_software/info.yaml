@@ -1,8 +1,8 @@
 - id: outdated_software
   name: Outdated Software
-  cve_id: null
+  severity: high
   references:
     - "https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/"
   categories:
-    - patch_management
-    - configuration
+    - Patch Management
+    - Configuration

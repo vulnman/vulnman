@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from vulnman.views import generic
+from apps.assets import models
 
-# Create your views here.
+
+class WebApplicationList(generic.ProjectListView):
+    template_name = "assets/webapp_list.html"
+    context_object_name = "webapps"
+    
+    def get_queryset(self):
+        return models.WebApplication.objects.filter(project=self.get_project())
+    

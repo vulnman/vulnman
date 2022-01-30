@@ -8,3 +8,7 @@ class BaseAsset(VulnmanProjectModel):
 
     class Meta:
         abstract = True
+
+    @property
+    def asset_type(self):
+        return self._meta.verbose_name
