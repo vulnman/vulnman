@@ -23,9 +23,10 @@ class VulnerabilityAdmin(admin.ModelAdmin):
 
 
 class TemplateAdmin(admin.ModelAdmin):
-    inlines = [TemplateReferenceInline]
-
+    # inlines = [TemplateReferenceInline]
+    pass
 
 admin.site.register(models.Vulnerability, VulnerabilityAdmin)
 admin.site.register(models.Template, TemplateAdmin)
 admin.site.register(models.Finding)
+#admin.site.register(models.VulnerabilityTemplate)

@@ -18,6 +18,7 @@ SEVERITY_COLORS = {
     'Low': {'hex': '2075f5', 'chart_border': 'rgba(32, 117, 245, 1)', 'chart': 'rgba(32, 117, 245, 0.2)'},
     'None': {'hex': '059D1D', 'chart_border': 'rgba(5, 157, 29, 1)', 'chart': 'rgba(5, 157, 29, 0.2)'},
     'Information': {'hex': '059D1D', 'chart_border': 'rgba(5, 157, 29, 1)', 'chart': 'rgba(5, 157, 29, 0.2)'},
+    'Informational': {'hex': '059D1D', 'chart_border': 'rgba(5, 157, 29, 1)', 'chart': 'rgba(5, 157, 29, 0.2)'},
 }
 
 VULNMAN_CSS_THEME = "vulnman-dark"

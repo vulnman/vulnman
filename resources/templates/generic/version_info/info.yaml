@@ -1,6 +1,6 @@
 - id: version_info
   name: Version Information
-  cve_id: null
+  severity: informational
   references:
     - "https://cwe.mitre.org/data/definitions/200.html"
   cwe:

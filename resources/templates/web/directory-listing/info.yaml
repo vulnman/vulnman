@@ -1,7 +1,6 @@
 - id: directory-listing
   name: Directory Listing
-  ease_of_resolution: simple
-  cve_id: null
+  severity: medium
   references:
     - "https://portswigger.net/kb/issues/00600100_directory-listing"
   cwe:

@@ -1,5 +1,7 @@
+import json
 from uuid import uuid4
 from django.db import models
+from django.db.models.functions import Cast
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 
@@ -29,7 +31,7 @@ class Project(models.Model):
         return self.get_critical_vulnerabilities(count=True)
 
     def get_critical_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(cvss_score__gte=9.0, verified=include_only_verified)
+        qs = self.vulnerability_set.filter(template__severity=4, verified=include_only_verified)
         if count:
             return qs.count()
         return qs
@@ -38,15 +40,13 @@ class Project(models.Model):
         return self.get_high_vulnerabilities(count=True)
 
     def get_high_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(cvss_score__gte=7.0, cvss_score__lt=9.0,
-                                           verified=include_only_verified)
+        qs = self.vulnerability_set.filter(template__severity=3, verified=include_only_verified)
         if count:
             return qs.count()
         return qs
 
     def get_medium_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(cvss_score__gte=4.0, cvss_score__lt=7.0,
-                                           verified=include_only_verified)
+        qs = self.vulnerability_set.filter(template__severity=2, verified=include_only_verified)
         if count:
             return qs.count()
         return qs
@@ -55,8 +55,7 @@ class Project(models.Model):
         return self.get_medium_vulnerabilities(count=True)
 
     def get_low_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(cvss_score__gte=0.1, cvss_score__lt=4.0,
-                                           verified=include_only_verified)
+        qs = self.vulnerability_set.filter(template__severity=1, verified=include_only_verified)
         if count:
             return qs.count()
         return qs
@@ -65,8 +64,7 @@ class Project(models.Model):
         return self.get_low_vulnerabilities(count=True)
 
     def get_informational_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(models.Q(cvss_score=0.0) | models.Q(cvss_score__isnull=True),
-                                           verified=include_only_verified)
+        qs = self.vulnerability_set.filter(template__severity=0, verified=include_only_verified)
         if count:
             return qs.count()
         return qs

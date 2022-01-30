@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Web Applications
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+        <li class="breadcrumb-item active">Web Applications</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-3">
+        <ul class="list-group">
+            {% for webapp in webapps %}
+                <li class="list-group-item-action">
+                    {{ webapp }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock content %}

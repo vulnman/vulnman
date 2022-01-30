@@ -8,10 +8,17 @@ from vulnman.forms import NamedInlineFormSetFactory
 from apps.networking.models import Service
 
 
+ASSET_TYPE_CHOICES = [
+    ("webapp", "Web Application"),
+    ("host", "Host"),
+    ("service", "Service")
+]
+
+
 class TemplateForm(forms.ModelForm):
     class Meta:
         model = models.Template
-        fields = ["name", "description", "resolution", "ease_of_resolution", "cve_id"]
+        fields = ["name", "description", "recommendation"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -23,16 +30,13 @@ class TemplateForm(forms.ModelForm):
                     bootstrap5.FloatingField("name"), css_class="col-sm-12 col-md-6"
                 ),
                 layout.Div(
-                    bootstrap5.FloatingField("ease_of_resolution"), css_class="col-sm-12 col-md-6"
-                ),
-                layout.Div(
                     bootstrap5.FloatingField("cve_id"), css_class="col-sm-12 col-md-12"
                 ),
                 layout.Div(
                     bootstrap5.Field("description"), css_class="col-sm-12 col-md-12"
                 ),
                 layout.Div(
-                    bootstrap5.Field("resolution"), css_class="col-sm-12 col-md-12"
+                    bootstrap5.Field("recommendation"), css_class="col-sm-12 col-md-12"
                 ),
             )
         )
@@ -78,38 +82,45 @@ class ImageProofForm(forms.ModelForm):
 class VulnerabilityForm(forms.ModelForm):
     template = forms.ModelChoiceField(queryset=models.Template.objects.all(), required=True,
                                       widget=autocomplete.ModelSelect2(url="findings:template-autocomplete"))
+    asset_type = forms.ChoiceField(choices=ASSET_TYPE_CHOICES)
+    f_asset = forms.ChoiceField(choices=[], label="Asset")
 
     class Meta:
         model = models.Vulnerability
-        fields = ["template", "service", "host", "details", "cvss_vector", "request", "response", "method", "tags", "name",
+        fields = ["template", "details", "cvss_vector", "method", "name", "asset_type", "f_asset",
                   "parameter", "parameters", "path", "query_parameters", "site", "is_fixed", "verified", "cve_id"]
 
+    def get_asset_choices(self, project):
+        choices = [("---", "---")]
+        for i in project.webapplication_set.all():
+            d_name = "%s (%s)" % (i.name, "Web Application")
+            choices.append((str(i.pk), d_name))
+        return choices
 
     def __init__(self, project, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['host'].queryset = project.host_set.all()
-        self.fields['service'].queryset = Service.objects.filter(host__project=project)
+        self.fields["f_asset"].choices = self.get_asset_choices(project)
         self.fields['template'].widget.attrs = {'data-theme': 'bootstrap5'}
         self.helper = FormHelper()
         self.helper.form_tag = False
         self.helper.layout = layout.Layout(
             layout.Row(
-                bootstrap5.FloatingField("template", wrapper_class="col-sm-12")
+                bootstrap5.Field("template", wrapper_class="col-sm-12")
             ),
             layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField("name"), css_class="col-sm-12 col-md-6",
-                ),
-                layout.Div(
-                    bootstrap5.FloatingField("service"), css_class="col-sm-12 col-md-3",
-                ),
-                layout.Div(
-                    bootstrap5.FloatingField("host"), css_class="col-sm-12 col-md-3",
+                    bootstrap5.FloatingField("name"), css_class="col-sm-12",
                 ),
             ),
             layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField('cve_id'), css_class="col-sm-12",
+                    bootstrap5.FloatingField('asset_type'), css_class="col-sm-12 col-md-3"
+                ),
+                layout.Div(
+                    bootstrap5.FloatingField('f_asset'), css_class="col-sm-12 col-md-3"
+                ),
+                layout.Div(
+                    bootstrap5.FloatingField('cve_id'), css_class="col-sm-12 col-md-6",
                 )
             ),
             layout.Row(
@@ -137,13 +148,8 @@ class VulnerabilityForm(forms.ModelForm):
             ),
             layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField("cvss_vector", css_class="mb-2"), css_class="col-sm-12 col-md-6 h-100",
-                ),
-                layout.Div(bootstrap5.FloatingField("tags"), css_class="col-sm-12 col-md-6")
-            ),
-            layout.Row(
-                bootstrap5.Field("request", wrapper_class="col-sm-12 col-md-6"),
-                bootstrap5.Field("response", wrapper_class="col-sm-12 col-md-6"), css_class="mt-2"
+                    bootstrap5.FloatingField("cvss_vector", css_class="mb-2"), css_class="col-sm-12 h-100",
+                )
             ),
             layout.Row(
                 layout.Div(
