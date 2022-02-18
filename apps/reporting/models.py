@@ -6,6 +6,27 @@ from django.contrib.auth.models import User
 from uuid import uuid4
 from vulnman.models import VulnmanProjectModel
 
+REPORT_TYPE_CHOICES = [
+    ("draft", "Draft"),
+    ("release", "Relase")
+]
+
+
+class PentestReport(VulnmanProjectModel):
+    report_type = models.CharField(max_length=16, choices=REPORT_TYPE_CHOICES)
+    raw_source = models.TextField(null=True, blank=True)
+    pdf_source = models.BinaryField(null=True, blank=True)
+
+    def __str__(self):
+        return self.get_report_type_display()
+
+    @property
+    def version(self):
+        return "0.1"
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy('projects:reporting:report-delete', kwargs={'pk': self.pk})
+
 
 class Report(VulnmanProjectModel):
     revision = models.CharField(max_length=6, default="0.1", help_text="The reports are ordered by revisions")
@@ -58,7 +79,7 @@ class ReportShareToken(models.Model):
 class ReportSection(VulnmanProjectModel):
     name = models.CharField(max_length=64)
     text = models.TextField(help_text="Markdown supported!")
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    report = models.ForeignKey(PentestReport, on_delete=models.CASCADE)
     order = models.IntegerField()
     
     def __str__(self):

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.utils.module_loading import import_string
 from apps.projects.models import Project
 from django.contrib.auth.models import User
-from apps.reporting.models import Report
+from apps.reporting.models import PentestReport
 from apps.findings.models import Template
 from apps.reporting.utils.converter import HTMLConverter
 from apps.reporting.utils.charts import SeverityDonutChart
@@ -11,7 +11,7 @@ from apps.reporting.utils.charts import SeverityDonutChart
 
 @shared_task
 def do_create_report(report_pk):
-    report = Report.objects.get(pk=report_pk)
+    report = PentestReport.objects.get(pk=report_pk)
     template_pks = Template.objects.filter(vulnerability__project=report.project, vulnerability__verified=True).order_by('-vulnerability__cvss_score').values_list("pk", flat=True)
     unique_pks = []
     for template_pk in template_pks:

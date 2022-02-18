@@ -17,4 +17,5 @@ class ReportAdmin(admin.ModelAdmin):
 
 
 # Register your models here.
-admin.site.register(models.Report, ReportAdmin)
+#admin.site.register(models.Report, ReportAdmin)
+admin.site.register(models.PentestReport)
