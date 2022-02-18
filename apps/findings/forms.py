@@ -4,7 +4,7 @@ from dal import autocomplete
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_bootstrap5 import bootstrap5
-from vulnman.forms import NamedInlineFormSetFactory
+from vulnman.forms import NamedInlineFormSetFactory, CodeMirrorWidget
 from apps.networking.models import Service
 
 
@@ -47,6 +47,9 @@ class TextProofForm(forms.ModelForm):
     class Meta:
         model = models.TextProof
         fields = ["name", "description", "text"]
+        widgets = {
+            "text": CodeMirrorWidget()
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
