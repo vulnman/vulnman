@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 {% load markdown %}
+{% load static %}
 
 {% block title %}
 {{ project.name }}
 {% endblock %}
+
+
+{% block extra_head %}
+<link href="{% static 'css/codehilite.css' %}" rel="stylesheet">
+{% endblock %}
+
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
@@ -126,15 +133,20 @@
         <div id="proofs" class="tab-pane fade" role="tabpanel">
             <div class="container-fluid mt-3">
                 {% for proof in vuln.proofs %}
-                    <p><strong>{{ proof.name }}</strong></p>
-                    <p>{{ proof.text|md_to_html }}</p>
-                    {% if proof.image %}
-                    <p>{{ proof.description|md_to_html }}</p>
-                    <figure class="figure">
-                        <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
-                        <figcaption class="figure-caption">{{ proof.name }}</figcaption>
-                    </figure>
+                    <div class="clearfix">
+                        <div class="float-end">
+                            <button class="btn btn-primary"><i class="fa fa-trash"></i></button>
+                        </div>
+                        <p><strong>{{ proof.name }}</strong></p>
+                        <p>{{ proof.text|md_to_html }}</p>
+                        {% if proof.image %}
+                        <p>{{ proof.description|md_to_html }}</p>
+                        <figure class="figure">
+                            <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
+                            <figcaption class="figure-caption">{{ proof.name }}</figcaption>
+                        </figure>
                      {% endif %}
+                </div>
                 {% endfor %}
             </div>
         </div>

@@ -180,3 +180,14 @@ class VulnDelete(generic.ProjectDeleteView):
 
     def get_queryset(self):
         return models.Vulnerability.objects.filter(project=self.get_project())
+
+
+class TextProofDelete(generic.ProjectDeleteView):
+    model = models.TextProof
+    http_method_names = ["post"]
+
+    def get_success_url(self):
+        return reverse_lazy('projects:findings:vulnerability-list')
+
+    def get_queryset(self):
+        return models.TextProof.objects.filter(project=self.get_project())

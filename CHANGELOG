@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.3.0] - 2022-01-29
 ### Added
 - Project have names now
+- Web Application asset
 
 ### Changed
 - Split proofs into ImageProof and TextProof

@@ -4,8 +4,8 @@ from markdownify import markdownify
 
 
 def bleach_md(markdown_content):
-    allowed_tags = ["p", "a", "code", "pre", "blockquote", "strong", "em", "br", "b", "i", "ul", "li"]
-    allowed_attributes = {"code": ["class"], "a": "href"}
+    allowed_tags = ["p", "a", "code", "pre", "blockquote", "strong", "em", "br", "b", "i", "ul", "li", "div", "span"]
+    allowed_attributes = {"code": ["class"], "a": "href", "div": ["class"], "span": ["class"]}
     if not markdown_content:
         return markdown_content
     cleaned = bleach.clean(markdown.markdown(markdown_content, extensions=['fenced_code', 'codehilite']),
