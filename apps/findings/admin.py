@@ -29,4 +29,5 @@ class TemplateAdmin(admin.ModelAdmin):
 admin.site.register(models.Vulnerability, VulnerabilityAdmin)
 admin.site.register(models.Template, TemplateAdmin)
 admin.site.register(models.Finding)
+admin.site.register(models.VulnerabilityCategory)
 #admin.site.register(models.VulnerabilityTemplate)

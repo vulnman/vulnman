@@ -30,6 +30,10 @@ class VulnerabilityCategory(VulnmanModel):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Vulnerability Category"
+        verbose_name_plural = "Vulnerability Categories"
+
 
 class VulnerabilityReference(VulnmanModel):
     url = models.URLField()

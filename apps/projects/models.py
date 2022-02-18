@@ -21,6 +21,11 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
+    def get_draft_report(self):
+        if self.pentestreport_set.filter(report_type="draft").exists():
+            return self.pentestreport_set.get(report_type="draft")
+        return None
+
     def has_vulns_with_severity(self, severity):
         for vuln in self.vulnerability_set.all():
             if vuln.get_severities()[0] == severity:

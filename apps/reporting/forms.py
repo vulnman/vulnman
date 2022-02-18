@@ -40,6 +40,14 @@ class ReportForm(forms.ModelForm):
         )
 
 
+class PentestReportDraftForm(forms.ModelForm):
+    empty = forms.CharField(required=False)
+
+    class Meta:
+        model = models.PentestReport
+        fields = ["empty"]
+
+
 class ReportUpdateForm(forms.ModelForm):
     class Meta:
         model = models.Report

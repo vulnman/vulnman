@@ -14,11 +14,41 @@
 {% endblock %}
 
 {% block content %}
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <div class="row">
+                <p><strong>Draft Report</strong></p>
+            </div>
+            <div class="row">
+                {% if project.get_draft_report %}
+                    <small><i>Created at {{ project.get_draft_report.date_created|date }}</i></small>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="row">
+                <div class="clearfix">
+                    <div class="float-end">
+                        <form method="post" action="{% url 'projects:reporting:report-draft-create' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="empty" value=""/>
+                            <button class="btn btn-primary">
+                                <i class="fa fa-file"></i> Create Draft
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="clearfix">
         <div class="float-end">
             <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-create-modal">
                 <i class="fa fa-plus"></i> New Report
             </a>
+            
         </div>
     </div>
 
