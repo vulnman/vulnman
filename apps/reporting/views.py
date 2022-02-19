@@ -1,6 +1,6 @@
 from vulnman.views import generic
 from django.conf import settings
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.utils.module_loading import import_string
@@ -42,6 +42,19 @@ class PentestReportDraftCreate(generic.ProjectCreateView):
             report = form.save()
         tasks.do_create_report.delay(report.pk)
         return HttpResponseRedirect(self.get_success_url())
+
+
+class PentestReportDownload(generic.ProjectDetailView):
+    context_object_name = "report"
+
+    def get_queryset(self):
+        return models.PentestReport.objects.filter(project=self.get_project())
+    
+    def render_to_response(self, context, **response_kwargs):
+        obj = self.get_object()
+        response = HttpResponse(obj.pdf_source, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        return response
 
 
 class ReportDetail(generic.ProjectDetailView):

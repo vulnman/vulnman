@@ -22,3 +22,4 @@ django-split-settings==1.1.0
 celery
 redis
 matplotlib==3.5.1
+defusedxml==0.7.1

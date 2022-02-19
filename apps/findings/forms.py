@@ -10,6 +10,7 @@ from apps.networking.models import Service
 
 ASSET_TYPE_CHOICES = [
     ("webapp", "Web Application"),
+    ("webrequest", "Web Request"),
     ("host", "Host"),
     ("service", "Service")
 ]
@@ -80,6 +81,12 @@ class ImageProofForm(forms.ModelForm):
         )
 
 
+class ProofOrderingForm(forms.Form):
+    pk = forms.UUIDField()
+    order = forms.IntegerField(min_value=0)
+
+    class Meta:
+        fields = ["order", "pk"]
 
 
 class VulnerabilityForm(forms.ModelForm):
@@ -90,13 +97,15 @@ class VulnerabilityForm(forms.ModelForm):
 
     class Meta:
         model = models.Vulnerability
-        fields = ["template", "details", "cvss_vector", "method", "name", "asset_type", "f_asset",
-                  "parameter", "parameters", "path", "query_parameters", "site", "is_fixed", "verified", "cve_id"]
+        fields = ["template", "details", "cvss_vector", "name", "asset_type", "f_asset", "is_fixed", "verified", "cve_id"]
 
     def get_asset_choices(self, project):
         choices = [("---", "---")]
         for i in project.webapplication_set.all():
             d_name = "%s (%s)" % (i.name, "Web Application")
+            choices.append((str(i.pk), d_name))
+        for i in project.webrequest_set.all():
+            d_name = "%s (%s)" % (i.name, "Web Request")
             choices.append((str(i.pk), d_name))
         return choices
 
@@ -117,32 +126,15 @@ class VulnerabilityForm(forms.ModelForm):
             ),
             layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField('asset_type'), css_class="col-sm-12 col-md-3"
+                    bootstrap5.FloatingField('asset_type'), css_class="col-sm-12 col-md-6"
                 ),
                 layout.Div(
-                    bootstrap5.FloatingField('f_asset'), css_class="col-sm-12 col-md-3"
-                ),
-                layout.Div(
-                    bootstrap5.FloatingField('cve_id'), css_class="col-sm-12 col-md-6",
+                    bootstrap5.FloatingField('f_asset'), css_class="col-sm-12 col-md-6"
                 )
             ),
             layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField("method"), css_class="col-sm-12 col-md-3",
-                ),
-                layout.Div(
-                    bootstrap5.FloatingField("parameter"), css_class="col-sm-12 col-md-3",
-                ),
-                layout.Div(
-                    bootstrap5.FloatingField("path"), css_class="col-sm-12 col-md-3",
-                ),
-                layout.Div(
-                    bootstrap5.FloatingField("site"), css_class="col-sm-12 col-md-3",
-                ),
-            ),
-            layout.Row(
-                layout.Div(
-                    bootstrap5.FloatingField("query_parameters"), css_class="col-sm-12 col-md-6",
+                    bootstrap5.FloatingField("cve_id"), css_class="col-sm-12 col-md-6",
                 ),
                 layout.Div(bootstrap5.Field("is_fixed"),
                            css_class="col-sm-12 col-md-2 form-check-form-check-inline form-switch"),

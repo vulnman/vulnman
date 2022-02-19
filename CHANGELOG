@@ -9,11 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.3.0] - 2022-01-29
 ### Added
 - Project have names now
-- Web Application asset
+- New Asset: Web Application
+- New Asset: Web Request
 
 ### Changed
+- Move pentest related objects into *assets*
 - Split proofs into ImageProof and TextProof
-- minor HTML improvements
+- Minor UI changes
+- Pentests will have a single draft report version instead of multiple
 
 ### Fixed
 - ordering of vulnerabiltiy by severity in report

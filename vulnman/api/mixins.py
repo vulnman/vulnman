@@ -1,3 +1,6 @@
+from guardian.shortcuts import get_objects_for_user
+from apps.projects.models import Project
+
 
 class IgnoreFieldsAfterCreationMixin(object):
     ignore_fields_after_creation = None
@@ -14,3 +17,27 @@ class IgnoreFieldsAfterCreationMixin(object):
                 request.data.pop(field)
         request.data._mutable = False
         return super().update(request, *args, **kwargs)
+
+
+class ProjectPermissionMixin(object):
+    def get_objects_for_user(self, perm, obj, use_groups=False):
+        return get_objects_for_user(self.request.user, perm, obj, use_groups=use_groups)
+
+    def get_project(self, project_pk):
+        if not project_pk:
+            return None
+        projects = get_objects_for_user(self.request.user, "pentest_project", Project.objects.filter(pk=project_pk),
+                                        use_groups=False)
+        if projects.exists():
+            return projects.get()
+        return None
+
+    def test_func(self):
+        project = self.get_project(serializer.validated_data["project"])
+        if project:
+            return True
+        return PermissionError
+
+    def perform_update(self, serializer):
+        self.test_func(serializer)
+        super().perform_update(serializer)
