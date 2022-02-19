@@ -30,8 +30,7 @@ urlpatterns = [
     # tools
     path('tools/', include('apps.external_tools.urls')),
 
-    # project members
-    # TODO
+    path('assets/', include('apps.assets.urls')),
 
     # single project
     path('<str:pk>/', views.ProjectDetail.as_view(), name="project-detail"),

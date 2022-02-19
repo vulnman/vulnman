@@ -1,7 +1,6 @@
 - id: cross-site-scripting-reflected
   name: Cross-Site Scripting (reflected)
-  ease_of_resolution: simple
-  cve_id: null
+  severity: critical
   references:
     - "https://owasp.org/www-community/attacks/xss/"
   cwe:

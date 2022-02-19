@@ -6,6 +6,7 @@ from vulnman.views import generic
 from apps.findings import models
 from apps.findings import forms
 from apps.findings.utils import cvss
+from apps.assets.models import WebApplication, WebRequest
 
 
 class TemplateCreate(generic.VulnmanAuthCreateWithInlinesView):
@@ -70,8 +71,13 @@ class VulnCreate(generic.ProjectCreateWithInlinesView):
         if form.instance.cvss_vector:
             form.instance.cvss_score = cvss.get_scores_by_vector(
                 form.instance.cvss_vector)[0]
-        if form.instance.service:
-            form.instance.host = form.instance.service.host
+        if form.cleaned_data["asset_type"] == "webapp":
+            form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
+        elif form.cleaned_data["asset_type"] == "webrequest":
+            form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
+        else:
+            form.add_errors("asset_type", "invalid asset type")
+            return super().form_invalid(form)
         return super().form_valid(form)
 
     def forms_valid(self, form, inlines):
@@ -96,9 +102,9 @@ class AddTextProof(generic.ProjectCreateView):
 
     def form_valid(self, form):
         vuln = self.get_project().vulnerability_set.filter(pk=self.kwargs.get('pk'))
-        #if not vuln.exists():
-        #    self.form.add_errors("name", "Vulnerability does not exist!")
-        #    return super().form_invalid(form)
+        if not vuln.exists():
+            self.form.add_errors("name", "Vulnerability does not exist!")
+            return super().form_invalid(form)
         form.instance.vulnerability = vuln.get()
         form.instance.project = self.get_project()
         self.success_url = vuln.get().get_absolute_url()
@@ -130,7 +136,6 @@ class VulnDetail(generic.ProjectDetailView):
     template_name = "findings/vuln_detail.html"
     context_object_name = "vuln"
     model = models.Vulnerability
-    allowed_project_roles = ["pentester", "read-only"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -144,7 +149,6 @@ class VulnUpdate(generic.ProjectUpdateWithInlinesView):
     inlines = []
     form_class = forms.VulnerabilityForm
     template_name = "findings/vulnerability_create.html"
-    allowed_project_roles = ["pentester"]
 
     def form_valid(self, form):
         if form.instance.cvss_vector:
@@ -178,3 +182,28 @@ class VulnDelete(generic.ProjectDeleteView):
 
     def get_queryset(self):
         return models.Vulnerability.objects.filter(project=self.get_project())
+
+
+class TextProofDelete(generic.ProjectDeleteView):
+    model = models.TextProof
+    http_method_names = ["post"]
+
+    def get_success_url(self):
+        return reverse_lazy('projects:findings:vulnerability-list')
+
+    def get_queryset(self):
+        return models.TextProof.objects.filter(project=self.get_project())
+
+
+class ProofSetOrder(generic.ProjectFormView):
+    http_method_names = ["post"]
+
+    def form_valid(self, form):
+        if models.TextProof.objects.filter(project=self.get_project(), pk=form.cleaned_data["pk"]).exists():
+            proof = models.TextProof.objects.get(pk=form.cleaned_data["pk"])
+        elif models.ImageProof.objects.filter(project=self.get_project(), pk=form.cleaned_data["pk"]).exists():
+            proof = models.ImageProof.objects.get(pk=form.cleaned_data["pk"])
+        proof.order = form.cleaned_data["pk"]
+        proof.save()
+        return super().form_valid(form)
+

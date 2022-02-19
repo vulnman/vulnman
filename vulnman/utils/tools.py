@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from django.db.models import Q
 from difflib import SequenceMatcher
 from apps.networking.models import Host, Hostname, Service
-from apps.findings.models import Finding, Vulnerability, Template, ProofOfConcept
+from apps.findings.models import Finding, Vulnerability, Template, TextProof
 from apps.findings.constants import VULNERABILITY_SEVERITY_MAP
 
 
@@ -90,11 +90,13 @@ class ToolResultParser(object):
                                                              "cvss_score": cvss_score, 'cve_id': cve_id,
                                                              "original_name": original_name})
 
+    def create_text_proof(self, vulnerability, project, creator, text, description=None):
+        return TextProof.objects.create(vulnerability=vulnerability, project=project, creator=creator, text=text, description=description)
+
     def _create_proof_of_concept(self, vulnerability, name, project, creator, image=None, description=None,
-                                 command=None, is_code=False):
-        return ProofOfConcept.objects.create(finding=vulnerability, name=name, project=project, creator=creator,
-                                             is_code=is_code,
-                                             image=image, description=description, command_created=command)
+                                 command=None, text=None, is_code=False):
+        return TextProof.objects.create(vulnerability=vulnerability, name=name, project=project, creator=creator,
+                                             image=image, description=description, text=text)
 
     def _resolve(self, hostname: str):
         """

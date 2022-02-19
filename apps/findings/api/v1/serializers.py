@@ -29,3 +29,15 @@ class VulnerabilitySerializer(serializers.ModelSerializer):
         else:
             vulnerability = models.Vulnerability.objects.create(**validated_data)
         return vulnerability
+
+
+class TextProofSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.TextProof
+        fields = ["order", "pk"]
+
+
+class ImageProofSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ImageProof
+        fields = ["order", "pk"]

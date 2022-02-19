@@ -1,4 +1,4 @@
-django==3.2.11
+django==3.2.12
 django-widget-tweaks==1.4.8
 cvss==2.3
 django-tex==1.1.8post1
@@ -21,3 +21,5 @@ django-taggit==2.0.0
 django-split-settings==1.1.0
 celery
 redis
+matplotlib==3.5.1
+defusedxml==0.7.1

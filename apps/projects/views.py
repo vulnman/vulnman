@@ -6,6 +6,7 @@ from django.db.models import Count
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from apps.projects import models
 from apps.projects import forms
+from apps.findings.models import get_severity_by_name
 from vulnman.views import generic
 from vulnman.mixins.permission import NonObjectPermissionRequiredMixin
 
@@ -58,13 +59,11 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
     def get_context_data(self, **kwargs):
         # this one is ugly. use API!!!
         context = super().get_context_data(**kwargs)
-        context['severity_vulns_count'] = [
-            self.get_object().vulnerability_set.filter(cvss_score__gte=9.0, cvss_score__lte=10.0).count(),
-            self.get_object().vulnerability_set.filter(cvss_score__gte=7.0, cvss_score__lte=8.9).count(),
-            self.get_object().vulnerability_set.filter(cvss_score__gte=4.0, cvss_score__lte=6.9).count(),
-            self.get_object().vulnerability_set.filter(cvss_score__gte=0.1, cvss_score__lte=3.9).count(),
-            self.get_object().vulnerability_set.filter(cvss_score=0.0).count()
-        ]
+        context['severity_vulns_count'] = []
+        obj = self.get_object()
+        for sev in ["critical", "high", "medium", "low", "informational"]:
+            context['severity_vulns_count'].append(obj.vulnerability_set.filter(
+                template__severity=get_severity_by_name(sev)).count())
         context['severity_labels'] = list(settings.SEVERITY_COLORS.keys())
         context['severity_background_colors'] = []
         context['severity_border_colors'] = []

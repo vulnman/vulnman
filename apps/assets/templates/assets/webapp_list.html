@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+    Web Applications
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+        <li class="breadcrumb-item active">Web Applications</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <div class="clearfix">
+        <div class="float-end">
+            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#webapp-create-modal">
+                <i class="fa fa-plus"></i> New Web Application
+            </a>
+        </div>
+    </div>
+
+
+    <div class="container mt-3">
+        <ul class="list-group">
+            {% for webapp in webapps %}
+                <li class="list-group-item-action">
+                    {{ webapp }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Create Modal -->
+    <div class="modal fade" id="webapp-create-modal" tabindex="-1" aria-labelledby="webapp-create-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="webapp-create-modal-label">Create Web Application</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% crispy webapp_create_form %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 {% load markdown %}
+{% load static %}
 
 {% block title %}
 {{ project.name }}
 {% endblock %}
+
+
+{% block extra_head %}
+<link href="{% static 'css/codehilite.css' %}" rel="stylesheet">
+{% endblock %}
+
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
@@ -22,7 +29,7 @@
                 <div class="float-start">
                     <small class="text-muted">Created: {{ vuln.date_created|date }}</small>
                 </div>
-                <small class="justify-content-center" style="color: #{{ vuln.get_severity_colors.hex }}"><strong>Score: </strong>{{ vuln.get_scores.0 }} ({{ vuln.get_severities.0 }})</small>
+                <small class="justify-content-center" style="color: #{{ vuln.get_severity_colors.hex }}"><strong>Score: </strong>{{ vuln.template.get_severity_display }}</small>
 
                 <div class="float-end">
                     <small class="text-muted">Created by: {{ vuln.creator }}</small>
@@ -32,7 +39,7 @@
     </div>
     <hr/>
 
-    <div class="clearfix">
+    <div class="clearfix mb-3">
         <div class="float-start">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-text-proof-modal">
                 Add Text Proof
@@ -58,44 +65,57 @@
     <!-- Start Tab View -->
         <!-- Tab NAV -->
     <ul class="nav nav-tabs nav-fill" role="tablist">
-        <li class="nav-item" role="presentation"><a class="nav-link active" data-bs-toggle="tab" href="#info"
-                                                    aria-controls="info">Information</a></li>
-        <li class="nav-item" role="presentation"><a class="nav-link" data-bs-toggle="tab" href="#details"
-                                                    aria-controls="details">Details</a></li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" data-bs-toggle="tab" href="#proofs" aria-controls="proofs">Proof of Concepts</a>
+            <a class="nav-link active" data-bs-toggle="tab" href="#proofs" aria-controls="proofs">Proof of Concepts</a>
         </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" data-bs-toggle="tab" href="#details" aria-controls="details">Details</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" data-bs-toggle="tab" href="#info" aria-controls="info">Vulnerabilitiy</a>
+        </li>
+
     </ul>
         <!-- Tab Content -->
-    <div class="tab-content">
-        <!-- Info -->
-        <div id="info" class="tab-pane fade show active" role="tabpanel">
+    <div class="tab-content card p-3">
+        <!-- Proofs -->
+        <div id="proofs" class="tab-pane show fade active" role="tabpanel">
             <div class="container-fluid mt-3">
-                {% if vuln.exclude_from_report %}
-                    <p class="alert alert-warning">Excluded From Report!</p>
-                {% endif %}
-                <p><strong>Affected Host: </strong></p>
-                <p><a href="{{ vuln.host.get_absolute_url }}">{{ vuln.host }}</a></p>
+                <div class="list-group" id="sortable" data-sortable-id="0" aria-dropeffect="move">
+                    {% for proof in vuln.proofs %}
+                        <div class="proof list-group-item" data-proof-pk="{{ proof.pk }}" data-id="{{ forloop.counter }}" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                            <div class="clearfix">
+                                <div class="float-end">
+                                    <button class="btn btn-primary" onclick="deleteProof('{{proof.pk}}')"><i class="fa fa-trash"></i></button>
+                                </div>
+                                <p><strong>{{ proof.name }}</strong></p>
+                                <p>{{ proof.text|md_to_html }}</p>
+                                {% if proof.image %}
+                                <p>{{ proof.description|md_to_html }}</p>
+                                <figure class="figure">
+                                    <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
+                                    <figcaption class="figure-caption">{{ proof.name }}</figcaption>
+                                </figure>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
 
-                {% if vuln.service %}
-                    <p><strong>Affected Service: </strong></p>
-                    <p>{{ vuln.service }}</p>
-                {% endif %}
-                {% if vuln.original_name %}
-                    <p><strong>Original Name: </strong></p>
-                    <p>{{ vuln.original_name }}</p>
-                {% endif %}
+
+        <!-- Info -->
+        <div id="info" class="tab-pane fade" role="tabpanel">
+            <div class="container-fluid mt-3">
+                <p><strong>Template: </strong></p>
+                <p><a href="{{ vuln.template.get_absolute_url }}">{{ vuln.template.name }}</a></p>
+
                 <p><strong>Description: </strong></p>
                 <p>{{ vuln.template.description | md_to_html }}</p>
 
-                <p><strong>Resolution: </strong></p>
-                <p>{{ vuln.template.resolution | md_to_html }}</p>
-
-                {% if vuln.template.cve_id %}
-                <p><strong>CVE-ID</strong></p>
-                <p>{{ vuln.template.cve_id }}</p>
-                {% endif %}
-
+                <p><strong>Recommendation: </strong></p>
+                <p>{{ vuln.template.recommendation | md_to_html }}</p>
 
                 {% if vuln.reference_set.all %}
                     <p><strong>References: </strong></p>
@@ -108,51 +128,22 @@
         <!-- Details -->
         <div id="details" class="tab-pane fade" role="tabpanel">
             <div class="container-fluid mt-3">
+                 
+                <p><strong>Asset: </strong></p>
+                <p>{{ vuln.asset }} ({{vuln.asset.asset_type}})</p>
+
+                {% if vuln.template.cve_id %}
+                <p><strong>CVE-ID</strong></p>
+                <p>{{ vuln.template.cve_id }}</p>
+                {% endif %}
                 <p><strong>CVSS-Vector: </strong></p>
                 {% if vuln.cvss_vector %}
-                <p>{{ vuln.cvss_vector }}</p>
+                <p>{{ vuln.cvss_vector }} ({{vuln.get_scores.0}})</p>
                 {% else %}
                     <p>-</p>
                 {% endif %}
                 <p><strong>Details</strong></p>
                 <p>{{ vuln.details|md_to_html }}</p>
-                {% if vuln.site %}
-                    <p><strong>Site</strong></p>
-                    <p>{{ vuln.site }}</p>
-                {% endif %}
-                {% if vuln.path %}
-                    <p><strong>Path</strong></p>
-                    <p>{{ vuln.path }}</p>
-                {% endif %}
-                {% if vuln.parameter %}
-                    <p><strong>Parameter</strong></p>
-                    <p>{{ vuln.parameter }}</p>
-                {% endif %}
-                {% if vuln.request %}
-                    <p><strong>Request</strong></p>
-                    <p>{{ vuln.request|linebreaksbr }}</p>
-                {% endif %}
-                {% if vuln.response %}
-                    <p><strong>Response</strong></p>
-                    <p>{{ vuln.response|linebreaksbr|truncatechars:3000 }}</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Proofs -->
-        <div id="proofs" class="tab-pane fade" role="tabpanel">
-            <div class="container-fluid mt-3">
-                {% for proof in vuln.proofs %}
-                    <p><strong>{{ proof.name }}</strong></p>
-                    <p>{{ proof.text|md_to_html }}</p>
-                    {% if proof.image %}
-                    <p>{{ proof.description|md_to_html }}</p>
-                    <figure class="figure">
-                        <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
-                        <figcaption class="figure-caption">{{ proof.name }}</figcaption>
-                    </figure>
-                     {% endif %}
-                {% endfor %}
             </div>
         </div>
     </div>
@@ -190,6 +181,53 @@
             </div>
         </div>
     </div>
-
+    {% csrf_token %}
+    
     {% include 'modals/delete_object.html' with obj=vuln %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+<script>
+    $(function() {
+        $.ajaxSetup({
+            headers: {
+              "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()
+            }
+        });
+
+        $("#sortable").sortable({
+            update: function ($item, container, _super, event) {
+                var proof_ids = [];
+                $('#sortable .list-group-item').each(function (i) {
+                    console.log($(this).attr("data-proof-pk"));
+                    $.ajax({
+                        type: "PATCH",
+                        url: "/api/v1/proofs/" + $(this).attr("data-proof-pk") + "/",
+                        data: {
+                            order: i,
+                            pk: $(this).attr("data-proof-pk")
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            console.log(data);
+                        }
+                      });
+                });
+            }
+        });
+        $("#sortable").disableSelection();
+    });
+
+    function deleteProof(pk){
+        $.ajax({
+            type: "DELETE",
+            url: "/api/v1/proofs/" + pk + "/",
+            dataType: "json",
+            success: function(data) {
+                location.reload();
+            }
+        });
+    }
+</script>
 {% endblock %}

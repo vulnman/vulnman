@@ -10,13 +10,18 @@ from vulnman.forms import DateInput
 class ReportForm(forms.ModelForm):
     class Meta:
         model = models.Report
-        fields = ["revision", "changes", "is_draft"]
+        fields = ["revision", "changes", "is_draft", "custom_title"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_action = "projects:reporting:report-create"
         self.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("custom_title"), css_class="col-sm-12 col-md-6"
+                )
+            ),
             layout.Row(
                 layout.Div(
                     bootstrap5.FloatingField("revision"), css_class="col-sm-12 col-md-6"
@@ -33,6 +38,14 @@ class ReportForm(forms.ModelForm):
                             wrapper_class="col-sm-12 col-md-6")
             )
         )
+
+
+class PentestReportDraftForm(forms.ModelForm):
+    empty = forms.CharField(required=False)
+
+    class Meta:
+        model = models.PentestReport
+        fields = ["empty"]
 
 
 class ReportUpdateForm(forms.ModelForm):
