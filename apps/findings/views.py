@@ -6,7 +6,7 @@ from vulnman.views import generic
 from apps.findings import models
 from apps.findings import forms
 from apps.findings.utils import cvss
-from apps.assets.models import WebApplication
+from apps.assets.models import WebApplication, WebRequest
 
 
 class TemplateCreate(generic.VulnmanAuthCreateWithInlinesView):
@@ -73,6 +73,8 @@ class VulnCreate(generic.ProjectCreateWithInlinesView):
                 form.instance.cvss_vector)[0]
         if form.cleaned_data["asset_type"] == "webapp":
             form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
+        elif form.cleaned_data["asset_type"] == "webrequest":
+            form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
         else:
             form.add_errors("asset_type", "invalid asset type")
             return super().form_invalid(form)
@@ -191,3 +193,17 @@ class TextProofDelete(generic.ProjectDeleteView):
 
     def get_queryset(self):
         return models.TextProof.objects.filter(project=self.get_project())
+
+
+class ProofSetOrder(generic.ProjectFormView):
+    http_method_names = ["post"]
+
+    def form_valid(self, form):
+        if models.TextProof.objects.filter(project=self.get_project(), pk=form.cleaned_data["pk"]).exists():
+            proof = models.TextProof.objects.get(pk=form.cleaned_data["pk"])
+        elif models.ImageProof.objects.filter(project=self.get_project(), pk=form.cleaned_data["pk"]).exists():
+            proof = models.ImageProof.objects.get(pk=form.cleaned_data["pk"])
+        proof.order = form.cleaned_data["pk"]
+        proof.save()
+        return super().form_valid(form)
+

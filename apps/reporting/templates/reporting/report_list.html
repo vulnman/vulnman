@@ -36,13 +36,18 @@
                             <button class="btn btn-primary">
                                 <i class="fa fa-file"></i> Create Draft
                             </button>
+                            {% if project.get_draft_report %}
+                                <a class="btn btn-primary" href="{% url 'projects:reporting:report-download' project.get_draft_report.pk %}">
+                                    <i class="fa fa-download"></i> Download
+                                </a>
+                            {% endif %}
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+<!--
     <div class="clearfix">
         <div class="float-end">
             <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-create-modal">
@@ -53,7 +58,7 @@
     </div>
 
     <div class="list-group mt-3">
-        {% for report in reports %}
+        {% for report in reportk %}
             <div class="list-group-item list-group-item-action">
                 <div class="clearfix">
                     <div class="float-start">
@@ -90,7 +95,7 @@
             <li class="list-group-item">No reports here!</li>
         {% endfor %}
     </div>
-
+-->
     {% for report in reports %}
         {% if report.is_draft %}
             {% include 'modals/delete_object.html' with obj=report %}

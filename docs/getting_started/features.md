@@ -1,21 +1,25 @@
 # Features
 
-- Multiple Projects
-    - Manage found hosts, services, vulnerabilities and other assets of your assessment
-    - Collaborate with other users on the same project with different permission roles
-- Report generation
-    - HTML Report Templates
-    - PDF export
-    - Multiple revisions with changelogs
-    - Edit Report after creation
-- Vulnerability Management
-    - Project Dashboard with charts
-    - Vulnerability Templates
-        - Import from CWE XML files
-        - Import from YAML templates
-    - CVSS Calculator
-    - Markdown supported in most places
-- Track credentials found during an engagement
-- Manage Tasks during a pentest (create tasks from templates)
-- REST-API
-- Import results from tools like: Burp-Pro, nuclei, nmap, gobuster and more.
+- Unlimited projects
+- Unlimited users
+- Easy pentest report generation based on information of the project
+- Customizable report template
+- Markdown syntax supported (mostly)
+- Vulnerability templates
+    - Templates can be imported from YAML files
+- Vulnerability management
+    - CVSS
+    - Simple proof of concept management
+- Manage tasks during a pentest
+    - Create tasks from templates
+- Import resulst from external tools
+    - BurpSuite Professional
+    - nuclei
+    - nmap
+    - gobuster
+    - and more
+- Manage assets of projects like
+    - Hosts
+    - Services
+    - Web Appications
+    - Web Requests

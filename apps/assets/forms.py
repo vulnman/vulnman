@@ -26,3 +26,28 @@ class WebApplicationForm(forms.ModelForm):
                             wrapper_class="col-sm-12 col-md-6")
             )
         )
+
+
+class WebRequestCreateForm(forms.ModelForm):
+    class Meta:
+        model = models.WebRequest
+        fields = ["web_app", "url", "parameter", "description"]
+
+    def __init__(self, project, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["web_app"].queryset = project.webapplication_set.all()
+        self.helper = FormHelper()
+        self.helper.form_action = "projects:assets:webrequest-create"
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.FloatingField("web_app", wrapper_class="col-sm-12"),
+                bootstrap5.FloatingField("url", wrapper_class="col-sm-12"),
+                bootstrap5.FloatingField("parameter", wrapper_class="col-sm-12"),
+                bootstrap5.Field("description", wrapper_class="col-sm-12")
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
+            )
+        )
+

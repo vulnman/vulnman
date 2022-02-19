@@ -14,4 +14,5 @@ urlpatterns = [
     path('vulnerabilities/<str:pk>/update/', views.VulnUpdate.as_view(), name="vulnerability-update"),
     path('vulnerabilities/<str:pk>/add-text-proof/', views.AddTextProof.as_view(), name="vulnerability-add-text-proof"),
     path('vulnerabilities/<str:pk>/add-image-proof/', views.AddImageProof.as_view(), name="vulnerability-add-image-proof"),
+    path('proofs/ordering/', views.ProofSetOrder.as_view(), name="proof-set-order")
 ]

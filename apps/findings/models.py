@@ -73,13 +73,6 @@ class Vulnerability(VulnmanProjectModel):
     details = models.TextField(help_text="Markdown supported!", null=True, blank=True)
     cvss_score = models.FloatField(default=0.0)
     cvss_vector = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
-    # usually web vulnerability require the following fields
-    method = models.CharField(max_length=12, blank=True, null=True)
-    parameter = models.CharField(max_length=128, blank=True, null=True)
-    parameters = models.CharField(max_length=256, blank=True, null=True)
-    path = models.CharField(max_length=256, blank=True, null=True)
-    query_parameters = models.CharField(max_length=256, blank=True, null=True)
-    site = models.CharField(max_length=256, blank=True, null=True)
     cve_id = models.CharField(max_length=28, null=True, blank=True)
     # general
     is_fixed = models.BooleanField(default=False)
@@ -87,6 +80,7 @@ class Vulnerability(VulnmanProjectModel):
     verified = models.BooleanField(default=False)
     # generic assets
     asset_webapp = models.ForeignKey('assets.WebApplication', on_delete=models.CASCADE, null=True, blank=True)
+    asset_webrequest = models.ForeignKey('assets.WebRequest', on_delete=models.CASCADE, null=True, blank=True)
     # asset_host = models.ForeignKey('assets.Host', on_delete=models.CASCADE)
 
     def __str__(self):
@@ -135,6 +129,8 @@ class Vulnerability(VulnmanProjectModel):
     def asset(self):
         if self.asset_webapp:
             return self.asset_webapp
+        elif self.asset_webrequest:
+            return self.asset_webrequest
 
     class Meta:
         ordering = ['-cvss_score', '-verified']
