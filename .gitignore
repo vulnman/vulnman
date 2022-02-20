@@ -11,3 +11,4 @@ static_files
 local_settings.py
 site
 custom
+node_modules

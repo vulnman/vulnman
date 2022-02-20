@@ -7,7 +7,6 @@ app_name = "reporting"
 
 urlpatterns = [
     path('reports/', views.ReportList.as_view(), name="report-list"),
-    path('reports/create/', views.ReportCreate.as_view(), name="report-create"),
     path('reports/draft-create', views.PentestReportDraftCreate.as_view(), name="report-draft-create"),
     path('reports/<str:pk>/download/', views.PentestReportDownload.as_view(), name="report-download"),
     path('reports/<str:pk>/', views.ReportDetail.as_view(), name="report-detail"),

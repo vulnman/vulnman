@@ -16,6 +16,7 @@ class PentestReport(VulnmanProjectModel):
     report_type = models.CharField(max_length=16, choices=REPORT_TYPE_CHOICES)
     raw_source = models.TextField(null=True, blank=True)
     pdf_source = models.BinaryField(null=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="pentest_report_author")
 
     def __str__(self):
         return self.get_report_type_display()
@@ -29,6 +30,7 @@ class PentestReport(VulnmanProjectModel):
 
 
 class Report(VulnmanProjectModel):
+    # deprecated: DO NOT USE!
     revision = models.CharField(max_length=6, default="0.1", help_text="The reports are ordered by revisions")
     custom_title = models.CharField(max_length=64, help_text="Overwrite Project Title", null=True, blank=True)
     changes = models.CharField(max_length=128)

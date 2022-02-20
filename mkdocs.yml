@@ -33,7 +33,6 @@ plugins:
 nav:
   - "Home": "index.md"
   - "Getting Started":
-      - "Glossary": "getting_started/glossary.md"
       - "Features": "getting_started/features.md"
       - "Installation":
           - "Vulnman Server": "getting_started/installation/server.md"

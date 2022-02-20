@@ -77,22 +77,6 @@ class Project(models.Model):
     def get_informational_vulnerabilities_count(self):
         return self.get_informational_vulnerabilities(count=True)
 
-    @staticmethod
-    def has_read_permission(request):
-        return True
-
-    @staticmethod
-    def has_create_permission(request):
-        return True
-
-    def has_object_retrieve_permission(self, request):
-        if request.user == self.creator:
-            return True
-        return False
-
-    def get_latest_command_history(self):
-        return self.commandhistoryitem_set.order_by("-date_updated")[:10]
-
     class Meta:
         ordering = ["-date_updated"]
         permissions = [
@@ -150,3 +134,4 @@ class ClientContact(models.Model):
     class Meta:
         verbose_name = "Client Contact"
         verbose_name_plural = "Client Contacts"
+

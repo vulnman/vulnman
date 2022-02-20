@@ -70,7 +70,6 @@ class Vulnerability(VulnmanProjectModel):
     service = models.ForeignKey('networking.Service', on_delete=models.CASCADE, null=True, blank=True)
     host = models.ForeignKey('networking.Host', on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=128)
-    details = models.TextField(help_text="Markdown supported!", null=True, blank=True)
     cvss_score = models.FloatField(default=0.0)
     cvss_vector = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
     cve_id = models.CharField(max_length=28, null=True, blank=True)
@@ -147,6 +146,9 @@ class Proof(VulnmanProjectModel):
     class Meta:
         abstract = True
 
+    def get_project(self):
+        return self.vulnerability.get_project()
+
 
 class TextProof(Proof):
     text = models.TextField(help_text="Markdown supported!")
@@ -161,23 +163,6 @@ class ImageProof(Proof):
             with open(self.image.path, "rb") as image_f:
                 encoded = base64.b64encode(image_f.read())
                 return "data:image/png;base64, %s" % encoded.decode()
-
-
-class Finding(VulnmanProjectModel):
-    name = models.CharField(max_length=128)
-    data = models.TextField()
-    host = models.ForeignKey('networking.Host', on_delete=models.CASCADE, null=True, blank=True)
-    service = models.ForeignKey('networking.Service', on_delete=models.CASCADE, null=True, blank=True)
-    hostname = models.ForeignKey('networking.Hostname', on_delete=models.CASCADE, null=True, blank=True)
-    additional_information = models.TextField(blank=True, null=True)
-    steps_to_reproduce = models.TextField(blank=True, null=True)
-    finding_type = models.CharField(max_length=32, choices=constants.FINDINGS_TYPES, default="undefined")
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ["-date_updated"]
 
 
 class Template(BaseVulnerability):
@@ -208,22 +193,11 @@ class Reference(VulnmanModel):
         verbose_name = "Reference"
 
 
-"""
-class Technology(VulnmanModel):
-    name = models.CharField(max_length=128)
-    description = models.TextField(null=True, blank=True)
-    maintained = models.BooleanField(blank=True, null=True)
-    homepage = models.URLField(blank=True, null=True)
-    icon = models.CharField(max_length=28, blank=True, null=True)
+class UserAccount(VulnmanProjectModel):
+    username = models.CharField(max_length=128)
+    password = models.CharField(max_length=512)
+    role = models.CharField(max_length=128, blank=True, null=True)
+    account_compromised = models.BooleanField(default=False)
 
-    class Meta:
-        verbose_name_plural = "Technologies"
-        verbose_name = "Technology"
-        ordering = ["-date_updated"]
-        unique_together = [('name',)]
-
-
-class Product(VulnmanProjectModel):
-    # a product that we pentest
-    name = models.CharField(max_length=128)
-"""
+    def __str__(self):
+        return self.username

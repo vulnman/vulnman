@@ -2,11 +2,14 @@
 GROUP_PERMISSION_MAP = {
     "management": {
         "permissions": {
-            "projects.Project": ["add_project", "view_project", "change_project"],
-            "projects.Client": ["view_client"]
+            "projects.Project": ["add_project", "view_project", "change_project", "delete_project"],
         }
     },
-    "pentester": {}
+    "pentester": {
+        "permissions": {
+            "projects.Project": ["add_project", "view_project", "change_project", "delete_project"],
+        }
+    }
 }
 
 

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+User Accounts
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item active">User Accounts</li>
+</ol>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="clearfix">
+        <div class="float-end">
+            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#account-create-modal">
+                <i class="fa fa-plus"></i> New User Account
+            </a>
+        </div>
+    </div>
+
+    <div class="list-group mt-3">
+        {% for account in user_accounts %}
+            <div class="list-group-item list-group-item-action">
+                <div class="float-start">
+                    <a href="#">
+                        {{ account }}
+                    </a>
+                </div>
+            </div>
+        {% empty %}
+            <span class="list-group-item">No user accounts yet!</span>
+        {% endfor %}
+    </div>
+
+     <!-- Report Create Modal -->
+     <div class="modal fade" id="account-create-modal" tabindex="-1" aria-labelledby="account-create-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="account-create-modal-label">Create User Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% crispy account_create_form %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'navigation/pagination.html' %}
+
+{% endblock %}

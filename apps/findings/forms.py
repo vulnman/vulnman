@@ -3,6 +3,7 @@ from apps.findings import models
 from dal import autocomplete
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
+from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
 from vulnman.forms import NamedInlineFormSetFactory, CodeMirrorWidget
 from apps.networking.models import Service
@@ -97,7 +98,7 @@ class VulnerabilityForm(forms.ModelForm):
 
     class Meta:
         model = models.Vulnerability
-        fields = ["template", "details", "cvss_vector", "name", "asset_type", "f_asset", "is_fixed", "verified", "cve_id"]
+        fields = ["template", "cvss_vector", "name", "asset_type", "f_asset", "is_fixed", "verified", "cve_id"]
 
     def get_asset_choices(self, project):
         choices = [("---", "---")]
@@ -145,11 +146,6 @@ class VulnerabilityForm(forms.ModelForm):
                 layout.Div(
                     bootstrap5.FloatingField("cvss_vector", css_class="mb-2"), css_class="col-sm-12 h-100",
                 )
-            ),
-            layout.Row(
-                layout.Div(
-                    bootstrap5.Field("details", css_class="mb-2 h-100"), css_class="col-sm-12 col-md-12",
-                ),
             )
         )
 
@@ -171,3 +167,27 @@ class ReferenceInline(NamedInlineFormSetFactory):
             )
         )
         return formset
+
+
+class UserAccountForm(forms.ModelForm):
+    class Meta:
+        model = models.UserAccount
+        fields = ["username", "password", "role", "account_compromised"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_action = "projects:findings:user-account-create"
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.FloatingField("username", wrapper_class="col-sm-12"),
+                bootstrap5.FloatingField("password", wrapper_class="col-sm-12"),
+                bootstrap5.FloatingField("role", wrapper_class="col-sm-12"),
+                bootstrap5.Field("account_compromised", wrapper_class="col-sm-12")
+
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
+            )
+        )

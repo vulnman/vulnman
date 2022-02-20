@@ -18,7 +18,6 @@ class ReportList(generic.ProjectListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["report_share_form"] = forms.ReportShareTokenForm()
-        context["report_create_form"] = forms.ReportForm()
         return context
 
     def get_queryset(self):
@@ -65,19 +64,6 @@ class ReportDetail(generic.ProjectDetailView):
 
     def render_to_response(self, context, **response_kwargs):
         return PDFResponse(context['report'].pdf_source, filename="report.pdf")
-
-
-class ReportCreate(generic.ProjectCreateView):
-    http_method_names = ["post"]
-    form_class = forms.ReportForm
-    success_url = reverse_lazy("projects:reporting:report-list")
-
-    def form_valid(self, form):
-        form.instance.project = self.get_project()
-        form.instance.creator = self.request.user
-        form.save()
-        tasks.do_create_report.delay(form.instance.pk)
-        return super().form_valid(form)
 
 
 class ReportUpdate(generic.ProjectUpdateView):

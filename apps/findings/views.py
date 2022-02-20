@@ -207,3 +207,20 @@ class ProofSetOrder(generic.ProjectFormView):
         proof.save()
         return super().form_valid(form)
 
+
+class UserAccountList(generic.ProjectListView):
+    model = models.UserAccount
+    context_object_name = "user_accounts"
+    template_name = "findings/user_account_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["account_create_form"] = forms.UserAccountForm() 
+        return context
+    
+
+class UserAccountCreate(generic.ProjectCreateView):
+    http_method_names = ["post"]
+    model = models.UserAccount
+    form_class = forms.UserAccountForm
+    success_url = reverse_lazy("projects:findings:user-account-list")
