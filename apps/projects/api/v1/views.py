@@ -1,18 +1,15 @@
-from rest_framework import mixins
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from dry_rest_permissions.generics import DRYPermissions
+
+from vulnman.api.viewsets import VulnmanModelViewSet
+from guardian.shortcuts import get_objects_for_user
 from apps.projects import models
 from apps.projects.api.v1 import serializers
 
 
-class ProjectViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
-                     viewsets.GenericViewSet):
-    permission_classes = [DRYPermissions, IsAuthenticated]
+class ProjectViewSet(VulnmanModelViewSet):
     serializer_class = serializers.ProjectSerializer
+    search_fields = ["name"]
 
     def get_queryset(self):
-        return models.Project.objects.filter(creator=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
+        # only get projects that we are allowed to see
+        return get_objects_for_user(self.request.user, "projects.view_project", use_groups=False, with_superuser=False, 
+            accept_global_perms=False, klass=models.Project)

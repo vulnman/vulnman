@@ -3,7 +3,7 @@ from vulnman.tests.mixins import VulnmanAPITestMixin
 from apps.commands import models
 
 
-class CommandTemplateTestCase(APITestCase, VulnmanAPITestMixin):
+class CommandTemplateTestCase(object):
     def setUp(self) -> None:
         self.init_mixin()
 

@@ -7,45 +7,18 @@ from apps.reporting import models
 from vulnman.forms import DateInput
 
 
-class ReportForm(forms.ModelForm):
-    class Meta:
-        model = models.Report
-        fields = ["revision", "changes", "is_draft", "custom_title"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_action = "projects:reporting:report-create"
-        self.helper.layout = layout.Layout(
-            layout.Row(
-                layout.Div(
-                    bootstrap5.FloatingField("custom_title"), css_class="col-sm-12 col-md-6"
-                )
-            ),
-            layout.Row(
-                layout.Div(
-                    bootstrap5.FloatingField("revision"), css_class="col-sm-12 col-md-6"
-                ),
-                layout.Div(
-                    bootstrap5.Field("is_draft"), css_class="col-sm-12 col-md-3 form-switch"
-                ),
-                layout.Div(
-                    bootstrap5.FloatingField("changes"), css_class="col-sm-12"
-                ),
-            ),
-            layout.Row(
-                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
-                            wrapper_class="col-sm-12 col-md-6")
-            )
-        )
-
-
 class PentestReportDraftForm(forms.ModelForm):
     empty = forms.CharField(required=False)
 
     class Meta:
         model = models.PentestReport
         fields = ["empty"]
+
+
+class PentestReportCreateForm(forms.ModelForm):
+    class Meta:
+        model = models.PentestReport
+        fields = ["author"]
 
 
 class ReportUpdateForm(forms.ModelForm):
