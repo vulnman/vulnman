@@ -1,8 +1,0 @@
-- id: outdated_software
-  name: Outdated Software
-  severity: high
-  references:
-    - "https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/"
-  categories:
-    - Patch Management
-    - Configuration

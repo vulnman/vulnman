@@ -1,5 +1,26 @@
-from 
+from vulnman.api import viewsets
+from apps.reporting import models
+from apps.reporting import tasks
+from rest_framework.response import Response
+from apps.reporting.api.v1 import serializers
+from rest_framework.decorators import action
+from rest_framework import status
 
-from celery.result import AsyncResult
-res = AsyncResult("your-task-id")
-res.ready()
+
+class ReportViewSet(viewsets.ProjectRelatedObjectRetrieveViewSet):
+    queryset = models.PentestReport.objects.all()
+    serializer_class = serializers.ReportSerializer
+
+    @action(detail=False, methods=["post"])
+    def create_report(self, request, pk=None):
+        serializer = serializers.PentestReportCreateSerializer(data=request.data, context={"request": request})
+        if serializer.is_valid():
+            serializer.validated_data["project"] = serializer.validated_data["project"].pk
+            report_task = tasks.do_create_pentest_report.delay(serializer.validated_data)
+            return Response({"task_id": report_task.task_id})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=["get"])
+    def get_task_status(self, request, pk=None):
+        # TODO: implement
+        pass
