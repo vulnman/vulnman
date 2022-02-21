@@ -1,9 +1,0 @@
-- id: directory-listing
-  name: Directory Listing
-  severity: medium
-  references:
-    - "https://portswigger.net/kb/issues/00600100_directory-listing"
-  cwe:
-    - CWE-548
-  categories:
-    - web

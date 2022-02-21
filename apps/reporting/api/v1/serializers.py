@@ -3,8 +3,14 @@ from vulnman.api.serializers import ProjectRelatedObjectSerializer
 from apps.reporting import models
 
 
-class ReportStatusSerializer(serializers.Serializer):
-    task = serializers.CharField()
-
+class ReportSerializer(ProjectRelatedObjectSerializer):
     class Meta:
-        fields = ["task"]
+        model = models.PentestReport
+        fields = ["uuid", "project", "author", "report_type"]
+        read_only_fields = ["uuid"]
+
+
+class PentestReportCreateSerializer(ProjectRelatedObjectSerializer):
+    class Meta:
+        model = models.PentestReport
+        fields = ["project", "report_type"]

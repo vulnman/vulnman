@@ -17,6 +17,11 @@ class ProjectRelatedObjectViewSet(mixins.CreateModelMixin, mixins.DestroyModelMi
     filter_backends = [SearchFilter]
 
 
+class ProjectRelatedObjectRetrieveViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated, ProjectRelatedObjectPermission]
+    filter_backends = [SearchFilter]
+
+
 class GenericListRetrieveModelViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     filter_backends = [SearchFilter]
     permission_classes = [IsAuthenticated]
