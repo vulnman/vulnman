@@ -32,9 +32,9 @@ class AgentQueue(VulnmanProjectModel):
 
 
 class Agent(Token):
-    key = models.CharField(max_length=128, primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=28)
+    key2 = models.CharField(max_length=128, primary_key=True)
+    user2 = models.ForeignKey(User, on_delete=models.CASCADE)
+    name2 = models.CharField(max_length=28)
 
     @classmethod
     def generate_key(cls):

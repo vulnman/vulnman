@@ -17,11 +17,13 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'extra_views',
     'rest_framework',
+    'rest_framework.authtoken',
     'crispy_forms',
     "crispy_bootstrap5",
     "guardian",
     "split_settings",
     'django_celery_results',
+    "corsheaders",
     # apps
     'apps.api.apps.ApiConfig',
     'apps.account.apps.AccountConfig',
@@ -32,7 +34,5 @@ INSTALLED_APPS = [
     'apps.networking.apps.NetworkingConfig',
     'apps.methodologies.apps.MethodologiesConfig',
     'apps.findings.apps.FindingsConfig',
-    'apps.agents.apps.AgentsConfig',
-    'apps.commands.apps.CommandsConfig',
     'apps.assets.apps.AssetsConfig',
 ]
