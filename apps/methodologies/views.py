@@ -7,6 +7,7 @@ from apps.methodologies import models
 class MethodologyList(generic.VulnmanAuthListView):
     template_name = "methodologies/methodology_list.html"
     context_object_name = "methodologies"
+    model = models.Task
     extra_context = {'TEMPLATE_HIDE_BREADCRUMBS': True}
 
 
