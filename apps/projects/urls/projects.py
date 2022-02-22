@@ -16,7 +16,7 @@ urlpatterns = [
     path('networking/', include('apps.networking.urls')),
 
     # command
-    path('methodologies/', include('apps.methodologies.urls.projects')),
+    # path('methodologies/', include('apps.methodologies.urls.projects')),
 
     # findings
     path('findings/', include('apps.findings.urls.projects')),

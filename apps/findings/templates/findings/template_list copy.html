@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Vulnerability Templates
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item active">Vulnerability Templates</li>
+</ol>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="clearfix">
+        <div class="float-end">
+            <a class="btn btn-primary" href="{% url 'findings:template-create' %}">
+                <i class="fa fa-plus"></i> Create Vulnerability Template
+            </a>
+        </div>
+    </div>
+
+    <div class="list-group mt-3">
+        {% for template in vuln_templates %}
+            <div class="list-group-item list-group-item-action">
+                <div class="float-start">
+                    <a href="{% url 'findings:template-detail' template.pk %}">
+                        {{ template }}
+                    </a>
+                </div>
+            </div>
+        {% empty %}
+            <span class="list-group-item">No templates yet!</span>
+        {% endfor %}
+    </div>
+
+    {% include 'navigation/pagination.html' %}
+
+{% endblock %}

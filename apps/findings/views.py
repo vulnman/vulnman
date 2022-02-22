@@ -9,38 +9,11 @@ from apps.findings.utils import cvss
 from apps.assets.models import WebApplication, WebRequest
 
 
-class TemplateCreate(generic.VulnmanAuthCreateWithInlinesView):
-    model = models.Template
-    form_class = forms.TemplateForm
-    inlines = [forms.ReferenceInline]
-    template_name = "findings/template_create.html"
-
-    def form_valid(self, form):
-        form.instance.creator = self.request.user
-        return super().form_valid(form)
-
-
 class TemplateList(generic.VulnmanAuthListView):
     model = models.Template
     paginate_by = 20
     template_name = "findings/template_list.html"
-    context_object_name = "vuln_templates"
-
-
-class TemplateDetail(generic.VulnmanAuthDetailView):
-    model = models.Template
-    template_name = "findings/template_detail.html"
-    context_object_name = "vuln_template"
-
-
-class TemplateUpdate(generic.VulnmanAuthUpdateView):
-    model = models.Template
-    form_class = forms.TemplateForm
-    template_name = "findings/template_create.html"
-
-    def form_valid(self, form):
-        form.instance.creator = self.request.user
-        return super().form_valid(form)
+    context_object_name = "templates"
 
 
 class VulnerabilityTemplateAutocomplete(LoginRequiredMixin,

@@ -109,7 +109,7 @@
         <div id="info" class="tab-pane fade" role="tabpanel">
             <div class="container-fluid mt-3">
                 <p><strong>Template: </strong></p>
-                <p><a href="{{ vuln.template.get_absolute_url }}">{{ vuln.template.name }}</a></p>
+                <p>{{ vuln.template.name }}</p>
 
                 <p><strong>Description: </strong></p>
                 <p>{{ vuln.template.description | md_to_html }}</p>
