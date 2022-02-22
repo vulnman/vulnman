@@ -91,14 +91,13 @@ class ProofOrderingForm(forms.Form):
 
 
 class VulnerabilityForm(forms.ModelForm):
-    template = forms.ModelChoiceField(queryset=models.Template.objects.all(), required=True,
-                                      widget=autocomplete.ModelSelect2(url="findings:template-autocomplete"))
+    template_id = forms.CharField(label="Template")
     asset_type = forms.ChoiceField(choices=ASSET_TYPE_CHOICES)
     f_asset = forms.ChoiceField(choices=[], label="Asset")
 
     class Meta:
         model = models.Vulnerability
-        fields = ["template", "cvss_vector", "name", "asset_type", "f_asset", "is_fixed", "verified", "cve_id"]
+        fields = ["template_id", "cvss_vector", "name", "asset_type", "f_asset", "is_fixed", "verified", "cve_id"]
 
     def get_asset_choices(self, project):
         choices = [("---", "---")]
@@ -113,12 +112,13 @@ class VulnerabilityForm(forms.ModelForm):
     def __init__(self, project, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["f_asset"].choices = self.get_asset_choices(project)
-        self.fields['template'].widget.attrs = {'data-theme': 'bootstrap5'}
         self.helper = FormHelper()
         self.helper.form_tag = False
         self.helper.layout = layout.Layout(
             layout.Row(
-                bootstrap5.Field("template", wrapper_class="col-sm-12")
+                layout.Div(
+                    bootstrap5.FloatingField("template_id"), css_class="col-sm-12",
+                ),
             ),
             layout.Row(
                 layout.Div(

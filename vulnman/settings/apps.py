@@ -3,11 +3,6 @@ from vulnman.settings import BASE_DIR
 # Application definition
 
 INSTALLED_APPS = [
-    # keep before django.contrib.admin
-    'dal',
-    'dal_select2',
-    'queryset_sequence',
-    'dal_queryset_sequence',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

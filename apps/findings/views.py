@@ -16,16 +16,6 @@ class TemplateList(generic.VulnmanAuthListView):
     context_object_name = "templates"
 
 
-class VulnerabilityTemplateAutocomplete(LoginRequiredMixin,
-                                        autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        queryset = models.Template.objects.all()
-        if self.q:
-            queryset = queryset.filter(
-                Q(name__contains=self.q) | Q(description__contains=self.q))
-        return queryset
-
-
 class VulnList(generic.ProjectListView):
     template_name = "findings/vulnerability_list.html"
     context_object_name = "vulns"
@@ -41,6 +31,10 @@ class VulnCreate(generic.ProjectCreateWithInlinesView):
     allowed_project_roles = ["pentester"]
 
     def form_valid(self, form):
+        if not models.Template.objects.filter(vulnerability_id=form.cleaned_data["template_id"]).exists():
+            form.add_errors("template_id", "Template does not exist!")
+            return super().form_invalid(form)
+        form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
         if form.instance.cvss_vector:
             form.instance.cvss_score = cvss.get_scores_by_vector(
                 form.instance.cvss_vector)[0]
