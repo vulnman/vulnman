@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from vulnman.api.serializers import ProjectRelatedObjectSerializer
+from vulnman.utils.markdown import md_to_clean_html
 from apps.findings import models
 
 
@@ -27,6 +28,10 @@ class TemplateSerializer(serializers.ModelSerializer):
         fields = ["uuid", "vulnerability_id", "cwe_ids", "name", "description", "recommendation", "categories"]
         read_only_fields = ["uuid"]
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["description"] = md_to_clean_html(data["description"])
+        return data
 
 class VulnerabilitySerializer(ProjectRelatedObjectSerializer):
     # template = serializers.PrimaryKeyRelatedField(read_only=True)

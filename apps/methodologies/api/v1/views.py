@@ -7,7 +7,7 @@ class TaskViewSet(GenericListRetrieveModelViewSet):
     # Only read information. Tasks are managed using YAML file imports
     queryset = models.Task.objects.all()
     serializer_class = serializers.TaskSerializer
-    search_fields = ["name", "id", "description"]
+    search_fields = ["name", "task_id", "description"]
 
 
 class AssetTaskViewSet(ProjectRelatedObjectViewSet):
