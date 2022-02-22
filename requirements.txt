@@ -3,8 +3,6 @@ django-widget-tweaks==1.4.8
 cvss==2.3
 django-tex==1.1.8post1
 django-extra-views==0.14.0
-django-autocomplete-light==3.5.1
-django-querysetsequence==0.14
 djangorestframework==3.12.4
 python-libnmap==0.7.2
 Pillow==9.0.0
