@@ -17,6 +17,9 @@
                                     <input type="password" id="password" name="password" v-model="password" class="form-control" />
                                     <label for="password">Password</label>
                                 </div>
+                                <div class="mb-3">
+                                    <button type="submit" class="form-control btn btn-primary">Login</button>
+                                </div>
                                 </form>
                             </CForm>
                         </div>
@@ -50,8 +53,10 @@ export default {
                 console.log(response.data)
                 const token = response.data.token
                 this.$store.commit('setToken', token)
+                this.$store.commit('setUsername', this.username)
                 axios.defaults.headers.common["Authorization"] = "Token " + token
                 localStorage.setItem("token", token)
+                this.$router.push("/")
             }).catch(error => {
                 console.log(error)
             })

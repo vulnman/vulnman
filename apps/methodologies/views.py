@@ -8,3 +8,9 @@ class TaskList(generic.VulnmanAuthListView):
     context_object_name = "methodologies"
     extra_context = {'TEMPLATE_HIDE_BREADCRUMBS': True}
     model = models.Task
+
+
+class ProjectToDos(generic.ProjectListView):
+    template_name = "methodologies/project_tasks.html"
+    context_object_name = "todos"
+    model = models.AssetTask

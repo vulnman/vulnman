@@ -30,6 +30,8 @@ class Command(BaseCommand):
         with open(filename, "r") as f:
             item = yaml.safe_load(f)
             description = self._get_description(filename)
-            template, created = models.Task.objects.update_or_create(task_id=item["id"], defaults={"name": item["name"], "description": description})
+            task, created = models.Task.objects.update_or_create(task_id=item["id"], defaults={"name": item["name"], "description": description})
+            for cond in item.get("on_assets", []):
+                models.TaskCondition.objects.update_or_create(task=task, asset_type=cond)
             if created:
                 import_counter += 1

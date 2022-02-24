@@ -17,7 +17,13 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class AssetTaskSerializer(ProjectRelatedObjectSerializer):
+    task = TaskSerializer()
 
     class Meta:
         model = models.AssetTask
         fields = ["project", "task", "status"]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["status"] = instance.get_status_display()
+        return data

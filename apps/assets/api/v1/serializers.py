@@ -1,31 +1,23 @@
 from rest_framework import serializers
-from apps.findings import models
+from vulnman.api.serializers import ProjectRelatedObjectSerializer
+from vulnman.utils.markdown import md_to_clean_html
+from apps.assets import models
 
 
-class TemplateSerializer(serializers.ModelSerializer):
+class WebApplicationSerializer(ProjectRelatedObjectSerializer):
     class Meta:
-        model = models.Template
-        fields = '__all__'
-        read_only_fields = ["uuid", "creator", "date_updated", "date_created"]
+        model = models.WebApplication
+        fields = ["uuid", "name", "base_url", "description", "in_pentest_report"]
+        read_only_fields = ["uuid"]
 
 
-class VulnerabilitySerializer(serializers.ModelSerializer):
-    template = TemplateSerializer()
-
+class WebRequestSerializer(ProjectRelatedObjectSerializer):
     class Meta:
-        model = models.Vulnerability
-        fields = '__all__'
-        read_only_fields = ["uuid", "creator", "date_updated", "date_created", "command_created"]
+        model = models.WebRequest
+        fields = ["name", "description", "in_pentest_report", "web_app", "url", "parameter"]
 
-    def create(self, validated_data):
-        if validated_data.get('vulnerabilitydetails'):
-            detail_validated_data = validated_data.pop('vulnerabilitydetails')
-            vulnerability = models.Vulnerability.objects.create(**validated_data)
-            detail_serializer = self.fields["details"]
-            detail_validated_data["project"] = vulnerability.project
-            detail_validated_data["creator"] = vulnerability.creator
-            detail_validated_data["vulnerability"] = vulnerability
-            detail_serializer.create(detail_validated_data)
-        else:
-            vulnerability = models.Vulnerability.objects.create(**validated_data)
-        return vulnerability
+
+class HostSerializer(ProjectRelatedObjectSerializer):
+    class Meta:
+        model = models.Host
+        fields = ["ip", "operating_system", "accessibility", "description", "dns"]
