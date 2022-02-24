@@ -67,8 +67,6 @@ def project_pocs_path(instance, filename):
 
 class Vulnerability(VulnmanProjectModel):
     template = models.ForeignKey('findings.Template', on_delete=models.CASCADE)
-    service = models.ForeignKey('networking.Service', on_delete=models.CASCADE, null=True, blank=True)
-    host = models.ForeignKey('networking.Host', on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=128)
     cvss_score = models.FloatField(default=0.0)
     cvss_vector = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
@@ -80,6 +78,7 @@ class Vulnerability(VulnmanProjectModel):
     # generic assets
     asset_webapp = models.ForeignKey('assets.WebApplication', on_delete=models.CASCADE, null=True, blank=True)
     asset_webrequest = models.ForeignKey('assets.WebRequest', on_delete=models.CASCADE, null=True, blank=True)
+    asset_host = models.ForeignKey('assets.Host', on_delete=models.CASCADE, null=True, blank=True)
     # asset_host = models.ForeignKey('assets.Host', on_delete=models.CASCADE)
 
     def __str__(self):
@@ -130,6 +129,8 @@ class Vulnerability(VulnmanProjectModel):
             return self.asset_webapp
         elif self.asset_webrequest:
             return self.asset_webrequest
+        elif self.asset_host:
+            return self.asset_host
 
     class Meta:
         ordering = ['-cvss_score', '-verified']
@@ -155,15 +156,14 @@ class TextProof(Proof):
 
 
 class ImageProof(Proof):
-    caption = models.TextField(blank=True, null=True)
+    caption = models.CharField(max_length=128, blank=True, null=True)
     image = models.ImageField(max_length=256, upload_to=project_pocs_path)
 
     def base64_encoded_image(self):
-        if self.image:
-            with open(self.image.path, "rb") as image_f:
-                encoded = base64.b64encode(image_f.read())
-                return "data:image/png;base64, %s" % encoded.decode()
-
+        with open(self.image.path, "rb") as image_f:
+            encoded = base64.b64encode(image_f.read())
+            return "data:image/png;base64, %s" % encoded.decode()
+        #return self.image.path
 
 class Template(BaseVulnerability):
     vulnerability_id = models.CharField(max_length=256, unique=True)

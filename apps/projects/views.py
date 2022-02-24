@@ -70,10 +70,10 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
         for key, value in settings.SEVERITY_COLORS.items():
             context['severity_background_colors'].append(value.get('chart'))
             context['severity_border_colors'].append(value.get('chart_border'))
-        context['hosts_list'] = list(self.get_object().host_set.annotate(
-            service_count=Count('service')).order_by('-service_count').values_list('ip', flat=True))[:5]
-        context['hosts_service_count'] = list(self.get_object().host_set.annotate(
-            service_count=Count('service')).order_by('-service_count').values_list('service_count', flat=True))[:5]
+        #context['hosts_list'] = list(self.get_object().host_set.annotate(
+        #    service_count=Count('service')).order_by('-service_count').values_list('ip', flat=True))[:5]
+        #context['hosts_service_count'] = list(self.get_object().host_set.annotate(
+        #    service_count=Count('service')).order_by('-service_count').values_list('service_count', flat=True))[:5]
         context['latest_days'] = []
         context['vulns_per_day'] = []
         for i in range(10):

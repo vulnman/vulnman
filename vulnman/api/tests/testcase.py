@@ -12,8 +12,8 @@ class VulnmanAPITestCaseMixin(object):
         self.denied_pentester = self.create_user("pentester2", "changeme")
         self.project_pentester.groups.add(Group.objects.get(name="pentester"))
         self.denied_pentester.groups.add(Group.objects.get(name="pentester"))
-        self.project = self.create_project()
-        self.assign_pentester_permissions(self.project_pentester, self.project)
+        self.project = self.create_project(creator=self.project_pentester)
+        # self.assign_pentester_permissions(self.project_pentester, self.project)
 
     def create_user(self, username, password, is_staff=False):
         email = "%s@example.com" % username

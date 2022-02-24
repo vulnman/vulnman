@@ -1,5 +1,6 @@
 import json
 from uuid import uuid4
+from guardian.shortcuts import assign_perm, remove_perm
 from django.db import models
 from django.db.models.functions import Cast
 from django.contrib.auth.models import User
@@ -20,6 +21,15 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+    def archive_project(self):
+        for contributor in self.projectcontributor_set.all():
+            remove_perm("projects.change_project", contributor.user, self)
+            remove_perm("projects.delete_project", contributor.user, self)
+
+    def get_assets(self):
+        assets = list(self.webapplication_set.all()) + list(self.webrequest_set.all()) + list(self.host_set.all())
+        return assets
 
     def get_draft_report(self):
         if self.pentestreport_set.filter(report_type="draft").exists():
@@ -77,14 +87,28 @@ class Project(models.Model):
     def get_informational_vulnerabilities_count(self):
         return self.get_informational_vulnerabilities(count=True)
 
+    def save(self, *args, **kwargs):
+        obj = super().save(*args, **kwargs)
+        self.assign_creator_permissions()
+        return obj
+
+    def assign_creator_permissions(self):
+        if not self.creator:
+            return
+        perms = ["projects.add_contributor", "projects.view_project", "projects.change_project", "projects.delete_project"]
+        for perm in perms:
+            assign_perm(perm, user_or_group=self.creator, obj=self)
+
     class Meta:
         ordering = ["-date_updated"]
         permissions = [
             ("pentest_project", "Pentest Project"),
+            ("add_contributor", "Add Contributor")
         ]
 
 
 class Scope(models.Model):
+    # TODO: deprecated
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -135,3 +159,45 @@ class ClientContact(models.Model):
         verbose_name = "Client Contact"
         verbose_name_plural = "Client Contacts"
 
+
+class ProjectContributor(models.Model):
+    ROLE_PENTESTER = "pentester"
+
+    CONTRIBUTOR_ROLE_CHOICES = [
+        (ROLE_PENTESTER, "Pentester"),
+    ]
+
+
+    uuid = models.UUIDField(default=uuid4, primary_key=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    role = models.CharField(max_length=16, choices=CONTRIBUTOR_ROLE_CHOICES)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+    
+    def get_role_permission_map(self):
+        # TODO: maybe not allow a pentester to delete a project? There is no endpoint for this at the moment
+        # but this may change soon.
+        return {
+            ProjectContributor.ROLE_PENTESTER: ["projects.view_project", "projects.change_project", "projects.delete_project"]
+        }
+
+    def save(self, *args, **kwargs):
+        obj = super().save(*args, **kwargs)
+        self.assign_role_permissions(self.role)
+        return obj
+
+    def assign_role_permissions(self, role):
+        perm_map = self.get_role_permission_map()
+        if perm_map.get(role):
+            for perm in perm_map[role]:
+                assign_perm(perm, user_or_group=self.user, obj=self.project)
+
+    def get_project(self):
+        return self.project
+
+    class Meta:
+        unique_together = [("user", "project")]

@@ -36,10 +36,6 @@
                     </ul>
 
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:networking:host-list' %}active{% endif %}"
-                           href="{% url 'projects:networking:host-list' %}">Hosts</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.view_name == 'projects:findings:vulnerability-list' %}active{% endif %}"
                            href="{% url 'projects:findings:vulnerability-list' %}">Vulnerabilities</a>
                     </li>
@@ -50,6 +46,10 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.view_name == 'projects:findings:user-account-list' %}active{% endif %}"
                             href="{% url 'projects:findings:user-account-list' %}">User Accounts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:methodologies:project-todos-list' %}active{% endif %}"
+                            href="{% url 'projects:methodologies:project-todos-list' %}">To Dos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.view_name == 'projects:external-tools:tool-import' %}active{% endif %}"

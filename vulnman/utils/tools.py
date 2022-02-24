@@ -2,8 +2,8 @@ import socket
 from urllib.parse import urlparse
 from django.db.models import Q
 from difflib import SequenceMatcher
-from apps.networking.models import Host, Hostname, Service
-from apps.findings.models import Finding, Vulnerability, Template, TextProof
+#rom apps.networking.models import Host, Hostname, Service
+from apps.findings.models import Vulnerability, Template, TextProof
 from apps.findings.constants import VULNERABILITY_SEVERITY_MAP
 
 

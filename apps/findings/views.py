@@ -1,7 +1,6 @@
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from dal import autocomplete
 from vulnman.views import generic
 from apps.findings import models
 from apps.findings import forms
@@ -23,16 +22,15 @@ class VulnList(generic.ProjectListView):
     allowed_project_roles = ["pentester", "read-only"]
 
 
-class VulnCreate(generic.ProjectCreateWithInlinesView):
+class VulnCreate(generic.ProjectCreateView):
     model = models.Vulnerability
-    inlines = []
     form_class = forms.VulnerabilityForm
     template_name = "findings/vulnerability_create.html"
     allowed_project_roles = ["pentester"]
 
     def form_valid(self, form):
         if not models.Template.objects.filter(vulnerability_id=form.cleaned_data["template_id"]).exists():
-            form.add_errors("template_id", "Template does not exist!")
+            form.add_error("template_id", "Template does not exist!")
             return super().form_invalid(form)
         form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
         if form.instance.cvss_vector:
@@ -43,7 +41,7 @@ class VulnCreate(generic.ProjectCreateWithInlinesView):
         elif form.cleaned_data["asset_type"] == "webrequest":
             form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
         else:
-            form.add_errors("asset_type", "invalid asset type")
+            form.add_error("asset_type", "invalid asset type")
             return super().form_invalid(form)
         return super().form_valid(form)
 

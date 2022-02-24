@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from vulnman.models import VulnmanModel, VulnmanProjectModel
 from apps.methodologies import constants
+from apps.assets.models import ASSET_TYPES_CHOICES
 
 
 TASK_STATUS_CHOICES = [
@@ -29,11 +30,22 @@ class Task(VulnmanModel):
         unique_together = [("task_id",)]
 
 
+class TaskCondition(VulnmanModel):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    asset_type = models.CharField(choices=ASSET_TYPES_CHOICES, max_length=128)
+    condition = models.CharField(max_length=256, null=True, blank=True)
+    is_regex = models.BooleanField(default=False)
+    on_pentest = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = [('task', 'asset_type', 'condition', 'is_regex')]
+
+
 class AssetTask(VulnmanProjectModel):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     status = models.PositiveIntegerField(default=0)
-    asset_webapp = models.ForeignKey('assets.WebApplication', on_delete=models.SET_NULL, null=True, blank=True)
-    asset_webrequest = models.ForeignKey('assets.WebRequest', on_delete=models.SET_NULL, null=True, blank=True)
+    asset_webapp = models.ForeignKey('assets.WebApplication', on_delete=models.CASCADE, null=True, blank=True)
+    asset_webrequest = models.ForeignKey('assets.WebRequest', on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         unique_together = [
@@ -47,3 +59,8 @@ class AssetTask(VulnmanProjectModel):
             return self.asset_webapp
         elif self.asset_webrequest:
             return self.asset_webrequest
+
+    def get_status_display(self):
+        for s in TASK_STATUS_CHOICES:
+            if self.status == s[0]:
+                return s[1]

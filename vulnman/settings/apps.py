@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'apps.reporting.apps.ReportingConfig',
     'apps.projects.apps.ProjectsConfig',
     'apps.dashboard.apps.DashboardConfig',
-    'apps.networking.apps.NetworkingConfig',
     'apps.methodologies.apps.MethodologiesConfig',
     'apps.findings.apps.FindingsConfig',
     'apps.assets.apps.AssetsConfig',

@@ -19,7 +19,7 @@ class TextProofSerializer(ProjectRelatedObjectSerializer):
 class ImageProofSerializer(ProjectRelatedObjectSerializer):
     class Meta:
         model = models.ImageProof
-        fields = ["pk", "order", "name", "description", "image"]
+        fields = ["pk", "order", "name", "description", "image", "caption"]
 
 
 class TemplateSerializer(serializers.ModelSerializer):

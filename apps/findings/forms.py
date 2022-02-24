@@ -1,12 +1,10 @@
 from django import forms
 from apps.findings import models
-from dal import autocomplete
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
 from vulnman.forms import NamedInlineFormSetFactory, CodeMirrorWidget
-from apps.networking.models import Service
 
 
 ASSET_TYPE_CHOICES = [
@@ -68,7 +66,7 @@ class TextProofForm(forms.ModelForm):
 class ImageProofForm(forms.ModelForm):
     class Meta:
         model = models.ImageProof
-        fields = ["name", "description", "image"]
+        fields = ["name", "description", "image", "caption"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -76,6 +74,7 @@ class ImageProofForm(forms.ModelForm):
         self.helper.layout = layout.Layout(
             layout.Row(
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
+                bootstrap5.FloatingField("caption", wrapper_class="col-sm-12"),
                 bootstrap5.Field("description", wrapper_class="col-sm-12"),
                 bootstrap5.Field("image", wrapper_class="col-sm-12")
             )

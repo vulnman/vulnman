@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Project have names now
 - New Asset: Web Application
 - New Asset: Web Request
+- New Asset: Host
+- REST-API v1 (alpha)
+- Import of vulnerability templates with descriptions and recommendations
+- Import of checklists (alpha)
 
 ### Changed
 - Move pentest related objects into *assets*
@@ -19,13 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pentests will have a single draft report version instead of multiple
 
 ### Fixed
-- ordering of vulnerabiltiy by severity in report
+- ordering of vulnerabilities by severity in report
+- fix legacy tests for Github CI
 
 ### Security
 - nothing
 
 ### Deprecated
-- ProofOfConcept model
+- nothing
 
 ### Removed
-- nothing
+- ProofOfConcept model
+
