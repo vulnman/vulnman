@@ -3,6 +3,9 @@ from apps.assets.models.base import BaseAsset
 
 
 class Host(BaseAsset):
+    ASSET_TYPE = "host"
+    ASSET_TYPE_CHOICE = (ASSET_TYPE, "Host")
+
     ACCESSIBILITY_NOT_TESTED = 0
     ACCESSIBILITY_ACCESSIBLE = 1
     ACCESSIBILITY_NOT_ACCESSIBLE = 2
@@ -12,9 +15,6 @@ class Host(BaseAsset):
         (ACCESSIBILITY_NOT_ACCESSIBLE, "Not Accessible"),
         (ACCESSIBILITY_NOT_TESTED, "Not Tested")
     ]
-
-    ASSET_TYPE = "host"
-    ASSET_TYPE_CHOICE = (ASSET_TYPE, "Host")
 
     ip = models.GenericIPAddressField()
     operating_system = models.CharField(max_length=256, blank=True)

@@ -1,6 +1,9 @@
 
 from vulnman.api.viewsets import VulnmanModelViewSet, ProjectRelatedObjectViewSet
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
 from guardian.shortcuts import get_objects_for_user
 from apps.projects import models
 from apps.projects.api.v1 import serializers
@@ -19,7 +22,14 @@ class ProjectViewSet(VulnmanModelViewSet):
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
 
-    # def archive_project(self):
+    @action(detail=True, methods=["patch"], url_path="archive-project", url_name="archive-project")
+    def archive_project(self, request, pk=None):
+        obj = self.get_object()
+        serializer = serializers.ProjectArchiveSerializer(obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProjectContributorViewSet(ProjectRelatedObjectViewSet):

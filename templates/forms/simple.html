@@ -21,6 +21,7 @@
       {% include 'forms/field.html' %}
     {% endfor %}
 
+    {% if not no_submit %}
     <div class="form-group mt-3">
         <div class="clearfix">
             <button type="submit" class="btn btn-success form-control">
@@ -32,6 +33,7 @@
             </button>
         </div>
     </div>
+    {% endif %}
     {% if not without_form_tag %}
   </form>
     {% endif %}

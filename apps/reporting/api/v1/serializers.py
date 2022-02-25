@@ -14,3 +14,9 @@ class PentestReportCreateSerializer(ProjectRelatedObjectSerializer):
     class Meta:
         model = models.PentestReport
         fields = ["project", "report_type"]
+
+
+class PentestReportUpdateSerializer(ProjectRelatedObjectSerializer):
+    class Meta:
+        model = models.PentestReport
+        fields = ["mgmt_summary_evaluation", "mgmt_summary_recommendation"]

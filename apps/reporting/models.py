@@ -17,6 +17,9 @@ class PentestReport(VulnmanProjectModel):
     raw_source = models.TextField(null=True, blank=True)
     pdf_source = models.BinaryField(null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="pentest_report_author")
+    report_title = models.CharField(max_length=256, null=True, blank=True)
+    mgmt_summary_evaluation = models.TextField(null=True, blank=True)
+    mgmt_summary_recommendation = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.get_report_type_display()

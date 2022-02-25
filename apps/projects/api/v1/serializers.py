@@ -45,3 +45,14 @@ class ProjectContributorSerializer(ProjectRelatedObjectSerializer):
     def create(self, validated_data):
         validated_data["user"] = User.objects.get(username=validated_data["user"])
         return super().create(validated_data)
+
+
+class ProjectArchiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Project
+        fields = ["is_archived"]
+
+    def update(self, instance, validated_data):
+        if validated_data["is_archived"] == True:
+            instance.archive_project()
+        return super().update(instance, validated_data)

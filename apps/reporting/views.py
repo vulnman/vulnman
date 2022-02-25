@@ -18,6 +18,10 @@ class ReportList(generic.ProjectListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["report_share_form"] = forms.ReportShareTokenForm()
+        context["report_mgmt_summary_form"] = forms.ReportManagementForm(
+            initial={"mgmt_summary_recommendation": self.get_queryset().first().mgmt_summary_recommendation,
+                "mgmt_summary_evaluation": self.get_queryset().first().mgmt_summary_evaluation
+            })
         return context
 
     def get_queryset(self):
