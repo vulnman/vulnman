@@ -10,14 +10,29 @@ class WebApplicationSerializer(ProjectRelatedObjectSerializer):
         fields = ["uuid", "name", "base_url", "description", "in_pentest_report"]
         read_only_fields = ["uuid"]
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["asset_type"] = models.WebApplication.ASSET_TYPE_CHOICE[1]
+        return data
+
 
 class WebRequestSerializer(ProjectRelatedObjectSerializer):
     class Meta:
         model = models.WebRequest
         fields = ["name", "description", "in_pentest_report", "web_app", "url", "parameter"]
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["asset_type"] = models.WebRequest.ASSET_TYPE_CHOICE[1]
+        return data
 
 
 class HostSerializer(ProjectRelatedObjectSerializer):
     class Meta:
         model = models.Host
         fields = ["ip", "operating_system", "accessibility", "description", "dns"]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["asset_type"] = models.Host.ASSET_TYPE_CHOICE[1]
+        return data

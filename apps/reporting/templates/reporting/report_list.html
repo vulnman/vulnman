@@ -48,6 +48,46 @@
         </div>
     </div>
 
-    {% include 'navigation/pagination.html' %}
+    <hr />
 
+    <div class="row">
+        <div class="col-sm-12">
+            {% include 'forms/simple.html' with form=report_mgmt_summary_form no_submit=True method="POST" %}
+        </div>
+    </div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+id_mgmt_summary_evaluation.on("blur", function(){
+    $.ajax({
+        type: "PATCH",
+        url: "/api/v1/reports/{{reports.0.pk}}/update/",
+        dataType: "json",
+        data: {"mgmt_summary_evaluation": id_mgmt_summary_evaluation.getValue()},
+        success: function(data){
+            //location.reload()
+            // console.log(data)
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+        }
+    });
+});
+id_mgmt_summary_recommendation.on("blur", function(){
+    $.ajax({
+        type: "PATCH",
+        url: "/api/v1/reports/{{reports.0.pk}}/update/",
+        dataType: "json",
+        data: {"mgmt_summary_recommendation": id_mgmt_summary_recommendation.getValue()},
+        success: function(data){
+            //location.reload()
+            // console.log(data)
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+        }
+    });
+});
+</script>
+{% endblock extra_scripts %}

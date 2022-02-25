@@ -37,6 +37,15 @@ To Dos
                 </div>
             </div>
             <div class="row">
+                <div class="col-sm-12">
+                    <p>
+                        <i class="fa fa-bullseye"></i> Asset:
+                        <span id="span-asset-name"></span>
+                    </p>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
                 <div class="col-sm-12 mt-3" id="col-todo-details">
                 </div>
             </div>
@@ -93,6 +102,7 @@ To Dos
                             getTaskStatusButton(v, "fa-question", 0) + getTaskStatusButton(v, "fa-check", 1) 
                         );
                         $('#col-todo-details').append(data2.task.description);
+                        $('#span-asset-name').append(data2.asset.name + " (" + data2.asset.asset_type + ")")
                     }
                 });
             });
@@ -110,6 +120,7 @@ To Dos
             dataType: "json",
             data: {"status": status_id},
             success: function(data){
+                location.reload()
                 // console.log(data)
             },
             beforeSend: function(xhr){

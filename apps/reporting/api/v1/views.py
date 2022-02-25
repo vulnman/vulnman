@@ -24,3 +24,12 @@ class ReportViewSet(viewsets.ProjectRelatedObjectRetrieveViewSet):
     def get_task_status(self, request, pk=None):
         # TODO: implement
         pass
+
+    @action(detail=True, methods=["patch"], url_name="update", url_path="update")
+    def update_report(self, request, pk=None):
+        obj = self.get_object()
+        serializer = serializers.PentestReportUpdateSerializer(obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
