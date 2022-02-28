@@ -5,12 +5,12 @@
     <div class="card-body">
         {% if method %}
             {% if not without_form_tag %}
-<form method="{{ method }}" {% if enctype %}enctype="multipart/form-data"{% endif %}>
+<form method="{{ method }}" {% if enctype %}enctype="multipart/form-data"{% endif %} action="{{ form.action }}">
     {% csrf_token %}
                 {% endif %}
 {% else %}
             {% if not without_form_tag %}
-<form method="get">
+<form method="get" action="{{ form.action}}">
                 {% endif %}
 {% endif %}
     {% for hidden in form.hidden_fields %}
