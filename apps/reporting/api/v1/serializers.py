@@ -16,7 +16,8 @@ class PentestReportCreateSerializer(ProjectRelatedObjectSerializer):
         fields = ["project", "report_type"]
 
 
-class PentestReportUpdateSerializer(ProjectRelatedObjectSerializer):
+class PentestReportInformationSerializer(ProjectRelatedObjectSerializer):
     class Meta:
-        model = models.PentestReport
-        fields = ["mgmt_summary_evaluation", "mgmt_summary_recommendation"]
+        model = models.ReportInformation
+        fields = ["evaluation", "recommendation", "project", "uuid", "author"]
+        read_only_fields = ["uuid"]
