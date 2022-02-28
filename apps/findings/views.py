@@ -36,7 +36,7 @@ class VulnCreate(generic.ProjectCreateView):
         if form.instance.cvss_vector:
             form.instance.cvss_score = cvss.get_scores_by_vector(
                 form.instance.cvss_vector)[0]
-        if form.cleaned_data["asset_type"] == "webapp":
+        if form.cleaned_data["asset_type"] == "webapplication":
             form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
         elif form.cleaned_data["asset_type"] == "webrequest":
             form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])

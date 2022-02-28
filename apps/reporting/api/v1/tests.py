@@ -13,13 +13,14 @@ class PentestReportViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
 
     def test_report_update(self):
         report = self.create_instance(models.PentestReport, project=self.project)
-        url = self.get_url("api:v1:report-update", pk=str(report.pk))
-        data = {"mgmt_summary_evaluation": "This is a *test*", "mgmt_summary_recommendation": "This is another **test**"}
-        response = self.client.patch(url, data)
+        url = self.get_url("api:v1:report-information-list")
+        data = {"evaluation": "This is a *test*", "recommendation": "This is another **test**", "project": str(self.project.pk), "author": self.project_pentester.pk}
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, 401)
         self.client.force_login(self.denied_pentester)
-        response = self.client.patch(url, data)
-        self.assertEqual(response.status_code, 403)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 400)
         self.client.force_login(self.project_pentester)
-        response = self.client.patch(url, data)
-        self.assertEqual(models.PentestReport.objects.filter(mgmt_summary_evaluation=data["mgmt_summary_evaluation"]).count(), 1)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(models.ReportInformation.objects.filter(evaluation=data["evaluation"]).count(), 1)

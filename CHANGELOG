@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Split proofs into ImageProof and TextProof
 - Minor UI changes
 - Pentests will have a single draft report version instead of multiple
+- Updated default report template
 
 ### Fixed
 - ordering of vulnerabilities by severity in report

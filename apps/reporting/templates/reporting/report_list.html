@@ -22,7 +22,7 @@
             </div>
             <div class="row">
                 {% if project.get_draft_report %}
-                    <small><i>Created at {{ project.get_draft_report.date_created|date }}</i></small>
+                    <small><i>Created at {{ project.get_draft_report.date_updated|date }}</i></small>
                 {% endif %}
             </div>
         </div>
@@ -61,12 +61,12 @@
 
 {% block extra_scripts %}
 <script>
-id_mgmt_summary_evaluation.on("blur", function(){
+id_evaluation.on("blur", function(){
     $.ajax({
         type: "PATCH",
-        url: "/api/v1/reports/{{reports.0.pk}}/update/",
+        url: "/api/v1/report-information/{{project.reportinformation.pk}}/",
         dataType: "json",
-        data: {"mgmt_summary_evaluation": id_mgmt_summary_evaluation.getValue()},
+        data: {"evaluation": id_evaluation.getValue()},
         success: function(data){
             //location.reload()
             // console.log(data)
@@ -76,12 +76,12 @@ id_mgmt_summary_evaluation.on("blur", function(){
         }
     });
 });
-id_mgmt_summary_recommendation.on("blur", function(){
+id_recommendation.on("blur", function(){
     $.ajax({
         type: "PATCH",
-        url: "/api/v1/reports/{{reports.0.pk}}/update/",
+        url: "/api/v1/report-information/{{project.reportinformation.pk}}/",
         dataType: "json",
-        data: {"mgmt_summary_recommendation": id_mgmt_summary_recommendation.getValue()},
+        data: {"recommendation": id_recommendation.getValue()},
         success: function(data){
             //location.reload()
             // console.log(data)

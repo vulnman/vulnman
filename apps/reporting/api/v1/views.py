@@ -25,11 +25,8 @@ class ReportViewSet(viewsets.ProjectRelatedObjectRetrieveViewSet):
         # TODO: implement
         pass
 
-    @action(detail=True, methods=["patch"], url_name="update", url_path="update")
-    def update_report(self, request, pk=None):
-        obj = self.get_object()
-        serializer = serializers.PentestReportUpdateSerializer(obj, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ReportInformationViewSet(viewsets.ProjectRelatedObjectViewSet):
+    # TODO: do not allow delete
+    queryset = models.ReportInformation
+    serializer_class = serializers.PentestReportInformationSerializer

@@ -1,7 +1,6 @@
 django==3.2.12
 django-widget-tweaks==1.4.8
 cvss==2.3
-django-tex==1.1.8post1
 django-extra-views==0.14.0
 djangorestframework==3.12.4
 python-libnmap==0.7.2

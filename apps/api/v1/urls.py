@@ -21,6 +21,7 @@ router.register("vulnerabilities/templates", findings_views.TemplateViewSet, bas
 router.register("vulnerabilities/proofs", findings_views.ProofViewSet, basename="proof")
 router.register("vulnerabilities", findings_views.VulnerabilityViewSet, basename="vulnerability")
 router.register("reports", reporting_views.ReportViewSet, basename="report")
+router.register("report-information", reporting_views.ReportInformationViewSet, basename="report-information")
 router.register("tasks/assets", methodologies_views.AssetTaskViewSet, basename="asset-task")
 router.register("tasks", methodologies_views.TaskViewSet, basename="task")
 router.register("assets/webapplications", assets_views.WebApplicationViewSet, basename="webapplication")

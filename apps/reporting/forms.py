@@ -16,18 +16,6 @@ class PentestReportDraftForm(forms.ModelForm):
         fields = ["empty"]
 
 
-class PentestReportCreateForm(forms.ModelForm):
-    class Meta:
-        model = models.PentestReport
-        fields = ["author"]
-
-
-class ReportUpdateForm(forms.ModelForm):
-    class Meta:
-        model = models.Report
-        fields = ['raw_source']
-
-
 class ReportShareTokenForm(forms.ModelForm):
     class Meta:
         model = models.ReportShareToken
@@ -37,13 +25,13 @@ class ReportShareTokenForm(forms.ModelForm):
         }
 
 
-class ReportManagementForm(forms.ModelForm):
+class ReportManagementSummaryForm(forms.ModelForm):
     class Meta:
-        model = models.PentestReport
-        fields = ["mgmt_summary_evaluation", "mgmt_summary_recommendation"]
+        model = models.ReportInformation
+        fields = ["evaluation", "recommendation"]
         widgets = {
-            "mgmt_summary_evaluation": CodeMirrorWidget(),
-            "mgmt_summary_recommendation": CodeMirrorWidget()
+            "evaluation": CodeMirrorWidget(),
+            "recommendation": CodeMirrorWidget()
         }
 
     def __init__(self, *args, **kwargs):
@@ -51,7 +39,7 @@ class ReportManagementForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.layout = layout.Layout(
             layout.Row(
-                bootstrap5.FloatingField("mgmt_summary_evaluation", wrapper_class="col-sm-12"),
-                bootstrap5.Field("mgmt_summary_recommendation", wrapper_class="col-sm-12"),
+                bootstrap5.FloatingField("evaluation", wrapper_class="col-sm-12"),
+                bootstrap5.Field("recommendation", wrapper_class="col-sm-12"),
             )
         )

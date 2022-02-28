@@ -4,7 +4,6 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.utils.module_loading import import_string
-from django_tex.response import PDFResponse
 from apps.reporting import models, forms
 from apps.reporting.utils.converter import HTMLConverter
 from apps.reporting import tasks
@@ -19,9 +18,9 @@ class ReportList(generic.ProjectListView):
         context = super().get_context_data(**kwargs)
         context["report_share_form"] = forms.ReportShareTokenForm()
         if len(self.get_queryset()):
-            context["report_mgmt_summary_form"] = forms.ReportManagementForm(
-                initial={"mgmt_summary_recommendation": self.get_queryset().first().mgmt_summary_recommendation,
-                    "mgmt_summary_evaluation": self.get_queryset().first().mgmt_summary_evaluation
+            context["report_mgmt_summary_form"] = forms.ReportManagementSummaryForm(
+                initial={"recommendation": self.get_project().reportinformation.recommendation,
+                    "evaluation": self.get_project().reportinformation.evaluation
                 })
         return context
 
@@ -37,14 +36,7 @@ class PentestReportDraftCreate(generic.ProjectCreateView):
         return reverse_lazy("projects:reporting:report-list")
 
     def form_valid(self, form):
-        if models.PentestReport.objects.filter(project=self.get_project()).exists():
-            report = models.PentestReport.objects.get(project=self.get_project())
-        else:
-            form.instance.project = self.get_project()
-            form.instance.creator = self.request.user
-            form.instance.report_type = "draft"
-            report = form.save()
-        tasks.do_create_report.delay(report.pk)
+        tasks.do_create_report.delay(self.get_project().reportinformation.pk, "draft")
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -59,43 +51,6 @@ class PentestReportDownload(generic.ProjectDetailView):
         response = HttpResponse(obj.pdf_source, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="report.pdf"'
         return response
-
-
-class ReportDetail(generic.ProjectDetailView):
-    context_object_name = "report"
-
-    def get_queryset(self):
-        return models.PentestReport.objects.filter(project=self.get_project())
-
-    def render_to_response(self, context, **response_kwargs):
-        return PDFResponse(context['report'].pdf_source, filename="report.pdf")
-
-
-class ReportUpdate(generic.ProjectUpdateView):
-    template_name = "reporting/report_update.html"
-    form_class = forms.ReportUpdateForm
-
-    def get_queryset(self):
-        return models.Report.objects.filter(project=self.get_project())
-
-    def get_success_url(self):
-        return reverse_lazy('projects:reporting:report-list')
-
-    def form_valid(self, form):
-        form.save()
-        tasks.do_create_report.delay(form.instance.pk)
-        return super().form_valid(form)
-
-
-class ReportDraftDelete(generic.ProjectDeleteView):
-    model = models.Report
-    http_method_names = ["post"]
-
-    def get_success_url(self):
-        return reverse_lazy('projects:reporting:report-list')
-
-    def get_queryset(self):
-        return models.Report.objects.filter(project=self.get_project(), is_draft=True, pk=self.kwargs.get('pk'))
 
 
 class ReportSharedDetail(generic.VulnmanDetailView):
