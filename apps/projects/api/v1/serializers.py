@@ -3,6 +3,14 @@ from rest_framework import serializers
 from apps.projects import models
 from vulnman.api.serializers import AssignObjectPermissionsModelSerializer
 from vulnman.api.serializers import ProjectRelatedObjectSerializer
+from apps.assets.api.v1.serializers import WebApplicationSerializer, WebRequestSerializer, HostSerializer
+
+
+class ClientSerializer(ProjectRelatedObjectSerializer):
+    class Meta:
+        model = models.Client
+        fields = ["uuid", "name"]
+        read_onyl_fields = ["uuid"]
 
 
 class ProjectSerializer(AssignObjectPermissionsModelSerializer):
@@ -10,9 +18,10 @@ class ProjectSerializer(AssignObjectPermissionsModelSerializer):
     user_accounts = serializers.PrimaryKeyRelatedField(source="useraccount_set", read_only=True, many=True)
     tasks = serializers.PrimaryKeyRelatedField(source="assettask_set", read_only=True, many=True)
     contributors = serializers.PrimaryKeyRelatedField(source="projectcontributor_set", read_only=True, many=True)
-    assets_webapplication = serializers.PrimaryKeyRelatedField(source="webapplication_set", read_only=True, many=True)
-    assets_webrequest = serializers.PrimaryKeyRelatedField(source="webrequest_set", many=True, read_only=True)
-    assets_host = serializers.PrimaryKeyRelatedField(source="host_set", many=True, read_only=True)
+    assets_webapplication = WebApplicationSerializer(source="webapplication_set", read_only=True, many=True)
+    assets_webrequest = WebRequestSerializer(source="webrequest_set", many=True, read_only=True)
+    assets_host = HostSerializer(source="host_set", many=True, read_only=True)
+    client = ClientSerializer(read_only=True)
 
     class Meta:
         model = models.Project

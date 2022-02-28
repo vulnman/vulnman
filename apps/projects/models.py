@@ -46,7 +46,7 @@ class Project(models.Model):
         return self.get_critical_vulnerabilities(count=True)
 
     def get_critical_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=4, verified=include_only_verified)
+        qs = self.vulnerability_set.filter(template__severity=4)
         if count:
             return qs.count()
         return qs
@@ -55,13 +55,13 @@ class Project(models.Model):
         return self.get_high_vulnerabilities(count=True)
 
     def get_high_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=3, verified=include_only_verified)
+        qs = self.vulnerability_set.filter(template__severity=3)
         if count:
             return qs.count()
         return qs
 
     def get_medium_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=2, verified=include_only_verified)
+        qs = self.vulnerability_set.filter(template__severity=2)
         if count:
             return qs.count()
         return qs
@@ -70,7 +70,7 @@ class Project(models.Model):
         return self.get_medium_vulnerabilities(count=True)
 
     def get_low_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=1, verified=include_only_verified)
+        qs = self.vulnerability_set.filter(template__severity=1)
         if count:
             return qs.count()
         return qs
@@ -79,7 +79,7 @@ class Project(models.Model):
         return self.get_low_vulnerabilities(count=True)
 
     def get_informational_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=0, verified=include_only_verified)
+        qs = self.vulnerability_set.filter(template__severity=0)
         if count:
             return qs.count()
         return qs
@@ -107,20 +107,6 @@ class Project(models.Model):
         ]
 
 
-class Scope(models.Model):
-    # TODO: deprecated
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    name = models.CharField(max_length=32)
-    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = [('project', 'name')]
-        verbose_name_plural = "Scopes"
-
-
 class Client(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -140,6 +126,14 @@ class Client(models.Model):
 
 
 class ClientContact(models.Model):
+    POSITION_ORGANISATIONAL = "org"
+    POSITION_TECHNICAL = "tech"
+
+    POSITION_CHOICES = [
+        (POSITION_ORGANISATIONAL, "Organisational"),
+        (POSITION_TECHNICAL, "Technical")
+    ]
+
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -150,7 +144,7 @@ class ClientContact(models.Model):
     phone = models.CharField(max_length=24, blank=True, null=True)
     pgp_key = models.TextField(blank=True, null=True, verbose_name="PGP-Key")
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    position = models.CharField(max_length=64)
+    position = models.CharField(max_length=64, choices=POSITION_CHOICES)
 
     def __str__(self):
         return "%s %s" % (self.first_name, self.last_name)

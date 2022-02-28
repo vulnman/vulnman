@@ -1,4 +1,4 @@
-from vulnman.api.viewsets import ProjectRelatedObjectViewSet
+from vulnman.api.viewsets import ProjectRelatedObjectViewSet, ProjectRelatedObjectListViewSet
 from apps.assets import models
 from apps.assets.api.v1 import serializers
 

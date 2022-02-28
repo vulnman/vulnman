@@ -1,4 +1,3 @@
-
 from vulnman.api.viewsets import VulnmanModelViewSet, ProjectRelatedObjectViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action

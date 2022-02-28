@@ -52,7 +52,9 @@
 
     <div class="row">
         <div class="col-sm-12">
+            {% if report_mgmt_summary_form %}
             {% include 'forms/simple.html' with form=report_mgmt_summary_form no_submit=True method="POST" %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

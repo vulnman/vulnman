@@ -21,8 +21,7 @@
                         </a>
                     </li>
                     {% get_obj_perms request.user for project as "project_perms" %}
-                    {% if "pentest_project" in project_perms %}
-                    
+                    {% if "change_project" in project_perms %}                    
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
