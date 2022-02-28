@@ -16,7 +16,7 @@ class ProjectList(generic.VulnmanAuthListView):
     context_object_name = "projects"
 
     def get_queryset(self):
-        qs = get_objects_for_user(self.request.user, "view_project", models.Project, use_groups=True)
+        qs = get_objects_for_user(self.request.user, "projects.view_project", models.Project, use_groups=False, accept_global_perms=False)
         if not self.request.GET.get('archived'):
             qs = qs.filter(is_archived=False)
         else:
@@ -33,7 +33,6 @@ class ProjectCreate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthCreateW
     template_name = "projects/project_create.html"
     form_class = forms.ProjectForm
     model = models.Project
-    inlines = [forms.ScopeInline]
     success_url = reverse_lazy("projects:project-list")
     extra_context = {"TEMPLATE_HIDE_BREADCRUMBS": True}
     permission_required = "projects.add_project"
@@ -92,7 +91,6 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
 class ProjectUpdate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthUpdateWithInlinesView):
     template_name = "projects/project_create.html"
     form_class = forms.ProjectForm
-    inlines = [forms.ScopeInline]
     model = models.Project
     permission_required = ["projects.change_project"]
 
@@ -125,6 +123,7 @@ class ProjectUpdateClose(generic.ProjectRedirectView):
         obj = self.get_project()
         obj.is_archived = True
         obj.save()
+        obj.archive_project()
         return super().post(request, *args, **kwargs)
 
 

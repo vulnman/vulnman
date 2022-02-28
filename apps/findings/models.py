@@ -8,6 +8,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.auth.models import User
 from vulnman.models import VulnmanModel, VulnmanProjectModel
 from apps.findings import constants
+from apps.assets.models import ASSET_TYPES_CHOICES, WebApplication
 
 
 SEVERITY_CHOICES = [
@@ -66,20 +67,27 @@ def project_pocs_path(instance, filename):
 
 
 class Vulnerability(VulnmanProjectModel):
+    STATUS_OPEN = 0
+    STATUS_FIXED = 1
+    STATUS_VERIFIED = 2
+
+    STATUS_CHOICES = [
+        (STATUS_OPEN, "Open"),
+        (STATUS_VERIFIED, "Verified"),
+        (STATUS_FIXED, "Fixed")
+    ]
+
     template = models.ForeignKey('findings.Template', on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     cvss_score = models.FloatField(default=0.0)
     cvss_vector = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
     cve_id = models.CharField(max_length=28, null=True, blank=True)
-    # general
-    is_fixed = models.BooleanField(default=False)
-    false_positive = models.BooleanField(default=False)
-    verified = models.BooleanField(default=False)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_OPEN)
     # generic assets
+    asset_type = models.CharField(max_length=64, choices=ASSET_TYPES_CHOICES, default=WebApplication.ASSET_TYPE)
     asset_webapp = models.ForeignKey('assets.WebApplication', on_delete=models.CASCADE, null=True, blank=True)
     asset_webrequest = models.ForeignKey('assets.WebRequest', on_delete=models.CASCADE, null=True, blank=True)
     asset_host = models.ForeignKey('assets.Host', on_delete=models.CASCADE, null=True, blank=True)
-    # asset_host = models.ForeignKey('assets.Host', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.template.name
@@ -133,7 +141,7 @@ class Vulnerability(VulnmanProjectModel):
             return self.asset_host
 
     class Meta:
-        ordering = ['-cvss_score', '-verified']
+        ordering = ['-cvss_score',]
         verbose_name_plural = "Vulnerabilities"
         verbose_name = "Vulnerability"
 

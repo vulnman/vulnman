@@ -42,7 +42,6 @@ class TemplateForm(forms.ModelForm):
         )
 
 
-
 class TextProofForm(forms.ModelForm):
     class Meta:
         model = models.TextProof
@@ -91,12 +90,12 @@ class ProofOrderingForm(forms.Form):
 
 class VulnerabilityForm(forms.ModelForm):
     template_id = forms.CharField(label="Template")
-    asset_type = forms.ChoiceField(choices=ASSET_TYPE_CHOICES)
+    # asset_type = forms.ChoiceField(choices=ASSET_TYPE_CHOICES)
     f_asset = forms.ChoiceField(choices=[], label="Asset")
 
     class Meta:
         model = models.Vulnerability
-        fields = ["template_id", "cvss_vector", "name", "asset_type", "f_asset", "is_fixed", "verified", "cve_id"]
+        fields = ["template_id", "cvss_vector", "name", "asset_type", "f_asset", "status", "cve_id"]
 
     def get_asset_choices(self, project):
         choices = [("---", "---")]
@@ -136,10 +135,7 @@ class VulnerabilityForm(forms.ModelForm):
                 layout.Div(
                     bootstrap5.FloatingField("cve_id"), css_class="col-sm-12 col-md-6",
                 ),
-                layout.Div(bootstrap5.Field("is_fixed"),
-                           css_class="col-sm-12 col-md-2 form-check-form-check-inline form-switch"),
-                layout.Div(bootstrap5.Field("verified"),
-                           css_class="col-sm-12 col-md-2 form-check-form-check-inline form-switch"),
+                layout.Div(bootstrap5.FloatingField("status"), css_class="col-sm-12 col-md-6"),
             ),
             layout.Row(
                 layout.Div(

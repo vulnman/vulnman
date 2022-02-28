@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework.authtoken.views import obtain_auth_token
 
 
 urlpatterns = [
@@ -28,7 +27,7 @@ urlpatterns = [
     path('clients/', include('apps.projects.urls.clients')),
     path('vulnerability-templates/', include('apps.findings.urls.global')),
     path('methodologies/', include('apps.methodologies.urls.global')),
-    path('api-token-auth', obtain_auth_token),
+    path('api-token-auth', include('apps.account.api.v1.urls')),
     # path('agents/', include('apps.agents.urls')),
     path('', include('apps.dashboard.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

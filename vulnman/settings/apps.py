@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     "split_settings",
     'django_celery_results',
     "corsheaders",
+    'django_filters',
     # apps
     'apps.api.apps.ApiConfig',
     'apps.account.apps.AccountConfig',

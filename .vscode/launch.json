@@ -23,6 +23,15 @@
                 "test"
             ],
             "django": true
+        }, 
+        {
+            "name": "Celery",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/venv/bin/celery",
+            "args": [
+                "-A", "vulnman", "worker", "-l", "INFO"
+            ]
         }
     ]
 }

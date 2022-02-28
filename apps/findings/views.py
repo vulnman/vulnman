@@ -119,9 +119,12 @@ class VulnUpdate(generic.ProjectUpdateWithInlinesView):
         if form.instance.cvss_vector:
             form.instance.cvss_score = cvss.get_scores_by_vector(
                 form.instance.cvss_vector)[0]
-        if form.instance.service:
-            form.instance.host = form.instance.service.host
         return super().form_valid(form)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["template_id"] = self.get_object().template.vulnerability_id
+        return initial
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
