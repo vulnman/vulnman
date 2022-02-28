@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Methodologies
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+        <li class="breadcrumb-item active">Methodologies</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <div class="clearfix">
+        <div class="float-end">
+            <a class="btn btn-primary" href="{% url 'projects:methodology:project-methodology-create' %}">
+                <i class="fa fa-plus"></i> Create Methodology
+            </a>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped table-hover mt-3">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Tasks</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for methodology in methodologies %}
+            <tr>
+                <td><a href="{{ methodology.get_absolute_url }}">{{ methodology.name }}</a></td>
+                <td>{{ methodology.get_open_tasks.count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}

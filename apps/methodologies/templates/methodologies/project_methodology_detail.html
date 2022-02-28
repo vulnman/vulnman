@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Methodologies
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+        <li class="breadcrumb-item"><a
+                href="{% url 'projects:methodology:project-methodology-list' %}">Methodologies</a></li>
+        <li class="breadcrumb-item active">{{ methodology }}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-center">{{ methodology.name }}</h3>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="d-flex justify-content-between">
+                <div class="float-start">
+                    <small class="text-muted">Created: {{ methodology.date_created|date }}</small>
+                </div>
+                <div class="float-end">
+                    <small class="text-muted">Created by: {{ methodology.creator }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+
+    <div class="clearfix">
+        <div class="float-end">
+            <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="host-action-dropdown"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
+                    <li><a class="dropdown-item" href="{{ methodology.get_absolute_update_url }}"><i class="fa fa-edit"></i> Edit</a>
+                    </li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal"
+                           data-bs-target="#delete-modal-{{ methodology.pk }}"><i class="fa fa-trash"></i> Delete</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+        {% include 'modals/delete_object.html' with obj=methodology %}
+
+
+    <!-- Start simple kanban -->
+    <div class="row mt-3">
+        <!-- todos -->
+        <div class="col-sm-12 col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h3>To Do</h3>
+                </div>
+                <div class="card-body droppable" ondragover="allowDrop(event)" ondrop="drop(event, this)" id="todo">
+                    {% for task in methodology.get_tasks_todo %}
+                        <div class="card draggable mt-3" draggable="true" ondragstart="dragStart(event)"
+                             id="{{ task.pk }}">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ task.name }}</h4>
+                                <div class="card-text">{{ task.description }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- in progress -->
+        <div class="col-sm-12 col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h3>In Progress</h3>
+                </div>
+                <div class="card-body droppable" ondragover="allowDrop(event)" ondrop="drop(event, this)" id="progress">
+                    {% for task in methodology.get_tasks_progress %}
+                        <div class="card draggable mt-3" draggable="true" ondragstart="dragStart(event)"
+                             id="{{ task.pk }}">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ task.name }}</h4>
+                                <div class="card-text">{{ task.description }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h3>Done</h3>
+                </div>
+                <div class="card-body droppable" ondragover="allowDrop(event)" ondrop="drop(event, this)" id="done">
+                    {% for task in methodology.get_tasks_done %}
+                        <div class="card draggable mt-3" draggable="true" ondragstart="dragStart(event)"
+                             id="{{ task.pk }}">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ task.name }}</h4>
+                                <div class="card-text">{{ task.description }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% csrf_token %}
+{% endblock content %}
+
+{% block extra_scripts %}
+    <script>
+        const dragStart = (event) => {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        const allowDrop = (event) => {
+            event.preventDefault();
+            event.currentTarget.style.background = '#7f8082';
+        }
+
+        const drop = (event, el) => {
+            event.preventDefault();
+            const data = event.dataTransfer.getData("text");
+            const element = document.getElementById(data);
+            $('.droppable').css("background-color", "");
+            try {
+                el.appendChild(element)
+                $.ajax({
+                    url: "/api/v1/project-tasks/" + data + "/status/",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+                    },
+                    type: "PATCH",
+                    data: {"status": event.target.id.replace("#", "")},
+                    success: function (result) {
+                        // location.reload();
+                    }
+                });
+            } catch (error) {
+                console.warn("you can't move the item to the same place")
+            }
+        }
+
+    </script>
+{% endblock %}

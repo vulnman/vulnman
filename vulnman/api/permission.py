@@ -1,4 +1,3 @@
-# TODO: legacy
 from rest_framework import permissions
 
 

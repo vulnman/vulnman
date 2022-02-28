@@ -1,0 +1,11 @@
+{% load markdown %}
+
+<article id="project-summary" class="chapter">
+    <h2 class="chapter-title" id="assessment-overview-title">Assessment Overview</h2>
+</article>
+
+<article>
+    <section id="assessment-overview-section" class="page-content">
+        {{ section.text|md_to_html }}
+    </section>
+</article>

@@ -5,12 +5,12 @@
     <div class="card-body">
         {% if method %}
             {% if not without_form_tag %}
-<form method="{{ method }}" {% if enctype %}enctype="multipart/form-data"{% endif %} action="{{ form.action }}">
+<form method="{{ method }}" {% if enctype %}enctype="multipart/form-data"{% endif %}>
     {% csrf_token %}
                 {% endif %}
 {% else %}
             {% if not without_form_tag %}
-<form method="get" action="{{ form.action}}">
+<form method="get">
                 {% endif %}
 {% endif %}
     {% for hidden in form.hidden_fields %}
@@ -21,7 +21,6 @@
       {% include 'forms/field.html' %}
     {% endfor %}
 
-    {% if not no_submit %}
     <div class="form-group mt-3">
         <div class="clearfix">
             <button type="submit" class="btn btn-success form-control">
@@ -33,7 +32,6 @@
             </button>
         </div>
     </div>
-    {% endif %}
     {% if not without_form_tag %}
   </form>
     {% endif %}

@@ -39,7 +39,7 @@ class CommandHistoryItem(VulnmanProjectModel):
     command = models.TextField()
     exit_code = models.IntegerField(blank=True, null=True)
     output = models.TextField(blank=True, null=True)
-    # agent = models.ForeignKey('agents.Agent', on_delete=models.SET_NULL, null=True, blank=True)
+    agent = models.ForeignKey('agents.Agent', on_delete=models.SET_NULL, null=True, blank=True)
 
     def get_timeline_icon(self):
         if self.exit_code == 0:

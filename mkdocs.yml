@@ -33,22 +33,26 @@ plugins:
 nav:
   - "Home": "index.md"
   - "Getting Started":
+      - "Glossary": "getting_started/glossary.md"
       - "Features": "getting_started/features.md"
       - "Installation":
           - "Vulnman Server": "getting_started/installation/server.md"
+          - "Vulnman CLI": "getting_started/installation/cli.md"
       - "Configuration": "getting_started/configuration/index.md"
       - "Upgrade":
            - "Vulnman Server": "getting_started/upgrade/server.md"
   - "Usage":
       - "Permissions and Groups": "usage/permissions.md"
-      - "Components": "usage/components.md"
       - "Create Client": "usage/create_client.md"
+      - "Import Vulnerability Templates": "usage/vulnerability_management/import_templates.md"
       - "Reporting": "usage/reporting.md"
+      - "CLI": "usage/cli/index.md"
   - "Advanced":
       - "Customize":
         - "CSS": "advanced/customize/css.md"
         - "Report": "advanced/customize/report.md"
       - "Plugin System": "advanced/plugin_system.md"
       - "REST-API": "advanced/rest_api.md"
+      - "Agents": "advanced/agents/index.md"
   - "Misc":
       - "Other Products": "misc/products.md"

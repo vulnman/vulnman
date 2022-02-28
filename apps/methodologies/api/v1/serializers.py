@@ -1,41 +1,43 @@
 from rest_framework import serializers
-from vulnman.api.serializers import ProjectRelatedObjectSerializer
-from vulnman.utils.markdown import md_to_clean_html
 from apps.methodologies import models
-from apps.assets.api.v1.serializers import WebApplicationSerializer, HostSerializer, WebRequestSerializer
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    creator = serializers.StringRelatedField()
+
     class Meta:
         model = models.Task
-        fields = ["task_id", "name", "description", "uuid"]
-        read_only_fields = ["task_id", "name", "description", "uuid"]
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data["description"] = md_to_clean_html(data["description"])
-        return data
+        fields = '__all__'
+        read_only_fields = ["uuid", "creator", "date_updated", "date_created", "methodology"]
 
 
-class AssetTaskSerializer(ProjectRelatedObjectSerializer):
-    task = TaskSerializer()
-    asset = serializers.SerializerMethodField()
-
-    def get_asset(self, obj):
-        if obj.asset.ASSET_TYPE == "webapplication":
-            return WebApplicationSerializer(obj.asset).data
-        elif obj.asset.ASSET_TYPE == "webrequest":
-            return WebRequestSerializer(obj.asset).data
-        elif obj.asset.ASSET_TYPE == "host":
-            return HostSerializer(obj.asset).data
-        return obj.asset
+class MethodologySerializer(serializers.ModelSerializer):
+    tasks = TaskSerializer(many=True, source='task_set')
+    creator = serializers.StringRelatedField()
 
     class Meta:
-        model = models.AssetTask
-        fields = ["project", "task", "status", "asset"]
-        read_only_fields = ["project", "task", "asset"]
+        model = models.Methodology
+        fields = '__all__'
+        read_only_fields = ["uuid", "creator", "date_updated", "date_created"]
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data["status"] = instance.get_status_display()
-        return data
+    def create(self, validated_data):
+        if validated_data.get('task_set'):
+            tasks_validated_data = validated_data.pop('task_set')
+            methodology = models.Methodology.objects.create(**validated_data)
+            tasks_serializer = self.fields["tasks"]
+            for task in tasks_validated_data:
+                task["methodology"] = methodology
+                task["creator"] = methodology.creator
+            tasks_serializer.create(tasks_validated_data)
+        else:
+            methodology = models.Methodology.objects.create(**validated_data)
+        return methodology
+
+
+class ProjectTaskStatusUpdateSerializer(serializers.ModelSerializer):
+    creator = serializers.StringRelatedField()
+
+    class Meta:
+        model = models.ProjectTask
+        fields = ["status", "creator"]
+        read_only_fields = ["creator"]

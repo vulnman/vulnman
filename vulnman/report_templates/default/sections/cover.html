@@ -1,23 +1,22 @@
 <article id="cover">
-    <h1>
-        {{ report.get_report_title }}
-    </h1>
-    <h2>
-        {{ project.client.name }}
-    </h2>
-    <table id="cover-footer">
-        <tr>
-            <td>Author:</td>
-            <td>{{ report.author }}</td>
-        </tr>
-        <tr>
-            <td>Version:</td>
-            <td>{{ report.version }}</td>
-        </tr>
-        <tr>
-            <td>Generator:</td>
-            <td><a href="{{ REPORT_COMPANY_INFORMATION.homepage }}">VULNMAN</a></td>
-        </tr>
-    </table>
-
+    {% if report.custom_title %}
+        <h1>
+            {{ report.custom_title }} <br/>
+            {{ project.client.name }}
+        </h1>
+    {% else %}
+        <h1>
+            {{ project.report_default_title }} <br/>
+            {{ project.client.name }}
+        </h1>
+    {% endif %}
+    <address>
+        {{ REPORT_COMPANY_INFORMATION.name }}
+        {{ REPORT_COMPANY_INFORMATION.street }}
+        {{ REPORT_COMPANY_INFORMATION.zip }}
+    </address>
+    <address>
+        {{ REPORT_COMPANY_INFORMATION.contact }}
+        {{ REPORT_COMPANY_INFORMATION.homepage }}
+    </address>
 </article>

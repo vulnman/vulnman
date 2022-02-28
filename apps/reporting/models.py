@@ -13,10 +13,6 @@ REPORT_TYPE_CHOICES = [
 
 
 class PentestReport(VulnmanProjectModel):
-<<<<<<< HEAD
-=======
-    name = models.CharField(max_length=128)
->>>>>>> origin/dev
     report_type = models.CharField(max_length=16, choices=REPORT_TYPE_CHOICES)
     raw_source = models.TextField(null=True, blank=True)
     pdf_source = models.BinaryField(null=True, blank=True)
@@ -31,27 +27,8 @@ class PentestReport(VulnmanProjectModel):
     def get_absolute_delete_url(self):
         return reverse_lazy('projects:reporting:report-delete', kwargs={'pk': self.pk})
 
-<<<<<<< HEAD
-=======
-
-class ReportInformation(VulnmanProjectModel):
-    REPORT_DEFAULT_TITLE = "Vulnerability Report"
-    project = models.OneToOneField("projects.Project", on_delete=models.CASCADE)
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="created_reportinformation_set", null=True, blank=True)
-    evaluation = models.TextField(null=True, blank=True)
-    recommendation = models.TextField(null=True, blank=True)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="reportinformation_set")
-    title = models.CharField(max_length=256, null=True, blank=True)
-
-    def get_report_title(self):
-        if self.title:
-            return self.title
-        return self.REPORT_DEFAULT_TITLE
-
->>>>>>> origin/dev
 
 class Report(VulnmanProjectModel):
-    # deprecated: DO NOT USE!
     revision = models.CharField(max_length=6, default="0.1", help_text="The reports are ordered by revisions")
     custom_title = models.CharField(max_length=64, help_text="Overwrite Project Title", null=True, blank=True)
     changes = models.CharField(max_length=128)

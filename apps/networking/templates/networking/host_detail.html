@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ host }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:networking:host-list' %}">Hosts</a></li>
+        <li class="breadcrumb-item active">{{ host }}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    {% if host.get_host_icon %}
+        <h3 class="text-center"><i class="{{ host.get_host_icon }}"></i> {{ host }}</h3>
+    {% else %}
+        <h3 class="text-center">{{ host }}</h3>
+    {% endif %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="clearfix">
+                <div class="float-start">
+                    <small class="text-muted">Last updated: {{ host.date_updated|timesince }} ago</small>
+                </div>
+                <div class="float-end">
+                    <small class="text-muted">Created by: {{ host.creator }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="clearfix">
+        <div class="float-end">
+            <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="host-action-dropdown"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
+                    <li>
+                        <a class="dropdown-item" href="https://censys.io/ipv4/{{ host.ip }}" target="_blank" rel="noopener"><i class="fa fa-external-link"></i> Censys</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="https://www.shodan.io/search?query={{ host.ip }}" target="_blank" rel="noopener"><i class="fa fa-external-link"></i> Shodan</a>
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'projects:networking:host-edit' host.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ host.pk }}"><i class="fa fa-trash"></i> Delete</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <p><strong>OS: </strong>{{ host.os }}</p>
+    <p><strong>Hostnames: </strong>{{ host.get_hostnames }}</p>
+
+    <ul class="nav nav-tabs nav-fill" role="tablist">
+        <li class="nav-item" role="presentation"><a class="nav-link active" data-bs-toggle="tab" href="#services"
+                                                    aria-controls="services">Services</a></li>
+        <li class="nav-item" role="presentation"><a class="nav-link" data-bs-toggle="tab" href="#findings"
+                                                    aria-controls="findings">Findings</a></li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" data-bs-toggle="tab" href="#vulns" aria-controls="vulns">Vulnerabilities</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="services" class="tab-pane fade show active" role="tabpanel">
+            <div class="container-fluid mt-3">
+                <h3>Services</h3>
+                <hr/>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Name</th>
+                        <th>Banner</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for service in host.service_set.all %}
+                        <tr>
+                            <td>{{ service }}</td>
+                            <td>{{ service.name }}</td>
+                            <td>{{ service.banner }}</td>
+                            <td>{{ service.status }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="findings" class="tab-pane fade" role="tabpanel">
+            <div class="container-fluid mt-3">
+                <h3>Findings</h3>
+                <hr/>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Data</th>
+                        <th>Service</th>
+                        <th>Hostname</th>
+                        <th>Steps to reproduce</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for finding in host.finding_set.all %}
+                        <tr>
+                            <td>{{ finding.name }}</td>
+                            <td>{{ finding.data | linebreaksbr }}</td>
+                            <td>{{ finding.service }}</td>
+                            <td>{{ finding.hostname }}</td>
+                            <td>{{ finding.steps_to_reproduce }}</td>
+                            <td>{% include 'components/actions_dropdown.html' with obj=finding btn_small=True %}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="vulns" class="tab-pane fade" role="tabpanel">
+            <div class="container-fluid mt-3">
+                <h3>Vulnerabilities</h3>
+                <hr/>
+                <table class="table table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Severity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vuln in host.vulnerability_set.all %}
+                            <tr>
+                                <td><a href="{{ vuln.get_absolute_url }}">{{ vuln.template.name }}</a></td>
+                                <td>{{ vuln.cvss_score }} ({{ vuln.get_severities.0 }})</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    {% include 'modals/delete_object.html' with obj=host %}
+
+{% endblock %}

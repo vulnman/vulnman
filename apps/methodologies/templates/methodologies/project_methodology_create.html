@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create Methodology
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+        <li class="breadcrumb-item"><a
+                href="{% url 'projects:methodology:project-methodology-list' %}">Methodologies</a></li>
+        <li class="breadcrumb-item active">Create</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <ul class="nav nav-tabs nav-fill" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" data-bs-toggle="tab" href="#step1"
+                                                    aria-controls="info">Without Template</a></li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" data-bs-toggle="tab" href="#step2" aria-controls="proofs">From Template</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- Step1 -->
+        <div id="step1" class="tab-pane fade show active" role="tabpanel">
+            <div class="container-fluid mt-3">
+                {% include 'forms/formset.html' with title="Blank Methodology" %}
+            </div>
+        </div>
+
+        <div id="step2" class="tab-pane fade show" role="tabpanel">
+            <div class="container-fluid mt-3">
+                <p>Choose a template</p>
+                <form class="form" action="{% url 'projects:methodology:project-methodology-from-template' %}" method="post">
+                    {% csrf_token %}
+                    {% include 'forms/simple.html' with method="POST" form=from_template_form witout_form_tag=True %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

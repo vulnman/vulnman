@@ -21,12 +21,8 @@
                         </a>
                     </li>
                     {% get_obj_perms request.user for project as "project_perms" %}
-<<<<<<< HEAD
                     {% if "pentest_project" in project_perms %}
                     
-=======
-                    {% if "change_project" in project_perms %}                    
->>>>>>> origin/dev
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
@@ -40,13 +36,10 @@
                     </ul>
 
                     <li class="nav-item">
-<<<<<<< HEAD
                         <a class="nav-link {% if request.resolver_match.view_name == 'projects:networking:host-list' %}active{% endif %}"
                            href="{% url 'projects:networking:host-list' %}">Hosts</a>
                     </li>
                     <li class="nav-item">
-=======
->>>>>>> origin/dev
                         <a class="nav-link {% if request.resolver_match.view_name == 'projects:findings:vulnerability-list' %}active{% endif %}"
                            href="{% url 'projects:findings:vulnerability-list' %}">Vulnerabilities</a>
                     </li>
@@ -55,12 +48,12 @@
                            href="{% url 'projects:reporting:report-list' %}">Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:findings:user-account-list' %}active{% endif %}"
-                            href="{% url 'projects:findings:user-account-list' %}">User Accounts</a>
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:social:credential-list' %}active{% endif %}"
+                            href="{% url 'projects:social:credential-list' %}">Credentials</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:methodologies:project-todos-list' %}active{% endif %}"
-                            href="{% url 'projects:methodologies:project-todos-list' %}">To Dos</a>
+                        <a class="nav-link {% if request.resolver_match.view_name == 'projects:methodology:project-methodology-list' %}active{% endif %}"
+                            href="{% url 'projects:methodology:project-methodology-list' %}">Tasks</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.view_name == 'projects:external-tools:tool-import' %}active{% endif %}"
@@ -80,7 +73,8 @@
                             <a class="dropdown-item" href="{% url 'projects:project-list' %}">Projects</a>
                             <a class="dropdown-item" href="{% url 'findings:template-list' %}">Vulnerability
                                 Templates</a>
-                            <a class="dropdown-item" href="{% url 'methodology:methodology-list' %}">Checklists</a>
+                            <a class="dropdown-item" href="{% url 'methodology:methodology-list' %}">Methodologies</a>
+                            <a class="dropdown-item" href="{% url 'agents:agent-list' %}">Agents</a>
                             {% if perms.projects.view_client %}
                                 <a class="dropdown-item" href="{% url 'clients:client-list' %}">Clients</a>
                             {% endif %}

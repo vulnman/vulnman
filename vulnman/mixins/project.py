@@ -14,8 +14,8 @@ class ProjectMixin(LoginRequiredMixin, UserPassesTestMixin):
         if not self.request.session.get('project_pk'):
             return None
         session_pk = self.request.session["project_pk"]
-        projects = get_objects_for_user(self.request.user, "projects.change_project", Project.objects.filter(pk=session_pk),
-                                        use_groups=False, accept_global_perms=False)
+        projects = get_objects_for_user(self.request.user, "pentest_project", Project.objects.filter(pk=session_pk),
+                                        use_groups=False)
         if projects.exists():
             return projects.get()
         return None

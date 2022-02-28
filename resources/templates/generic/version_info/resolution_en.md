@@ -1,0 +1,1 @@
+Hide the version information.

@@ -1,0 +1,9 @@
+- id: version_info
+  name: Version Information
+  severity: informational
+  references:
+    - "https://cwe.mitre.org/data/definitions/200.html"
+  cwe:
+    - CWE-200
+  categories:
+    - information_disclosure

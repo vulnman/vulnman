@@ -28,11 +28,7 @@ class CodeMirrorWidget(forms.Textarea):
 
     def render(self, name, value, attrs=None, renderer=None):
         output = [super().render(name, value, attrs, renderer),
-<<<<<<< HEAD
             '<script>var id_%s = CodeMirror.fromTextArea(document.getElementById("id_%s"), {mode: "markdown"});$("#id_%s").val("-");</script>' % (
-=======
-            '<script>var id_%s = CodeMirror.fromTextArea(document.getElementById("id_%s"), {mode: "markdown"});$("#dddid_%s").val("-");</script>' % (
->>>>>>> origin/dev
                 name, name, name
             )
         ]

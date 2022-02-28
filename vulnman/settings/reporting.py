@@ -8,4 +8,3 @@ REPORT_COMPANY_INFORMATION = {
 }
 
 REPORTING_TEMPLATE = "vulnman.report_templates.default.DefaultReportTemplate"
-CELERY_RESULT_BACKEND = 'django-db'

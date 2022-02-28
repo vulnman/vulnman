@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Employees
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item active">Employees</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+
+    <div class="clearfix">
+        <div class="float-end">
+            <a class="btn btn-primary" href="{% url 'projects:social:employee-create' %}">
+                <i class="fa fa-plus"></i> Create Employee
+            </a>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-hover table-striped mt-3">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>E-Mail</th>
+                <th>Position</th>
+                <th>Description</th>
+                <th>Credentials</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td><a href="{{ employee.get_absolute_url }}">{{ employee.first_name }}</a></td>
+                    <td>{{ employee.last_name }}</td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.position }}</td>
+                    <td>{{ employee.description }}</td>
+                    <td>{{ employee.credential_set.count }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'navigation/pagination.html' %}
+
+{% endblock %}

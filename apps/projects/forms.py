@@ -10,7 +10,7 @@ from extra_views import InlineFormSetFactory
 
 class ProjectForm(forms.ModelForm):
     pentesters = forms.ModelMultipleChoiceField(queryset=User.objects.filter(
-        groups__name="pentester"), required=False)
+        groups__name="pentester"))
 
     class Meta:
         model = models.Project
@@ -39,6 +39,25 @@ class ProjectForm(forms.ModelForm):
                 layout.Div(bootstrap5.FloatingField("pentesters"), css_class="col-sm-12 col-md-12")
             )
         )
+
+
+class ScopeInline(InlineFormSetFactory):
+    model = models.Scope
+    fields = ["name"]
+    factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 10}
+
+    def construct_formset(self):
+        formset = super().construct_formset()
+        formset.helper = FormHelper()
+        formset.helper.form_tag = False
+        formset.helper.disable_csrf = True
+        formset.helper.render_unmentioned_fields = True
+        formset.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12")
+            )
+        )
+        return formset
 
 
 class ClientForm(forms.ModelForm):

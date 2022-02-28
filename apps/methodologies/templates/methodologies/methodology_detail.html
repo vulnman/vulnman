@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load methodologies %}
+
+{% block title %}
+    {{ methodology }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'methodology:methodology-list' %}">Methodologies</a></li>
+        <li class="breadcrumb-item active">{{ methodology }}</li>
+    </ol>
+    <hr/>
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-center">{{ methodology }}</h3>
+    {% if methodology.description %}
+    <small><i class="text-center"><p>{{ methodology.description }}</p></i></small>
+    {% endif %}
+    <hr/>
+    <div class="clearfix">
+        <div class="float-end">
+            {% include 'components/actions_dropdown.html' with obj=methodology %}
+        </div>
+    </div>
+
+    <div class="list-group mt-3">
+        {% for task in methodology.task_set.all %}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="clearfix">
+                            <div class="float-start">
+                                <p>{{ task.name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="clearfix">
+                            <div class="float-start">
+                                <p>{{ task.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </div>
+
+
+    {% include 'modals/delete_object.html' with obj=methodology %}
+{% endblock %}

@@ -109,11 +109,7 @@
         <div id="info" class="tab-pane fade" role="tabpanel">
             <div class="container-fluid mt-3">
                 <p><strong>Template: </strong></p>
-<<<<<<< HEAD
                 <p><a href="{{ vuln.template.get_absolute_url }}">{{ vuln.template.name }}</a></p>
-=======
-                <p>{{ vuln.template.name }}</p>
->>>>>>> origin/dev
 
                 <p><strong>Description: </strong></p>
                 <p>{{ vuln.template.description | md_to_html }}</p>
@@ -146,11 +142,8 @@
                 {% else %}
                     <p>-</p>
                 {% endif %}
-<<<<<<< HEAD
                 <p><strong>Details</strong></p>
                 <p>{{ vuln.details|md_to_html }}</p>
-=======
->>>>>>> origin/dev
             </div>
         </div>
     </div>
@@ -159,7 +152,7 @@
     <div class="modal fade bd-example-modal-lg" id="add-text-proof-modal" tabindex="-1" role="dialog" aria-labelledby="add-text-proof-modal-label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <form method="post" action="{% url 'projects:findings:vulnerability-add-text-proof' vuln.pk %}" id="text-proof-form">
+                <form method="post" action="{% url 'projects:findings:vulnerability-add-text-proof' vuln.pk %}">
                     {% csrf_token %}
                     <div class="modal-header">
                         <h5 class="modal-title" id="add-text-proof-modal-label">Add Text Proof</h5>
@@ -210,11 +203,7 @@
                     console.log($(this).attr("data-proof-pk"));
                     $.ajax({
                         type: "PATCH",
-<<<<<<< HEAD
                         url: "/api/v1/proofs/" + $(this).attr("data-proof-pk") + "/",
-=======
-                        url: "/api/v1/vulnerabilities/proofs/" + $(this).attr("data-proof-pk") + "/",
->>>>>>> origin/dev
                         data: {
                             order: i,
                             pk: $(this).attr("data-proof-pk")
@@ -233,22 +222,12 @@
     function deleteProof(pk){
         $.ajax({
             type: "DELETE",
-<<<<<<< HEAD
             url: "/api/v1/proofs/" + pk + "/",
-=======
-            url: "/api/v1/vulnerabilities/proofs/" + pk + "/",
->>>>>>> origin/dev
             dataType: "json",
             success: function(data) {
                 location.reload();
             }
         });
     }
-<<<<<<< HEAD
-=======
-
-    $('#text-proof-form #id_text').attr("required", false);
-
->>>>>>> origin/dev
 </script>
 {% endblock %}

@@ -1,39 +1,9 @@
-@font-face {
-  font-family: Fira Sans;
-  font-weight: 400;
-  src: url(firasans-regular.otf);
-}
-@font-face {
-  font-family: Fira Sans;
-  font-style: italic;
-  font-weight: 400;
-  src: url(firasans-italic.otf);
-}
-@font-face {
-  font-family: Fira Sans;
-  font-weight: 300;
-  src: url(firasans-light.otf);
-}
-@font-face {
-  font-family: Fira Sans;
-  font-style: italic;
-  font-weight: 300;
-  src: url(firasans-lightitalic.otf);
-}
-@font-face {
-  font-family: Fira Sans;
-  font-weight: 700;
-  src: url(firasans-bold.otf);
-}
-
-
 @page {
-  size: a4 portrait;
-  margin: 30mm 10mm 30mm 10mm;
+      size: a4 portrait;
+    margin: 30mm 10mm 30mm 10mm;
   @top-left {
-    background: #2c3e50;
+    background: #fbc847;
     content: counter(page);
-    color: #c6c9cb;
     height: 1cm;
     text-align: center;
     width: 1cm;
@@ -41,7 +11,7 @@
 
   }
   @top-center {
-    background: #2c3e50;
+    background: #fbc847;
     content: '';
     display: block;
     height: .05cm;
@@ -55,7 +25,8 @@
     height: 1cm;
     vertical-align: middle;
     width: 100%;
-    margin-bottom: 1cm;
+        margin-bottom: 1cm;
+
   }
 }
 @page :blank {
@@ -69,12 +40,12 @@
   @top-right { content: none }
 }
 @page :first {
-  background: url(cover.png) no-repeat center;
+  background: url(report-cover.jpg) no-repeat center;
   background-size: cover;
   margin: 0;
 }
 @page chapter {
-  background: #2c3e50;
+  background: #fbc847;
   @top-left { content: none }
   @top-center { content: none }
   @top-right { content: none }
@@ -82,29 +53,33 @@
 
 html {
   color: #393939;
-  font-size: 14px;
-  font-weight: 300;
+  font-size: 11pt;
+  /*font-weight: 300;*/
   line-height: 1.5;
 }
 
 h1 {
+  color: #fbc847;
+  font-size: 38pt;
+  margin: 5cm 2cm 0 2cm;
+  page: no-chapter;
+  width: 100%;
+}
+h2, h3, h4 {
+  color: black;
+  font-weight: 400;
+}
+h2 {
   break-before: always;
-  font-size: 26pt;
+  font-size: 28pt;
   string-set: heading content();
 }
-
-h2 {
-  font-size: 22px;
-  margin-bottom: 1.2em;
-}
-
 h3 {
-  font-size: 18px;
-
+  font-weight: 300;
+  font-size: 15pt;
 }
-
-h4, h5 {
-  font-size: 16px;
+h4 {
+  font-size: 13pt;
 }
 
 #cover {
@@ -113,41 +88,245 @@ h4, h5 {
   flex-wrap: wrap;
   height: 297mm;
 }
-
-#cover h1{
-    color: #c6c9cb;
-    font-size: 32pt;
-    margin: 10cm 2cm 0 2cm;
-    page: no-chapter;
-    width: 100%;
+#cover address {
+  background: #fbc847;
+  flex: 1 50%;
+  margin: 0 -2cm;
+  padding: 1cm 0;
+  white-space: pre-wrap;
+}
+#cover address:first-of-type {
+  padding-left: 3cm;
 }
 
+.columns section {
+  columns: 2;
+  column-gap: 1cm;
+  padding-top: 1cm;
+}
+.columns section p {
+  text-align: justify;
+}
+.columns section p:first-of-type {
+  font-weight: 700;
+}
 
-#cover h2{
-  color: #c6c9cb;
-  font-size: 28pt;
-  margin: -5cm 2cm 0 2cm;
-  page: no-chapter;
+#skills h3 {
+  background: #fbc847;
+  margin: 0 -3cm 1cm;
+  padding: 1cm 1cm 1cm 3cm;
+  width: 21cm;
+}
+#skills section {
+  padding: .5cm 0;
+}
+#skills section#table-content::before {
+  background: url(table-content.svg) no-repeat center #fbc847;
+  background-size: 50%;
+  content: '';
+  display: inline-block;
+  float: left;
+  height: 2cm;
+  margin-right: .5cm;
+  vertical-align: middle;
+  width: 2cm;
+}
+#skills section#heading::before {
+  background: url(heading.svg) no-repeat center #fbc847;
+  background-size: 50%;
+  content: '';
+  display: inline-block;
+  float: left;
+  height: 2cm;
+  margin-right: .5cm;
+  vertical-align: middle;
+  width: 2cm;
+}
+#skills section#multi-columns::before {
+  background: url(multi-columns.svg) no-repeat center #fbc847;
+  background-size: 50%;
+  content: '';
+  display: inline-block;
+  float: left;
+  height: 2cm;
+  margin-right: .5cm;
+  vertical-align: middle;
+  width: 2cm;
+}
+#skills section#internal-links::before {
+  background: url(internal-links.svg) no-repeat center #fbc847;
+  background-size: 50%;
+  content: '';
+  display: inline-block;
+  float: left;
+  height: 2cm;
+  margin-right: .5cm;
+  vertical-align: middle;
+  width: 2cm;
+}
+#skills section#style::before {
+  background: url(style.svg) no-repeat center #fbc847;
+  background-size: 50%;
+  content: '';
+  display: inline-block;
+  float: left;
+  height: 2cm;
+  margin-right: .5cm;
+  vertical-align: middle;
+  width: 2cm;
+}
+#skills section h4 {
+  margin: 0;
+}
+#skills section p {
+  margin-top: 0;
+}
+
+#offers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+#offers h2, #offers h3 {
   width: 100%;
 }
-
-
-
-#cover-footer {
-  color: #c6c9cb;
-  flex: 1 50%;
-  margin-bottom: 1cm;
-  margin-left: 1cm;
+#offers section {
+  width: 30%;
 }
-
-#cover-footer a {
-  color: #c6c9cb;
+#offers section h4 {
+  margin-bottom: 0;
 }
-
+#offers section ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+#offers section ul li:not(:last-of-type) {
+  margin: .5cm 0;
+}
+#offers section p {
+  background: #fbc847;
+  display: block;
+  font-size: 15pt;
+  font-weight: 700;
+  margin-bottom: 0;
+  padding: .25cm 0;
+  text-align: center;
+}
 
 .chapter {
-  /*border-bottom: 1px solid black;*/
-  margin-top: -1cm;
+  align-items: center;
+  display: flex;
+  height: 297mm;
+  justify-content: center;
+  page: chapter;
+}
+
+#typography section {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1cm 0;
+}
+#typography section h4 {
+  border-top: 1pt solid;
+  flex: 1 25%;
+  margin: 0;
+}
+#typography section h4 + * {
+  flex: 1 75%;
+  margin: 0;
+  padding-left: .5cm;
+}
+#typography section p {
+  text-align: justify;
+}
+#typography section ul {
+  line-height: 2;
+  list-style: none;
+}
+#typography section#small-caps p {
+  font-variant: small-caps;
+}
+#typography section#ligatures dl {
+  display: flex;
+  flex-wrap: wrap;
+}
+#typography section#ligatures dl dt {
+  font-weight: 400;
+  width: 30%;
+}
+#typography section#ligatures dl dd {
+  flex: 1 70%;
+  margin: 0;
+  padding: 0;
+}
+#typography section#ligatures .none {
+  font-variant-ligatures: none;
+}
+#typography section#ligatures .common {
+  font-variant-ligatures: common-ligatures;
+}
+#typography section#ligatures .discretionary {
+  font-variant-ligatures: discretionary-ligatures;
+}
+#typography section#ligatures .contextual {
+  font-variant-ligatures: contextual;
+}
+#typography section#numbers dl {
+  display: flex;
+  flex-wrap: wrap;
+}
+#typography section#numbers dl dt {
+  font-weight: 400;
+  width: 30%;
+}
+#typography section#numbers dl dd {
+  flex: 1 70%;
+  margin: 0;
+  padding: 0;
+}
+#typography section#numbers #fractions {
+  font-variant-numeric: diagonal-fractions;
+}
+#typography section#numbers #ordinals {
+  font-variant-numeric: ordinal;
+}
+#typography section#numbers #slashed {
+  font-variant-numeric: slashed-zero;
+}
+#typography section#numbers #super {
+  font-variant-position: super;
+}
+#typography section#numbers #sub {
+  font-variant-position: sub;
+}
+#typography section#figures dl {
+  columns: 4;
+}
+#typography section#figures dl dt {
+  font-weight: 400;
+}
+#typography section#figures dl dd {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+#typography section#figures dl dd ul {
+  padding: 0 1em 0 0;
+}
+#typography section#figures #oldstyle {
+  font-variant-numeric: oldstyle-nums;
+}
+#typography section#figures #tabular {
+  font-variant-numeric: tabular-nums;
+}
+#typography section#figures #old-tabular {
+  font-variant-numeric: oldstyle-nums tabular-nums;
+}
+
+.page-intro p {
+  padding-top: 1cm;
+  text-align: justify;
 }
 
 table.vulnerability-detail-table {
@@ -174,6 +353,12 @@ table.table-bordered td, table.table-bordered th {
   text-align: left;
 }
 
+
+.page-break { page-break-after: always; }
+
+.pt-1 {
+  padding-top: 1cm;
+}
 
 .float-start {
   float: left;
@@ -215,11 +400,7 @@ table.table-bordered td, table.table-bordered th {
   color: #2075f5;
 }
 
-.text-informational {
-  color: #059D1D;
-}
-
-.text-information {
+.text-info {
   color: #059D1D;
 }
 
@@ -247,44 +428,3 @@ table.table-bordered td, table.table-bordered th {
     color: inherit;
   text-decoration: inherit;
 }
-
-.text-informational a {
-  color: inherit;
-text-decoration: inherit;
-}
-
-pre {
-  word-wrap: normal;
-  max-width: 100%;
-  white-space: pre-wrap;
-  background-color: #f8f8f8;
-  border-radius: 5px;
-  border: 1px solid #c6c9cb;
-  padding: 8px 15px;
-}
-
-code {
-  word-wrap: normal;
-  max-width: 100%;
-}
-
-.page-break {
-  page-break-before: always;
-}
-
-/*
-.draft {
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: -2;
-  background: url(draft.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-}
-*/

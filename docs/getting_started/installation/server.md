@@ -1,4 +1,4 @@
-# Install Vulnman
+# Install Vulnman Server
 
 
 ## Without Docker
@@ -25,7 +25,6 @@ First we fetch the source code.
 mkdir /opt/vulnman-server
 git clone https://github.com/vulnman/vulnman.git
 cd /opt/vulnman-server
-git submodule update --init --recursive
 ```
 
 
