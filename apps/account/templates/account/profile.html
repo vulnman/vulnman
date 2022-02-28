@@ -11,5 +11,8 @@ Edit Profile
 {% endblock %}
 
 {% block content %}
-    {% include 'forms/form_in_card.html' with title="Profile" %}
+
+    <div class="change-password">
+        {% include 'forms/form_in_card.html' with method="POST" form=change_password_form title="Change Password" %}
+    </div>
 {% endblock %}

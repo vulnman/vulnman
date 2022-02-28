@@ -150,7 +150,7 @@
     <div class="modal fade bd-example-modal-lg" id="add-text-proof-modal" tabindex="-1" role="dialog" aria-labelledby="add-text-proof-modal-label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <form method="post" action="{% url 'projects:findings:vulnerability-add-text-proof' vuln.pk %}">
+                <form method="post" action="{% url 'projects:findings:vulnerability-add-text-proof' vuln.pk %}" id="text-proof-form">
                     {% csrf_token %}
                     <div class="modal-header">
                         <h5 class="modal-title" id="add-text-proof-modal-label">Add Text Proof</h5>
@@ -227,5 +227,8 @@
             }
         });
     }
+
+    $('#text-proof-form #id_text').attr("required", false);
+
 </script>
 {% endblock %}
