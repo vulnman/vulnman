@@ -3,90 +3,64 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from vulnman.models import VulnmanModel, VulnmanProjectModel
 from apps.methodologies import constants
+from apps.assets.models import ASSET_TYPES_CHOICES
 
 
-class Methodology(VulnmanModel):
-    name = models.CharField(max_length=128, unique=True)
-    description = models.CharField(max_length=256, blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse_lazy('methodology:methodology-detail', kwargs={'pk': self.pk})
-
-    def get_update_url(self):
-        return reverse_lazy('methodology:methodology-update', kwargs={'pk': self.pk})
-
-    def get_absolute_delete_url(self):
-        return reverse_lazy('methodology:methodology-delete', kwargs={'pk': self.pk})
-
-    def get_absolute_update_url(self):
-        return reverse_lazy('methodology:methodology-update', kwargs={'pk': self.pk})
-
-    class Meta:
-        ordering = ["-date_updated"]
+TASK_STATUS_CHOICES = [
+    (0, "Open"),
+    (1, "Closed"),
+    (2, "To Review"),
+    (3, "Not Tested"),
+    (4, "Not Applicable")
+]
 
 
 class Task(VulnmanModel):
+    task_id = models.CharField(max_length=128)
     name = models.CharField(max_length=128)
-    description = models.CharField(max_length=256)
-    methodology = models.ForeignKey(Methodology, on_delete=models.CASCADE)
+    description = models.TextField()
+    
+    def __str__(self):
+        return self.task_id
 
     class Meta:
         ordering = ["-date_updated"]
         verbose_name = "Task"
         verbose_name_plural = "Tasks"
-        unique_together = [("name", "methodology")]
+        unique_together = [("task_id",)]
 
 
-class ProjectMethodology(VulnmanProjectModel):
-    name = models.CharField(max_length=128, unique=True)
-    description = models.CharField(max_length=256, blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ["-date_updated"]
-        unique_together = [('name', 'project')]
-        verbose_name = "Project Methodology"
-        verbose_name_plural = "Project Methodologies"
-
-    def get_open_tasks(self):
-        return self.projecttask_set.exclude(status="done")
-
-    def get_absolute_url(self):
-        return reverse_lazy("projects:methodology:project-methodology-detail", kwargs={"pk": self.pk})
-
-    def get_absolute_delete_url(self):
-        return reverse_lazy("projects:methodology:project-methodology-delete", kwargs={"pk": self.pk})
-
-    def get_absolute_update_url(self):
-        return reverse_lazy("projects:methodology:project-methodology-update", kwargs={"pk": self.pk})
-
-    def get_tasks_todo(self):
-        return self.projecttask_set.filter(status="todo")
-
-    def get_tasks_progress(self):
-        return self.projecttask_set.filter(status="progress")
-
-    def get_tasks_done(self):
-        return self.projecttask_set.filter(status="done")
-
-
-class ProjectTask(VulnmanProjectModel):
-    name = models.CharField(max_length=128)
-    description = models.CharField(max_length=256)
-    methodology = models.ForeignKey(ProjectMethodology, on_delete=models.CASCADE)
-    assignee = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="assigned_projecttask_set", blank=True)
-    status = models.CharField(max_length=28, choices=constants.TASK_STATUS_CHOICES, default="todo")
+class TaskCondition(VulnmanModel):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    asset_type = models.CharField(choices=ASSET_TYPES_CHOICES, max_length=128)
+    condition = models.CharField(max_length=256, null=True, blank=True)
+    is_regex = models.BooleanField(default=False)
+    on_pentest = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ["-date_updated"]
-        verbose_name = "Project Task"
-        verbose_name_plural = "Project Tasks"
-        unique_together = [("name", "methodology")]
+        unique_together = [('task', 'asset_type', 'condition', 'is_regex')]
 
-    def __str__(self):
-        return self.name
+
+class AssetTask(VulnmanProjectModel):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    status = models.PositiveIntegerField(default=0)
+    asset_webapp = models.ForeignKey('assets.WebApplication', on_delete=models.CASCADE, null=True, blank=True)
+    asset_webrequest = models.ForeignKey('assets.WebRequest', on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        unique_together = [
+            ("task", "project", "asset_webrequest"),
+            ("task", "project", "asset_webapp")
+        ]
+
+    @property
+    def asset(self):
+        if self.asset_webapp:
+            return self.asset_webapp
+        elif self.asset_webrequest:
+            return self.asset_webrequest
+
+    def get_status_display(self):
+        for s in TASK_STATUS_CHOICES:
+            if self.status == s[0]:
+                return s[1]

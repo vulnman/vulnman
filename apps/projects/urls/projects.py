@@ -13,10 +13,7 @@ urlpatterns = [
     path('reporting/', include('apps.reporting.urls')),
 
     # networking
-    path('networking/', include('apps.networking.urls')),
-
-    # social
-    path('social/', include('apps.social.urls')),
+    # path('networking/', include('apps.networking.urls')),
 
     # command
     path('methodologies/', include('apps.methodologies.urls.projects')),

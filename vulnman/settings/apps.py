@@ -3,11 +3,6 @@ from vulnman.settings import BASE_DIR
 # Application definition
 
 INSTALLED_APPS = [
-    # keep before django.contrib.admin
-    'dal',
-    'dal_select2',
-    'queryset_sequence',
-    'dal_queryset_sequence',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -17,11 +12,14 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'extra_views',
     'rest_framework',
-    'dry_rest_permissions',
+    'rest_framework.authtoken',
     'crispy_forms',
     "crispy_bootstrap5",
     "guardian",
     "split_settings",
+    'django_celery_results',
+    "corsheaders",
+    'django_filters',
     # apps
     'apps.api.apps.ApiConfig',
     'apps.account.apps.AccountConfig',
@@ -29,11 +27,12 @@ INSTALLED_APPS = [
     'apps.reporting.apps.ReportingConfig',
     'apps.projects.apps.ProjectsConfig',
     'apps.dashboard.apps.DashboardConfig',
-    'apps.networking.apps.NetworkingConfig',
     'apps.methodologies.apps.MethodologiesConfig',
-    'apps.social.apps.SocialConfig',
     'apps.findings.apps.FindingsConfig',
+<<<<<<< HEAD
     'apps.agents.apps.AgentsConfig',
     'apps.commands.apps.CommandsConfig',
+=======
+>>>>>>> origin/dev
     'apps.assets.apps.AssetsConfig',
 ]

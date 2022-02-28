@@ -1,7 +1,5 @@
 venv
 __pycache__
-.idea
-.vscode
 db.sqlite3
 *.xml
 docs/_build
@@ -11,3 +9,4 @@ static_files
 local_settings.py
 site
 custom
+node_modules

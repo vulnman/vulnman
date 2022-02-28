@@ -14,6 +14,7 @@
 {% endblock %}
 
 {% block content %}
+<<<<<<< HEAD
 
     <div class="row">
         <div class="col-sm-12 col-md-6">
@@ -60,36 +61,40 @@
     <div class="list-group mt-3">
         {% for report in reportk %}
             <div class="list-group-item list-group-item-action">
+=======
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <div class="row">
+                <p><strong>Draft Report</strong></p>
+            </div>
+            <div class="row">
+                {% if project.get_draft_report %}
+                    <small><i>Created at {{ project.get_draft_report.date_updated|date }}</i></small>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="row">
+>>>>>>> origin/dev
                 <div class="clearfix">
-                    <div class="float-start">
-                        <a href="{% url 'projects:reporting:report-detail' report.pk %}" target="_blank">
-                            {{ report }}
-                        </a>
-                    </div>
                     <div class="float-end">
-                        <div class="dropdown">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                               id="host-action-dropdown"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-ellipsis-v"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
-                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                       data-bs-target="#share-modal-{{ report.pk }}"><i class="fa fa-share"></i>
-                                    Share</a></li>
-                                <li><a class="dropdown-item"
-                                       href="{% url 'projects:reporting:report-update' report.pk %}"><i
-                                        class="fa fa-edit"></i> Edit</a></li>
-                                {% if report.is_draft %}
-                                    <li><a class="dropdown-item" data-bs-toggle="modal"
-                                           data-bs-target="#delete-modal-{{ report.pk }}"><i class="fa fa-trash"></i>
-                                        Delete</a></li>
-                                {% endif %}
-                            </ul>
-                        </div>
+                        <form method="post" action="{% url 'projects:reporting:report-draft-create' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="empty" value=""/>
+                            <button class="btn btn-primary">
+                                <i class="fa fa-file"></i> Create Draft
+                            </button>
+                            {% if project.get_draft_report %}
+                                <a class="btn btn-primary" href="{% url 'projects:reporting:report-download' project.get_draft_report.pk %}">
+                                    <i class="fa fa-download"></i> Download
+                                </a>
+                            {% endif %}
+                        </form>
                     </div>
                 </div>
             </div>
+<<<<<<< HEAD
 
         {% empty %}
             <li class="list-group-item">No reports here!</li>
@@ -136,10 +141,53 @@
                     {% crispy report_create_form %}
                 </div>
             </div>
+=======
+>>>>>>> origin/dev
         </div>
     </div>
 
+    <hr />
 
-    {% include 'navigation/pagination.html' %}
-
+    <div class="row">
+        <div class="col-sm-12">
+            {% if report_mgmt_summary_form %}
+            {% include 'forms/simple.html' with form=report_mgmt_summary_form no_submit=True method="POST" %}
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+id_evaluation.on("blur", function(){
+    $.ajax({
+        type: "PATCH",
+        url: "/api/v1/report-information/{{project.reportinformation.pk}}/",
+        dataType: "json",
+        data: {"evaluation": id_evaluation.getValue()},
+        success: function(data){
+            //location.reload()
+            // console.log(data)
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+        }
+    });
+});
+id_recommendation.on("blur", function(){
+    $.ajax({
+        type: "PATCH",
+        url: "/api/v1/report-information/{{project.reportinformation.pk}}/",
+        dataType: "json",
+        data: {"recommendation": id_recommendation.getValue()},
+        success: function(data){
+            //location.reload()
+            // console.log(data)
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+        }
+    });
+});
+</script>
+{% endblock extra_scripts %}

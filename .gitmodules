@@ -1,0 +1,6 @@
+[submodule "resources/checklists"]
+	path = resources/checklists
+	url = git@github.com:vulnman/community-checklists.git
+[submodule "resources/vuln_templates"]
+	path = resources/vuln_templates
+	url = git@github.com:vulnman/community-vulnerability-templates

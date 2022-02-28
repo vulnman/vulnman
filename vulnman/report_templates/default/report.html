@@ -1,16 +1,20 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link href="report.css" rel="stylesheet">
-    <title>Report</title>
-    <meta name="description" content="{{ report.title }}">
+    <title>{{ report.get_report_title}}</title>
+    <meta name="description" content="{{ report.get_report_title }}">
 </head>
 
-<body>
+<body {% if report_type == "draft" %}class="draft"{% endif %}>
 
-{% for section in RENDERED_SECTIONS %}
-    {% include section.template with section=section %}
-{% endfor %}
+    {% include 'default/sections/cover.html' %}
+
+    {# change history #}
+    {# table of content #}
+
+    {% include 'default/sections/mgmt_summary.html' %}
+    {% include 'default/sections/vulnerability_overview.html' %}
+    {% include 'default/sections/technical_details.html' %}
 
 </body>
 </html>

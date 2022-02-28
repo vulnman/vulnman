@@ -3,6 +3,12 @@ from apps.assets.models.base import BaseAsset
 
 
 class WebRequest(BaseAsset):
+<<<<<<< HEAD
+=======
+    ASSET_TYPE = "webrequest"
+    ASSET_TYPE_CHOICE = (ASSET_TYPE, "Web Request")
+
+>>>>>>> origin/dev
     web_app = models.ForeignKey('assets.WebApplication', on_delete=models.CASCADE)
     url = models.URLField(blank=True)
     parameter = models.CharField(max_length=255, blank=True)

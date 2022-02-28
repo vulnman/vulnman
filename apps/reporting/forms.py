@@ -5,10 +5,14 @@ from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
 from apps.reporting import models
 from vulnman.forms import DateInput
+from vulnman.forms import CodeMirrorWidget
 
 
-class ReportForm(forms.ModelForm):
+class PentestReportDraftForm(forms.ModelForm):
+    empty = forms.CharField(required=False)
+
     class Meta:
+<<<<<<< HEAD
         model = models.Report
         fields = ["revision", "changes", "is_draft", "custom_title"]
 
@@ -52,6 +56,10 @@ class ReportUpdateForm(forms.ModelForm):
     class Meta:
         model = models.Report
         fields = ['raw_source']
+=======
+        model = models.PentestReport
+        fields = ["empty"]
+>>>>>>> origin/dev
 
 
 class ReportShareTokenForm(forms.ModelForm):
@@ -61,3 +69,23 @@ class ReportShareTokenForm(forms.ModelForm):
         widgets = {
             "date_expires": DateInput()
         }
+
+
+class ReportManagementSummaryForm(forms.ModelForm):
+    class Meta:
+        model = models.ReportInformation
+        fields = ["evaluation", "recommendation"]
+        widgets = {
+            "evaluation": CodeMirrorWidget(),
+            "recommendation": CodeMirrorWidget()
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.FloatingField("evaluation", wrapper_class="col-sm-12"),
+                bootstrap5.Field("recommendation", wrapper_class="col-sm-12"),
+            )
+        )

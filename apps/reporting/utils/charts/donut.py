@@ -19,7 +19,11 @@ class SeverityDonutChart:
         colors = []
         labels = []
         for sev in ["critical", "high", "medium", "low", "informational"]:
+<<<<<<< HEAD
             amount = Vulnerability.objects.filter(verified=True, template__severity=get_severity_by_name(sev), project=project).count()
+=======
+            amount = Vulnerability.objects.filter(status=Vulnerability.STATUS_VERIFIED, template__severity=get_severity_by_name(sev), project=project).count()
+>>>>>>> origin/dev
             if amount > 0:
                 data.append(amount)
                 # labels.append(sev.capitalize())
@@ -28,10 +32,18 @@ class SeverityDonutChart:
         fig, ax = plt.subplots(figsize=(8,8), dpi=100)
         ax.axis('equal')
         width = 0.35
+<<<<<<< HEAD
         total = Vulnerability.objects.filter(verified=True, project=project).count()
         outside, labels = ax.pie(data, radius=1, labels=labels, 
             colors=colors, startangle=180, pctdistance=1-width/2)
         labels[0].set_fontsize(20)
+=======
+        total = Vulnerability.objects.filter(status=Vulnerability.STATUS_VERIFIED, project=project).count()
+        outside, labels = ax.pie(data, radius=1, labels=labels, 
+            colors=colors, startangle=180, pctdistance=1-width/2)
+        if labels:
+            labels[0].set_fontsize(20)
+>>>>>>> origin/dev
         plt.setp(outside, width=width, edgecolor='white')
         ax.text(0, 0, text, ha="center", size=20, fontweight="bold", va="center")
         #fig.set_size_inches(10.5, 10.5)

@@ -5,4 +5,8 @@ from .celery import app as celery_app
 __all__ = ('celery_app',)
 
 
+<<<<<<< HEAD
 __version__ = "0.3.0-pre1"
+=======
+__version__ = "0.3.0-pre2"
+>>>>>>> origin/dev

@@ -27,6 +27,7 @@ urlpatterns = [
     path('clients/', include('apps.projects.urls.clients')),
     path('vulnerability-templates/', include('apps.findings.urls.global')),
     path('methodologies/', include('apps.methodologies.urls.global')),
-    path('agents/', include('apps.agents.urls')),
+    path('api-token-auth', include('apps.account.api.v1.urls')),
+    # path('agents/', include('apps.agents.urls')),
     path('', include('apps.dashboard.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
