@@ -48,5 +48,9 @@ class VulnerabilitySerializer(ProjectRelatedObjectSerializer):
 
     class Meta:
         model = models.Vulnerability
-        fields = ["name", "cve_id", "cvss_vector", "severity", "template", "asset", "verified", "is_fixed", 
-                "false_positive", "cvss_score", "project"]
+        fields = ["name", "cve_id", "cvss_vector", "severity", "template", "asset", "status", "cvss_score", "project"]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["status"] = instance.get_status_display()
+        return data
