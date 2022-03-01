@@ -15,7 +15,6 @@ class Project(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    report_default_title = models.CharField(max_length=64, default="Assessment Report", blank=True)
     is_archived = models.BooleanField(default=False)
     name = models.CharField(max_length=128)
 
@@ -26,6 +25,14 @@ class Project(models.Model):
         for contributor in self.projectcontributor_set.all():
             remove_perm("projects.change_project", contributor.user, self)
             remove_perm("projects.delete_project", contributor.user, self)
+        remove_perm("projects.change_project", self.creator, self)
+        remove_perm("projects.delete_project", self.creator, self)
+        remove_perm("projects.add_contributor", self.creator, self)
+
+    def is_contributor(self, user):
+        if self.creator == user:
+            return True
+        return self.projectcontributor_set.filter(user=user).exists()
 
     def get_assets(self):
         assets = list(self.webapplication_set.all()) + list(self.webrequest_set.all()) + list(self.host_set.all())

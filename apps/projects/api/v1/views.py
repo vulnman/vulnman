@@ -26,7 +26,8 @@ class ProjectViewSet(VulnmanModelViewSet):
         obj = self.get_object()
         serializer = serializers.ProjectArchiveSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save()
+            instance = serializer.save()
+            instance.archive_project()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -20,4 +20,4 @@ class PentestReportInformationSerializer(ProjectRelatedObjectSerializer):
     class Meta:
         model = models.ReportInformation
         fields = ["evaluation", "recommendation", "project", "uuid", "author"]
-        read_only_fields = ["uuid"]
+        read_only_fields = ["uuid", "project"]

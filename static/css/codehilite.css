@@ -77,3 +77,4 @@
 .codehilite .vm { color: #00cdcd } /* Name.Variable.Magic */
 .codehilite .il { color: #cd00cd } /* Literal.Number.Integer.Long */
 
+.codehilite .linenos {padding-right: 20px;}

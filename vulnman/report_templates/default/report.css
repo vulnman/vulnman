@@ -80,7 +80,9 @@
   @top-right { content: none }
 }
 
+
 html {
+  font-family: "Fira Sans", sans-serif;
   color: #393939;
   font-size: 14px;
   font-weight: 300;
@@ -271,6 +273,8 @@ code {
 .page-break {
   page-break-before: always;
 }
+
+.codehilite .linenos {padding-right: 20px;}
 
 /*
 .draft {

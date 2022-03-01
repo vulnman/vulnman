@@ -5,6 +5,7 @@
 - Easy pentest report generation based on information of the project
 - Customizable report template
 - Markdown syntax supported (mostly)
+    - Highlight important lines in your proofs with `§§highlighted§§`
 - Vulnerability templates
     - Templates can be imported from YAML files
 - Vulnerability management
