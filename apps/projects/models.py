@@ -42,7 +42,7 @@ class Project(models.Model):
         if self.pentestreport_set.filter(report_type="draft").exists():
             return self.pentestreport_set.get(report_type="draft")
         return None
-
+    """
     def has_vulns_with_severity(self, severity):
         for vuln in self.vulnerability_set.all():
             if vuln.get_severities()[0] == severity:
@@ -93,7 +93,7 @@ class Project(models.Model):
 
     def get_informational_vulnerabilities_count(self):
         return self.get_informational_vulnerabilities(count=True)
-
+    """
     def save(self, *args, **kwargs):
         obj = super().save(*args, **kwargs)
         self.assign_creator_permissions()

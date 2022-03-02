@@ -22,6 +22,7 @@
         <p>{{ template.recommendation|md_to_html }}</p>
     </section>
 
+    <div class="page-break"></div>
 
     <section id="template-{{ template.pk}}-vulnerbilities">
     {% for vulnerability in template|get_vulns_for_project:project %}
@@ -39,6 +40,10 @@
                 <tr>
                     <th>Severity</th>
                     <td class="text-{{ vulnerability.severity }}">{{ vulnerability.severity|capfirst }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ vulnerability.get_status_display }}</td>
                 </tr>
                 {% if vulnerability.cvss_vector %}
                     <tr>

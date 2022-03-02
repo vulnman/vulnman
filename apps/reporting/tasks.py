@@ -1,5 +1,6 @@
 from celery import shared_task
 from django.conf import settings
+from django.db.models import Q
 from django.utils.module_loading import import_string
 from apps.projects.models import Project
 from django.contrib.auth.models import User
@@ -13,7 +14,7 @@ from apps.reporting.utils.charts import SeverityDonutChart
 def do_create_report(report_pk, report_type):
     reportinformation = ReportInformation.objects.get(pk=report_pk)
     project = reportinformation.get_project()
-    template_pks = Template.objects.filter(vulnerability__project=project, vulnerability__status=Vulnerability.STATUS_VERIFIED).order_by('-vulnerability__severity').values_list("pk", flat=True)
+    template_pks = Template.objects.filter(vulnerability__project=project).exclude(vulnerability__status=Vulnerability.STATUS_TO_REVIEW).order_by('-vulnerability__severity').values_list("pk", flat=True)
     unique_pks = []
     for template_pk in template_pks:
         if not template_pk in unique_pks:

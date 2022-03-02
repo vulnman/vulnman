@@ -1,0 +1,18 @@
+<article id="scope" class="chapter">
+    <h1 class="chapter-title" id="scope-title">Scope</h1>
+</article>
+
+<article>
+    The scope contains the following assets:
+
+    <table>
+        {% for asset in project.get_assets %}
+            <tr>
+                <th>[{{ asset.ASSET_TYPE_CHOICE.1 }}] {{ asset.name }}</th>
+            </tr>
+            <tr>
+                <td>{{ asset.description}}</td>
+            <tr>
+        {% endfor %}
+    </table>
+</article>

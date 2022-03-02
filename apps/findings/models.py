@@ -69,11 +69,11 @@ def project_pocs_path(instance, filename):
 class Vulnerability(VulnmanProjectModel):
     STATUS_OPEN = 0
     STATUS_FIXED = 1
-    STATUS_VERIFIED = 2
+    STATUS_TO_REVIEW = 2
 
     STATUS_CHOICES = [
         (STATUS_OPEN, "Open"),
-        (STATUS_VERIFIED, "Verified"),
+        (STATUS_TO_REVIEW, "To Review"),
         (STATUS_FIXED, "Fixed")
     ]
 

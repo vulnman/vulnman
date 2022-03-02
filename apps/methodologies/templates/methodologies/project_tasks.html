@@ -83,14 +83,18 @@ To Dos
         success: function(data) {
             var tasks = data["tasks"];
             $('#todo-list').html("");
+            $('#col-task-status').html("");
+            $('#col-todo-details').html("");
+            $('#span-asset-name').html("");
             $.each(tasks, function(k, v){
                 $.ajax({
                     type: "GET",
                     url: "/api/v1/tasks/assets/" + v + "/",
                     dataType: "json",
                     success: function(data2) {
+                        console.log(data2);
                         $('#todo-list').append(
-                            '<a class="list-group-item list-group-item-action" onclick=showDetails("' + data2.task.task_id + '")>' +
+                            '<a class="list-group-item list-group-item-action" onclick=showDetails("' + data2.uuid + '")>' +
                                 '<div class="row"><div class="col-sm-12"><div class="clearfix"><div class="float-start">' + 
                                     '<span class="rounded-circle mr-3">' + getStatusIcon(data2.status) + ' </span>' +
                                     data2.task.name + '</div></div></div></div>' +
@@ -98,11 +102,7 @@ To Dos
                                 '</div></div></div></div>' +
                             '</a>'
                         );
-                        $('#col-task-status').append(
-                            getTaskStatusButton(v, "fa-question", 0) + getTaskStatusButton(v, "fa-check", 1) 
-                        );
-                        $('#col-todo-details').append(data2.task.description);
-                        $('#span-asset-name').append(data2.asset.name + " (" + data2.asset.asset_type + ")")
+                        
                     }
                 });
             });
@@ -110,7 +110,21 @@ To Dos
     });
 
     function showDetails(task_id){
-        $('#todo-details').removeClass("d-none");
+        $('#todo-details').addClass("d-none");
+        $('#span-asset-name').html("");
+        $('#col-todo-details').html("");
+        $('#col-task-status').html("");
+        $.ajax({
+            type: "GET",
+            url: "/api/v1/tasks/assets/" + task_id + "/",
+            dataType: "json",
+            success: function(data){
+                $('#col-task-status').append(getTaskStatusButton(task_id, "fa-question", 0) + getTaskStatusButton(task_id, "fa-check", 1) );
+                $('#col-todo-details').append(data.task.description);
+                $('#span-asset-name').append(data.asset.name + " (" + data.asset.asset_type + ")");
+                $('#todo-details').removeClass("d-none");
+            }
+        });
     }
 
     function changeStatus(task_id, status_id){

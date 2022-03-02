@@ -119,7 +119,7 @@ h4, h5 {
 #cover h1{
     color: #c6c9cb;
     font-size: 32pt;
-    margin: 10cm 2cm 0 2cm;
+    margin: 8cm 2cm 0 2cm;
     page: no-chapter;
     width: 100%;
 }
@@ -133,6 +133,13 @@ h4, h5 {
   width: 100%;
 }
 
+#cover h3{
+  color: #c6c9cb;
+  font-size: 24pt;
+  margin: -7cm 2cm 0 2cm;
+  page: no-chapter;
+  width: 100%;
+}
 
 
 #cover-footer {
