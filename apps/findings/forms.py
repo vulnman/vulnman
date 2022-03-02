@@ -89,13 +89,14 @@ class ProofOrderingForm(forms.Form):
 
 
 class VulnerabilityForm(forms.ModelForm):
-    template_id = forms.CharField(label="Template")
-    # asset_type = forms.ChoiceField(choices=ASSET_TYPE_CHOICES)
+    template_id = forms.CharField(label="Template", widget=forms.TextInput(attrs={
+        'autocomplete':'off'
+    }))
     f_asset = forms.ChoiceField(choices=[], label="Asset")
 
     class Meta:
         model = models.Vulnerability
-        fields = ["template_id", "cvss_vector", "name", "asset_type", "f_asset", "status", "cve_id"]
+        fields = ["template_id", "cvss_vector", "name", "asset_type", "f_asset", "status", "cve_id", "severity"]
 
     def get_asset_choices(self, project):
         choices = [("---", "---")]
@@ -122,6 +123,11 @@ class VulnerabilityForm(forms.ModelForm):
                 layout.Div(
                     bootstrap5.FloatingField("name"), css_class="col-sm-12",
                 ),
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("severity"), css_class="col-sm-12",
+                )
             ),
             layout.Row(
                 layout.Div(

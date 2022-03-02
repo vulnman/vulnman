@@ -27,8 +27,17 @@
     <div class="container mt-3">
         <ul class="list-group">
             {% for webrequest in webrequests %}
-                <li class="list-group-item-action">
-                    {{ webrequest }}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ webrequest }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <small>{{ webrequest.web_app }}</small>
+                        </div>
+                    </div>
                 </li>
             {% endfor %}
         </ul>

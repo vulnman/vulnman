@@ -27,8 +27,17 @@
     <div class="container mt-3">
         <ul class="list-group">
             {% for webapp in webapps %}
-                <li class="list-group-item-action">
-                    {{ webapp }}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ webapp }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <small>{{ webapp.base_url }}</small>
+                        </div>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
@@ -48,4 +57,6 @@
             </div>
         </div>
     </div>
+
+    {% include "navigation/pagination.html" %}
 {% endblock content %}
