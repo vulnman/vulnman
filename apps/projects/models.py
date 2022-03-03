@@ -42,58 +42,7 @@ class Project(models.Model):
         if self.pentestreport_set.filter(report_type="draft").exists():
             return self.pentestreport_set.get(report_type="draft")
         return None
-    """
-    def has_vulns_with_severity(self, severity):
-        for vuln in self.vulnerability_set.all():
-            if vuln.get_severities()[0] == severity:
-                return True
-        return False
 
-    def get_critical_vulnerabilities_count(self):
-        return self.get_critical_vulnerabilities(count=True)
-
-    def get_critical_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=4)
-        if count:
-            return qs.count()
-        return qs
-
-    def get_high_vulnerabilities_count(self):
-        return self.get_high_vulnerabilities(count=True)
-
-    def get_high_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=3)
-        if count:
-            return qs.count()
-        return qs
-
-    def get_medium_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=2)
-        if count:
-            return qs.count()
-        return qs
-
-    def get_medium_vulnerabilities_count(self):
-        return self.get_medium_vulnerabilities(count=True)
-
-    def get_low_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=1)
-        if count:
-            return qs.count()
-        return qs
-
-    def get_low_vulnerabilities_count(self):
-        return self.get_low_vulnerabilities(count=True)
-
-    def get_informational_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=0)
-        if count:
-            return qs.count()
-        return qs
-
-    def get_informational_vulnerabilities_count(self):
-        return self.get_informational_vulnerabilities(count=True)
-    """
     def save(self, *args, **kwargs):
         obj = super().save(*args, **kwargs)
         self.assign_creator_permissions()

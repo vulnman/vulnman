@@ -30,7 +30,10 @@
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-sm-12">
-                            {{ webrequest }}
+                            <div class="float-start">{{ webrequest }}</div>
+                            <div class="float-end">
+                                <button class="btn btn-sm btn-outline-primary" onclick="removeAsset('{{webrequest.pk}}')"><i class="fa fa-trash"></i></button>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -58,3 +61,23 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block extra_scripts %}
+<script>
+    function removeAsset(asset_id){
+        $.ajax({
+            type: "DELETE",
+            url: "/api/v1/assets/webrequests/" + asset_id + "/",
+            dataType: "json",
+            data: {},
+            success: function(data){
+                location.reload()
+                // console.log(data)
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -33,5 +33,9 @@ class Command(BaseCommand):
             task, created = models.Task.objects.update_or_create(task_id=item["id"], defaults={"name": item["name"], "description": description})
             for cond in item.get("on_assets", []):
                 models.TaskCondition.objects.update_or_create(task=task, asset_type=cond)
+            # remove legacy conditions
+            for cond in models.TaskCondition.objects.filter(task=task):
+                if cond.asset_type not in item.get("on_assets"):
+                    cond.delete()
             if created:
                 import_counter += 1

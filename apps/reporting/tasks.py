@@ -7,14 +7,14 @@ from django.contrib.auth.models import User
 from apps.reporting.models import PentestReport, ReportInformation
 from apps.findings.models import Template, Vulnerability
 from apps.reporting.utils.converter import HTMLConverter
-from apps.reporting.utils.charts import SeverityDonutChart
+from apps.reporting.utils import charts
 
 
 @shared_task
 def do_create_report(report_pk, report_type):
     reportinformation = ReportInformation.objects.get(pk=report_pk)
     project = reportinformation.get_project()
-    template_pks = Template.objects.filter(vulnerability__project=project).exclude(vulnerability__status=Vulnerability.STATUS_TO_REVIEW).order_by('-vulnerability__severity').values_list("pk", flat=True)
+    template_pks = Template.objects.filter(vulnerability__project=project).exclude(vulnerability__status=Vulnerability.STATUS_TO_REVIEW).order_by('vulnerability__severity').values_list("pk", flat=True)
     unique_pks = []
     for template_pk in template_pks:
         if not template_pk in unique_pks:
@@ -26,7 +26,8 @@ def do_create_report(report_pk, report_type):
         "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
         "SEVERITY_COLORS": settings.SEVERITY_COLORS, 'templates': templates,
         "report": reportinformation, "project": project, 'report_type': report_type,
-        'SEVERITY_CHART_SRC': SeverityDonutChart().create_image(project)
+        'SEVERITY_CHART_SRC': charts.SeverityDonutChart().create_image(project),
+        'CATEGORY_POLAR_CHART': charts.VulnCategoryPolarChart().create_image(project)
     }
     report_template = import_string(settings.REPORTING_TEMPLATE)()
     converter = HTMLConverter(report_template, context)

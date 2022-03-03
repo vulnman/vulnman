@@ -135,6 +135,7 @@ class VulnUpdate(generic.ProjectUpdateWithInlinesView):
     def get_initial(self):
         initial = super().get_initial()
         initial["template_id"] = self.get_object().template.vulnerability_id
+        initial["f_asset"] = (self.get_object().asset.pk, self.get_object().name )
         return initial
 
     def get_form_kwargs(self):

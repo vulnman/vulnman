@@ -35,6 +35,7 @@ class ProjectViewSet(VulnmanModelViewSet):
 class ProjectContributorViewSet(ProjectRelatedObjectViewSet):
     serializer_class = serializers.ProjectContributorSerializer
     permission_classes = [IsAuthenticated, permissions.AddContributorPermission]
-    
+    search_fields = ["user__username"]
+
     def get_queryset(self):
         return models.ProjectContributor.objects.all()
