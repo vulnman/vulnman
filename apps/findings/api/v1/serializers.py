@@ -2,6 +2,7 @@ from rest_framework import serializers
 from vulnman.api.serializers import ProjectRelatedObjectSerializer
 from vulnman.utils.markdown import md_to_clean_html
 from apps.findings import models
+from apps.assets.models import ASSET_TYPES_CHOICES, WebApplication, WebRequest, Host
 
 
 class UserAccountSerializer(ProjectRelatedObjectSerializer):
@@ -35,20 +36,21 @@ class TemplateSerializer(serializers.ModelSerializer):
 
 class VulnerabilitySerializer(ProjectRelatedObjectSerializer):
     # template = serializers.PrimaryKeyRelatedField(read_only=True)
-    asset = serializers.SerializerMethodField()
+    asset = serializers.CharField()
 
-    def get_asset(self, obj):
-        asset = obj.asset
-        if asset:
-            return {
-                "uuid": str(asset.pk), "type": asset._meta.verbose_name,
-                "name": asset.name
-            }
-        return {"uuid": None}
+    def create(self, validated_data):
+        asset_data = validated_data.pop('asset')
+        if validated_data["asset_type"] == WebApplication.ASSET_TYPE:
+            asset = WebApplication.objects.get(project=validated_data["project"], pk=asset_data)
+            vulnerability = models.Vulnerability.objects.create(**validated_data, asset_webapp=asset)
+        elif validated_data["asset_type"] == WebRequest.ASSET_TYPE:
+            asset = WebRequest.objects.get(project=validated_data["project"], pk=asset_data)
+            vulnerability = models.Vulnerability.objects.create(**validated_data, asset_webrequest=asset)
+        return vulnerability
 
     class Meta:
         model = models.Vulnerability
-        fields = ["name", "cve_id", "cvss_vector", "severity", "template", "asset", "status", "cvss_score", "project"]
+        fields = ["name", "cve_id", "cvss_vector", "severity", "template", "asset", "status", "cvss_score", "project", "asset_type"]
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

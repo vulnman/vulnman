@@ -87,3 +87,23 @@ class ClientContactInline(InlineFormSetFactory):
             )
         )
         return formset
+
+
+class ContributorForm(forms.ModelForm):
+    username = forms.CharField()
+    class Meta:
+        model = models.ProjectContributor
+        fields = ["username", "role"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("username"), css_class="col-sm-12"),
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("role"), css_class="col-sm-12"),
+            ),
+        )

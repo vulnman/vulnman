@@ -1,10 +1,7 @@
 <article id="cover">
-    <h1>
-        {{ report.get_report_title }}
-    </h1>
-    <h2>
-        {{ project.client.name }}
-    </h2>
+    <h1>{{ report.get_report_title }}</h1>
+    <h2>{{ project.name }}</h2>
+    <h3>{{ project.client.name }}</h3>
     <table id="cover-footer">
         <tr>
             <td>Author:</td>
@@ -14,6 +11,9 @@
             <td>Version:</td>
             <td>{{ report.version }}</td>
         </tr>
+        <tr>
+            <td>Date:</td>
+            <td>{{ report.date_updated | date }}</td>
         <tr>
             <td>Generator:</td>
             <td><a href="{{ REPORT_COMPANY_INFORMATION.homepage }}">VULNMAN</a></td>

@@ -80,7 +80,9 @@
   @top-right { content: none }
 }
 
+
 html {
+  font-family: "Fira Sans", sans-serif;
   color: #393939;
   font-size: 14px;
   font-weight: 300;
@@ -117,7 +119,7 @@ h4, h5 {
 #cover h1{
     color: #c6c9cb;
     font-size: 32pt;
-    margin: 10cm 2cm 0 2cm;
+    margin: 8cm 2cm 0 2cm;
     page: no-chapter;
     width: 100%;
 }
@@ -131,6 +133,13 @@ h4, h5 {
   width: 100%;
 }
 
+#cover h3{
+  color: #c6c9cb;
+  font-size: 24pt;
+  margin: -7cm 2cm 0 2cm;
+  page: no-chapter;
+  width: 100%;
+}
 
 
 #cover-footer {
@@ -271,6 +280,8 @@ code {
 .page-break {
   page-break-before: always;
 }
+
+.codehilite .linenos {padding-right: 20px;}
 
 /*
 .draft {

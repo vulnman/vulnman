@@ -32,8 +32,8 @@ class AssetTaskSerializer(ProjectRelatedObjectSerializer):
 
     class Meta:
         model = models.AssetTask
-        fields = ["project", "task", "status", "asset"]
-        read_only_fields = ["project", "task", "asset"]
+        fields = ["project", "task", "status", "asset", "uuid"]
+        read_only_fields = ["project", "task", "asset", "uuid"]
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

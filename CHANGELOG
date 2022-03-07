@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Import of vulnerability templates with descriptions and recommendations
 - Import of checklists (alpha)
 - Tasks on an asset level
+- Code Highlight for proofs with "highlight line in codeblock"
 
 ### Changed
 - Move pentest related objects into *assets*

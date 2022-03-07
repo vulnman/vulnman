@@ -7,5 +7,6 @@ class DefaultReportTemplate(ReportTemplate):
     name = "default-html-template"
     template_directory = os.path.join(settings.BASE_DIR, "vulnman/report_templates/default")
     stylesheets = [
-        "report.css"
+        "report.css",
+        "fontawesome.min.css"
     ]

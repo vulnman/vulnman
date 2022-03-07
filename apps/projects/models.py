@@ -15,7 +15,6 @@ class Project(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    report_default_title = models.CharField(max_length=64, default="Assessment Report", blank=True)
     is_archived = models.BooleanField(default=False)
     name = models.CharField(max_length=128)
 
@@ -26,6 +25,14 @@ class Project(models.Model):
         for contributor in self.projectcontributor_set.all():
             remove_perm("projects.change_project", contributor.user, self)
             remove_perm("projects.delete_project", contributor.user, self)
+        remove_perm("projects.change_project", self.creator, self)
+        remove_perm("projects.delete_project", self.creator, self)
+        remove_perm("projects.add_contributor", self.creator, self)
+
+    def is_contributor(self, user):
+        if self.creator == user:
+            return True
+        return self.projectcontributor_set.filter(user=user).exists()
 
     def get_assets(self):
         assets = list(self.webapplication_set.all()) + list(self.webrequest_set.all()) + list(self.host_set.all())
@@ -35,57 +42,6 @@ class Project(models.Model):
         if self.pentestreport_set.filter(report_type="draft").exists():
             return self.pentestreport_set.get(report_type="draft")
         return None
-
-    def has_vulns_with_severity(self, severity):
-        for vuln in self.vulnerability_set.all():
-            if vuln.get_severities()[0] == severity:
-                return True
-        return False
-
-    def get_critical_vulnerabilities_count(self):
-        return self.get_critical_vulnerabilities(count=True)
-
-    def get_critical_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=4)
-        if count:
-            return qs.count()
-        return qs
-
-    def get_high_vulnerabilities_count(self):
-        return self.get_high_vulnerabilities(count=True)
-
-    def get_high_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=3)
-        if count:
-            return qs.count()
-        return qs
-
-    def get_medium_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=2)
-        if count:
-            return qs.count()
-        return qs
-
-    def get_medium_vulnerabilities_count(self):
-        return self.get_medium_vulnerabilities(count=True)
-
-    def get_low_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=1)
-        if count:
-            return qs.count()
-        return qs
-
-    def get_low_vulnerabilities_count(self):
-        return self.get_low_vulnerabilities(count=True)
-
-    def get_informational_vulnerabilities(self, count=False, include_only_verified=True):
-        qs = self.vulnerability_set.filter(template__severity=0)
-        if count:
-            return qs.count()
-        return qs
-
-    def get_informational_vulnerabilities_count(self):
-        return self.get_informational_vulnerabilities(count=True)
 
     def save(self, *args, **kwargs):
         obj = super().save(*args, **kwargs)

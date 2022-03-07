@@ -1,0 +1,67 @@
+{% load markdown %}
+
+<article id="contacts" class="chapter">
+    <h1 class="chapter-title" id="contacts-title">Contacts</h1>
+</article>
+
+
+<article>
+    <h2>Customer</h2>
+
+    <div class="row">
+        <div class="col">
+            <p><strong>{{ project.client.name }}</strong></p>
+            <p>
+                {{ project.client.street}}</br>
+                {{ project.client.zip }} {{ project.client.city}}</br>
+                {{ project.client.country}}
+            </p>
+        </div>
+        <div class="col">
+            {% for contact in project.client.clientcontact_set.all %}
+                <p><strong>{{ contact.first_name}} {{contact.last_name}}</strong></p>
+                <p>{{ contact.get_position_display }} Contact</br>
+                    Mail Address: {{ contact.email }} </br>
+                    {% if contact.phone %}
+                    Phone Number: {{ contact.phone }}
+                    {% endif %}
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+</article>
+
+<article>
+    <h2>{{ REPORT_COMPANY_INFORMATION.name }}</h2>
+
+    <div class="row">
+        <div class="col">
+            <p><strong>{{ REPORT_COMPANY_INFORMATION.name }}</strong></p>
+            <p>
+                {{ REPORT_COMPANY_INFORMATION.street }}</br>
+                {{ REPORT_COMPANY_INFORMATION.zip }}</br>
+                {{ REPORT_COMPANY_INFORMATION.company }}
+            </p>
+        </div>
+        <div class="col">
+            <p><strong>{{ project.creator.username}}</strong></p>
+            <p>
+                Creator</br>
+                Mail Address: {{ project.creator.email }}
+            </p>
+        </div>
+        <div class="col">
+            {% for contact in project.projectcontributor_set.all %}
+                <p><strong>{{ contact.username}}</strong></p>
+                <p>
+                    {{ contact.get_role_display }}</br>
+                    Mail Address: {{ contact.email }}
+                    {% if contact.phone %}
+                        </br>
+                        Phone Number: {{ contact.phone }}
+                    {% endif %}
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+</article>

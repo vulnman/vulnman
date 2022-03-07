@@ -1,4 +1,4 @@
-from rest_framework.permissions import DjangoObjectPermissions, BasePermission
+from rest_framework.permissions import DjangoObjectPermissions, BasePermission, SAFE_METHODS
 
 
 class BaseObjectPermission(DjangoObjectPermissions):
@@ -18,6 +18,9 @@ class BaseObjectPermission(DjangoObjectPermissions):
 
 class ProjectRelatedObjectPermission(BasePermission):
     def has_object_permission(self, request, view, obj):
-        perms = ["projects.view_project", "projects.change_project", "projects.delete_project"]
+        if request.method in SAFE_METHODS:
+            perms = ["view_project"]
+        else:
+            perms = ["projects.view_project", "projects.change_project", "projects.delete_project"]
         has_permissions = all(request.user.has_perm(perm, obj.get_project()) for perm in perms)
         return has_permissions

@@ -26,7 +26,8 @@ class ProjectViewSet(VulnmanModelViewSet):
         obj = self.get_object()
         serializer = serializers.ProjectArchiveSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save()
+            instance = serializer.save()
+            instance.archive_project()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -34,6 +35,7 @@ class ProjectViewSet(VulnmanModelViewSet):
 class ProjectContributorViewSet(ProjectRelatedObjectViewSet):
     serializer_class = serializers.ProjectContributorSerializer
     permission_classes = [IsAuthenticated, permissions.AddContributorPermission]
-    
+    search_fields = ["user__username"]
+
     def get_queryset(self):
         return models.ProjectContributor.objects.all()

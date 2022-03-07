@@ -80,10 +80,20 @@ class FindingsViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
         asset = self.create_instance(WebApplication, project=self.project)
         template = self.create_instance(models.Template)
         url = self.get_url("api:v1:vulnerability-list")
-        data = {"template": str(template.pk), "name": "My first vuln", "severity": "high", "project": str(self.forbidden_project.pk)}
+        data = {"template": str(template.pk), "name": "My first vuln", "severity": 0, 
+            "project": str(self.forbidden_project.pk), "asset_type": WebApplication.ASSET_TYPE, "asset": str(asset.pk)}
         self.client.force_login(self.project_pentester)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 400)
         data["project"] = str(self.project.pk)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 201)
+        self.assertEqual(models.Vulnerability.objects.filter(project=self.forbidden_project).count(), 0)
+        self.assertEqual(models.Vulnerability.objects.filter(project=self.project).count(), 1)
+        # test foreign project - asset combination
+        not_my_asset = self.create_instance(WebApplication, project=self.forbidden_project)
+        data["asset"] = str(not_my_asset.pk)
+        data["project"] = str(self.forbidden_project.pk)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(models.Vulnerability.objects.filter(project=self.forbidden_project).count(), 0)
