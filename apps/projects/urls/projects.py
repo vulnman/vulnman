@@ -32,6 +32,6 @@ urlpatterns = [
     # single project
     path('<str:pk>/', views.ProjectDetail.as_view(), name="project-detail"),
     path('<str:pk>/update/', views.ProjectUpdate.as_view(), name="project-update"),
-    path('<str:pk>/close/', views.ProjectUpdateClose.as_view(), name="project-close")
-
+    path('<str:pk>/close/', views.ProjectUpdateClose.as_view(), name="project-close"),
+    path('<str:pk>/contributors/', views.ProjectContributorList.as_view(), name="contributor-list"),
 ]

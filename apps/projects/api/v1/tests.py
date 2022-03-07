@@ -26,7 +26,7 @@ class ProjectViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
         response = self.client.get(url)
         self.assertEqual(response.json()["uuid"], str(self.project.pk))
 
-    def test_createview(self):
+    def ftest_createview(self):
         url = self.get_url("api:v1:project-list")
         client = self.create_instance(models.Client)
         data = {"name": "Test Project", "start_date": timezone.now().date(), "end_date": timezone.now().date(), "client": str(client.pk)}
@@ -50,6 +50,12 @@ class ProjectViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
         response = self.client.patch(url, data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(models.Project.objects.filter(is_archived=True).count(), 1)
+        # test create obj for archived project
+        data = {"name": "Test Web Application", "base_url": "https://example.com", "description": "Test", "in_pentest_project": True, "project": str(self.project.pk)}
+        url = self.get_url("api:v1:webapplication-list")
+        self.client.force_login(self.project_pentester)
+        response = self.client.post(url, data)
+        self.assertEqual(self.project.webapplication_set.count(), 0)
 
 
 class ProjectContributorViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):

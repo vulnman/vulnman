@@ -147,3 +147,10 @@ class ClientCreate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthCreateWi
     permission_required = ["projects.add_client"]
     form_class = forms.ClientForm
     inlines = [forms.ClientContactInline]
+
+
+class ProjectContributorList(generic.ProjectListView):
+    template_name = "projects/contributor_list.html"
+    model = models.ProjectContributor
+    permission_required = ["projects.view_project"]
+    context_object_name = "contributors"

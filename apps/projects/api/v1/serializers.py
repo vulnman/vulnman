@@ -61,7 +61,3 @@ class ProjectArchiveSerializer(serializers.ModelSerializer):
         model = models.Project
         fields = ["is_archived"]
 
-    def update(self, instance, validated_data):
-        if validated_data["is_archived"] == True:
-            instance.archive_project()
-        return super().update(instance, validated_data)

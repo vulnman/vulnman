@@ -69,11 +69,11 @@ def project_pocs_path(instance, filename):
 class Vulnerability(VulnmanProjectModel):
     STATUS_OPEN = 0
     STATUS_FIXED = 1
-    STATUS_VERIFIED = 2
+    STATUS_TO_REVIEW = 2
 
     STATUS_CHOICES = [
         (STATUS_OPEN, "Open"),
-        (STATUS_VERIFIED, "Verified"),
+        (STATUS_TO_REVIEW, "To Review"),
         (STATUS_FIXED, "Fixed")
     ]
 
@@ -83,6 +83,7 @@ class Vulnerability(VulnmanProjectModel):
     cvss_vector = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
     cve_id = models.CharField(max_length=28, null=True, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_OPEN)
+    severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES, blank=True, null=True)
     # generic assets
     asset_type = models.CharField(max_length=64, choices=ASSET_TYPES_CHOICES, default=WebApplication.ASSET_TYPE)
     asset_webapp = models.ForeignKey('assets.WebApplication', on_delete=models.CASCADE, null=True, blank=True)
@@ -92,9 +93,15 @@ class Vulnerability(VulnmanProjectModel):
     def __str__(self):
         return self.template.name
 
-    @property
-    def severity(self):
+    def get_severity_disp(self):
+        if self.severity:
+            return self.get_severity_display()
         return self.template.get_severity_display()
+
+    def get_severity(self):
+        if self.severity:
+            return self.severity
+        return self.template.severity
 
     def get_scores(self):
         if self.cvss_score:
@@ -117,7 +124,7 @@ class Vulnerability(VulnmanProjectModel):
         return ["Information", "Information", "Information"]
 
     def get_severity_colors(self):
-        return settings.SEVERITY_COLORS[self.severity.capitalize()]
+        return settings.SEVERITY_COLORS[self.get_severity_disp().capitalize()]
 
     def get_absolute_url(self):
         return reverse_lazy('projects:findings:vulnerability-detail', kwargs={'pk': self.pk})
@@ -186,7 +193,7 @@ class Template(BaseVulnerability):
         return reverse_lazy('findings:template-detail', kwargs={'pk': self.pk})
 
     def get_risk_level(self):
-        return self.vulnerability_set.first().severity
+        return self.get_severity_display()
 
 
 class Reference(VulnmanModel):

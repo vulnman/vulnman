@@ -27,8 +27,20 @@
     <div class="container mt-3">
         <ul class="list-group">
             {% for webapp in webapps %}
-                <li class="list-group-item-action">
-                    {{ webapp }}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="float-start">{{ webapp }}</div>
+                            <div class="float-end">
+                                <button class="btn btn-sm btn-outline-primary" onclick="removeAsset('{{webapp.pk}}')"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <small>{{ webapp.base_url }}</small>
+                        </div>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
@@ -48,4 +60,26 @@
             </div>
         </div>
     </div>
+
+    {% include "navigation/pagination.html" %}
 {% endblock content %}
+
+{% block extra_scripts %}
+<script>
+    function removeAsset(asset_id){
+        $.ajax({
+            type: "DELETE",
+            url: "/api/v1/assets/webapplications/" + asset_id + "/",
+            dataType: "json",
+            data: {},
+            success: function(data){
+                location.reload()
+                // console.log(data)
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+            }
+        });
+    }
+</script>
+{% endblock %}

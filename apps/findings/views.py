@@ -36,9 +36,9 @@ class VulnCreate(generic.ProjectCreateView):
         if form.instance.cvss_vector:
             form.instance.cvss_score = cvss.get_scores_by_vector(
                 form.instance.cvss_vector)[0]
-        if form.cleaned_data["asset_type"] == "webapplication":
+        if form.cleaned_data["asset_type"] == WebApplication.ASSET_TYPE:
             form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-        elif form.cleaned_data["asset_type"] == "webrequest":
+        elif form.cleaned_data["asset_type"] == WebRequest.ASSET_TYPE:
             form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
         else:
             form.add_error("asset_type", "invalid asset type")
@@ -116,14 +116,26 @@ class VulnUpdate(generic.ProjectUpdateWithInlinesView):
     template_name = "findings/vulnerability_create.html"
 
     def form_valid(self, form):
+        if not models.Template.objects.filter(vulnerability_id=form.cleaned_data["template_id"]).exists():
+            form.add_error("template_id", "Template does not exist!")
+            return super().form_invalid(form)
+        form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
         if form.instance.cvss_vector:
             form.instance.cvss_score = cvss.get_scores_by_vector(
                 form.instance.cvss_vector)[0]
+        if form.cleaned_data["asset_type"] == WebApplication.ASSET_TYPE:
+            form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
+        elif form.cleaned_data["asset_type"] == WebRequest.ASSET_TYPE:
+            form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
+        else:
+            form.add_error("asset_type", "invalid asset type")
+            return super().form_invalid(form)
         return super().form_valid(form)
 
     def get_initial(self):
         initial = super().get_initial()
         initial["template_id"] = self.get_object().template.vulnerability_id
+        initial["f_asset"] = (self.get_object().asset.pk, self.get_object().name )
         return initial
 
     def get_form_kwargs(self):

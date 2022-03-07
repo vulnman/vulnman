@@ -29,7 +29,7 @@
                 <div class="float-start">
                     <small class="text-muted">Created: {{ vuln.date_created|date }}</small>
                 </div>
-                <small class="justify-content-center" style="color: #{{ vuln.get_severity_colors.hex }}"><strong>Score: </strong>{{ vuln.template.get_severity_display }}</small>
+                <small class="justify-content-center" style="color: #{{ vuln.get_severity_colors.hex }}"><strong>Severity: </strong>{{ vuln.get_severity_disp|capfirst }}</small>
 
                 <div class="float-end">
                     <small class="text-muted">Created by: {{ vuln.creator }}</small>
@@ -98,6 +98,10 @@
                                 </figure>
                                 {% endif %}
                             </div>
+                        </div>
+                    {% empty %}
+                        <div class="">
+                            <p>No proofs yet!</p>
                         </div>
                     {% endfor %}
                 </div>

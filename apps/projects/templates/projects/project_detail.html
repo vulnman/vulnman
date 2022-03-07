@@ -31,6 +31,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
                     <li><a class="dropdown-item" href="{% url 'projects:project-update' project.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                    <li><a class="dropdown-item" href="{% url 'projects:contributor-list' project.pk %}"><i class="fa fa-users"></i> Contributors</a></li>
                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#close-project-modal"><i class="fa fa-times"></i> Close</a></li>
 
                 </ul>

@@ -20,11 +20,6 @@ class ReportViewSet(viewsets.ProjectRelatedObjectRetrieveViewSet):
             return Response({"task_id": report_task.task_id})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=["get"])
-    def get_task_status(self, request, pk=None):
-        # TODO: implement
-        pass
-
 
 class ReportInformationViewSet(viewsets.ProjectRelatedObjectViewSet):
     # TODO: do not allow delete
