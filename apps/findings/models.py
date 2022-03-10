@@ -50,7 +50,6 @@ class CWEEntry(VulnmanModel):
 class BaseVulnerability(VulnmanModel):
     severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES)
     name = models.CharField(max_length=256)
-    # mitigation = models.TextField()
     description = models.TextField()
     recommendation = models.TextField()
     vulnerability_id = models.CharField(max_length=256)
