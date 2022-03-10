@@ -36,7 +36,7 @@ class PentestReportDraftCreate(generic.ProjectCreateView):
         return reverse_lazy("projects:reporting:report-list")
 
     def form_valid(self, form):
-        tasks.do_create_report.delay(self.get_project().reportinformation.pk, "draft")
+        tasks.do_create_report.delay(self.get_project().reportinformation.pk, "draft", creator=self.request.user.username)
         return HttpResponseRedirect(self.get_success_url())
 
 

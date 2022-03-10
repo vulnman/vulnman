@@ -89,13 +89,14 @@
                                     <button class="btn btn-primary" onclick="deleteProof('{{proof.pk}}')"><i class="fa fa-trash"></i></button>
                                 </div>
                                 <p><strong>{{ proof.name }}</strong></p>
-                                <p>{{ proof.text|md_to_html }}</p>
-                                {% if proof.image %}
                                 <p>{{ proof.description|md_to_html }}</p>
+                                {% if proof.image %}
                                 <figure class="figure">
                                     <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
                                     <figcaption class="figure-caption">{{ proof.name }}</figcaption>
                                 </figure>
+                                {% else %}
+                                <p>{{ proof.text|md_to_html }}</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -177,7 +178,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        {% include 'forms/simple.html' with without_form_tag=True form=image_proof_form%}
+                        {% include 'forms/simple.html' with without_form_tag=True form=image_proof_form %}
                     </div>
                 </form>
             </div>

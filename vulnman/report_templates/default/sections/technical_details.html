@@ -70,7 +70,9 @@
                     {% if proof.image %}
                         <figure>
                             <img src="{{ proof.base64_encoded_image }}" alt="proof-image" style="width: 100%; max-width: 100%; height:auto;">
-                            <figcaption>{{ proof.caption }}</figcaption>
+                            {% if proof.caption %}
+                                <figcaption>{{ proof.caption }}</figcaption>
+                            {% endif %}
                         </figure>
                     {% endif %}                    
                 {% endif %}
