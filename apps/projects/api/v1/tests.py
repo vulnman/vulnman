@@ -68,7 +68,7 @@ class ProjectContributorViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
         data = {"role": models.ProjectContributor.ROLE_PENTESTER, "user": str(self.denied_pentester.username), "project": str(self.project.pk)}
         self.client.force_login(self.denied_pentester)
         response = self.client.post(url, data)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 403)
         self.assertEqual(models.ProjectContributor.objects.filter(user=self.denied_pentester, project=self.project).count(), 0)
         self.client.force_login(self.project_pentester)
         response = self.client.post(url, data)

@@ -5,11 +5,15 @@
     <table id="cover-footer">
         <tr>
             <td>Author:</td>
+            {% if creator %}
+            <td>{{ creator }}</td>
+            {% else %}
             <td>{{ report.author }}</td>
+            {% endif %}
         </tr>
         <tr>
             <td>Version:</td>
-            <td>{{ report.version }}</td>
+            <td>0.1-draft</td>
         </tr>
         <tr>
             <td>Date:</td>

@@ -5,7 +5,7 @@ from vulnman.views import generic
 from apps.findings import models
 from apps.findings import forms
 from apps.findings.utils import cvss
-from apps.assets.models import WebApplication, WebRequest
+from apps.assets.models import WebApplication, WebRequest, Host
 
 
 class TemplateList(generic.VulnmanAuthListView):
@@ -33,6 +33,7 @@ class VulnCreate(generic.ProjectCreateView):
             form.add_error("template_id", "Template does not exist!")
             return super().form_invalid(form)
         form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
+        form.instance.severity = form.instance.template.severity
         if form.instance.cvss_vector:
             form.instance.cvss_score = cvss.get_scores_by_vector(
                 form.instance.cvss_vector)[0]
@@ -40,6 +41,8 @@ class VulnCreate(generic.ProjectCreateView):
             form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
         elif form.cleaned_data["asset_type"] == WebRequest.ASSET_TYPE:
             form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
+        elif form.cleaned_data["asset_type"] == Host.ASSET_TYPE:
+            form.instance.asset_host = Host.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
         else:
             form.add_error("asset_type", "invalid asset type")
             return super().form_invalid(form)
@@ -76,6 +79,24 @@ class AddTextProof(generic.ProjectCreateView):
         return super().form_valid(form)
 
 
+class TextProofUpdate(generic.ProjectUpdateView):
+    template_name ="findings/proof_update.html"
+    model = models.TextProof
+    form_class = forms.TextProofForm
+
+    def get_success_url(self):
+        return reverse_lazy("projects:findings:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})
+
+
+class ImageProofUpdate(generic.ProjectUpdateView):
+    template_name ="findings/proof_update.html"
+    model = models.ImageProof
+    form_class = forms.ImageProofForm
+
+    def get_success_url(self):
+        return reverse_lazy("projects:findings:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})
+
+
 class AddImageProof(generic.ProjectCreateView):
     http_method_names = ["post"]
     model = models.ImageProof
@@ -109,9 +130,8 @@ class VulnDetail(generic.ProjectDetailView):
         return context
     
 
-class VulnUpdate(generic.ProjectUpdateWithInlinesView):
+class VulnUpdate(generic.ProjectUpdateView):
     model = models.Vulnerability
-    inlines = []
     form_class = forms.VulnerabilityForm
     template_name = "findings/vulnerability_create.html"
 
@@ -120,13 +140,23 @@ class VulnUpdate(generic.ProjectUpdateWithInlinesView):
             form.add_error("template_id", "Template does not exist!")
             return super().form_invalid(form)
         form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
+        if not form.cleaned_data.get('severity'):
+            form.instance.severity = form.instance.template.severity
         if form.instance.cvss_vector:
             form.instance.cvss_score = cvss.get_scores_by_vector(
                 form.instance.cvss_vector)[0]
         if form.cleaned_data["asset_type"] == WebApplication.ASSET_TYPE:
             form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
+            form.instance.asset_host = None
+            form.instance.asset_webrequest = None
         elif form.cleaned_data["asset_type"] == WebRequest.ASSET_TYPE:
             form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
+            form.instance.asset_webapp = None
+            form.instance.asset_host = None
+        elif form.cleaned_data["asset_type"] == Host.ASSET_TYPE:
+            form.instance.asset_host = Host.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
+            form.instance.asset_webrequest = None
+            form.instance.asset_webapp = None
         else:
             form.add_error("asset_type", "invalid asset type")
             return super().form_invalid(form)
@@ -143,14 +173,6 @@ class VulnUpdate(generic.ProjectUpdateWithInlinesView):
         kwargs['project'] = self.get_project()
         return kwargs
 
-    def forms_valid(self, form, inlines):
-        response = self.form_valid(form)
-        for formset in inlines:
-            instances = formset.save(commit=False)
-            for instance in instances:
-                instance.project = self.get_project()
-                instance.save()
-        return response
 
 class VulnDelete(generic.ProjectDeleteView):
     model = models.Vulnerability

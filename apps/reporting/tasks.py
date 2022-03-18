@@ -11,10 +11,10 @@ from apps.reporting.utils import charts
 
 
 @shared_task
-def do_create_report(report_pk, report_type):
+def do_create_report(report_pk, report_type, creator=None):
     reportinformation = ReportInformation.objects.get(pk=report_pk)
     project = reportinformation.get_project()
-    template_pks = Template.objects.filter(vulnerability__project=project).exclude(vulnerability__status=Vulnerability.STATUS_TO_REVIEW).order_by('vulnerability__severity').values_list("pk", flat=True)
+    template_pks = Template.objects.filter(vulnerability__project=project).order_by('-severity').values_list("pk", flat=True)
     unique_pks = []
     for template_pk in template_pks:
         if not template_pk in unique_pks:
@@ -24,6 +24,7 @@ def do_create_report(report_pk, report_type):
         templates.append(Template.objects.get(pk=pk))
     context = {
         "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
+        "creator": creator,
         "SEVERITY_COLORS": settings.SEVERITY_COLORS, 'templates': templates,
         "report": reportinformation, "project": project, 'report_type': report_type,
         'SEVERITY_CHART_SRC': charts.SeverityDonutChart().create_image(project),

@@ -14,8 +14,10 @@ class VulnCategoryPolarChart:
         labels = []
         amount = []
         for cat in categories:
-            labels.append(cat.name)
-            amount.append(Vulnerability.objects.filter(project=project, template__categories__name=cat.name).count())
+            counter = Vulnerability.objects.filter(project=project, template__categories__name=cat.name).count()
+            if counter:
+                labels.append(cat.name)
+                amount.append(counter)
         amount.append(amount[0])
         # Initialise the spider plot by setting figure size and polar projection
         plt.figure(figsize=(10, 6))

@@ -9,38 +9,30 @@
     {% include 'components/timeline/style.html' %}
 {% endblock extra_head %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
-        <li class="breadcrumb-item active">{{ project.name }}</li>
-    </ol>
-{% endblock %}
 
 {% block content %}
     <h3 class="text-center">{{ project.name }}</h3>
     <small><p class="text-center"><i>{{ project.client.name }}</i></p></small>
     <hr/>
-    {% if perms.projects.change_project %}
 
-    <div class="clearfix">
-        <div class="float-end">
-            <div class="dropdown">
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="host-action-dropdown"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-ellipsis-v"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="host-action-dropdown">
-                    <li><a class="dropdown-item" href="{% url 'projects:project-update' project.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
-                    <li><a class="dropdown-item" href="{% url 'projects:contributor-list' project.pk %}"><i class="fa fa-users"></i> Contributors</a></li>
-                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#close-project-modal"><i class="fa fa-times"></i> Close</a></li>
-
-                </ul>
+    <div class="container mt-3">
+        {% if perms.projects.change_project %}
+            <div class="clearfix">
+                <div class="float-start">
+                    <p>Your Role:
+                        {% if request.user == project.creator %}
+                            Creator
+                        {% else %}
+                            Pentester
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="float-end">
+                    <a class="btn btn-outline-warning" href="{% url 'projects:project-update' project.pk %}"><i class="fa fa-edit"></i></a>
+                    <a class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#close-project-modal"><i class="fa fa-times"></i></a>
+                </div>
             </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <div class="container-fluid mt-3">
+        {% endif %}
 
         <!-- Dashboard Row 1 -->
         <div class="row mt-3">
@@ -82,6 +74,59 @@
                             <div class="col-sm-9">
                                 <h3 class="text-center">{{ project.get_assets|length }}</h3>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix">
+                            <p class="float-start">
+                                <strong>Customer:</strong>
+                            </p>
+                            <p class="float-end">
+                                <a href="{% url 'clients:client-detail' project.client.pk %}">{{ project.client.name }}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix">
+                            <p class="float-start">
+                                <strong>Contributors:</strong>
+                            </p>
+                            <p class="float-end">{{ project.projectcontributor_set.count }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix">
+                            <p class="float-start">
+                                <strong>Open To Dos:</strong>
+                            </p>
+                            <p class="float-end">{{ project.get_open_todos.count }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix">
+                            <p class="float-start">
+                                <strong>Compromised Accounts:</strong>
+                            </p>
+                            <p class="float-end">{{ project.get_compromised_accounts.count }}</p>
                         </div>
                     </div>
                 </div>

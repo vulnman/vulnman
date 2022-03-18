@@ -6,26 +6,18 @@
     Web Applications
 {% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
-        <li class="breadcrumb-item active">Web Applications</li>
-    </ol>
-{% endblock %}
-
 {% block content %}
-    <div class="clearfix">
-        <div class="float-end">
-            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#webapp-create-modal">
-                <i class="fa fa-plus"></i> New Web Application
-            </a>
-        </div>
-    </div>
-
 
     <div class="container mt-3">
-        <ul class="list-group">
+        <div class="clearfix">
+            <div class="float-end">
+                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#webapp-create-modal">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
+        </div>
+
+        <ul class="list-group mt-3">
             {% for webapp in webapps %}
                 <li class="list-group-item">
                     <div class="row">

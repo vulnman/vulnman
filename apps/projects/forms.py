@@ -9,12 +9,10 @@ from extra_views import InlineFormSetFactory
 
 
 class ProjectForm(forms.ModelForm):
-    pentesters = forms.ModelMultipleChoiceField(queryset=User.objects.filter(
-        groups__name="pentester"), required=False)
 
     class Meta:
         model = models.Project
-        fields = ["client", "start_date", "end_date", "pentesters", "name"]
+        fields = ["client", "start_date", "end_date", "name"]
         widgets = {
             'start_date': DateInput(),
             'end_date': DateInput()
@@ -34,9 +32,6 @@ class ProjectForm(forms.ModelForm):
             layout.Row(
                 layout.Div(bootstrap5.FloatingField("start_date"), css_class="col-sm-12 col-md-6"),
                 layout.Div(bootstrap5.FloatingField("end_date"), css_class="col-sm-12 col-md-6")
-            ),
-            layout.Row(
-                layout.Div(bootstrap5.FloatingField("pentesters"), css_class="col-sm-12 col-md-12")
             )
         )
 
