@@ -4,55 +4,51 @@
 Templates
 {% endblock %}
 
-{% block breadcrumbs %}
-<ol class="breadcrumb">
-  <li class="breadcrumb-item active">Templates</li>
-</ol>
-{% endblock %}
-
 {% block content %}
 
-    <div class="mt-3 form-floating">
-        <input class="form-control" id="search-template">
-        <label for="search-template">Search</label>
-    </div>
+    <div class="container mt-3">
+        <div class="mt-3 form-floating">
+            <input class="form-control" id="search-template">
+            <label for="search-template">Search</label>
+        </div>
 
-    <div class="list-group mt-3" id="template-list">
-    {% for template in templates %}
-        <a class="list-group-item list-group-item-action" href="" data-bs-toggle="modal" data-id="{{template.pk}}" data-bs-target="#template-detail-modal">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="clearfix">
-                        <div class="float-start">
-                            {{ template.vulnerability_id }}
+        <div class="list-group mt-3" id="template-list">
+            {% for template in templates %}
+                <a class="list-group-item list-group-item-action" href="" data-bs-toggle="modal" data-id="{{template.pk}}" data-bs-target="#template-detail-modal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    {{ template.vulnerability_id }}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="clearfix">
-                        <div class="float-start">
-                            <small class="text-muted"><i>Last updated: {{ template.date_updated|timesince }} ago</i></small>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    <small class="text-muted"><i>Last updated: {{ template.date_updated|timesince }} ago</i></small>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </a>
-    {% empty %}
-        <li class="list-group-item">No templates here!</li>
-    {% endfor %}
-    </div>
+                </a>
+            {% empty %}
+                <li class="list-group-item">No templates here!</li>
+            {% endfor %}
+        </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="template-detail-modal" tabindex="-1" aria-labelledby="template-detail-modal">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="template-detail-modal-label"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Modal -->
+        <div class="modal fade" id="template-detail-modal" tabindex="-1" aria-labelledby="template-detail-modal">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="template-detail-modal-label"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body"></div>
                 </div>
-                <div class="modal-body"></div>
             </div>
         </div>
     </div>

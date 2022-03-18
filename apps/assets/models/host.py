@@ -26,3 +26,9 @@ class Host(BaseAsset):
         unique_together = [
             ('project', 'ip')
         ]
+
+    def __str__(self):
+        if self.dns:
+            return "%s (%s)" % (self.dns, self.ip)
+        return self.ip
+    

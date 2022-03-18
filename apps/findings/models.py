@@ -12,11 +12,11 @@ from apps.assets.models import ASSET_TYPES_CHOICES, WebApplication
 
 
 SEVERITY_CHOICES = [
-    (4, "critical"),
-    (3, "high"),
-    (2, "medium"),
-    (1, "low"),
-    (0, "informational")
+    (4, "Critical"),
+    (3, "High"),
+    (2, "Medium"),
+    (1, "Low"),
+    (0, "Informational")
 ]
 
 def get_severity_by_name(name):
@@ -50,7 +50,6 @@ class CWEEntry(VulnmanModel):
 class BaseVulnerability(VulnmanModel):
     severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES)
     name = models.CharField(max_length=256)
-    # mitigation = models.TextField()
     description = models.TextField()
     recommendation = models.TextField()
     vulnerability_id = models.CharField(max_length=256)
@@ -90,13 +89,11 @@ class Vulnerability(VulnmanProjectModel):
     asset_webrequest = models.ForeignKey('assets.WebRequest', on_delete=models.CASCADE, null=True, blank=True)
     asset_host = models.ForeignKey('assets.Host', on_delete=models.CASCADE, null=True, blank=True)
 
+    auth_required = models.BooleanField(default=False)
+    user_account = models.ForeignKey('findings.UserAccount', on_delete=models.SET_NULL, null=True, blank=True)
+
     def __str__(self):
         return self.template.name
-
-    def get_severity_disp(self):
-        if self.severity:
-            return self.get_severity_display()
-        return self.template.get_severity_display()
 
     def get_severity(self):
         if self.severity:
@@ -124,7 +121,9 @@ class Vulnerability(VulnmanProjectModel):
         return ["Information", "Information", "Information"]
 
     def get_severity_colors(self):
-        return settings.SEVERITY_COLORS[self.get_severity_disp().capitalize()]
+        if not self.severity:
+            return ""
+        return settings.SEVERITY_COLORS[self.get_severity_display()]
 
     def get_absolute_url(self):
         return reverse_lazy('projects:findings:vulnerability-detail', kwargs={'pk': self.pk})
@@ -148,7 +147,7 @@ class Vulnerability(VulnmanProjectModel):
             return self.asset_host
 
     class Meta:
-        ordering = ['-cvss_score',]
+        ordering = ['-severity',]
         verbose_name_plural = "Vulnerabilities"
         verbose_name = "Vulnerability"
 

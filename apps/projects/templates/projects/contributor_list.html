@@ -5,77 +5,74 @@
     Contributors
 {% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
-        <li class="breadcrumb-item active">{{ project.name }}</li>
-        <li class="breadcrumb-item active">Contributors</li>
-    </ol>
-{% endblock %}
-
 {% block content %}
     <h3 class="text-center">Contributors</h3>
     <hr/>
-    <div class="clearfix">
-        <div class="float-end">
-            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">
-                <i class="fa fa-plus"></i> Add Contributor
-            </a>
+    
+    <div class="container mt-3">
+        <div class="clearfix">
+            <div class="float-end">
+                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
         </div>
-    </div>
 
-
-    <ul class="list-group mt-3">
-        {% for contributor in contributors %}
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="float-start">
-                            {{ contributor.user.username}}
-                        </div>
-                        <div class="float-end">
-                            <button class="btn btn-outline-primary" onclick="removeContributor('{{contributor.pk}}')"><i class="fa fa-trash"></i>
+        <ul class="list-group mt-3">
+            {% for contributor in contributors %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="float-start">
+                                {{ contributor.user.username}}
+                            </div>
+                            <div class="float-end">
+                                <button class="btn btn-outline-primary" onclick="removeContributor('{{contributor.pk}}')"><i class="fa fa-trash"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <small>Role: {{ contributor.get_role_display }}</small>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <small>Role: {{ contributor.get_role_display }}</small>
+                        </div>
                     </div>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+                </li>
+            {% empty %}
+                <li class="list-group-item">
+                    No Contributors
+                </li>
+            {% endfor %}
+        </ul>
 
 
-    <!-- Create Modal -->
-    <div class="modal fade" id="create-modal" tabindex="-1" aria-labelledby="create-modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="create-modal-label">Add Contributor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="add-contributor-form">
-                        {% csrf_token %}
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="username">
-                            <label for="username">Username</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <select class="form-select" id="role" aria-label="role">
-                              <option value="pentester">Pentester</option>
-                            </select>
-                            <label for="role">Role</label>
-                        </div>
-                        <button class="form-control btn btn-primary">Add</button>
-                    </form>
+        <!-- Create Modal -->
+        <div class="modal fade" id="create-modal" tabindex="-1" aria-labelledby="create-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="create-modal-label">Add Contributor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="add-contributor-form">
+                            {% csrf_token %}
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="username">
+                                <label for="username">Username</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <select class="form-select" id="role" aria-label="role">
+                                <option value="pentester">Pentester</option>
+                                </select>
+                                <label for="role">Role</label>
+                            </div>
+                            <button class="form-control btn btn-primary">Add</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block extra_scripts %}

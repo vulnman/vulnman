@@ -5,56 +5,43 @@
     Reports
 {% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
-        <li class="breadcrumb-item active">Reports</li>
-    </ol>
-{% endblock %}
-
 {% block content %}
-
-    <div class="row">
-        <div class="col-sm-12 col-md-6">
-            <div class="row">
-                <p><strong>Draft Report</strong></p>
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="row">
+                    <p><strong>Draft Report</strong></p>
+                </div>
+                <div class="row">
+                    {% if project.get_draft_report %}
+                        <small><i id="report-status-info">Created at {{ project.get_draft_report.date_updated|date }}</i></small>                        
+                    {% endif %}
+                </div>
             </div>
-            <div class="row">
-                {% if project.get_draft_report %}
-                    <small><i>Created at {{ project.get_draft_report.date_updated|date }}</i></small>
-                {% endif %}
-            </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-            <div class="row">
-                <div class="clearfix">
-                    <div class="float-end">
-                        <form method="post" action="{% url 'projects:reporting:report-draft-create' %}">
+            <div class="col-sm-12 col-md-6">
+                <div class="row">
+                    <div class="clearfix">
+                        <div class="float-end">
+                            <button class="btn btn-primary" onclick="createDraftReport()" id="report-draft-create-btn"><i class="fa fa-file"></i> Create Draft</button>
                             {% csrf_token %}
-                            <input type="hidden" name="empty" value=""/>
-                            <button class="btn btn-primary">
-                                <i class="fa fa-file"></i> Create Draft
-                            </button>
                             {% if project.get_draft_report %}
-                                <a class="btn btn-primary" href="{% url 'projects:reporting:report-download' project.get_draft_report.pk %}">
+                                <a class="btn btn-primary" target="_blank" href="{% url 'projects:reporting:report-download' project.get_draft_report.pk %}" rel="noopener noreferrer">
                                     <i class="fa fa-download"></i> Download
                                 </a>
                             {% endif %}
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <hr />
 
-    <hr />
-
-    <div class="row">
-        <div class="col-sm-12">
-            {% if report_mgmt_summary_form %}
-            {% include 'forms/simple.html' with form=report_mgmt_summary_form no_submit=True method="POST" %}
-            {% endif %}
+        <div class="row">
+            <div class="col-sm-12">
+                {% if report_mgmt_summary_form %}
+                {% include 'forms/simple.html' with form=report_mgmt_summary_form no_submit=True method="POST" %}
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -91,5 +78,41 @@ id_recommendation.on("blur", function(){
         }
     });
 });
+
+
+function createDraftReport(){
+    $.ajax({
+        type: "POST",
+        url: "{% url 'api:v1:report-create-report' %}",
+        dataType: "json",
+        data: {"project": "{{project.pk}}", "report_type": "draft"},
+        success: function(data){
+            $('#report-status-info').html("");
+            $('#report-status-info').html('<div class="spinner-border spinner-border-sm" role="status"></div>')
+            $('#report-draft-create-btn').attr("disabled", "disabled")
+            setInterval(function(){
+                checkTaskStatus(data.task_id)
+            }, 5 * 1000);
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+        }
+    })
+}
+
+function checkTaskStatus(task_id){
+    $.ajax({
+        type: "GET",
+        url: "/api/v1/reports/tasks/" + task_id + "/",
+        dataType: "json",
+        success: function(data){
+            if (data.status === "SUCCESS"){
+                location.reload();
+            }
+        }
+    });
+}
+
+
 </script>
 {% endblock extra_scripts %}

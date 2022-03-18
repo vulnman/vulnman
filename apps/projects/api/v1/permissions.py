@@ -1,10 +1,18 @@
 from rest_framework.permissions import BasePermission
+from apps.projects.models import Project
 
 
 class AddContributorPermission(BasePermission):
     def has_object_permission(self, request, view, obj):
-        perms = ["projects.add_contributor"]
-        if not obj.get_project():
+        if request.user == obj.get_project().creator:
+            return True
+        return False
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            project = request.data.get('project')
+            instance = Project.objects.filter(pk=project, creator=request.user)
+            if instance.exists():
+                return True
             return False
-        has_permissions = all(request.user.has_perm(perm, obj.get_project()) for perm in perms)
-        return has_permissions
+        return True

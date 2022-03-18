@@ -6,52 +6,60 @@
     Web Applications
 {% endblock %}
 
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'projects:project-detail' project.pk %}">{{ project.name }}</a></li>
+        <li class="breadcrumb-item active">Hosts</li>
+    </ol>
+{% endblock %}
+
 {% block content %}
 
     <div class="container mt-3">
         <div class="clearfix">
             <div class="float-end">
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#webrequest-create-modal">
+                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">
                     <i class="fa fa-plus"></i>
                 </a>
             </div>
         </div>
 
         <ul class="list-group mt-3">
-            {% for webrequest in webrequests %}
+            {% for host in hosts %}
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="float-start">{{ webrequest }}</div>
+                            <div class="float-start">{{ host }}</div>
                             <div class="float-end">
-                                <button class="btn btn-sm btn-outline-primary" onclick="removeAsset('{{webrequest.pk}}')"><i class="fa fa-trash"></i></button>
+                                <button class="btn btn-sm btn-outline-primary" onclick="removeAsset('{{host.pk}}')"><i class="fa fa-trash"></i></button>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <small>{{ webrequest.web_app }}</small>
+                            <small>OS: {{ host.operating_system }}</small>
                         </div>
                     </div>
                 </li>
             {% empty %}
                 <li class="list-group-item">
-                    No Web Requests yet!
+                    No Hosts yet!
                 </li>
             {% endfor %}
         </ul>
     </div>
 
     <!-- Create Modal -->
-    <div class="modal fade" id="webrequest-create-modal" tabindex="-1" aria-labelledby="webrequest-create-modal">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="create-modal" tabindex="-1" aria-labelledby="create-modal">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="webrequest-create-modal-label">Create Web Request</h5>
+                    <h5 class="modal-title" id="create-modal-label">Create Host</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    {% crispy webrequest_create_form %}
+                    {% crispy host_create_form %}
                 </div>
             </div>
         </div>
@@ -63,7 +71,7 @@
     function removeAsset(asset_id){
         $.ajax({
             type: "DELETE",
-            url: "/api/v1/assets/webrequests/" + asset_id + "/",
+            url: "/api/v1/assets/hosts/" + asset_id + "/",
             dataType: "json",
             data: {},
             success: function(data){

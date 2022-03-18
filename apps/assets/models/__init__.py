@@ -6,5 +6,6 @@ from apps.assets.models.host import Host
 
 ASSET_TYPES_CHOICES = [
     WebApplication.ASSET_TYPE_CHOICE,
-    WebRequest.ASSET_TYPE_CHOICE
+    WebRequest.ASSET_TYPE_CHOICE,
+    Host.ASSET_TYPE_CHOICE
 ]

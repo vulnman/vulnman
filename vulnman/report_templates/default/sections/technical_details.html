@@ -29,7 +29,7 @@
         <!-- Header Table -->
         <section id="vuln-{{ vulnerability.pk}}-header">
             <h3 id="vuln-{{vulnerability.pk}}-title">
-                <span class="fa-layers text-{{ vulnerability.get_severity_disp|lower }}">
+                <span class="fa-layers text-{{ vulnerability.get_severity_display|lower }}">
                     <i class="fas fa-bookmark"></i>
                     <span class="fa-layers-text" data-fa-transform="shrink-8 down-3" style="font-weight:900"></span>
                 </span>
@@ -39,7 +39,7 @@
             <table class="table-bordered">
                 <tr>
                     <th>Severity</th>
-                    <td class="text-{{ vulnerability.get_severity_disp|lower }}">{{ vulnerability.get_severity_disp|capfirst }}</td>
+                    <td class="text-{{ vulnerability.get_severity_display|lower }}">{{ vulnerability.get_severity_display|capfirst }}</td>
                 </tr>
                 <tr>
                     <th>Status</th>
@@ -70,7 +70,9 @@
                     {% if proof.image %}
                         <figure>
                             <img src="{{ proof.base64_encoded_image }}" alt="proof-image" style="width: 100%; max-width: 100%; height:auto;">
-                            <figcaption>{{ proof.caption }}</figcaption>
+                            {% if proof.caption %}
+                                <figcaption>{{ proof.caption }}</figcaption>
+                            {% endif %}
                         </figure>
                     {% endif %}                    
                 {% endif %}

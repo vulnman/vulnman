@@ -2,6 +2,7 @@ import json
 from uuid import uuid4
 from guardian.shortcuts import assign_perm, remove_perm
 from django.db import models
+from django.db.models import Q
 from django.db.models.functions import Cast
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
@@ -54,6 +55,12 @@ class Project(models.Model):
         perms = ["projects.add_contributor", "projects.view_project", "projects.change_project", "projects.delete_project"]
         for perm in perms:
             assign_perm(perm, user_or_group=self.creator, obj=self)
+
+    def get_open_todos(self):
+        return self.assettask_set.filter(~Q(status=0))
+
+    def get_compromised_accounts(self):
+        return self.useraccount_set.filter(account_compromised=True)
 
     class Meta:
         ordering = ["-date_updated"]
@@ -145,6 +152,12 @@ class ProjectContributor(models.Model):
         if perm_map.get(role):
             for perm in perm_map[role]:
                 assign_perm(perm, user_or_group=self.user, obj=self.project)
+
+    def clear_perms(self):
+        perm_map = self.get_role_permission_map()
+        for role in self.get_role_permission_map().keys():
+            for perm in perm_map[role]:
+                remove_perm(perm, self.user, self.project)
 
     def get_project(self):
         return self.project

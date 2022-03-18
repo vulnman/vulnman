@@ -37,13 +37,6 @@ class ProjectCreate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthCreateW
     extra_context = {"TEMPLATE_HIDE_BREADCRUMBS": True}
     permission_required = "projects.add_project"
 
-    def form_valid(self, form):
-        instance = form.save()
-        for pentester in form.cleaned_data.get('pentesters'):
-            assign_perm("projects.pentest_project", pentester, instance)
-            assign_perm("projects.view_project", pentester, instance)
-        return super().form_valid(form)
-
 
 class ProjectDetail(generic.VulnmanAuthDetailView):
     template_name = "projects/project_detail.html"
@@ -55,37 +48,9 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
             self.request.session['project_pk'] = str(self.get_object().pk)
         return self.render_to_response(context)
 
-    def get_context_data(self, **kwargs):
-        # this one is ugly. use API!!!
-        context = super().get_context_data(**kwargs)
-        context['severity_vulns_count'] = []
-        obj = self.get_object()
-        for sev in ["critical", "high", "medium", "low", "informational"]:
-            context['severity_vulns_count'].append(obj.vulnerability_set.filter(
-                template__severity=get_severity_by_name(sev)).count())
-        context['severity_labels'] = list(settings.SEVERITY_COLORS.keys())
-        context['severity_background_colors'] = []
-        context['severity_border_colors'] = []
-        for key, value in settings.SEVERITY_COLORS.items():
-            context['severity_background_colors'].append(value.get('chart'))
-            context['severity_border_colors'].append(value.get('chart_border'))
-        #context['hosts_list'] = list(self.get_object().host_set.annotate(
-        #    service_count=Count('service')).order_by('-service_count').values_list('ip', flat=True))[:5]
-        #context['hosts_service_count'] = list(self.get_object().host_set.annotate(
-        #    service_count=Count('service')).order_by('-service_count').values_list('service_count', flat=True))[:5]
-        context['latest_days'] = []
-        context['vulns_per_day'] = []
-        for i in range(10):
-            context['latest_days'].append(str(timezone.now().date() - timezone.timedelta(days=i)))
-            context['vulns_per_day'].append(self.get_object().vulnerability_set.filter(
-                date_created__date=timezone.now().date() - timezone.timedelta(days=i)).count())
-        context['latest_days'].reverse()
-        context['vulns_per_day'].reverse()
-        return context
-
     def get_queryset(self):
-        return get_objects_for_user(self.request.user, "view_project",
-                                    models.Project.objects.filter(pk=self.kwargs.get('pk')))
+        return get_objects_for_user(self.request.user, "projects.view_project",
+                                    models.Project.objects.filter(pk=self.kwargs.get('pk')), use_groups=False, accept_global_perms=False)
 
 
 class ProjectUpdate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthUpdateWithInlinesView):

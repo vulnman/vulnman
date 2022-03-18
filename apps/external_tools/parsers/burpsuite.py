@@ -1,4 +1,3 @@
-#import xml.etree.ElementTree as ET
 import defusedxml.ElementTree as ET
 import base64
 import re

@@ -9,14 +9,18 @@ from django.utils.safestring import mark_safe
 
 
 class HighlightCodeBlockProcessor(Postprocessor):
-    line = re.compile(r'(<span id="line-\d+">(?:<span class="hll">)?(?:<span class="linenos">\s*\d+<\/span>)?)([^><]+)((?:<\/span>)+)',
-        re.DOTALL | re.MULTILINE)
+    #line = re.compile(r'(<span id="line-\d+">(?:<span class="hll">)?(?:<span class="linenos">\s*\d+<\/span>)?)([^><]+)((?:<\/span>)+)',
+    #    re.DOTALL | re.MULTILINE)
+    # line = re.compile(r'(<span.*>.*|<span.*>)§§(.*)§§(.*<\/span>|<\/span>)', re.DOTALL | re.MULTILINE)
+    line = re.compile(r'(<span.*>.*)§§(.*)§§(.*<\/span>)*', re.MULTILINE)
     highlited_code = re.compile(r"§§(.*?)§§")
 
     @staticmethod
     def match_bold(code):
-        bold = HighlightCodeBlockProcessor.highlited_code.sub(r"<b>\1</b>", code.group(2))
-        return "%s%s%s" % (code.group(1), bold, code.group(3))
+        if code.group(3) is not None:
+            replaced_code = "%s<b>%s</b>%s" % (code.group(1), code.group(2), code.group(3))
+            return replaced_code
+        return "%s<b>%s</b>" % (code.group(1), code.group(2))
 
     def run(self, text):
         return self.line.sub(self.match_bold, text)
@@ -34,7 +38,7 @@ def bleach_md(markdown_content):
         return markdown_content
     cleaned = bleach.clean(markdown.markdown(markdown_content, extensions=['fenced_code', CodeHiliteExtension(
                 guess_lang=False,
-                linenums=False,
+                linenums=True,
                 linenos="inline",
                 linespans="line",
                 startinline=True,

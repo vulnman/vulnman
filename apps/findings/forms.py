@@ -7,14 +7,6 @@ from crispy_bootstrap5 import bootstrap5
 from vulnman.forms import NamedInlineFormSetFactory, CodeMirrorWidget
 
 
-ASSET_TYPE_CHOICES = [
-    ("webapp", "Web Application"),
-    ("webrequest", "Web Request"),
-    ("host", "Host"),
-    ("service", "Service")
-]
-
-
 class TemplateForm(forms.ModelForm):
     class Meta:
         model = models.Template
@@ -58,6 +50,10 @@ class TextProofForm(forms.ModelForm):
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
                 bootstrap5.Field("description", wrapper_class="col-sm-12"),
                 bootstrap5.Field("text", wrapper_class="col-sm-12")
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )
 
@@ -96,7 +92,7 @@ class VulnerabilityForm(forms.ModelForm):
 
     class Meta:
         model = models.Vulnerability
-        fields = ["template_id", "cvss_vector", "name", "asset_type", "f_asset", "status", "cve_id", "severity"]
+        fields = ["template_id", "cvss_vector", "name", "asset_type", "f_asset", "status", "cve_id", "severity", "auth_required", "user_account"]
 
     def get_asset_choices(self, project):
         choices = [("---", "---")]
@@ -106,11 +102,15 @@ class VulnerabilityForm(forms.ModelForm):
         for i in project.webrequest_set.all():
             d_name = "%s (%s)" % (i.name, "Web Request")
             choices.append((str(i.pk), d_name))
+        for i in project.host_set.all():
+            d_name = "%s (%s)" % (str(i), "Host")
+            choices.append((str(i.pk), d_name))
         return choices
 
     def __init__(self, project, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["f_asset"].choices = self.get_asset_choices(project)
+        self.fields["user_account"].queryset = project.useraccount_set.all()
         self.helper = FormHelper()
         self.helper.form_tag = False
         self.helper.layout = layout.Layout(
@@ -126,8 +126,11 @@ class VulnerabilityForm(forms.ModelForm):
             ),
             layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField("severity"), css_class="col-sm-12",
-                )
+                    bootstrap5.FloatingField("severity"), css_class="col-sm-12 col-md-6",
+                ),
+                layout.Div(
+                    bootstrap5.FloatingField("user_account"), css_class="col-sm-12 col-md-6",
+                ),
             ),
             layout.Row(
                 layout.Div(

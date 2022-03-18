@@ -1,0 +1,103 @@
+<!-- Source: https://github.com/StartBootstrap/startbootstrap-simple-sidebar/blob/master/dist/index.html -->
+<div class="border-end bg-primary border-secondary" id="sidebar-wrapper" style="width: 280px;">
+    <div class="sidebar-heading border-bottom">VULNMAN</div>
+    <div class="accordion bg-primary m-0 p-0 w-100" id="sidebar-menu">
+        {% with label="Pentest" icon="fa fa-shield" %}
+            <!-- Sidebar Menu Item: {{ label }} -->
+            <div class="accordion-item bg-primary">
+                <h2 class="sidebar-menu-{{label|lower|slugify}}-heading" id="sidebar-menu-{{label|lower|slugify}}">
+                    <button class="accordion-button bg-primary collapsed" type="button" data-bs-toggle="collapse" id="sidebar-menu-button-{{label|lower|slugify}}"
+                        data-bs-target="#collapse-menu-{{label|lower|slugify}}" aria-expanded="true" aria-controls="collapse-menu-{{label|lower|slugify}}">
+                        <i class="{{icon}} d-inline-block" style="margin-right: 1em !important"></i>
+                            <span class="sidebar-label"> {{ label }}</span>
+                    </button>
+                </h2>
+
+                <div id="collapse-menu-{{label|lower|slugify}}" class="accordion-collapse collapse" 
+                    aria-labelledby="sidebar-menu-{{label|lower|slugify}}-heading" data-bs-parent="#sidebar-menu">
+                    <div class="accordion-body m-0 p-0">
+                        <div class="list-group list-group-flush">
+                            <a class="list-group-item list-group-item-primary p-3" href="{% url 'projects:project-detail' project.pk %}">Project</a>
+                            <a class="list-group-item list-group-item-primary p-3" href="{% url 'projects:findings:vulnerability-list' %}">
+                                Vulnerabilities
+                            </a>
+                            <a class="list-group-item list-group-item-primary p-3" href="{% url 'projects:methodologies:project-todos-list' %}">To Dos</a>
+                            <a class="list-group-item list-group-item-primary p-3" href="{% url 'projects:findings:user-account-list' %}">User Accounts</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+
+    
+        {% with label="Assets" icon="fa fa-server" %}
+            <!-- Sidebar Menu Item: {{ label }} -->
+            <div class="accordion-item bg-primary">
+                <h2 class="sidebar-menu-{{label|lower|slugify}}-heading" id="sidebar-menu-{{label|lower|slugify}}">
+                    <button class="accordion-button bg-primary collapsed" type="button" data-bs-toggle="collapse" id="sidebar-menu-button-{{label|lower|slugify}}"
+                        data-bs-target="#collapse-menu-{{label|lower|slugify}}" aria-expanded="true" aria-controls="collapse-menu-{{label|lower|slugify}}">
+                        <i class="{{icon}} d-inline-block" style="margin-right: 1em !important"></i>
+                            <span class="sidebar-label"> {{ label }}</span>
+                    </button>
+                </h2>
+                <div id="collapse-menu-{{label|lower|slugify}}" class="accordion-collapse collapse" 
+                    aria-labelledby="sidebar-menu-{{label|lower|slugify}}-heading" data-bs-parent="#sidebar-menu">
+                    <div class="accordion-body m-0 p-0">
+                        <div class="list-group list-group-flush">
+                            <a class="list-group-item list-group-item-primary p-3" href="{% url 'projects:assets:host-list' %}">Hosts</a>
+                            <a class="list-group-item list-group-item-primary p-3" href="#">Services</a>
+                            <a class="list-group-item list-group-item-primary p-3" href="{% url 'projects:assets:webapp-list' %}">Web Applications</a>
+                            <a class="list-group-item list-group-item-primary p-3" href="{% url 'projects:assets:webrequest-list' %}">Web Requests</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+
+        {% with label="Management" icon="fa fa-columns" %}
+            <!-- Sidebar Menu Item: {{ label }} -->
+            <div class="accordion-item bg-primary">
+                <h2 class="sidebar-menu-{{label|lower|slugify}}-heading" id="sidebar-menu-{{label|lower|slugify}}">
+                    <button class="accordion-button bg-primary collapsed" type="button" data-bs-toggle="collapse" id="sidebar-menu-button-{{label|lower|slugify}}"
+                        data-bs-target="#collapse-menu-{{label|lower|slugify}}" aria-expanded="true" aria-controls="collapse-menu-{{label|lower|slugify}}">
+                        <i class="{{icon}} d-inline-block" style="margin-right: 1em !important"></i>
+                            <span class="sidebar-label"> {{ label }}</span>
+                    </button>
+                </h2>
+                <div id="collapse-menu-{{label|lower|slugify}}" class="accordion-collapse collapse" 
+                    aria-labelledby="sidebar-menu-{{label|lower|slugify}}-heading" data-bs-parent="#sidebar-menu">
+                    <div class="accordion-body m-0 p-0">
+                        <div class="list-group list-group-flush">
+                            <a class="list-group-item list-group-item-primary p-3" href="{% url 'projects:contributor-list' project.pk %}">Contributors</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+
+        {% with label="Reporting" icon="fa fa-file" %}
+            <!-- Sidebar Menu Item: {{ label }} -->
+            <div class="accordion-item bg-primary">
+                <h2 class="sidebar-menu-{{label|lower|slugify}}-heading" id="sidebar-menu-{{label|lower|slugify}}">
+                    <button class="accordion-button bg-primary collapsed" type="button" data-bs-toggle="collapse" id="sidebar-menu-button-{{label|lower|slugify}}"
+                        data-bs-target="#collapse-menu-{{label|lower|slugify}}" aria-expanded="true" aria-controls="collapse-menu-{{label|lower|slugify}}">
+                            <i class="{{icon}} d-inline-block" style="margin-right: 1em !important"></i>
+                                <span class="sidebar-label"> {{ label }}</span>
+                    </button>
+                </h2>
+                <div id="collapse-menu-{{label|lower|slugify}}" class="accordion-collapse collapse" 
+                    aria-labelledby="sidebar-menu-{{label|lower|slugify}}-heading" data-bs-parent="#sidebar-menu">
+                    <div class="accordion-body m-0 p-0">
+                        <div class="list-group list-group-flush">
+                            <a class="list-group-item list-group-item-primary p-3" href="{% url 'projects:reporting:report-list' %}">
+                                Report
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+
+    </div>
+</div>
+<!-- END SIDEBAR -->
