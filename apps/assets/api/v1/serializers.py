@@ -30,9 +30,11 @@ class WebRequestSerializer(ProjectRelatedObjectSerializer):
 class HostSerializer(ProjectRelatedObjectSerializer):
     class Meta:
         model = models.Host
-        fields = ["ip", "operating_system", "accessibility", "description", "dns"]
+        fields = ["uuid", "ip", "operating_system", "accessibility", "description", "dns"]
+        read_only_fields = ["uuid"]
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data["asset_type"] = models.Host.ASSET_TYPE_CHOICE[1]
+        data["name"] = str(instance)
         return data

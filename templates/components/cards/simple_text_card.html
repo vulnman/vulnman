@@ -1,0 +1,16 @@
+{% comment %}
+    {% include 'components/cards/simple_text_card.html' with label="Name" text=obj.name %}
+{% endcomment %}
+
+<div class="card">
+    <div class="card-body">
+        <div class="clearfix">
+            <div class="float-start">
+                <p class="card-text"><strong>{{ label }}</strong></p>
+            </div>
+            <div class="float-end">
+                <p class="card-text">{{ text }} </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,40 +12,42 @@ Clients
 {% endblock %}
 
 {% block content %}
-    <div class="clearfix">
-        <div class="float-end">
-            {% if perms.projects.add_client %}
-            <a class="btn btn-primary" href="{% url 'clients:client-create' %}"><i class="fa fa-plus"></i> New Client</a>
-            {% endif %}
+    <div class="container mt-3">
+        <div class="clearfix">
+            <div class="float-end">
+                {% if perms.projects.add_client %}
+                    <a class="btn btn-primary" href="{% url 'clients:client-create' %}"><i class="fa fa-plus"></i> New Client</a>
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-    <div class="list-group mt-3">
-    {% for client in clients %}
-        <a class="list-group-item list-group-item-action" href="{{ client.get_absolute_url }}">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="clearfix">
-                        <div class="float-start">
-                            {{ client }}
+        <div class="list-group mt-3">
+        {% for client in clients %}
+            <a class="list-group-item list-group-item-action" href="{{ client.get_absolute_url }}">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="clearfix">
+                            <div class="float-start">
+                                {{ client }}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="clearfix">
-                        <div class="float-start">
-                            <small class="text-muted"><i>Last updated: {{ client.date_updated|timesince }} ago</i></small>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="clearfix">
+                            <div class="float-start">
+                                <small class="text-muted"><i>Last updated: {{ client.date_updated|timesince }} ago</i></small>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </a>
-    {% empty %}
-        <li class="list-group-item">No clients here!</li>
-    {% endfor %}
-    </div>
+            </a>
+        {% empty %}
+            <li class="list-group-item">No clients here!</li>
+        {% endfor %}
+        </div>
 
-    {% include 'navigation/pagination.html' %}
+        {% include 'navigation/pagination.html' %}
+    </div>
 {% endblock %}

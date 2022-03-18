@@ -6,8 +6,8 @@ from django.db.models import Q
 
 
 SEVERITY_COLORS = {
-    "critical": "#9c1720",
-    "high": "#d13c0f", "medium": "#e8971e", "low": "#2075f5", "informational": "#059D1D"
+    "Critical": "#9c1720",
+    "High": "#d13c0f", "Medium": "#e8971e", "Low": "#2075f5", "Informational": "#059D1D"
 }
 
 
@@ -19,8 +19,8 @@ class SeverityDonutChart:
         data = []
         colors = []
         labels = []
-        for sev in ["critical", "high", "medium", "low", "informational"]:
-            amount = Vulnerability.objects.filter(template__severity=get_severity_by_name(sev), project=project).exclude(status=Vulnerability.STATUS_TO_REVIEW).count()
+        for sev in ["Critical", "High", "Medium", "Low", "Informational"]:
+            amount = Vulnerability.objects.filter(severity=get_severity_by_name(sev), project=project).exclude(status=Vulnerability.STATUS_TO_REVIEW).count()
             if amount > 0:
                 data.append(amount)
                 # labels.append(sev.capitalize())
@@ -33,7 +33,8 @@ class SeverityDonutChart:
         outside, labels = ax.pie(data, radius=1, labels=labels, 
             colors=colors, startangle=180, pctdistance=1-width/2)
         if labels:
-            labels[0].set_fontsize(20)
+            for label in labels:
+                label.set_fontsize(20)
         plt.setp(outside, width=width, edgecolor='white')
         ax.text(0, 0, text, ha="center", size=20, fontweight="bold", va="center")
         #fig.set_size_inches(10.5, 10.5)

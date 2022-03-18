@@ -4,55 +4,50 @@
 Checklists
 {% endblock %}
 
-{% block breadcrumbs %}
-<ol class="breadcrumb">
-  <li class="breadcrumb-item active">Checklists</li>
-</ol>
-{% endblock %}
-
 {% block content %}
+    <div class="container mt-3">
+        <div class="form-floating">
+            <input class="form-control" id="search-checklist">
+            <label for="search-checklist">Search</label>
+        </div>
 
-    <div class="mt-3 form-floating">
-        <input class="form-control" id="search-checklist">
-        <label for="search-checklist">Search</label>
-    </div>
-
-    <div class="list-group mt-3" id="checklist-list">
-    {% for methodology in methodologies %}
-        <a class="list-group-item list-group-item-action" href="" data-bs-toggle="modal" data-id="{{methodology.pk}}" data-bs-target="#checklist-detail-modal">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="clearfix">
-                        <div class="float-start">
-                            {{ methodology }}
+        <div class="list-group mt-3" id="checklist-list">
+            {% for methodology in methodologies %}
+                <a class="list-group-item list-group-item-action" href="" data-bs-toggle="modal" data-id="{{methodology.pk}}" data-bs-target="#checklist-detail-modal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    {{ methodology }}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="clearfix">
-                        <div class="float-start">
-                            <small class="text-muted"><i>Last updated: {{ methodology.date_updated|timesince }} ago</i></small>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    <small class="text-muted"><i>Last updated: {{ methodology.date_updated|timesince }} ago</i></small>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </a>
-    {% empty %}
-        <li class="list-group-item">No methodologies here!</li>
-    {% endfor %}
-    </div>
+                </a>
+            {% empty %}
+                <li class="list-group-item">No methodologies here!</li>
+            {% endfor %}
+        </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="checklist-detail-modal" tabindex="-1" aria-labelledby="checklist-detail-modal">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="checklist-detail-modal-label"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Modal -->
+        <div class="modal fade" id="checklist-detail-modal" tabindex="-1" aria-labelledby="checklist-detail-modal">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="checklist-detail-modal-label"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body"></div>
                 </div>
-                <div class="modal-body"></div>
             </div>
         </div>
     </div>

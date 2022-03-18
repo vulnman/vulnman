@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-dark border-bottom bg-primary">
+    <div class="container-fluid">
+        {% if request.user.is_authenticated and project %}
+            <button class="btn btn-primary" id="sidebarToggle"><i class="navbar-toggler-icon"></i></button>
+        {% endif %}
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'projects:project-list' %}">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'clients:client-list' %}">Clients</a>
+                    </li>
+                {% endif %}
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ request.user.username }}</a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'findings:template-list' %}">Vulnerability Templates</a>
+                            <a class="dropdown-item" href="{% url 'methodology:methodology-list' %}">Checklists</a>
+                            <a class="dropdown-item" href="{% url 'account:profile-edit' %}">Edit Profile</a>
+                            {% if request.user.is_staff %}
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank" rel="noopener">Administration</a>
+                            {% endif %}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

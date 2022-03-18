@@ -5,61 +5,79 @@
     {{ client.name }}
 {% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'clients:client-list' %}">Clients</a></li>
-        <li class="breadcrumb-item active">{{ client.name }}</li>
-    </ol>
-{% endblock %}
 
 {% block content %}
     <h3 class="text-center">{{ client.name }}</h3>
     <hr/>
-    <div class="clearfix">
-        <div class="float-end">
-            <div class="dropdown">
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="object-action-dropdown"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-ellipsis-v"></i>
+    <div class="container mt-3">
+        <div class="clearfix">
+            <div class="float-end">
+                <a class="btn btn-outline-warning" href="#"><i class="fa fa-edit"></i></a>
+                <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ client.pk }}">
+                    <i class="fa fa-trash"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="object-action-dropdown">
-                    <li><a class="dropdown-item" href="#"><i class="fa fa-edit"></i> Edit</a></li>
-                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ client.pk }}"><i class="fa fa-trash"></i> Delete</a></li>
-                </ul>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-sm-12 col-md-4">
+                {% include 'components/cards/simple_text_card.html' with label="Name" text=client.name %}
+            </div>
+            <div class="col-sm-12 col-md-4">
+                {% include 'components/cards/simple_text_card.html' with label="Street" text=client.street %}
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix">
+                            <div class="float-start">
+                                <p class="card-text"><strong>City</strong></p>
+                            </div>
+                            <div class="float-end">
+                                <p class="card-text">{{ client.zip }} {{ client.city }}, {{ client.country }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <h3>Contacts</h3>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>E-Mail</th>
+                            <th>Phone</th>
+                            <th>Position</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for contact in client.clientcontact_set.all %}
+                            <tr>
+                                <td>{{ contact.first_name }} {{ contact.last_name }}</td>
+                                <td>{{ contact.email }}</td>
+                                <td>{{ contact.phone }}</td>
+                                <td>{{ contact.position }}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-outline-warning" href="{{ contact.get_absolute_update_url }}">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ contact.pk }}">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% include 'modals/delete_object.html' with obj=contact %}
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% include 'modals/delete_object.html' with obj=client %}
+
             </div>
         </div>
     </div>
-    <div>
-        <p><strong>Name:</strong></p>
-        <p>{{ client.name }}</p>
-        <p><strong>Address:</strong></p>
-        <p>{{ client.street }}</p>
-        <p>{{ client.zip }} {{ client.city }}, {{ client.country }}</p>
-
-        <p><strong>Contacts</strong></p>
-        <table class="table table-bordered table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>E-Mail</th>
-                    <th>Phone</th>
-                    <th>Position</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-        {% for contact in client.clientcontact_set.all %}
-            <tr>
-                <td>{{ contact.first_name }} {{ contact.last_name }}</td>
-                <td>{{ contact.email }}</td>
-                <td>{{ contact.phone }}</td>
-                <td>{{ contact.position }}</td>
-                <td>{% include 'components/actions_dropdown.html' with obj=contact btn_small=True  %}</td>
-            </tr>
-        {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    {% include 'modals/delete_object.html' with obj=client %}
 {% endblock %}

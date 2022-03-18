@@ -1,0 +1,25 @@
+{% comment %}
+USAGE:
+{% with [{"Report": "projects:reporting:report-list"}] as items %}
+    {% include 'navigation/sidebar/accordion_item.html with label="Assets" %}
+{% endwith %}
+{% endcomment %}
+
+<!-- Sidebar Menu Item: {{ label }} -->
+<div class="accordion-item">
+    <h2 class="accordion-header" id="sidebar-menu-{{report|lower|slugify}}">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#collapse-menu-{{report|lower|slugify}}" aria-expanded="true" aria-controls="collapse-menu-{{report|lower|slugify}}">
+                {{ label }}
+        </button>
+    </h2>
+    <div id="collapse-menu-{{report|lower|slugify}}" class="accordion-collapse collapse" 
+        aria-labelledby="menu-{{report|lower|slugify}}-heading" data-bs-parent="#sidebar-menu">
+        <div class="accordion-body m-0 p-0">
+            <div class="list-group list-group-flush">
+                <a class="list-group-item list-group-item-primary p-3" href="#!">Report</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END SIDEBAR MENU ITEM -->

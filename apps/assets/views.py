@@ -55,4 +55,30 @@ class WebRequestCreate(generic.ProjectCreateView):
         kwargs = super().get_form_kwargs()
         kwargs['project'] = self.get_project()
         return kwargs
-    
+
+
+class HostList(generic.ProjectListView):
+    template_name = "assets/host_list.html"
+    context_object_name = "hosts"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["host_create_form"] = forms.HostCreateForm(self.get_project()) 
+        return context
+
+    def get_queryset(self):
+        return models.Host.objects.filter(project=self.get_project())
+
+
+class HostCreate(generic.ProjectCreateView):
+    http_method_names = ["post"]
+    form_class = forms.HostCreateForm
+    success_url = reverse_lazy("projects:assets:host-list")
+
+    def get_queryset(self):
+        return models.Host.objects.filter(project=self.get_project())
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['project'] = self.get_project()
+        return kwargs

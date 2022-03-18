@@ -38,7 +38,7 @@ def bleach_md(markdown_content):
         return markdown_content
     cleaned = bleach.clean(markdown.markdown(markdown_content, extensions=['fenced_code', CodeHiliteExtension(
                 guess_lang=False,
-                linenums=False,
+                linenums=True,
                 linenos="inline",
                 linespans="line",
                 startinline=True,

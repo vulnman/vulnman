@@ -5,53 +5,45 @@
 Projects
 {% endblock %}
 
-{% block breadcrumbs %}
-<ol class="breadcrumb">
-    {% if request.GET.archived %}
-    <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
-    <li class="breadcrumb-item active">Archive</li>
-    {% else %}
-    <li class="breadcrumb-item active">Projects</li>
-    {% endif %}
-</ol>
-{% endblock %}
-
 {% block content %}
-    <div class="clearfix">
-        <div class="float-end">
-            <a class="btn btn-primary" href="{% url 'projects:project-list' %}?archived=1">Show Archived</a>
-            {% if perms.projects.add_project %}
-            <a class="btn btn-primary" href="{% url 'projects:project-create' %}"><i class="fa fa-plus"></i> New Project</a>
-            {% endif %}
+
+    <div class="container mt-3">
+        <div class="clearfix">
+            <div class="float-end">
+                <a class="btn btn-primary" href="{% url 'projects:project-list' %}?archived=1">Show Archived</a>
+                {% if perms.projects.add_project %}
+                <a class="btn btn-primary" href="{% url 'projects:project-create' %}"><i class="fa fa-plus"></i> New Project</a>
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-    <div class="list-group mt-3">
-    {% for project in projects %}
-        <a class="list-group-item list-group-item-action" href="{% url 'projects:project-detail' project.pk %}">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="clearfix">
-                        <div class="float-start">
-                            <p>{{ project }} ({{project.client}})</p>
+        <div class="list-group mt-3">
+            {% for project in projects %}
+                <a class="list-group-item list-group-item-action" href="{% url 'projects:project-detail' project.pk %}">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    <p>{{ project }} ({{project.client}})</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="clearfix">
-                        <div class="float-start">
-                            <small class="text-muted"><i>Last updated: {{ project.date_updated|timesince }} ago</i></small>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    <small class="text-muted"><i>Last updated: {{ project.date_updated|timesince }} ago</i></small>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </a>
-    {% empty %}
-        <li class="list-group-item">No projects here!</li>
-    {% endfor %}
-    </div>
+                </a>
+            {% empty %}
+                <li class="list-group-item">No projects here!</li>
+            {% endfor %}
+        </div>
 
-    {% include 'navigation/pagination.html' %}
+        {% include 'navigation/pagination.html' %}
+    </div>
 {% endblock %}
