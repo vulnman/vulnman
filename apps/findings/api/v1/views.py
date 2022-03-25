@@ -1,4 +1,4 @@
-from vulnman.api.viewsets import ProjectRelatedObjectViewSet, GenericListRetrieveModelViewSet
+from vulnman.api.viewsets import ProjectRelatedObjectViewSet, GenericListRetrieveModelViewSet, ProjectRelatedObjectCreateViewSet
 from apps.findings import models
 from apps.findings.api.v1 import serializers
 
@@ -24,6 +24,11 @@ class ProofViewSet(ProjectRelatedObjectViewSet):
         if models.TextProof.objects.filter(pk=self.kwargs.get("pk")).exists():
             return serializers.TextProofSerializer
         return serializers.ImageProofSerializer
+
+
+class TextProofViewSet(ProjectRelatedObjectCreateViewSet):
+    queryset = models.TextProof.objects.all()
+    serializer_class = serializers.TextProofSerializer
 
 
 class VulnerabilityViewSet(ProjectRelatedObjectViewSet):

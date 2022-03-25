@@ -3,7 +3,7 @@
 
 
 {% block title %}
-    Web Applications
+    Services
 {% endblock %}
 
 {% block content %}
@@ -17,29 +17,30 @@
             </div>
         </div>
 
-        <ul class="list-group mt-3">
-            {% for webapp in webapps %}
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="float-start">{{ webapp }}</div>
-                            <div class="float-end">
-                                <a class="btn btn-sm btn-outline-warning" href="{% url 'projects:assets:webapp-update' webapp.pk %}">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <button class="btn btn-sm btn-outline-primary" onclick="removeAsset('{{webapp.pk}}')"><i class="fa fa-trash"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <small>{{ webapp.base_url }}</small>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+        <table class="table table-hover table-striped table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Host</th>
+                    <th>Port</th>
+                    <th>Name</th>
+                    <th>Protocol</th>
+                    <th>State</th>
+                    <th>Banner</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                    <tr>
+                        <td>{{ service.host }}</td>
+                        <td>{{ service.port }}</td>
+                        <td>{{ service.name }}</td>
+                        <td>{{ service.get_protocol_display }}</td>
+                        <td>{{ service.get_state_display }}</td>
+                        <td>{{ service.banner }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
     <!-- Create Modal -->
     <div class="modal fade" id="webapp-create-modal" tabindex="-1" aria-labelledby="webapp-create-modal">
@@ -50,7 +51,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    {% crispy webapp_create_form %}
+                    {% crispy service_create_form %}
                 </div>
             </div>
         </div>

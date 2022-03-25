@@ -127,6 +127,12 @@ class VulnDetail(generic.ProjectDetailView):
         context = super().get_context_data(**kwargs)
         context["text_proof_form"] = forms.TextProofForm()
         context["image_proof_form"] = forms.ImageProofForm()
+        context["change_cvss_form"] = forms.VulnerabilityCVSSBaseForm(initial={
+            "cvss_av": context["vuln"].cvss_av, "cvss_ac": context["vuln"].cvss_ac,
+            "cvss_s": context["vuln"].cvss_s, "cvss_c": context["vuln"].cvss_c,
+            "cvss_i": context["vuln"].cvss_i, "cvss_a": context["vuln"].cvss_a,
+            "cvss_pr": context["vuln"].cvss_pr, "cvss_ui": context["vuln"].cvss_ui
+        })
         return context
     
 
@@ -226,3 +232,14 @@ class UserAccountCreate(generic.ProjectCreateView):
     model = models.UserAccount
     form_class = forms.UserAccountForm
     success_url = reverse_lazy("projects:findings:user-account-list")
+
+
+class VulnerabilityCVSSUpdate(generic.ProjectUpdateView):
+    model = models.Vulnerability
+    form_class = forms.VulnerabilityCVSSBaseForm
+    template_name = "findings/vuln_cvss_update.html"
+
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(project=self.get_project())
+
+    

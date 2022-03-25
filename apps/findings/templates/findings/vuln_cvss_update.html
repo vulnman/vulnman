@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}
-Create Project
-{% endblock %}
+{% block title %}Update CVSS{% endblock %}
+
 
 {% block content %}
     <div class="container mt-3">
-        {% crispy form %}
+        {% include 'forms/formset.html' with title="Vulnerability" %}
     </div>
 {% endblock %}

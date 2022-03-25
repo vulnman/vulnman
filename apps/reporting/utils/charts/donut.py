@@ -1,14 +1,8 @@
 import io
 import base64
 import matplotlib.pyplot as plt
-from apps.findings.models import Vulnerability, get_severity_by_name, SEVERITY_CHOICES
+from apps.findings.models import Vulnerability, SEVERITY_CHOICES
 from django.db.models import Q
-
-
-SEVERITY_COLORS = {
-    "Critical": "#9c1720",
-    "High": "#d13c0f", "Medium": "#e8971e", "Low": "#2075f5", "Informational": "#059D1D"
-}
 
 
 class SeverityDonutChart:
@@ -19,13 +13,13 @@ class SeverityDonutChart:
         data = []
         colors = []
         labels = []
-        for sev in ["Critical", "High", "Medium", "Low", "Informational"]:
-            amount = Vulnerability.objects.filter(severity=get_severity_by_name(sev), project=project).exclude(status=Vulnerability.STATUS_TO_REVIEW).count()
+        for sev in SEVERITY_CHOICES:
+            amount = Vulnerability.objects.filter(severity=sev[0], project=project).exclude(status=Vulnerability.STATUS_TO_REVIEW).count()
             if amount > 0:
                 data.append(amount)
                 # labels.append(sev.capitalize())
                 labels.append(amount)
-                colors.append(SEVERITY_COLORS[sev])
+                colors.append(Vulnerability.SEVERITY_COLORS[sev[1]])
         fig, ax = plt.subplots(figsize=(8,8), dpi=100)
         ax.axis('equal')
         width = 0.35

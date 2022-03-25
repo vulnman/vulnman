@@ -19,3 +19,9 @@ class HostViewSet(ProjectRelatedObjectViewSet):
     queryset = models.Host
     serializer_class = serializers.HostSerializer
     search_fields = ["ip", "description", "dns", "operating_system"]
+
+
+class ServiceViewSet(ProjectRelatedObjectViewSet):
+    queryset = models.Service
+    serializer_class = serializers.ServiceSerializer
+    search_fields = ["name"]

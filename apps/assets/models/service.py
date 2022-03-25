@@ -33,3 +33,7 @@ class Service(BaseAsset):
         unique_together = [
             ('project', 'host', 'port', 'protocol')
         ]
+
+    def __str__(self):
+        return "%s/%s %s" % (self.protocol, self.port, self.name)
+    

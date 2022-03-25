@@ -10,6 +10,7 @@
     <hr/>
     
     <div class="container mt-3">
+        {% if project.creator == request.user %}
         <div class="clearfix">
             <div class="float-end">
                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">
@@ -17,6 +18,7 @@
                 </a>
             </div>
         </div>
+        {% endif %}
 
         <ul class="list-group mt-3">
             {% for contributor in contributors %}
@@ -27,7 +29,9 @@
                                 {{ contributor.user.username}}
                             </div>
                             <div class="float-end">
+                                {% if request.user == project.creator %}
                                 <button class="btn btn-outline-primary" onclick="removeContributor('{{contributor.pk}}')"><i class="fa fa-trash"></i>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

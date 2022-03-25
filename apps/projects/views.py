@@ -2,11 +2,11 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.conf import settings
 from django.utils import timezone
-from django.db.models import Count
+from django.db.models import Count, Q
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from apps.projects import models
 from apps.projects import forms
-from apps.findings.models import get_severity_by_name
+from apps.findings.models import Vulnerability, SEVERITY_CHOICES
 from vulnman.views import generic
 from vulnman.mixins.permission import NonObjectPermissionRequiredMixin
 
@@ -17,11 +17,19 @@ class ProjectList(generic.VulnmanAuthListView):
 
     def get_queryset(self):
         qs = get_objects_for_user(self.request.user, "projects.view_project", models.Project, use_groups=False, accept_global_perms=False)
-        if not self.request.GET.get('archived'):
-            qs = qs.filter(is_archived=False)
+        if self.request.GET.get('archived'):
+            qs = qs.filter(status=models.Project.PENTEST_STATUS_CLOSED)
         else:
-            qs = qs.filter(is_archived=True)
+            qs = qs.filter(~Q(status=models.Project.PENTEST_STATUS_CLOSED))
         return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["create_project_form"] = forms.ProjectForm(form_action="projects:project-create")
+        if self.request.GET.get('archived'):
+            context["show_archived"] =  True
+        return context
+    
 
     def get(self, request, *args, **kwargs):
         if self.request.session.get('project_pk'):
@@ -29,12 +37,11 @@ class ProjectList(generic.VulnmanAuthListView):
         return super().get(request, *args, **kwargs)
 
 
-class ProjectCreate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthCreateWithInlinesView):
-    template_name = "projects/project_create.html"
+class ProjectCreate(NonObjectPermissionRequiredMixin, generic.VulnmanCreateView):
+    http_method_names = ["post"]
     form_class = forms.ProjectForm
     model = models.Project
     success_url = reverse_lazy("projects:project-list")
-    extra_context = {"TEMPLATE_HIDE_BREADCRUMBS": True}
     permission_required = "projects.add_project"
 
 
@@ -44,6 +51,13 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
+        context["Vulnerability"] = Vulnerability
+        obj = self.get_object()
+        context["vulnerability_severities"] = []
+        for sev in SEVERITY_CHOICES:
+            context["vulnerability_severities"].append(
+                obj.vulnerability_set.filter(severity=sev[0]).count()
+            )            
         if self.object:
             self.request.session['project_pk'] = str(self.get_object().pk)
         return self.render_to_response(context)
@@ -86,7 +100,7 @@ class ProjectUpdateClose(generic.ProjectRedirectView):
 
     def post(self, request, *args, **kwargs):
         obj = self.get_project()
-        obj.is_archived = True
+        obj.status = models.Project.PENTEST_STATUS_CLOSED
         obj.save()
         obj.archive_project()
         return super().post(request, *args, **kwargs)

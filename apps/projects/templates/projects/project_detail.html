@@ -41,7 +41,7 @@
                     <div class="card-body bg-primary text-white">
                         <div class="row">
                             <div class="col-sm-2 border-light border-end">
-                                <h3 class="text-center"><i class="fa fa-clock-o"></i></h3>
+                                <h3 class="text-center"><i class="fa fa-clock"></i></h3>
                             </div>
                             <div class="col-sm-9">
                                 <h3 id="countdown" class="text-center"></h3>
@@ -133,6 +133,32 @@
             </div>
         </div>
 
+        <div class="row mt-3 mb-5">
+            <div class="col-sm-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <p class="card-text">Vulnerabilities by Severity</p>
+                        <canvas id="severity-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <p class="card-text">Dummy Chart Card</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <p class="card-text">Dummy Chart Card</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Timeline -->
         {% if project.get_latest_command_history %}
         <div class="row mt-3">
@@ -206,6 +232,38 @@
                 document.getElementById("countdown").innerHTML = "EXPIRED";
             }
         }, 1000);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const severity_chart_config = {
+            type: "doughnut",
+            data: {
+                labels: ["Critical", "High", "Medium", "Low", "Informational"],
+                datasets: [
+                    {
+                        label: "Vulnerabilities by Severity",
+                        data: {{vulnerability_severities|safe}},
+                        backgroundColor: ["{{Vulnerability.SEVERITY_COLOR_CRITICAL}}", "{{Vulnerability.SEVERITY_COLOR_HIGH}}",
+                            "{{Vulnerability.SEVERITY_COLOR_MEDIUM}}", "{{Vulnerability.SEVERITY_COLOR_LOW}}",
+                            "{{Vulnerability.SEVERITY_COLOR_INFORMATIONAL}}"
+                        ],
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+        const severity_chart = new Chart(
+            document.getElementById("severity-chart"),
+            severity_chart_config
+        )
     </script>
 
 {% endblock extra_scripts %}

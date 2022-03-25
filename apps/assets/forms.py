@@ -28,6 +28,27 @@ class WebApplicationForm(forms.ModelForm):
         )
 
 
+class WebApplicationUpdateForm(forms.ModelForm):
+    class Meta:
+        model = models.WebApplication
+        fields = ["name", "base_url", "description"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
+                bootstrap5.FloatingField("base_url", wrapper_class="col-sm-12"),
+                bootstrap5.Field("description", wrapper_class="col-sm-12"),
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
+            )
+        )
+
+
 class WebRequestCreateForm(forms.ModelForm):
     class Meta:
         model = models.WebRequest
@@ -69,6 +90,37 @@ class HostCreateForm(forms.ModelForm):
             layout.Row(
                 bootstrap5.FloatingField("accessibility", wrapper_class="col-sm-12 col-md-6"),
                 bootstrap5.FloatingField("dns", wrapper_class="col-sm-12 col-md-6")
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                    wrapper_class="col-sm-12 col-md-6"
+                )
+            )
+        )
+
+
+class ServiceCreateForm(forms.ModelForm):
+    class Meta:
+        model = models.Service
+        fields = ["host", "port", "name", "protocol", "state", "banner"]
+
+    def __init__(self, project, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_action = "projects:assets:service-create"
+        self.fields["host"].queryset = project.host_set.all()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.FloatingField("host", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("port", wrapper_class="col-sm-12 col-md-6")
+            ),
+            layout.Row(
+                bootstrap5.FloatingField("name", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("protocol", wrapper_class="col-sm-12 col-md-6")
+            ),
+            layout.Row(
+                bootstrap5.FloatingField("state", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("banner", wrapper_class="col-sm-12 col-md-6")
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
