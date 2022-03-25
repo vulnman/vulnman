@@ -44,6 +44,10 @@ class ProjectCreate(NonObjectPermissionRequiredMixin, generic.VulnmanCreateView)
     success_url = reverse_lazy("projects:project-list")
     permission_required = "projects.add_project"
 
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super().form_valid(form)
+
 
 class ProjectDetail(generic.VulnmanAuthDetailView):
     template_name = "projects/project_detail.html"
