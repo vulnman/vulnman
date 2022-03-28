@@ -307,10 +307,15 @@
         $("#sortable").disableSelection();
     });
 
-    function deleteProof(pk){
+    function deleteProof(pk, text_proof){
+        if (text_proof === true){
+            var url = "/api/v1/vulnerabilities/text-proof/" + pk + "/"
+        } else {
+            var url = "/api/v1/vulnerabilities/image-proofs/" + pk + "/"
+        }
         $.ajax({
             type: "DELETE",
-            url: "/api/v1/vulnerabilities/proofs/" + pk + "/",
+            url: url,
             dataType: "json",
             success: function(data) {
                 location.reload();

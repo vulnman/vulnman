@@ -34,4 +34,4 @@ class Host(BaseAsset):
     
     @property
     def name(self):
-        return self.__str__
+        return self.__str__()

@@ -35,5 +35,4 @@ class Service(BaseAsset):
         ]
 
     def __str__(self):
-        return "%s/%s %s" % (self.protocol, self.port, self.name)
-    
+        return "%s/%s %s (%s)" % (self.protocol, self.port, self.name, self.host.ip)

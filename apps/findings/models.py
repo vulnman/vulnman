@@ -252,6 +252,9 @@ class Proof(VulnmanProjectModel):
     def get_project(self):
         return self.vulnerability.get_project()
 
+    def __str__(self):
+        return self.name
+
 
 class TextProof(Proof):
     text = models.TextField(help_text="Markdown supported!")
