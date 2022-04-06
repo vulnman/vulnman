@@ -1,0 +1,36 @@
+<div class="modal" tabindex="-1" id="service-filter-modal" aria-labelledby="service-filter-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="service-filter-modal-label">Filter Services</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="form">
+                    <div class="form-floating mb-3">
+                        <input type="text" name="ip" id="search-ip" class="form-control" value="{{ request.GET.ip }}">
+                        <label for="search-ip">IP</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" name="name" id="search-name" class="form-control" value="{{ request.GET.name }}">
+                        <label for="search-name">Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" name="port" id="search-port" class="form-control" value="{{ request.GET.port }}">
+                        <label for="search-port">Port</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <div class="clearfix">
+                            <div class="float-end">
+                                <a class="btn btn-outline-secondary" href="{% url 'projects:assets:service-list'%}"><i class="fa fa-times"></i> Reset</a>
+
+                                <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

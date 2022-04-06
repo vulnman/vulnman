@@ -10,6 +10,11 @@
 
     <div class="container mt-3">
         <div class="clearfix">
+            <div class="float-start">
+                <button data-bs-toggle="modal" data-bs-target="#service-filter-modal" class="btn btn-outline-secondary">
+                    <i class="fa fa-filter"></i>
+                </button>
+            </div>
             <div class="float-end">
                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#webapp-create-modal">
                     <i class="fa fa-plus"></i>
@@ -20,8 +25,6 @@
         <table class="table table-hover table-striped table-bordered mt-3">
             <thead>
                 <tr>
-                    <th>Host</th>
-                    <th>Port</th>
                     <th>Name</th>
                     <th>Protocol</th>
                     <th>State</th>
@@ -31,12 +34,14 @@
             <tbody>
                 {% for service in services %}
                     <tr>
-                        <td>{{ service.host }}</td>
-                        <td>{{ service.port }}</td>
-                        <td>{{ service.name }}</td>
+                        <td><a href="{% url 'projects:assets:service-detail' service.pk %}">{{ service }}</a></td>
                         <td>{{ service.get_protocol_display }}</td>
                         <td>{{ service.get_state_display }}</td>
-                        <td>{{ service.banner }}</td>
+                        {% if not service.banner %}
+                            <td>-</td>
+                        {% else %}
+                            <td>{{ service.banner }}</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
@@ -58,24 +63,6 @@
     </div>
 
     {% include "navigation/pagination.html" %}
-{% endblock content %}
+    {% include 'assets/components/service_list_filter.html' %}
 
-{% block extra_scripts %}
-<script>
-    function removeAsset(asset_id){
-        $.ajax({
-            type: "DELETE",
-            url: "/api/v1/assets/webapplications/" + asset_id + "/",
-            dataType: "json",
-            data: {},
-            success: function(data){
-                location.reload()
-                // console.log(data)
-            },
-            beforeSend: function(xhr){
-                xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
-            }
-        });
-    }
-</script>
-{% endblock %}
+{% endblock content %}

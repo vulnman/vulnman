@@ -58,7 +58,7 @@
                         <div class="clearfix card-text">
                             <p class="float-start"><strong>Asset:</strong></p>
                             <div class="float-end">
-                                <p>{{ vuln.asset }} ({{vuln.asset.asset_type}})</p>
+                                <p><a href="{{ vuln.asset.get_absolute_url}}"> {{ vuln.asset }} ({{vuln.asset.asset_type}})</a></p>
                             </div>
                         </div>
                     </div>

@@ -14,4 +14,5 @@ urlpatterns = [
     path("hosts/create/", views.HostCreate.as_view(), name="host-create"),
     path("services/", views.ServiceList.as_view(), name="service-list"),
     path("services/create/", views.ServiceCreate.as_view(), name="service-create"),
+    path('services/<str:pk>/', views.ServiceDetail.as_view(), name="service-detail")
 ]

@@ -183,8 +183,6 @@ class Vulnerability(BaseCVSS, VulnmanProjectModel):
 
     template = models.ForeignKey('findings.Template', on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
-    cvss_score = models.FloatField(default=0.0)
-    cvss_vector = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
     cve_id = models.CharField(max_length=28, null=True, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_OPEN)
     severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES, blank=True, null=True)
