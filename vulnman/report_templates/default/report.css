@@ -84,7 +84,7 @@
 html {
   font-family: "Fira Sans", sans-serif;
   color: #393939;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 300;
   line-height: 1.5;
 }
@@ -199,6 +199,33 @@ table.table-bordered td, table.table-bordered th {
   border-right: 1px solid black;
 }
 
+.border-1 {
+  border: 1px solid black;
+}
+
+.contact-card {
+  border: 0.5px solid black;
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+}
+
+/* Float four columns side by side */
+.column {
+  float: left;
+  width: 25%;
+  padding: 0 10px;
+}
+
+/* Remove extra left and right margins, due to padding in columns */
+.row {margin: 0 -10px;}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+/*
 .row {
   display: flex;
 }
@@ -206,7 +233,7 @@ table.table-bordered td, table.table-bordered th {
 .col {
   flex: 1;
   padding: 1em;
-}
+}*/
 
 .text-critical {
   color: #9c1720;

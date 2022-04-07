@@ -3,7 +3,8 @@ from rest_framework import serializers
 from apps.projects import models
 from vulnman.api.serializers import AssignObjectPermissionsModelSerializer
 from vulnman.api.serializers import ProjectRelatedObjectSerializer
-from apps.assets.api.v1.serializers import WebApplicationSerializer, WebRequestSerializer, HostSerializer
+from apps.assets.api.v1.serializers import WebApplicationSerializer, WebRequestSerializer, HostSerializer, ServiceSerializer
+from apps.findings.api.v1.serializers import VulnerabilitySerializer
 
 
 class ClientSerializer(ProjectRelatedObjectSerializer):
@@ -21,12 +22,14 @@ class ProjectSerializer(AssignObjectPermissionsModelSerializer):
     assets_webapplication = WebApplicationSerializer(source="webapplication_set", read_only=True, many=True)
     assets_webrequest = WebRequestSerializer(source="webrequest_set", many=True, read_only=True)
     assets_host = HostSerializer(source="host_set", many=True, read_only=True)
+    assets_service = ServiceSerializer(source="service_set", many=True, read_only=True)
+    vulnerabilities = VulnerabilitySerializer(source="vulnerability_set", many=True, read_only=True)
     client = ClientSerializer(read_only=True)
 
     class Meta:
         model = models.Project
-        fields = ["uuid", "name", "start_date", "end_date", "client", "vulnerabilities", 
-            "user_accounts", "tasks", "contributors", "assets_webapplication",
+        fields = ["uuid", "name", "start_date", "end_date", "client", "vulnerabilities",
+            "user_accounts", "tasks", "contributors", "assets_webapplication", "assets_service",
             "assets_webrequest", "assets_host"]
         read_only_fields = ["uuid"]
 

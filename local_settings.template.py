@@ -8,6 +8,9 @@
 # set this to the hostnames of allowed to be used in the Host HTTP header
 # ALLOWED_HOSTS = ["vulnman.example.com"]
 
+# Required Setting:
+# CSRF_TRUSTED_ORIGINS = ['http://localhost','http://127.0.0.1']
+
 
 # CSS theme
 # VULNMAN_CSS_THEME = "flatly"
@@ -29,13 +32,6 @@
 #  }
 # }
 
-# ##############
-# External Tools
-# ##############
-# add your own custom tools classes here
-# CUSTOM_EXTERNAL_TOOLS = {
-#     "my-new-nmap-parser": "apps.external_tools.parsers.nmap.NmapParser",
-# }
 
 # #########
 # Reporting

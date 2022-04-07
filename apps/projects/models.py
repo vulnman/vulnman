@@ -9,6 +9,26 @@ from django.urls import reverse_lazy
 
 
 class Project(models.Model):
+    PENTEST_METHOD_WHITEBOX = 0
+    PENTEST_METHOD_GREYBOX = 1
+    PENTEST_METHOD_BLACKBOX = 2
+
+    PENTEST_METHOD_CHOICES = [
+        (PENTEST_METHOD_WHITEBOX, "Whitebox"),
+        (PENTEST_METHOD_GREYBOX, "Greybox"),
+        (PENTEST_METHOD_BLACKBOX, "Blackbox")
+    ]
+
+    PENTEST_STATUS_OPEN = 0
+    PENTEST_STATUS_CLOSED = 1
+    PENTEST_STATUS_INPROGRESS = 2
+
+    PENTEST_STATUS_CHOICES = [
+        (PENTEST_STATUS_CLOSED, "Closed"),
+        (PENTEST_STATUS_OPEN, "Open"),
+        (PENTEST_STATUS_INPROGRESS, "In Progress")
+    ]
+
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -16,8 +36,10 @@ class Project(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    is_archived = models.BooleanField(default=False)
+    status = models.PositiveIntegerField(choices=PENTEST_STATUS_CHOICES, default=PENTEST_STATUS_OPEN)
     name = models.CharField(max_length=128)
+    pentest_method = models.PositiveIntegerField(choices=PENTEST_METHOD_CHOICES, default=PENTEST_METHOD_GREYBOX)
+    cvss_required = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

@@ -6,22 +6,24 @@ from crispy_bootstrap5 import bootstrap5
 from apps.projects import models
 from vulnman.forms import DateInput
 from extra_views import InlineFormSetFactory
+from crispy_forms.bootstrap import FormActions
 
 
 class ProjectForm(forms.ModelForm):
 
     class Meta:
         model = models.Project
-        fields = ["client", "start_date", "end_date", "name"]
+        fields = ["client", "start_date", "end_date", "name", "cvss_required", "pentest_method"]
         widgets = {
             'start_date': DateInput(),
             'end_date': DateInput()
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, form_action=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_tag = False
+        if form_action:
+            self.helper.form_action = form_action
         self.helper.layout = layout.Layout(
             layout.Row(
                 layout.Div(bootstrap5.FloatingField("client"), css_class="col-sm-12"),
@@ -30,8 +32,18 @@ class ProjectForm(forms.ModelForm):
                 layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12")
             ),
             layout.Row(
+                layout.Div(bootstrap5.FloatingField("pentest_method"), css_class="col-sm-12")
+            ),
+            layout.Row(
                 layout.Div(bootstrap5.FloatingField("start_date"), css_class="col-sm-12 col-md-6"),
                 layout.Div(bootstrap5.FloatingField("end_date"), css_class="col-sm-12 col-md-6")
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.Field("cvss_required"), css_class="col-sm-12 col-md-6"),
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )
 

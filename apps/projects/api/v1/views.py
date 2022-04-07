@@ -20,7 +20,7 @@ class ProjectViewSet(VulnmanModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
-
+    """
     @action(detail=True, methods=["patch"], url_path="archive-project", url_name="archive-project")
     def archive_project(self, request, pk=None):
         obj = self.get_object()
@@ -30,6 +30,7 @@ class ProjectViewSet(VulnmanModelViewSet):
             instance.archive_project()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    """
 
 
 class ProjectContributorViewSet(ProjectRelatedObjectViewSet):

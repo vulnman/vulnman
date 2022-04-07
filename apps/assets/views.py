@@ -2,6 +2,8 @@ from django.urls import reverse_lazy
 from vulnman.views import generic
 from apps.assets import models
 from apps.assets import forms
+from apps.assets import filters
+import django_filters.views
 
 
 class WebApplicationList(generic.ProjectListView):
@@ -29,6 +31,15 @@ class WebApplicationCreate(generic.ProjectCreateView):
         form.instance.project = self.get_project()
         return super().form_valid(form)
 
+
+class WebApplicationUpdate(generic.ProjectUpdateView):
+    form_class = forms.WebApplicationUpdateForm
+    success_url = reverse_lazy("projects:assets:webapp-list")
+    template_name = "assets/webapp_create.html"
+
+    def get_queryset(self):
+        return models.WebApplication.objects.filter(project=self.get_project())
+        
 
 class WebRequestList(generic.ProjectListView):
     template_name = "assets/webreqests_list.html"
@@ -82,3 +93,43 @@ class HostCreate(generic.ProjectCreateView):
         kwargs = super().get_form_kwargs()
         kwargs['project'] = self.get_project()
         return kwargs
+
+
+class ServiceList(django_filters.views.FilterMixin, generic.ProjectListView):
+    template_name = "assets/service_list.html"
+    context_object_name = "services"
+    filterset_class = filters.ServiceFilter
+    model = models.Service
+    
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs).filter(project=self.get_project())
+        filterset = self.filterset_class(self.request.GET, queryset=qs)
+        return filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["service_create_form"] = forms.ServiceCreateForm(self.get_project())
+        return context
+
+
+class ServiceCreate(generic.ProjectCreateView):
+    http_method_names = ["post"]
+    form_class = forms.ServiceCreateForm
+    success_url = reverse_lazy("projects:assets:service-list")
+
+    def get_queryset(self):
+        return models.Service.objects.filter(project=self.get_project())
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['project'] = self.get_project()
+        return kwargs
+
+
+class ServiceDetail(generic.ProjectDetailView):
+    template_name = "assets/service_detail.html"
+    context_object_name = "service"
+
+    def get_queryset(self):
+        return models.Service.objects.filter(project=self.get_project())
+    

@@ -25,12 +25,41 @@ User Accounts
         <div class="list-group mt-3">
             {% for account in user_accounts %}
                 <div class="list-group-item list-group-item-action">
-                    <div class="float-start">
-                        <a href="#">
-                            {{ account }}
-                        </a>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="float-start">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#password-show-modal-{{account.pk}}">{{ account }}</a>
+                            </div>
+                            <div class="float-end">
+                                <a class="btn btn-sm btn-outline-warning"><i class="fa fa-edit"></i></a>
+                                <a class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="float-start">
+                                <small><i>{{ account.role }}</i></small>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
+                <div class="modal fade" id="password-show-modal-{{account.pk}}" tabindex="-1" aria-labelledby="password-show-modal-{{account.pk}}-label">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="password-show-modal-{{account.pk}}-label">Password</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ account.password }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             {% empty %}
                 <span class="list-group-item">No user accounts yet!</span>
             {% endfor %}
@@ -50,6 +79,7 @@ User Accounts
                 </div>
             </div>
         </div>
+
 
         {% include 'navigation/pagination.html' %}
     </div>

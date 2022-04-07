@@ -40,6 +40,7 @@ class ProjectViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
+    """
     def test_archive_project(self):
         url = self.get_url("api:v1:project-archive-project", pk=str(self.project.pk))
         data = {"is_archived": True}
@@ -56,7 +57,7 @@ class ProjectViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
         self.client.force_login(self.project_pentester)
         response = self.client.post(url, data)
         self.assertEqual(self.project.webapplication_set.count(), 0)
-
+    """
 
 class ProjectContributorViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
     def setUp(self):

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse_lazy
 from apps.assets.models.base import BaseAsset
 
 
@@ -33,3 +34,9 @@ class Service(BaseAsset):
         unique_together = [
             ('project', 'host', 'port', 'protocol')
         ]
+
+    def __str__(self):
+        return "%s/%s %s (%s)" % (self.protocol, self.port, self.name, self.host.ip)
+
+    def get_absolute_url(self):
+        return reverse_lazy("projects:assets:service-detail", kwargs={"pk": self.pk})

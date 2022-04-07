@@ -10,9 +10,19 @@ Projects
     <div class="container mt-3">
         <div class="clearfix">
             <div class="float-end">
-                <a class="btn btn-primary" href="{% url 'projects:project-list' %}?archived=1">Show Archived</a>
+                {% if show_archived %}
+                    <a class="btn btn-outline-info" href="{% url 'projects:project-list' %}" data-toggle="tooltip" title="Show all projects!">
+                        <i class="fa fa-list-alt"></i>
+                    </a>
+                {% else %}
+                    <a class="btn btn-outline-info" href="{% url 'projects:project-list' %}?archived=1" data-toggle="tooltip" title="Show archived projects!">
+                        <i class="fa fa-archive"></i>
+                    </a>
+                {% endif %}
                 {% if perms.projects.add_project %}
-                <a class="btn btn-primary" href="{% url 'projects:project-create' %}"><i class="fa fa-plus"></i> New Project</a>
+                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#form-modal">
+                        <i class="fa fa-plus"></i>
+                    </a>
                 {% endif %}
             </div>
         </div>
@@ -43,6 +53,8 @@ Projects
                 <li class="list-group-item">No projects here!</li>
             {% endfor %}
         </div>
+
+        {% include 'components/modals/form.html' with title="Create Project" form=create_project_form %}
 
         {% include 'navigation/pagination.html' %}
     </div>

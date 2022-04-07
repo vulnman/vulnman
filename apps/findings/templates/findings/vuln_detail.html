@@ -19,7 +19,7 @@
                 <div class="float-start">
                     <small class="text-muted">Created: {{ vuln.date_created|date }}</small>
                 </div>
-                <small class="justify-content-center" style="color: #{{ vuln.get_severity_colors.hex }}">
+                <small class="justify-content-center" style="color: {{ vuln.get_severity_color }}">
                     <strong>Severity: </strong>{{ vuln.get_severity_display }}
                 </small>
                 <div class="float-end">
@@ -58,7 +58,7 @@
                         <div class="clearfix card-text">
                             <p class="float-start"><strong>Asset:</strong></p>
                             <div class="float-end">
-                                <p>{{ vuln.asset }} ({{vuln.asset.asset_type}})</p>
+                                <p><a href="{{ vuln.asset.get_absolute_url}}"> {{ vuln.asset }} ({{vuln.asset.asset_type}})</a></p>
                             </div>
                         </div>
                     </div>
@@ -125,10 +125,10 @@
             </div>
             <div class="col-sm-12 col-md-4">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body"  data-bs-toggle="modal" data-bs-target="#cvss-update-modal">
                         <div class="clearfix card-text">
-                            {% if vuln.cvss_vector %}
-                                <p>{{ vuln.cvss_vector }} ({{vuln.get_scores.0}})</p>
+                            {% if vuln.cvss_get_base_score %}
+                                <p>{{ vuln.cvss_get_vector_string }} ({{vuln.cvss_get_base_score}})</p>
                             {% else %}
                                 <p class="float-start"><strong>CVSS:</strong></p>
                                 <p class="float-end">-</p>                                    
@@ -147,30 +147,40 @@
                     <div class="container-fluid mt-3">
                         <div class="list-group list-group-flush" id="sortable" data-sortable-id="0" aria-dropeffect="move">
                             {% for proof in vuln.proofs %}
-                                <div class="proof list-group-item" data-proof-pk="{{ proof.pk }}" data-id="{{ forloop.counter }}" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                                    <div class="clearfix">
-                                        <div class="float-end">
-                                            {% if proof.image %}
-                                                <a href="{% url 'projects:findings:image-proof-update' proof.pk %}" class="btn btn-outline-secondary">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                            {% else %}
-                                                <a href="{% url 'projects:findings:text-proof-update' proof.pk %}" class="btn btn-outline-secondary">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                            {% endif %}
-                                            <button class="btn btn-outline-danger" onclick="deleteProof('{{proof.pk}}')"><i class="fa fa-trash"></i></button>
+                                <div class="proof list-group-item" >
+                                    <div class="row">
+                                        <div class="col-sm-11">
+                                            <div class="clearfix">
+                                                <div class="float-end">
+                                                    {% if proof.image %}
+                                                        <a href="{% url 'projects:findings:image-proof-update' proof.pk %}" class="btn btn-outline-secondary">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="{% url 'projects:findings:text-proof-update' proof.pk %}" class="btn btn-outline-secondary">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                    <button class="btn btn-outline-danger" onclick="deleteProof('{{proof.pk}}')"><i class="fa fa-trash"></i></button>
+                                                </div>
+                                                <p><strong>{{ proof.name }}</strong></p>
+                                                <p>{{ proof.description|md_to_html }}</p>
+                                                {% if proof.image %}
+                                                    <figure class="figure">
+                                                        <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
+                                                        <figcaption class="figure-caption">{{ proof.name }}</figcaption>
+                                                    </figure>
+                                                {% else %}
+                                                    <p>{{ proof.text|md_to_html }}</p>
+                                                {% endif %}
+                                            </div>
                                         </div>
-                                        <p><strong>{{ proof.name }}</strong></p>
-                                        <p>{{ proof.description|md_to_html }}</p>
-                                        {% if proof.image %}
-                                            <figure class="figure">
-                                                <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
-                                                <figcaption class="figure-caption">{{ proof.name }}</figcaption>
-                                            </figure>
-                                        {% else %}
-                                            <p>{{ proof.text|md_to_html }}</p>
-                                        {% endif %}
+                                        <div class="col-sm-1 my-auto">
+                                            <i class="fa fa-grip-vertical draggable-icon fa-2xl float-end" data-proof-pk="{{ proof.pk }}" 
+                                                data-id="{{ forloop.counter }}" 
+                                                data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                                            </i>
+                                        </div>
                                     </div>
                                 </div>
                             {% empty %}
@@ -223,6 +233,25 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade bd-example-modal-lg" id="cvss-update-modal" tabindex="-1" role="dialog" aria-labelledby="cvss-update-modal-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'projects:findings:vulnerability-cvss-update' vuln.pk %}" id="cvss-update-form">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cvss-update-modal-label">Change CVSS</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% include 'forms/simple.html' with without_form_tag=True form=change_cvss_form %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade bd-example-modal-lg" id="add-image-proof-modal" tabindex="-1" role="dialog" aria-labelledby="add-image-proof-modal-label" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
@@ -258,7 +287,7 @@
         $("#sortable").sortable({
             update: function ($item, container, _super, event) {
                 var proof_ids = [];
-                $('#sortable .list-group-item').each(function (i) {
+                $('#sortable .draggable-icon').each(function (i) {
                     console.log($(this).attr("data-proof-pk"));
                     $.ajax({
                         type: "PATCH",
@@ -278,10 +307,15 @@
         $("#sortable").disableSelection();
     });
 
-    function deleteProof(pk){
+    function deleteProof(pk, text_proof){
+        if (text_proof === true){
+            var url = "/api/v1/vulnerabilities/text-proof/" + pk + "/"
+        } else {
+            var url = "/api/v1/vulnerabilities/image-proofs/" + pk + "/"
+        }
         $.ajax({
             type: "DELETE",
-            url: "/api/v1/vulnerabilities/proofs/" + pk + "/",
+            url: url,
             dataType: "json",
             success: function(data) {
                 location.reload();
