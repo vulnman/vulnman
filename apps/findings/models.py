@@ -2,13 +2,9 @@ import cvss
 import os
 import base64
 from django.db import models
-from django.conf import settings
 from django.urls import reverse_lazy
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
 from django.dispatch import receiver
 from vulnman.models import VulnmanModel, VulnmanProjectModel
-from apps.findings import constants
 from apps.assets.models import ASSET_TYPES_CHOICES, WebApplication
 
 
@@ -20,11 +16,13 @@ SEVERITY_CHOICES = [
     (0, "Informational")
 ]
 
+
 def get_severity_by_name(name):
     for sev in SEVERITY_CHOICES:
         if sev[1] == name:
             return sev[0]
     return None
+
 
 class VulnerabilityCategory(VulnmanModel):
     name = models.CharField(max_length=128, unique=True)
@@ -46,7 +44,7 @@ class CWEEntry(VulnmanModel):
 
     def __str__(self):
         return self.entry
-    
+
 
 class BaseVulnerability(VulnmanModel):
 
@@ -169,7 +167,6 @@ class Vulnerability(BaseCVSS, VulnmanProjectModel):
         "Low": SEVERITY_COLOR_LOW,
         "Informational": SEVERITY_COLOR_INFORMATIONAL
     }
-
 
     STATUS_OPEN = 0
     STATUS_FIXED = 1
