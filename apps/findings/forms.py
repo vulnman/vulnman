@@ -76,6 +76,39 @@ class ImageProofForm(forms.ModelForm):
         )
 
 
+class VulnerabilityCVSSBaseForm(forms.ModelForm):
+    class Meta:
+        model = models.Vulnerability
+        fields = ["cvss_av", "cvss_ac", "cvss_pr", "cvss_ui", "cvss_s", "cvss_c", "cvss_i", "cvss_a"]
+        labels = {
+            "cvss_av": "Attack Vector", "cvss_ac": "Attack Complexity",
+            "cvss_pr": "Privileges Required", "cvss_ui": "User Interaction",
+            "cvss_s": "Scope", "cvss_c": "Confidentiality", "cvss_i": "Integrity", "cvss_a": "Availability"
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.FloatingField("cvss_av", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("cvss_ac", wrapper_class="col-sm-12 col-md-6"),
+            ),
+            layout.Row(
+                bootstrap5.FloatingField("cvss_pr", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("cvss_ui", wrapper_class="col-sm-12 col-md-6"),
+            ),
+            layout.Row(
+                bootstrap5.FloatingField("cvss_s", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("cvss_c", wrapper_class="col-sm-12 col-md-6"),
+            ),
+            layout.Row(
+                bootstrap5.FloatingField("cvss_i", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("cvss_a", wrapper_class="col-sm-12 col-md-6"),
+            )
+        )
+
+
 class ProofOrderingForm(forms.Form):
     pk = forms.UUIDField()
     order = forms.IntegerField(min_value=0)
@@ -92,7 +125,7 @@ class VulnerabilityForm(forms.ModelForm):
 
     class Meta:
         model = models.Vulnerability
-        fields = ["template_id", "cvss_vector", "name", "asset_type", "f_asset", "status", "cve_id", "severity", "auth_required", "user_account"]
+        fields = ["template_id", "name", "asset_type", "f_asset", "status", "cve_id", "severity", "auth_required", "user_account"]
 
     def get_asset_choices(self, project):
         choices = [("---", "---")]
@@ -145,11 +178,6 @@ class VulnerabilityForm(forms.ModelForm):
                     bootstrap5.FloatingField("cve_id"), css_class="col-sm-12 col-md-6",
                 ),
                 layout.Div(bootstrap5.FloatingField("status"), css_class="col-sm-12 col-md-6"),
-            ),
-            layout.Row(
-                layout.Div(
-                    bootstrap5.FloatingField("cvss_vector", css_class="mb-2"), css_class="col-sm-12 h-100",
-                )
             )
         )
 

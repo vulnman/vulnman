@@ -80,7 +80,7 @@ class FindingsViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
         asset = self.create_instance(WebApplication, project=self.project)
         template = self.create_instance(models.Template)
         url = self.get_url("api:v1:vulnerability-list")
-        data = {"template": str(template.pk), "name": "My first vuln", "severity": 0, 
+        data = {"template_id": template.vulnerability_id, "name": "My first vuln", "severity": 0, 
             "project": str(self.forbidden_project.pk), "asset_type": WebApplication.ASSET_TYPE, "asset": str(asset.pk)}
         self.client.force_login(self.project_pentester)
         response = self.client.post(url, data)

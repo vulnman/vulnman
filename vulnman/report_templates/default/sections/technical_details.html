@@ -45,10 +45,10 @@
                     <th>Status</th>
                     <td>{{ vulnerability.get_status_display }}</td>
                 </tr>
-                {% if vulnerability.cvss_vector %}
+                {% if project.cvss_required %}
                     <tr>
                         <th>CVSS-Vector</th>
-                        <td>{{ vulnerability.cvss_vector }}</td>
+                        <td>{{ vulnerability.cvss_get_vector_string}} ({{vulnerability.cvss_get_base_score}})</td>
                     </tr>
                 {% endif %}
                 <tr>

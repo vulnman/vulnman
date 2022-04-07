@@ -24,6 +24,9 @@
                         <div class="col-sm-12">
                             <div class="float-start">{{ webapp }}</div>
                             <div class="float-end">
+                                <a class="btn btn-sm btn-outline-warning" href="{% url 'projects:assets:webapp-update' webapp.pk %}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
                                 <button class="btn btn-sm btn-outline-primary" onclick="removeAsset('{{webapp.pk}}')"><i class="fa fa-trash"></i></button>
                             </div>
                         </div>

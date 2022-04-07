@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}
 Create Project
@@ -6,6 +7,6 @@ Create Project
 
 {% block content %}
     <div class="container mt-3">
-        {% include 'forms/formset.html' with title="Project" %}
+        {% crispy form %}
     </div>
 {% endblock %}

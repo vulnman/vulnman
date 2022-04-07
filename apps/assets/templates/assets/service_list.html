@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+    Services
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-3">
+        <div class="clearfix">
+            <div class="float-start">
+                <button data-bs-toggle="modal" data-bs-target="#service-filter-modal" class="btn btn-outline-secondary">
+                    <i class="fa fa-filter"></i>
+                </button>
+            </div>
+            <div class="float-end">
+                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#webapp-create-modal">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
+        </div>
+
+        <table class="table table-hover table-striped table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Protocol</th>
+                    <th>State</th>
+                    <th>Banner</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                    <tr>
+                        <td><a href="{% url 'projects:assets:service-detail' service.pk %}">{{ service }}</a></td>
+                        <td>{{ service.get_protocol_display }}</td>
+                        <td>{{ service.get_state_display }}</td>
+                        {% if not service.banner %}
+                            <td>-</td>
+                        {% else %}
+                            <td>{{ service.banner }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    <!-- Create Modal -->
+    <div class="modal fade" id="webapp-create-modal" tabindex="-1" aria-labelledby="webapp-create-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="webapp-create-modal-label">Create Web Application</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% crispy service_create_form %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include "navigation/pagination.html" %}
+    {% include 'assets/components/service_list_filter.html' %}
+
+{% endblock content %}

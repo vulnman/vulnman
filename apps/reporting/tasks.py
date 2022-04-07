@@ -25,7 +25,7 @@ def do_create_report(report_pk, report_type, creator=None):
     context = {
         "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
         "creator": creator,
-        "SEVERITY_COLORS": settings.SEVERITY_COLORS, 'templates': templates,
+        'templates': templates,
         "report": reportinformation, "project": project, 'report_type': report_type,
         'SEVERITY_CHART_SRC': charts.SeverityDonutChart().create_image(project),
         'CATEGORY_POLAR_CHART': charts.VulnCategoryPolarChart().create_image(project)

@@ -1,13 +1,10 @@
 import cvss
+import os
 import base64
 from django.db import models
-from django.conf import settings
 from django.urls import reverse_lazy
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.auth.models import User
+from django.dispatch import receiver
 from vulnman.models import VulnmanModel, VulnmanProjectModel
-from apps.findings import constants
 from apps.assets.models import ASSET_TYPES_CHOICES, WebApplication
 
 
@@ -19,11 +16,13 @@ SEVERITY_CHOICES = [
     (0, "Informational")
 ]
 
+
 def get_severity_by_name(name):
     for sev in SEVERITY_CHOICES:
         if sev[1] == name:
             return sev[0]
     return None
+
 
 class VulnerabilityCategory(VulnmanModel):
     name = models.CharField(max_length=128, unique=True)
@@ -45,9 +44,10 @@ class CWEEntry(VulnmanModel):
 
     def __str__(self):
         return self.entry
-    
+
 
 class BaseVulnerability(VulnmanModel):
+
     severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES)
     name = models.CharField(max_length=256)
     description = models.TextField()
@@ -61,11 +61,113 @@ class BaseVulnerability(VulnmanModel):
         abstract = True
 
 
+class BaseCVSS(models.Model):
+    # Attack Vector
+    CVSS_AV_NETWORK = "N"
+    CVSS_AV_ADJACENT = "A"
+    CVSS_AV_LOCAL = "L"
+    CVSS_AV_PHYSICAL = "P"
+    CVSS_AV_CHOICES = [
+        (CVSS_AV_NETWORK, "Network (N)"), (CVSS_AV_PHYSICAL, "Physical (P)"),
+        (CVSS_AV_ADJACENT, "Adjacent (A)", )
+    ]
+
+    # Attack Complexity
+    CVSS_AC_LOW = "L"
+    CVSS_AC_HIGH = "H"
+    CVSS_AC_CHOICES = [
+        (CVSS_AC_LOW, "Low (L)"), (CVSS_AC_HIGH, "High (H)")
+    ]
+
+    # Privileges Required
+    CVSS_PR_NONE = "N"
+    CVSS_PR_LOW = "L"
+    CVSS_PR_HIGH = "H"
+    CVSS_PR_CHOICES = [
+        (CVSS_PR_NONE, "None (N)"), (CVSS_PR_LOW, "Low (L)"), (CVSS_PR_HIGH, "High (H)")
+    ]
+
+    # User Interaction
+    CVSS_UI_NONE = "N"
+    CVSS_UI_REQUIRED = "R"
+    CVSS_UI_CHOICES = [
+        (CVSS_UI_NONE, "None (N)"), (CVSS_UI_REQUIRED, "Required (R)")
+    ]
+
+    # Scope
+    CVSS_S_UNCHANGED = "U"
+    CVSS_S_CHANGED = "C"
+    CVSS_S_CHOICES = [
+        (CVSS_S_UNCHANGED, "Unchanged (U)"), (CVSS_S_CHANGED, "Changed (C)")
+    ]
+    # Confidentiality
+    CVSS_C_NONE = "N"
+    CVSS_C_LOW = "L"
+    CVSS_C_HIGH = "H"
+    CVSS_C_CHOICES = [
+        (CVSS_C_NONE, "None (N)"), (CVSS_C_LOW, "Low (L)"), (CVSS_C_HIGH, "High (H)")
+    ]
+
+    # Integrity
+    CVSS_I_NONE = "N"
+    CVSS_I_LOW = "L"
+    CVSS_I_HIGH = "H"
+    CVSS_I_CHOICES = [
+        (CVSS_I_NONE, "None (N)"), (CVSS_I_LOW, "Low (L)"), (CVSS_I_HIGH, "High (H)")
+    ]
+
+    # Availability
+    CVSS_A_NONE = "N"
+    CVSS_A_LOW = "L"
+    CVSS_A_HIGH = "H"
+    CVSS_A_CHOICES = [
+        (CVSS_A_NONE, "None (N)"), (CVSS_A_LOW, "Low (L)"), (CVSS_A_HIGH, "High (H)")
+    ]
+
+    cvss_av = models.CharField(max_length=3, choices=CVSS_AV_CHOICES, blank=True, null=True)
+    cvss_ac = models.CharField(max_length=3, choices=CVSS_AC_CHOICES, blank=True, null=True)
+    cvss_pr = models.CharField(max_length=3, choices=CVSS_PR_CHOICES, blank=True, null=True)
+    cvss_ui = models.CharField(max_length=3, choices=CVSS_UI_CHOICES, blank=True, null=True)
+    cvss_s = models.CharField(max_length=3, choices=CVSS_S_CHOICES, blank=True, null=True)
+    cvss_c = models.CharField(max_length=3, choices=CVSS_C_CHOICES, blank=True, null=True)
+    cvss_i = models.CharField(max_length=3, choices=CVSS_I_CHOICES, blank=True, null=True)
+    cvss_a = models.CharField(max_length=3, choices=CVSS_A_CHOICES, blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+    def cvss_get_vector_string(self):
+        values = ["CVSS:3.1", "AV:%s" % self.cvss_av, "AC:%s" % self.cvss_ac, "PR:%s" % self.cvss_pr,
+            "UI:%s" % self.cvss_ui, "S:%s" % self.cvss_s, "C:%s" % self.cvss_c, "I:%s" % self.cvss_i,
+            "A:%s" % self.cvss_a
+        ]
+        return "/".join(values)
+
+    def cvss_get_base_score(self):
+        try:
+            return cvss.CVSS3(self.cvss_get_vector_string()).scores()[0]
+        except:
+            return None
+
+
 def project_pocs_path(instance, filename):
     return "uploads/proofs/projects/%s/%s" % (instance.pk, filename)
 
 
-class Vulnerability(VulnmanProjectModel):
+class Vulnerability(BaseCVSS, VulnmanProjectModel):
+    SEVERITY_COLOR_CRITICAL = "#9c1720"
+    SEVERITY_COLOR_HIGH = "#d13c0f"
+    SEVERITY_COLOR_MEDIUM = "#e8971e"
+    SEVERITY_COLOR_LOW = "#2075f5"
+    SEVERITY_COLOR_INFORMATIONAL = "#059D1D"
+    SEVERITY_COLORS = {
+        "Critical": SEVERITY_COLOR_CRITICAL,
+        "High": SEVERITY_COLOR_HIGH,
+        "Medium": SEVERITY_COLOR_MEDIUM,
+        "Low": SEVERITY_COLOR_LOW,
+        "Informational": SEVERITY_COLOR_INFORMATIONAL
+    }
+
     STATUS_OPEN = 0
     STATUS_FIXED = 1
     STATUS_TO_REVIEW = 2
@@ -78,8 +180,6 @@ class Vulnerability(VulnmanProjectModel):
 
     template = models.ForeignKey('findings.Template', on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
-    cvss_score = models.FloatField(default=0.0)
-    cvss_vector = models.CharField(max_length=64, null=True, blank=True, verbose_name="CVSS Vector")
     cve_id = models.CharField(max_length=28, null=True, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_OPEN)
     severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES, blank=True, null=True)
@@ -88,6 +188,7 @@ class Vulnerability(VulnmanProjectModel):
     asset_webapp = models.ForeignKey('assets.WebApplication', on_delete=models.CASCADE, null=True, blank=True)
     asset_webrequest = models.ForeignKey('assets.WebRequest', on_delete=models.CASCADE, null=True, blank=True)
     asset_host = models.ForeignKey('assets.Host', on_delete=models.CASCADE, null=True, blank=True)
+    asset_service = models.ForeignKey('assets.Service', on_delete=models.CASCADE, null=True, blank=True)
 
     auth_required = models.BooleanField(default=False)
     user_account = models.ForeignKey('findings.UserAccount', on_delete=models.SET_NULL, null=True, blank=True)
@@ -100,30 +201,10 @@ class Vulnerability(VulnmanProjectModel):
             return self.severity
         return self.template.severity
 
-    def get_scores(self):
-        if self.cvss_score:
-            return [self.cvss_score, self.cvss_score, self.cvss_score]
-        if not self.cvss_vector:
-            return [0.0, 0.0, 0.0]
-        return cvss.CVSS3(self.cvss_vector).scores()
-
-    def get_severities(self):
-        if self.cvss_vector:
-            return cvss.CVSS3(self.cvss_vector).severities()
-        if self.cvss_score >= 9.0:
-            return ["Critical", "Critical", "Critical"]
-        elif self.cvss_score >= 7.0:
-            return ["High", "High", "High"]
-        elif self.cvss_score >= 4.0:
-            return ["Medium", "Medium", "Medium"]
-        elif self.cvss_score >= 0.1:
-            return ["Low", "Low", "Low"]
-        return ["Information", "Information", "Information"]
-
-    def get_severity_colors(self):
+    def get_severity_color(self):
         if not self.severity:
             return ""
-        return settings.SEVERITY_COLORS[self.get_severity_display()]
+        return self.SEVERITY_COLORS[self.get_severity_display()]
 
     def get_absolute_url(self):
         return reverse_lazy('projects:findings:vulnerability-detail', kwargs={'pk': self.pk})
@@ -145,6 +226,8 @@ class Vulnerability(VulnmanProjectModel):
             return self.asset_webrequest
         elif self.asset_host:
             return self.asset_host
+        elif self.asset_service:
+            return self.asset_service
 
     class Meta:
         ordering = ['-severity',]
@@ -163,6 +246,9 @@ class Proof(VulnmanProjectModel):
 
     def get_project(self):
         return self.vulnerability.get_project()
+
+    def __str__(self):
+        return self.name
 
 
 class TextProof(Proof):
@@ -215,3 +301,25 @@ class UserAccount(VulnmanProjectModel):
 
     def __str__(self):
         return self.username
+
+
+@receiver(models.signals.post_delete, sender=ImageProof)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    if instance.image:
+        if os.path.isfile(instance.image.path):
+            os.remove(instance.image.path)
+
+
+@receiver(models.signals.pre_save, sender=ImageProof)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    """
+    Deletes old file from filesystem
+    when corresponding `MediaFile` object is updated
+    with new file.
+    """
+    if not instance.pk:
+        return False

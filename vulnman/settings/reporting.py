@@ -4,7 +4,7 @@ REPORT_COMPANY_INFORMATION = {
     "street": "No Street 54",
     "zip": "123456 Berlin",
     "country": "Germany",
-    "homepage": "https://vulnman.github.io/vulnman",
+    "homepage": "https://vulnman.github.io",
     "contact": "contact@example.com"
 }
 

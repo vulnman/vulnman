@@ -54,17 +54,17 @@ class PentestReportDownload(generic.ProjectDetailView):
 
 
 class ReportSharedDetail(generic.VulnmanDetailView):
-    model = models.Report
+    model = models.PentestReport
     context_object_name = "report"
 
     def get_queryset(self):
-        report = models.Report.objects.filter(pk=self.kwargs.get('pk'))
+        report = models.PentestReport.objects.filter(pk=self.kwargs.get('pk'))
         try:
             obj = report.get()
             if obj.reportsharetoken.is_expired(self.kwargs.get('token')):
-                return models.Report.objects.none()
-        except models.Report.DoesNotExist:
-            return models.Report.objects.none()
+                return models.PentestReport.objects.none()
+        except models.PentestReport.DoesNotExist:
+            return models.PentestReport.objects.none()
         return report
 
     def render_to_response(self, context, **response_kwargs):
