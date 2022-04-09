@@ -34,9 +34,6 @@ class VulnCreate(generic.ProjectCreateView):
             return super().form_invalid(form)
         form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
         form.instance.severity = form.instance.template.severity
-        if form.instance.cvss_vector:
-            form.instance.cvss_score = cvss.get_scores_by_vector(
-                form.instance.cvss_vector)[0]
         if form.cleaned_data["asset_type"] == WebApplication.ASSET_TYPE:
             form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
         elif form.cleaned_data["asset_type"] == WebRequest.ASSET_TYPE:
@@ -47,15 +44,6 @@ class VulnCreate(generic.ProjectCreateView):
             form.add_error("asset_type", "invalid asset type")
             return super().form_invalid(form)
         return super().form_valid(form)
-
-    def forms_valid(self, form, inlines):
-        response = self.form_valid(form)
-        for formset in inlines:
-            instances = formset.save(commit=False)
-            for instance in instances:
-                instance.project = self.get_project()
-                instance.save()
-        return response
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -80,7 +68,7 @@ class AddTextProof(generic.ProjectCreateView):
 
 
 class TextProofUpdate(generic.ProjectUpdateView):
-    template_name ="findings/proof_update.html"
+    template_name = "findings/proof_update.html"
     model = models.TextProof
     form_class = forms.TextProofForm
 
@@ -89,7 +77,7 @@ class TextProofUpdate(generic.ProjectUpdateView):
 
 
 class ImageProofUpdate(generic.ProjectUpdateView):
-    template_name ="findings/proof_update.html"
+    template_name = "findings/proof_update.html"
     model = models.ImageProof
     form_class = forms.ImageProofForm
 
@@ -134,7 +122,7 @@ class VulnDetail(generic.ProjectDetailView):
             "cvss_pr": context["vuln"].cvss_pr, "cvss_ui": context["vuln"].cvss_ui
         })
         return context
-    
+
 
 class VulnUpdate(generic.ProjectUpdateView):
     model = models.Vulnerability
@@ -225,7 +213,7 @@ class UserAccountList(generic.ProjectListView):
         context = super().get_context_data(**kwargs)
         context["account_create_form"] = forms.UserAccountForm() 
         return context
-    
+
 
 class UserAccountCreate(generic.ProjectCreateView):
     http_method_names = ["post"]
@@ -241,5 +229,3 @@ class VulnerabilityCVSSUpdate(generic.ProjectUpdateView):
 
     def get_queryset(self):
         return models.Vulnerability.objects.filter(project=self.get_project())
-
-    

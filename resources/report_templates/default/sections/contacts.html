@@ -17,7 +17,7 @@
     <div class="row">
         {% for contact in project.client.clientcontact_set.all %}
             <div class="column">
-                <div class="contact-card">
+                <div class="contact-card mb-3">
                     <p><strong>{{ contact.first_name}} {{contact.last_name}}</strong></p>
                     <p><i class="fa fa-address-card"></i> {{ contact.get_position_display }} Contact</br>
                         <i class="fa fa-envelope"></i>  {{ contact.email }} </br>
@@ -61,7 +61,7 @@
         </div>
         {% for contact in project.projectcontributor_set.all %}
             <div class="column">
-                <div class="contact-card h-100">
+                <div class="contact-card h-100 mb-3">
                     <p><strong>{{ contact.user.username}}</strong></p>
                     <p>
                         <i class="fa fa-address-card"></i> {{ contact.get_role_display }}</br>

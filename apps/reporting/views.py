@@ -1,11 +1,8 @@
-from vulnman.views import generic
-from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse
+from django.db.models import Q
 from django.urls import reverse_lazy
-from django.contrib import messages
-from django.utils.module_loading import import_string
+from vulnman.views import generic
 from apps.reporting import models, forms
-from apps.reporting.utils.converter import HTMLConverter
 from apps.reporting import tasks
 
 
@@ -16,16 +13,17 @@ class ReportList(generic.ProjectListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["report_share_form"] = forms.ReportShareTokenForm()
-        if len(self.get_queryset()):
-            context["report_mgmt_summary_form"] = forms.ReportManagementSummaryForm(
-                initial={"recommendation": self.get_project().reportinformation.recommendation,
-                    "evaluation": self.get_project().reportinformation.evaluation
-                })
+        # if len(self.get_queryset()):
+        context["report_mgmt_summary_form"] = forms.ReportManagementSummaryForm(
+            initial={
+                "recommendation": self.get_project().reportinformation.recommendation,
+                "evaluation": self.get_project().reportinformation.evaluation
+            })
+        context["report_create_form"] = forms.PentestReportForm()
         return context
 
     def get_queryset(self):
-        return models.PentestReport.objects.filter(project=self.get_project())#.order_by('-revision')
+        return models.PentestReport.objects.filter(~Q(name=""), project=self.get_project())
 
 
 class PentestReportDraftCreate(generic.ProjectCreateView):
@@ -36,7 +34,9 @@ class PentestReportDraftCreate(generic.ProjectCreateView):
         return reverse_lazy("projects:reporting:report-list")
 
     def form_valid(self, form):
-        tasks.do_create_report.delay(self.get_project().reportinformation.pk, "draft", creator=self.request.user.username)
+        tasks.do_create_report.delay(
+            self.get_project().reportinformation.pk, "draft",
+            creator=self.request.user.username)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -45,7 +45,7 @@ class PentestReportDownload(generic.ProjectDetailView):
 
     def get_queryset(self):
         return models.PentestReport.objects.filter(project=self.get_project())
-    
+
     def render_to_response(self, context, **response_kwargs):
         obj = self.get_object()
         response = HttpResponse(obj.pdf_source, content_type='application/pdf')
@@ -53,38 +53,25 @@ class PentestReportDownload(generic.ProjectDetailView):
         return response
 
 
-class ReportSharedDetail(generic.VulnmanDetailView):
-    model = models.PentestReport
-    context_object_name = "report"
+class PentestReportCreate(generic.ProjectCreateView):
+    http_method_names = ["post"]
+    form_class = forms.PentestReportForm
 
-    def get_queryset(self):
-        report = models.PentestReport.objects.filter(pk=self.kwargs.get('pk'))
-        try:
-            obj = report.get()
-            if obj.reportsharetoken.is_expired(self.kwargs.get('token')):
-                return models.PentestReport.objects.none()
-        except models.PentestReport.DoesNotExist:
-            return models.PentestReport.objects.none()
-        return report
+    def get_success_url(self):
+        return reverse_lazy("projects:reporting:report-list")
 
-    def render_to_response(self, context, **response_kwargs):
-        return PDFResponse(context['report'].pdf_source, filename="report.pdf")
+    def form_valid(self, form):
+        tasks.do_create_report.delay(
+            self.get_project().reportinformation.pk,
+            form.cleaned_data["report_type"],
+            creator=self.request.user.username,
+            name=form.cleaned_data["name"])
+        return HttpResponseRedirect(self.get_success_url())
 
 
-class ReportSharedTokenCreate(generic.ProjectCreateView):
-    model = models.ReportShareToken
-    form_class = forms.ReportShareTokenForm
+class PentestReportDelete(generic.ProjectDeleteView):
     http_method_names = ["post"]
     success_url = reverse_lazy("projects:reporting:report-list")
 
-    def form_valid(self, form):
-        report = models.Report.objects.filter(pk=self.kwargs.get('pk'), project=self.get_project())
-        if not report.exists():
-            return super().form_invalid(form)
-        form.instance.report = report.get()
-        response = super().form_valid(form)
-        messages.add_message(self.request, messages.SUCCESS, "Share Link: %s" % self.request.build_absolute_uri(
-            reverse_lazy(
-                "projects:reporting:report-shared-report-detail",
-                kwargs={"pk": self.kwargs.get('pk'), "token": report.get().reportsharetoken.share_token})))
-        return response
+    def get_queryset(self):
+        return models.PentestReport.objects.filter(project=self.get_project())

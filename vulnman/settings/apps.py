@@ -1,5 +1,3 @@
-from vulnman.settings import BASE_DIR
-
 # Application definition
 
 INSTALLED_APPS = [

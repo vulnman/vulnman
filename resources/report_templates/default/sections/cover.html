@@ -17,7 +17,7 @@
         </tr>
         <tr>
             <td>Date:</td>
-            <td>{{ report.date_updated | date }}</td>
+            <td>{% now "jS F Y" %}</td>
         <tr>
             <td>Generator:</td>
             <td><a href="{{ REPORT_COMPANY_INFORMATION.homepage }}">VULNMAN</a></td>

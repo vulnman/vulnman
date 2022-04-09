@@ -9,7 +9,7 @@ import django_filters.views
 class WebApplicationList(generic.ProjectListView):
     template_name = "assets/webapp_list.html"
     context_object_name = "webapps"
-    
+
     def get_queryset(self):
         return models.WebApplication.objects.filter(project=self.get_project())
 
@@ -39,18 +39,19 @@ class WebApplicationUpdate(generic.ProjectUpdateView):
 
     def get_queryset(self):
         return models.WebApplication.objects.filter(project=self.get_project())
-        
+
 
 class WebRequestList(generic.ProjectListView):
     template_name = "assets/webreqests_list.html"
     context_object_name = "webrequests"
-    
+
     def get_queryset(self):
         return models.WebRequest.objects.filter(project=self.get_project())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["webrequest_create_form"] = forms.WebRequestCreateForm(self.get_project())
+        context["webrequest_create_form"] = forms.WebRequestCreateForm(
+            self.get_project())
         return context
 
 
@@ -74,7 +75,7 @@ class HostList(generic.ProjectListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["host_create_form"] = forms.HostCreateForm(self.get_project()) 
+        context["host_create_form"] = forms.HostCreateForm(self.get_project())
         return context
 
     def get_queryset(self):
@@ -100,15 +101,17 @@ class ServiceList(django_filters.views.FilterMixin, generic.ProjectListView):
     context_object_name = "services"
     filterset_class = filters.ServiceFilter
     model = models.Service
-    
+
     def get_queryset(self, *args, **kwargs):
-        qs = super().get_queryset(*args, **kwargs).filter(project=self.get_project())
+        qs = super().get_queryset(*args, **kwargs).filter(
+            project=self.get_project())
         filterset = self.filterset_class(self.request.GET, queryset=qs)
         return filterset.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["service_create_form"] = forms.ServiceCreateForm(self.get_project())
+        context["service_create_form"] = forms.ServiceCreateForm(
+            self.get_project())
         return context
 
 
@@ -132,4 +135,27 @@ class ServiceDetail(generic.ProjectDetailView):
 
     def get_queryset(self):
         return models.Service.objects.filter(project=self.get_project())
-    
+
+
+class ServiceDelete(generic.ProjectDeleteView):
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:assets:service-list")
+
+    def get_queryset(self):
+        return models.Service.objects.filter(project=self.get_project())
+
+
+class HostDetail(generic.ProjectDetailView):
+    template_name = "assets/host_detail.html"
+    context_object_name = "host"
+
+    def get_queryset(self):
+        return models.Host.objects.filter(project=self.get_project())
+
+
+class HostDelete(generic.ProjectDeleteView):
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:assets:host-list")
+
+    def get_queryset(self):
+        return models.Host.objects.filter(project=self.get_project())

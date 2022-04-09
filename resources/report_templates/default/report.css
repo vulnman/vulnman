@@ -29,7 +29,8 @@
 
 @page {
   size: a4 portrait;
-  margin: 30mm 10mm 30mm 10mm;
+  margin: 3cm 1cm 2cm 1cm;
+
   @top-left {
     background: #2c3e50;
     content: counter(page);
@@ -38,7 +39,6 @@
     text-align: center;
     width: 1cm;
     margin-bottom: 1cm;
-
   }
   @top-center {
     background: #2c3e50;
@@ -50,7 +50,6 @@
     margin-bottom: 1cm;
   }
   @top-right {
-    content: string(heading);
     font-size: 9pt;
     height: 1cm;
     vertical-align: middle;
@@ -65,8 +64,8 @@
 }
 @page no-chapter {
   @top-left { background: none; content: none }
-  @top-center { content: none }
-  @top-right { content: none }
+  @top-center { content: none !important}
+  @top-right { content: none !important }
 }
 @page :first {
   background: url(cover.png) no-repeat center;
@@ -97,7 +96,8 @@ h1 {
 
 h2 {
   font-size: 22px;
-  margin-bottom: 1.2em;
+  /*margin-bottom: 1.2em;*/
+  margin-bottom: 1.0 em;
 }
 
 h3 {
@@ -183,6 +183,62 @@ table.table-bordered td, table.table-bordered th {
   text-align: left;
 }
 
+/* TABLE OF CONTENTS */
+#contents {
+  break-before: right;
+  break-after: left;
+  page: no-chapter;
+  break-before: avoid !important;
+  break-after: avoid !important;
+}
+#contents h2 {
+  font-size: 20pt;
+  font-weight: 400;
+  margin-bottom: 3cm;
+}
+#contents h3 {
+  font-weight: 500;
+  margin: 3em 0 1em;
+}
+#contents h3::before {
+  background: #2c3e50;
+  content: '';
+  display: block;
+  height: .08cm;
+  margin-bottom: .25cm;
+  width: 2cm;
+}
+#contents ul {
+  list-style: none;
+  padding-left: 0;
+}
+#contents ul li {
+  border-top: .25pt solid #c1c1c1;
+  margin: .25cm 0;
+  padding-top: .25cm;
+}
+#contents ul li::before {
+  color: black;
+  content: '• ';
+  font-size: 40pt;
+  line-height: 16pt;
+  vertical-align: bottom;
+}
+#contents ul li a {
+  color: inherit;
+  text-decoration-line: inherit;
+}
+#contents ul li a::before {
+  content: target-text(attr(href));
+}
+#contents ul li a::after {
+  color: black;
+  content: target-counter(attr(href), page);
+  float: right;
+}
+
+/* END TABLE OF CONTENTS */
+
 
 .float-start {
   float: left;
@@ -212,8 +268,12 @@ table.table-bordered td, table.table-bordered th {
 /* Float four columns side by side */
 .column {
   float: left;
-  width: 25%;
+  width: 47%;
   padding: 0 10px;
+}
+
+.mb-3 {
+  margin-bottom: 1rem !important;
 }
 
 /* Remove extra left and right margins, due to padding in columns */
@@ -310,19 +370,11 @@ code {
 
 .codehilite .linenos {padding-right: 20px;}
 
-/*
+
 .draft {
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
   z-index: -2;
   background: url(draft.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
 }
-*/
