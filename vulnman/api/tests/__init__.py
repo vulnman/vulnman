@@ -1,0 +1,1 @@
+from vulnman.api.tests.testcase import VulnmanAPITestCaseMixin

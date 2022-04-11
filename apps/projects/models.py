@@ -1,9 +1,8 @@
-import json
+import secrets
 from uuid import uuid4
 from guardian.shortcuts import assign_perm, remove_perm
 from django.db import models
 from django.db.models import Q
-from django.db.models.functions import Cast
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 
@@ -62,8 +61,8 @@ class Project(models.Model):
         return assets
 
     def get_draft_report(self):
-        if self.pentestreport_set.filter(report_type="draft").exists():
-            return self.pentestreport_set.get(report_type="draft")
+        if self.pentestreport_set.filter(report_type="draft", name="").exists():
+            return self.pentestreport_set.get(report_type="draft", name="")
         return None
 
     def save(self, *args, **kwargs):
@@ -146,7 +145,6 @@ class ProjectContributor(models.Model):
         (ROLE_PENTESTER, "Pentester"),
     ]
 
-
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -156,12 +154,15 @@ class ProjectContributor(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_role_permission_map(self):
-        # TODO: maybe not allow a pentester to delete a project? There is no endpoint for this at the moment
+        # TODO: maybe not allow a pentester to delete a project?
+        # There is no endpoint for this at the moment
         # but this may change soon.
         return {
-            ProjectContributor.ROLE_PENTESTER: ["projects.view_project", "projects.change_project", "projects.delete_project"]
+            ProjectContributor.ROLE_PENTESTER: [
+                "projects.view_project", "projects.change_project",
+                "projects.delete_project"]
         }
 
     def save(self, *args, **kwargs):
@@ -186,3 +187,22 @@ class ProjectContributor(models.Model):
 
     class Meta:
         unique_together = [("user", "project")]
+
+
+class ProjectAPIToken(models.Model):
+    key = models.CharField(max_length=512, primary_key=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=32)
+
+    @classmethod
+    def generate_key(cls):
+        return secrets.token_hex(64)
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = self.generate_key()
+        return super().save(*args, **kwargs)
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy("projects:token-delete", kwargs={"pk": self.pk})

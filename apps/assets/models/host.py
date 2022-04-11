@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse_lazy
 from apps.assets.models.base import BaseAsset
 
 
@@ -18,7 +19,8 @@ class Host(BaseAsset):
 
     ip = models.GenericIPAddressField()
     operating_system = models.CharField(max_length=256, blank=True)
-    accessibility = models.IntegerField(choices=ACCESSIBILITY_CHOICES, default=ACCESSIBILITY_NOT_TESTED)
+    accessibility = models.IntegerField(
+        choices=ACCESSIBILITY_CHOICES, default=ACCESSIBILITY_NOT_TESTED)
     dns = models.CharField(max_length=256, null=True, blank=True)
 
     class Meta:
@@ -31,7 +33,14 @@ class Host(BaseAsset):
         if self.dns:
             return "%s (%s)" % (self.dns, self.ip)
         return self.ip
-    
+
     @property
     def name(self):
         return self.__str__()
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy(
+            "projects:assets:host-delete", kwargs={"pk": self.pk})
+
+    def get_absolute_url(self):
+        return reverse_lazy("projects:assets:host-detail", kwargs={"pk": self.pk})

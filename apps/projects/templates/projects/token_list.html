@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Tokens
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container mt-3">
+        <div class="clearfix">
+            <div class="float-end">
+                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="list-group mt-3">
+            {% for token in tokens %}
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    <p>{{ token.key|truncatechars:54 }}</p>
+                                </div>
+                                <div class="float-end">
+                                    <a class="btn btn-outline-info" onclick="copyToClipboard('{{token.pk}}')" data-toggle="tooltip" title="Copied" class="copy-button">
+                                        <i class="fa fa-copy"></i>
+                                    </a>
+                                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ token.pk }}">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    <small class="text-muted"><i>Last updated: 0m ago</i></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% include 'modals/delete_object.html' with obj=token %}
+            {% empty %}
+                <li class="list-group-item">No tokens here!</li>
+            {% endfor %}
+        </div>
+
+        <!-- Create Modal -->
+        <div class="modal fade" id="create-modal" tabindex="-1" aria-labelledby="create-modal">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="create-modal-label">Create Token</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% crispy token_create_form %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include 'navigation/pagination.html' %}
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+
+<script>
+    $(function(){
+        $('a[data-toggle="tooltip"]').tooltip({
+            trigger: "click",
+            placement: "top",
+            animated: "fade"
+        });
+    })
+
+    function copyToClipboard(value){
+        navigator.clipboard.writeText(value);
+    }
+</script>
+{% endblock %}

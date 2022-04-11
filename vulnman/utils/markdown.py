@@ -9,9 +9,6 @@ from django.utils.safestring import mark_safe
 
 
 class HighlightCodeBlockProcessor(Postprocessor):
-    #line = re.compile(r'(<span id="line-\d+">(?:<span class="hll">)?(?:<span class="linenos">\s*\d+<\/span>)?)([^><]+)((?:<\/span>)+)',
-    #    re.DOTALL | re.MULTILINE)
-    # line = re.compile(r'(<span.*>.*|<span.*>)§§(.*)§§(.*<\/span>|<\/span>)', re.DOTALL | re.MULTILINE)
     line = re.compile(r'(<span.*>.*)§§(.*)§§(.*<\/span>)*', re.MULTILINE)
     highlited_code = re.compile(r"§§(.*?)§§")
 

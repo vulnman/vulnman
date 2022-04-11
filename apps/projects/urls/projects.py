@@ -29,6 +29,10 @@ urlpatterns = [
 
     path('assets/', include('apps.assets.urls')),
 
+    path('tokens/', views.ProjectTokenList.as_view(), name="token-list"),
+    path('tokens/create/', views.ProjectTokenCreate.as_view(), name="token-create"),
+    path('tokens/<str:pk>/delete/', views.ProjectTokenDelete.as_view(), name="token-delete"),
+
     # single project
     path('<str:pk>/', views.ProjectDetail.as_view(), name="project-detail"),
     path('<str:pk>/update/', views.ProjectUpdate.as_view(), name="project-update"),

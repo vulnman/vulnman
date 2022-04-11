@@ -2,8 +2,8 @@ from uuid import uuid4
 from django.contrib.auth.models import User, Group
 from django.urls import reverse_lazy
 from guardian.shortcuts import assign_perm
-from apps.projects.models import Project
 from ddf import G
+from apps.projects.models import Project
 
 
 class VulnmanAPITestCaseMixin(object):
@@ -16,8 +16,9 @@ class VulnmanAPITestCaseMixin(object):
         # self.assign_pentester_permissions(self.project_pentester, self.project)
 
     def create_user(self, username, password, is_staff=False):
-        email = "%s@example.com" % username
-        return User.objects.create_user(username, password=password, is_staff=is_staff, email=email)
+        email = "{username}@example.com".format(username=username)
+        return User.objects.create_user(
+            username, password=password, is_staff=is_staff, email=email)
 
     def get_url(self, endpoint, **kwargs):
         return reverse_lazy(endpoint, kwargs=kwargs)

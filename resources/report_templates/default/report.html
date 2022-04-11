@@ -1,0 +1,52 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ report.get_report_title}}</title>
+    <meta name="description" content="{{ report.get_report_title }}">
+
+    <style>
+        @page {
+            @bottom-left {
+                font-size: 10px;
+                content: "Confidential";
+                margin-top: -5px;
+
+            }
+
+            @bottom-center {
+                content: "{{ REPORT_COMPANY_INFORMATION.name }}";
+                font-size: 10px;
+                margin-top: -5px;
+            }
+
+            @bottom-right {
+                font-size: 10px;
+                content: counter(page) ' / ' counter(pages);
+                margin-top: -5px;
+            }
+
+            @top-right {
+                content: "{{ REPORT_COMPANY_INFORMATION.name }}";
+            }
+        }
+    </style>
+</head>
+
+<body {% if report_type == "draft" %}class="draft"{% endif %}>
+
+    {% include 'default/sections/cover.html' %}
+
+    {# change history #}
+    {% include 'default/sections/toc.html' %}
+
+    {% include 'default/sections/contacts.html' %}
+
+    {% include 'default/sections/intro.html' %}
+
+    {% include 'default/sections/scope.html' %}
+    {% include 'default/sections/vulnerability_overview.html' %}
+    {% include 'default/sections/mgmt_summary.html' %}
+    {% include 'default/sections/technical_details.html' %}
+
+</body>
+</html>

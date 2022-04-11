@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+    {{ host }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-3">
+
+        <h3 class="text-center">Host: {{ host }}</h3>
+        <hr/>
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <div class="float-end">
+                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#form-modal-{{ host_update_form.instance.pk }}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ host.pk }}">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-text">
+                            <p><strong>IP:</strong><span class="float-end">{{ host.ip }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-text">
+                            <p><strong>DNS:</strong><span class="float-end">{{ host.dns }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-text">
+                            <p><strong>OS:</strong><span class="float-end">
+                                {% if host.operating_system %}
+                                    {{ host.operating_system }}
+                                {% else %}
+                                    unknown
+                                {% endif %}
+                            </span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-text">
+                            <p><strong>Accessibility:</strong><span class="float-end">{{ host.get_accessibility_display }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <h4 class="text-center">Vulnerabilities</h4>
+                <hr/>
+
+
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Severity</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vuln in host.vulnerability_set.all %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'projects:findings:vulnerability-detail' vuln.pk %}">
+                                        {{ vuln.template.vulnerability_id }}/{{vuln.name }}
+                                    </a>
+                                </td>
+                                <td>{{ vuln.get_severity_display }}</td>
+                                <td>{{ vuln.get_status_display}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% include 'modals/delete_object.html' with obj=host %}
+
+    {% include 'forms/form_modal.html' with title="Update Host" form=host_update_form %}
+
+{% endblock content %}

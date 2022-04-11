@@ -24,10 +24,12 @@ class Service(BaseAsset):
     ]
 
     port = models.PositiveIntegerField(blank=True, null=True)
-    host = models.ForeignKey('assets.Host', on_delete=models.PROTECT)
+    host = models.ForeignKey('assets.Host', on_delete=models.CASCADE)
     name = models.CharField(max_length=64, blank=True)
-    protocol = models.CharField(max_length=12, default=PROTOCOL_TCP, choices=PROTOCOL_CHOICES)
-    state = models.CharField(max_length=24, default=STATE_FILTERED, choices=STATE_CHOICES)
+    protocol = models.CharField(
+        max_length=12, default=PROTOCOL_TCP, choices=PROTOCOL_CHOICES)
+    state = models.CharField(
+        max_length=24, default=STATE_FILTERED, choices=STATE_CHOICES)
     banner = models.CharField(max_length=255, blank=True)
 
     class Meta:
@@ -36,7 +38,13 @@ class Service(BaseAsset):
         ]
 
     def __str__(self):
-        return "%s/%s %s (%s)" % (self.protocol, self.port, self.name, self.host.ip)
+        return "%s/%s %s (%s)" % (
+            self.protocol, self.port, self.name, self.host.ip)
 
     def get_absolute_url(self):
-        return reverse_lazy("projects:assets:service-detail", kwargs={"pk": self.pk})
+        return reverse_lazy(
+            "projects:assets:service-detail", kwargs={"pk": self.pk})
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy(
+            "projects:assets:service-delete", kwargs={"pk": self.pk})

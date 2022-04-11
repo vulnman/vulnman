@@ -55,8 +55,8 @@ TEMPLATES = [
         'NAME': 'report_templates',
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'report_templates', BASE_DIR / 'vulnman/report_templates',
-            # BASE_DIR / 'custom/report_templates'
+            # BASE_DIR / 'report_templates', BASE_DIR / 'vulnman/report_templates',
+            BASE_DIR / 'resources/report_templates'
         ],
         'APP_DIRS': False
     },

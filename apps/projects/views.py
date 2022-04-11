@@ -1,8 +1,7 @@
-from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.conf import settings
 from django.utils import timezone
-from django.db.models import Count, Q
+from django.db.models import Q
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from apps.projects import models
 from apps.projects import forms
@@ -27,9 +26,8 @@ class ProjectList(generic.VulnmanAuthListView):
         context = super().get_context_data(**kwargs)
         context["create_project_form"] = forms.ProjectForm(form_action="projects:project-create")
         if self.request.GET.get('archived'):
-            context["show_archived"] =  True
+            context["show_archived"] = True
         return context
-    
 
     def get(self, request, *args, **kwargs):
         if self.request.session.get('project_pk'):
@@ -61,7 +59,7 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
         for sev in SEVERITY_CHOICES:
             context["vulnerability_severities"].append(
                 obj.vulnerability_set.filter(severity=sev[0]).count()
-            )            
+            )
         if self.object:
             self.request.session['project_pk'] = str(self.get_object().pk)
         return self.render_to_response(context)
@@ -137,3 +135,40 @@ class ProjectContributorList(generic.ProjectListView):
     model = models.ProjectContributor
     permission_required = ["projects.view_project"]
     context_object_name = "contributors"
+
+
+class ProjectTokenList(generic.ProjectListView):
+    template_name = "projects/token_list.html"
+    context_object_name = "tokens"
+    permission_required = ["projects.view_project"]
+
+    def get_queryset(self):
+        return models.ProjectAPIToken.objects.filter(user=self.request.user, project=self.get_project())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["token_create_form"] = forms.ProjectAPITokenForm()
+        return context
+
+
+class ProjectTokenCreate(generic.ProjectCreateView):
+    http_method_names = ["post"]
+    form_class = forms.ProjectAPITokenForm
+    success_url = reverse_lazy("projects:token-list")
+
+    def get_queryset(self):
+        return models.ProjectAPIToken.objects.filter(project=self.get_project(), user=self.request.user)
+
+    def form_valid(self, form):
+        form.instance.project = self.get_project()
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class ProjectTokenDelete(generic.ProjectDeleteView):
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:token-list")
+
+    def get_queryset(self):
+        return models.ProjectAPIToken.objects.filter(
+            project=self.get_project(), user=self.request.user)
