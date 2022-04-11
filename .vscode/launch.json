@@ -23,7 +23,7 @@
                 "test"
             ],
             "django": true
-        }, 
+        },
         {
             "name": "Celery",
             "type": "python",

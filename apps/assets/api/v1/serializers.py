@@ -20,7 +20,7 @@ class WebRequestSerializer(ProjectRelatedObjectSerializer):
     class Meta:
         model = models.WebRequest
         fields = ["name", "description", "in_pentest_report", "web_app", "url", "parameter"]
-    
+
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data["asset_type"] = models.WebRequest.ASSET_TYPE_CHOICE[1]

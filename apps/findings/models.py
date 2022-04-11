@@ -26,8 +26,11 @@ def get_severity_by_name(name):
 
 class VulnerabilityCategory(VulnmanModel):
     name = models.CharField(max_length=128, unique=True)
+    display_name = models.CharField(max_length=128, null=True)
 
     def __str__(self):
+        if self.display_name:
+            return self.display_name
         return self.name
 
     class Meta:
@@ -230,7 +233,7 @@ class Vulnerability(BaseCVSS, VulnmanProjectModel):
             return self.asset_service
 
     class Meta:
-        ordering = ['-severity',]
+        ordering = ['-severity']
         verbose_name_plural = "Vulnerabilities"
         verbose_name = "Vulnerability"
 
@@ -263,7 +266,7 @@ class ImageProof(Proof):
         with open(self.image.path, "rb") as image_f:
             encoded = base64.b64encode(image_f.read())
             return "data:image/png;base64, %s" % encoded.decode()
-        #return self.image.path
+
 
 class Template(BaseVulnerability):
     vulnerability_id = models.CharField(max_length=256, unique=True)

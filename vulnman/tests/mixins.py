@@ -11,10 +11,14 @@ class VulnmanTestMixin(object):
     def init_mixin(self):
         self.user1 = self._create_user("dummyuser1", "changeme")
         self.user2 = self._create_user("dummyuser2", "changeme")
-        self.pentester = self._create_user("pentester", "changeme")
+        self.pentester1 = self._create_user("pentester", "changeme")
+        self.pentester2 = self._create_user("pentester2", "changeme")
         self.manager = self._create_user("manager", "changeme")
         self.manager.groups.add(Group.objects.get(name="management"))
-        self.pentester.groups.add(Group.objects.get(name="pentester"))
+        self.pentester1.groups.add(Group.objects.get(name="pentester"))
+        self.pentester2.groups.add(Group.objects.get(name="pentester"))
+        self.project1 = self._create_project(creator=self.pentester1)
+        self.project2 = self._create_project(creator=self.pentester2)
 
     def _create_user(self, username, password, is_staff=False):
         email = "%s@example.com" % username

@@ -14,7 +14,7 @@
                 </div>
                 <div class="row">
                     {% if project.get_draft_report %}
-                        <small><i id="report-status-info">Updated at {{ project.get_draft_report.date_updated|date:'Y-M-d H:m:i' }}</i></small>                        
+                        <small><i id="report-status-info">Updated at {{ project.get_draft_report.date_updated|date:'Y-M-d H:m:i' }}</i></small>
                     {% endif %}
                 </div>
             </div>
@@ -36,14 +36,86 @@
         </div>
         <hr />
 
-        <div class="row">
+        <div class="row mt-3">
             <div class="col-sm-12">
+                <div class="row">
+
+                    <div class="clearfix">
+                        <div class="float-start">
+                            <h4>Pentest Reports</h4>
+
+                        </div>
+                        <div class="float-end">
+                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-create-modal">
+                                <i class="fa fa-file"></i> Create Report
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="list-group mt-3">
+                    {% for report in reports %}
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="float-start">
+                                        <h4>{{ report.name }}</h4>
+                                    </div>
+                                    <div class="float-end">
+                                        <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ report.pk }}">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                        <a class="btn btn-primary" target="_blank" href="{% url 'projects:reporting:report-download' report.pk %}" rel="noopener noreferrer">
+                                            <i class="fa fa-download"></i> Download
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <i>Created: {{ report.date_created | date }}</i>
+                                </div>
+                            </div>
+                        </div>
+                        {% include 'modals/delete_object.html' with obj=report%}
+
+                    {% empty %}
+                        <div class="list-group-item">
+                            No pentest reports yet!
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-5">
+            <div class="col-sm-12">
+                <h3>Management Summary</h3>
+                <hr/>
                 {% if report_mgmt_summary_form %}
-                {% include 'forms/simple.html' with form=report_mgmt_summary_form no_submit=True method="POST" %}
+                    {% crispy report_mgmt_summary_form %}
                 {% endif %}
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="report-create-modal" tabindex="-1" aria-labelledby="report-create-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="webapp-create-modal-label">Create Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% crispy report_create_form %}
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block extra_scripts %}
