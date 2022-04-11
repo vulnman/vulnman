@@ -41,3 +41,6 @@ class Host(BaseAsset):
     def get_absolute_delete_url(self):
         return reverse_lazy(
             "projects:assets:host-delete", kwargs={"pk": self.pk})
+
+    def get_absolute_url(self):
+        return reverse_lazy("projects:assets:host-detail", kwargs={"pk": self.pk})

@@ -28,4 +28,5 @@ INSTALLED_APPS = [
     'apps.methodologies.apps.MethodologiesConfig',
     'apps.findings.apps.FindingsConfig',
     'apps.assets.apps.AssetsConfig',
+    'core.apps.CoreConfig'
 ]

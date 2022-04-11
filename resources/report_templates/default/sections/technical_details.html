@@ -58,10 +58,20 @@
                     <th>Affected Component</th>
                     <td>{{ vulnerability.asset }} ({{ vulnerability.asset.asset_type }})</td>
                 </tr>
+                <tr>
+                    <th>Category</th>
+                    <td>{{ vulnerability.template.categories.all.0 }}</td>
+                </tr>
                 {% if vulnerability.cve_id %}
                 <tr>
                     <th>CVE-ID</th>
                     <td>{{ vulnerability.cve_id}}</td>
+                </tr>
+                {% endif %}
+                {% if vulnerability.user_account %}
+                <tr>
+                    <th>Tested Account</th>
+                    <td>{{ vulnerability.user_account }}</td>
                 </tr>
                 {% endif %}
             </table>
@@ -77,7 +87,7 @@
                                 <figcaption>{{ proof.caption }}</figcaption>
                             {% endif %}
                         </figure>
-                    {% endif %}                    
+                    {% endif %}
                 {% endif %}
                 {% if proof.text %}
                     {{ proof.text|md_to_html }}

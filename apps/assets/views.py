@@ -136,6 +136,12 @@ class ServiceDetail(generic.ProjectDetailView):
     def get_queryset(self):
         return models.Service.objects.filter(project=self.get_project())
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["service_update_form"] = forms.ServiceUpdateForm(
+            project=self.get_project(), instance=context["service"])
+        return context
+
 
 class ServiceDelete(generic.ProjectDeleteView):
     http_method_names = ["post"]
@@ -149,6 +155,12 @@ class HostDetail(generic.ProjectDetailView):
     template_name = "assets/host_detail.html"
     context_object_name = "host"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["host_update_form"] = forms.HostUpdateForm(
+            project=self.get_project(), instance=context["host"])
+        return context
+
     def get_queryset(self):
         return models.Host.objects.filter(project=self.get_project())
 
@@ -159,3 +171,29 @@ class HostDelete(generic.ProjectDeleteView):
 
     def get_queryset(self):
         return models.Host.objects.filter(project=self.get_project())
+
+
+class HostUpdate(generic.ProjectUpdateView):
+    http_method_names = ["post"]
+    form_class = forms.HostUpdateForm
+
+    def get_queryset(self):
+        return models.Host.objects.filter(project=self.get_project())
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['project'] = self.get_project()
+        return kwargs
+
+
+class ServiceUpdate(generic.ProjectUpdateView):
+    http_method_names = ["post"]
+    form_class = forms.ServiceUpdateForm
+
+    def get_queryset(self):
+        return models.Service.objects.filter(project=self.get_project())
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['project'] = self.get_project()
+        return kwargs

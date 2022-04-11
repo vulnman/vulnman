@@ -15,6 +15,9 @@
         <div class="row mt-3">
             <div class="col-sm-12">
                 <div class="float-end">
+                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#form-modal-{{ host_update_form.instance.pk }}">
+                        <i class="fa fa-edit"></i>
+                    </a>
                     <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ host.pk }}">
                         <i class="fa fa-trash"></i>
                     </a>
@@ -100,5 +103,7 @@
     </div>
 
     {% include 'modals/delete_object.html' with obj=host %}
+
+    {% include 'forms/form_modal.html' with title="Update Host" form=host_update_form %}
 
 {% endblock content %}

@@ -10,6 +10,7 @@ from matplotlib.spines import Spine
 from matplotlib.transforms import Affine2D
 from apps.findings.models import Vulnerability, VulnerabilityCategory
 
+
 def radar_factory(num_vars, frame='circle'):
     """
     Create a radar chart with `num_vars` axes.
@@ -57,8 +58,10 @@ def radar_factory(num_vars, frame='circle'):
                 line.set_data(x, y)
 
         def set_varlabels(self, labels):
-            labels_with_newlines = [l.replace(' ', '\n') for l in labels]
-            _lines, texts = self.set_thetagrids(np.degrees(theta), labels_with_newlines)
+            labels_with_newlines = [
+                label.replace(' ', '\n') for label in labels]
+            _lines, texts = self.set_thetagrids(
+                np.degrees(theta), labels_with_newlines)
             half = (len(texts) - 1) // 2
             for t in texts[1:half]:
                 t.set_horizontalalignment('left')
@@ -99,117 +102,6 @@ def radar_factory(num_vars, frame='circle'):
 
 class VulnCategoryPolarChart:
 
-    def create_image_radar(self, project):
-        s = io.BytesIO()
-        categories = VulnerabilityCategory.objects.all()
-        labels = []
-        amount = []
-        for cat in categories:
-            counter = Vulnerability.objects.filter(
-                project=project, template__categories__name=cat.name).count()
-            if counter:
-                labels.append(cat.name)
-                amount.append(counter)
-        amount.append(amount[0])
-        # Initialise the spider plot by setting figure size
-        # and polar projection
-        data = [labels,
-                ('Basecase', [
-                    [0.88, 0.01, 0.03, 0.03, 0.00],
-                    [0.07, 0.95, 0.04, 0.05, 0.00],
-                    [0.01, 0.02, 0.85, 0.19, 0.05],
-                    [0.02, 0.01, 0.07, 0.01, 0.21],
-                    [0.02, 0.01, 0.07, 0.01, 0.21],
-                    [0.02, 0.01, 0.07, 0.01, 0.21],
-                    [0.02, 0.01, 0.07, 0.01, 0.21],
-                    [0.02, 0.01, 0.07, 0.01, 0.21],
-                    [0.01, 0.01, 0.02, 0.71, 0.74]])]
-
-        N = len(data[0])
-        theta = radar_factory(N, frame='polygon')
-
-        spoke_labels = data.pop(0)
-        title, case_data = data[0]
-
-        fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(projection='radar'))
-        fig.subplots_adjust(top=0.85, bottom=0.05)
-
-        ax.set_rgrids([0.2, 0.4, 0.6, 0.8])
-        # ax.set_title(title,  position=(0.5, 1.1), ha='center')
-
-        for d in case_data:
-            line = ax.plot(theta, d)
-            ax.fill(theta, d,  alpha=0.25)
-        ax.set_varlabels(spoke_labels)
-        # vertical padding
-        for tick in ax.xaxis.get_major_ticks():
-            tick.set_pad(15)
-
-        plt.savefig(s, format="png", transpartent=True)
-        plt.close()
-        s = base64.b64encode(s.getvalue()).decode().replace("\n", "")
-        return "data:image/png;base64,{data}".format(data=s)
-
-    def create_image1(self, project):
-        s = io.BytesIO()
-        categories = VulnerabilityCategory.objects.all()
-        labels = []
-        amount = []
-        for cat in categories:
-            counter = Vulnerability.objects.filter(
-                project=project, template__categories__name=cat.name).count()
-            if counter:
-                name = cat.name.split("\n")
-                labels.append(name)
-                amount.append(counter)
-        amount.append(amount[0])
-        # Initialise the spider plot by setting figure size
-        # and polar projection
-        plt.figure(figsize=(10, 6))
-        plt.subplot(polar=True)
-        theta = np.linspace(0, 2 * np.pi, len(amount))
-        # Arrange the grid into number of sales equal parts in degrees
-        lines, labels = plt.thetagrids(range(0, 360, int(
-            360/len(labels))), (labels))
-        # Plot graph
-        plt.plot(theta, amount)
-        plt.fill(theta, amount, 'b', alpha=0.1)
-        plt.savefig(s, format="png", bbox_inches="tight")
-        plt.close()
-        s = base64.b64encode(s.getvalue()).decode().replace("\n", "")
-        return "data:image/png;base64,{data}".format(data=s)
-
-    def create_image3(self, project):
-        s = io.BytesIO()
-        categories = VulnerabilityCategory.objects.all()
-        labels = []
-        amount = []
-        for cat in categories:
-            counter = Vulnerability.objects.filter(
-                project=project, template__categories__name=cat.name).count()
-            if counter and len(labels) <= 10:
-                labels.append(cat.name)
-                amount.append(counter)
-        amount.append(amount[0])
-        # Initialise the spider plot by setting figure size
-        # and polar projection
-        plt.figure(figsize=(5, 5))
-        plt.subplot(polar=True)
-        theta = np.linspace(0, 2 * np.pi, len(amount))
-        # Arrange the grid into number of sales equal parts in degrees
-        lines, labels = plt.thetagrids(range(0, 360, int(
-            360/len(labels))), (labels))
-        for label in labels:
-            label.set_fontsize(12)
-        # Plot graph
-        plt.plot(theta, amount)
-        plt.fill(theta, amount, 'b', alpha=0.1)
-        plt.tick_params(axis='both', which='major', pad=25)
-        plt.savefig(s, format="png", bbox_inches="tight")
-        plt.close()
-        s = base64.b64encode(s.getvalue()).decode().replace("\n", "")
-        return "data:image/png;base64,{data}".format(data=s)
-
     def create_image(self, project):
         s = io.BytesIO()
         categories = VulnerabilityCategory.objects.all()
@@ -219,8 +111,7 @@ class VulnCategoryPolarChart:
             counter = Vulnerability.objects.filter(
                 project=project, template__categories__name=cat.name).count()
             if counter and len(labels) <= 10:
-                name = '\n'.join(cat.name.split("-"))
-                labels.append(name)
+                labels.append(cat.display_name)
                 amount.append(counter)
         # amount.append(amount[0])
         # Initialise the spider plot by setting figure size
@@ -240,16 +131,6 @@ class VulnCategoryPolarChart:
         ax.set_theta_direction(-1)
         ax.set_yticklabels([])
 
-
-        # Arrange the grid into number of sales equal parts in degrees
-        # lines, labels = plt.thetagrids(range(0, 360, int(
-        #    360/len(labels))), (labels))
-        # for label in labels:
-        #    label.set_fontsize(12)
-        # Plot graph
-        # plt.plot(theta, amount)
-        # plt.fill(theta, amount, 'b', alpha=0.1)
-        # plt.tick_params(axis='both', which='major', pad=25)
         plt.savefig(s, format="png", bbox_inches="tight", transpartent=True)
         plt.close()
         s = base64.b64encode(s.getvalue()).decode().replace("\n", "")

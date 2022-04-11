@@ -1,4 +1,5 @@
 from django import forms
+from django.urls import reverse_lazy
 from apps.assets import models
 from crispy_forms.helper import FormHelper
 from crispy_forms.bootstrap import FormActions
@@ -99,6 +100,16 @@ class HostCreateForm(forms.ModelForm):
         )
 
 
+class HostUpdateForm(HostCreateForm):
+    class Meta:
+        model = models.Host
+        fields = ["ip", "operating_system", "accessibility", "dns"]
+
+    def __init__(self, project, *args, **kwargs):
+        super().__init__(project, *args, **kwargs)
+        self.helper.form_action = reverse_lazy("projects:assets:host-update", kwargs={"pk": self.instance.pk})
+
+
 class ServiceCreateForm(forms.ModelForm):
     class Meta:
         model = models.Service
@@ -128,3 +139,11 @@ class ServiceCreateForm(forms.ModelForm):
                 )
             )
         )
+
+
+class ServiceUpdateForm(ServiceCreateForm):
+
+    def __init__(self, project, *args, **kwargs):
+        super().__init__(project, *args, **kwargs)
+        self.helper.form_action = reverse_lazy(
+            "projects:assets:service-update", kwargs={"pk": self.instance.pk})

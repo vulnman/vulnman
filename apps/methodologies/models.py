@@ -19,7 +19,7 @@ class Task(VulnmanModel):
     task_id = models.CharField(max_length=128)
     name = models.CharField(max_length=128)
     description = models.TextField()
-    
+
     def __str__(self):
         return self.task_id
 
@@ -44,8 +44,11 @@ class TaskCondition(VulnmanModel):
 class AssetTask(VulnmanProjectModel):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     status = models.PositiveIntegerField(default=0)
-    asset_webapp = models.ForeignKey('assets.WebApplication', on_delete=models.CASCADE, null=True, blank=True)
-    asset_webrequest = models.ForeignKey('assets.WebRequest', on_delete=models.CASCADE, null=True, blank=True)
+    asset_webapp = models.ForeignKey(
+        'assets.WebApplication', on_delete=models.CASCADE, null=True,
+        blank=True)
+    asset_webrequest = models.ForeignKey(
+        'assets.WebRequest', on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         unique_together = [

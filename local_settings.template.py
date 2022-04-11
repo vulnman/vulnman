@@ -38,7 +38,12 @@
 # #########
 
 # Report Template
-# REPORTING_TEMPLATE = "custom.report_templates.bugbounty.BugBountyReportTemplate"
+# Report Templates
+# REPORT_TEMPLATES = {
+#    "default": {
+#        "CSS": ["report.css", "fontawesome.min.css"]
+#    }
+# }
 
 
 # Add information about your company that is displayed in the report

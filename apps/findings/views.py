@@ -136,9 +136,6 @@ class VulnUpdate(generic.ProjectUpdateView):
         form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
         if not form.cleaned_data.get('severity'):
             form.instance.severity = form.instance.template.severity
-        if form.instance.cvss_vector:
-            form.instance.cvss_score = cvss.get_scores_by_vector(
-                form.instance.cvss_vector)[0]
         if form.cleaned_data["asset_type"] == WebApplication.ASSET_TYPE:
             form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
             form.instance.asset_host = None
