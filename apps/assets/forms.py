@@ -29,27 +29,6 @@ class WebApplicationForm(forms.ModelForm):
         )
 
 
-class WebApplicationUpdateForm(forms.ModelForm):
-    class Meta:
-        model = models.WebApplication
-        fields = ["name", "base_url", "description"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.layout = layout.Layout(
-            layout.Row(
-                bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
-                bootstrap5.FloatingField("base_url", wrapper_class="col-sm-12"),
-                bootstrap5.Field("description", wrapper_class="col-sm-12"),
-            ),
-            layout.Row(
-                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
-                            wrapper_class="col-sm-12 col-md-6")
-            )
-        )
-
-
 class WebRequestCreateForm(forms.ModelForm):
     class Meta:
         model = models.WebRequest
@@ -147,3 +126,10 @@ class ServiceUpdateForm(ServiceCreateForm):
         super().__init__(project, *args, **kwargs)
         self.helper.form_action = reverse_lazy(
             "projects:assets:service-update", kwargs={"pk": self.instance.pk})
+
+
+class WebApplicationUpdateForm(WebApplicationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper.form_action = reverse_lazy(
+            "projects:assets:webapp-update", kwargs={"pk": self.instance.pk})

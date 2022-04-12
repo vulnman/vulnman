@@ -6,8 +6,10 @@ app_name = "assets"
 
 urlpatterns = [
     path("webapps/", views.WebApplicationList.as_view(), name="webapp-list"),
-    path("webapps/create/",views.WebApplicationCreate.as_view(), name="webapp-create"),
+    path("webapps/create/", views.WebApplicationCreate.as_view(), name="webapp-create"),
     path("webapps/<str:pk>/update/", views.WebApplicationUpdate.as_view(), name="webapp-update"),
+    path("webapps/<str:pk>/delete/", views.WebApplicationDelete.as_view(), name="webapp-delete"),
+    path("webapps/<str:pk>/", views.WebApplicationDetail.as_view(), name="webapp-detail"),
     path("webrequests/", views.WebRequestList.as_view(), name="webrequest-list"),
     path("webrequests/create/", views.WebRequestCreate.as_view(), name="webrequest-create"),
     path("hosts/", views.HostList.as_view(), name="host-list"),

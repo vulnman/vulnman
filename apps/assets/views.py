@@ -197,3 +197,27 @@ class ServiceUpdate(generic.ProjectUpdateView):
         kwargs = super().get_form_kwargs()
         kwargs['project'] = self.get_project()
         return kwargs
+
+
+class WebApplicationDetail(generic.ProjectDetailView):
+    template_name = "assets/webapp_detail.html"
+    context_object_name = "webapp"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["webapp_update_form"] = forms.WebApplicationUpdateForm(
+            instance=context["webapp"])
+        return context
+
+    def get_queryset(self):
+        return models.WebApplication.objects.filter(
+            project=self.get_project())
+
+
+class WebApplicationDelete(generic.ProjectDeleteView):
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:assets:webapp-list")
+
+    def get_queryset(self):
+        return models.WebApplication.objects.filter(
+            project=self.get_project())
