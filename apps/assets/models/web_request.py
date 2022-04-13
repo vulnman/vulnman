@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse_lazy
 from apps.assets.models.base import BaseAsset
 
 
@@ -23,3 +24,8 @@ class WebRequest(BaseAsset):
         unique_together = [
             ("web_app", "url", "parameter")
         ]
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy(
+            "projects:assets:webrequest-delete",
+            kwargs={"pk": self.pk})

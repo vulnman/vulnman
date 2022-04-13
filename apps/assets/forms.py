@@ -86,7 +86,8 @@ class HostUpdateForm(HostCreateForm):
 
     def __init__(self, project, *args, **kwargs):
         super().__init__(project, *args, **kwargs)
-        self.helper.form_action = reverse_lazy("projects:assets:host-update", kwargs={"pk": self.instance.pk})
+        self.helper.form_action = reverse_lazy(
+            "projects:assets:host-update", kwargs={"pk": self.instance.pk})
 
 
 class ServiceCreateForm(forms.ModelForm):
@@ -133,3 +134,11 @@ class WebApplicationUpdateForm(WebApplicationForm):
         super().__init__(*args, **kwargs)
         self.helper.form_action = reverse_lazy(
             "projects:assets:webapp-update", kwargs={"pk": self.instance.pk})
+
+
+class WebRequestUpdateForm(WebRequestCreateForm):
+
+    def __init__(self, project, *args, **kwargs):
+        super().__init__(project, *args, **kwargs)
+        self.helper.form_action = reverse_lazy(
+            "projects:assets:webrequest-update", kwargs={"pk": self.instance.pk})

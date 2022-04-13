@@ -17,3 +17,8 @@ class TextProofViewSet(generics.SearchModelViewSet):
         serializer.save(
             creator=self.request.user,
             project=self.request.auth.project)
+
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs.setdefault('context', self.get_serializer_context())
+        return serializer_class(self.request.auth.project, *args, **kwargs)

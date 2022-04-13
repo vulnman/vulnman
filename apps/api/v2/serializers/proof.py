@@ -19,3 +19,9 @@ class TextProofSerializer(serializers.ModelSerializer):
         if qs.exists():
             return qs.get()
         return super().create(validated_data)
+
+    def __init__(self, project, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["vulnerability"].queryset = project.vulnerability_set.all()
+        if self.instance is not None:
+            self.fields["vulnerability"].read_only = True
