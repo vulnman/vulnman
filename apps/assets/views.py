@@ -1,9 +1,9 @@
 from django.urls import reverse_lazy
+import django_filters.views
 from vulnman.views import generic
 from apps.assets import models
 from apps.assets import forms
 from apps.assets import filters
-import django_filters.views
 
 
 class WebApplicationList(generic.ProjectListView):
@@ -221,3 +221,40 @@ class WebApplicationDelete(generic.ProjectDeleteView):
     def get_queryset(self):
         return models.WebApplication.objects.filter(
             project=self.get_project())
+
+
+class WebRequestDelete(generic.ProjectDeleteView):
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:assets:webrequest-list")
+
+    def get_queryset(self):
+        return models.WebRequest.objects.filter(
+            project=self.get_project())
+
+
+class WebRequestDetail(generic.ProjectDetailView):
+    template_name = "assets/webrequest_detail.html"
+    context_object_name = "webrequest"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["webrequest_update_form"] = forms.WebRequestUpdateForm(
+            project=self.get_project(), instance=context["webrequest"])
+        return context
+
+    def get_queryset(self):
+        return models.WebRequest.objects.filter(project=self.get_project())
+
+
+class WebRequestUpdate(generic.ProjectUpdateView):
+    http_method_names = ["post"]
+    form_class = forms.WebRequestUpdateForm
+
+    def get_queryset(self):
+        return models.WebRequest.objects.filter(
+            project=self.get_project())
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['project'] = self.get_project()
+        return kwargs
