@@ -21,12 +21,6 @@ urlpatterns = [
     # findings
     path('findings/', include('apps.findings.urls.projects')),
 
-    # vulns app
-    # path('vulns/', include('vulns.urls')),
-
-    # tools
-    path('tools/', include('apps.external_tools.urls')),
-
     path('assets/', include('apps.assets.urls')),
 
     path('tokens/', views.ProjectTokenList.as_view(), name="token-list"),

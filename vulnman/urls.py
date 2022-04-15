@@ -22,12 +22,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('apps.account.urls')),
-    path('api/', include('apps.api.urls')),
+    path('api/', include('api.urls')),
     path('projects/', include('apps.projects.urls.projects')),
     path('clients/', include('apps.projects.urls.clients')),
     path('vulnerability-templates/', include('apps.findings.urls.global')),
     path('methodologies/', include('apps.methodologies.urls.global')),
-    path('api-token-auth', include('apps.account.api.v1.urls')),
-    # path('agents/', include('apps.agents.urls')),
     path('', include('apps.dashboard.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
