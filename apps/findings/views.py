@@ -208,7 +208,7 @@ class UserAccountList(generic.ProjectListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["account_create_form"] = forms.UserAccountForm() 
+        context["account_create_form"] = forms.UserAccountForm()
         return context
 
 
@@ -226,3 +226,14 @@ class VulnerabilityCVSSUpdate(generic.ProjectUpdateView):
 
     def get_queryset(self):
         return models.Vulnerability.objects.filter(project=self.get_project())
+
+
+class ImageProofDelete(generic.ProjectDeleteView):
+    model = models.ImageProof
+    http_method_names = ["post"]
+
+    def get_success_url(self):
+        return reverse_lazy('projects:findings:vulnerability-list')
+
+    def get_queryset(self):
+        return models.TextProof.objects.filter(project=self.get_project())

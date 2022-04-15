@@ -3,7 +3,8 @@ from rest_framework import serializers
 from apps.projects import models
 from vulnman.api.serializers import AssignObjectPermissionsModelSerializer
 from vulnman.api.serializers import ProjectRelatedObjectSerializer
-from apps.assets.api.v1.serializers import WebApplicationSerializer, WebRequestSerializer, HostSerializer, ServiceSerializer
+from api.v1.serializers.assets import WebApplicationSerializer, WebRequestSerializer
+from api.v1.serializers.assets import HostSerializer, ServiceSerializer
 from apps.findings.api.v1.serializers import VulnerabilitySerializer
 
 

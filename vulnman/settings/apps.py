@@ -19,14 +19,14 @@ INSTALLED_APPS = [
     "corsheaders",
     'django_filters',
     # apps
-    'apps.api.apps.ApiConfig',
+    # 'apps.api.apps.ApiConfig',
     'apps.account.apps.AccountConfig',
-    'apps.external_tools.apps.ExternalToolsConfig',
     'apps.reporting.apps.ReportingConfig',
     'apps.projects.apps.ProjectsConfig',
     'apps.dashboard.apps.DashboardConfig',
     'apps.methodologies.apps.MethodologiesConfig',
     'apps.findings.apps.FindingsConfig',
     'apps.assets.apps.AssetsConfig',
-    'core.apps.CoreConfig'
+    'core.apps.CoreConfig',
+    'api.apps.ApiConfig'
 ]

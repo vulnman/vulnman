@@ -6,16 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.3.0] - 2022-01-29
+## [0.3.0-rc1] - 2022-04-15
 ### Added
 - Project have names now
 - New Asset: Web Application
 - New Asset: Web Request
 - New Asset: Host
+- New Asset: Service
 - REST-API v1 (alpha)
 - Import of vulnerability templates with descriptions and recommendations
 - Import of checklists (alpha)
-- Tasks on an asset level
+- Tasks on an asset level (alpha)
 - Code Highlight for proofs with "highlight line in codeblock"
 
 ### Changed

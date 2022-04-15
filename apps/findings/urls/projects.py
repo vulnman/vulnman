@@ -17,7 +17,9 @@ urlpatterns = [
     path('vulnerabilities/<str:pk>/update-text-proof/', views.TextProofUpdate.as_view(), name="text-proof-update"),
     path('vulnerabilities/<str:pk>/add-image-proof/', views.AddImageProof.as_view(), name="vulnerability-add-image-proof"),
     path('vulnerabilities/<str:pk>/image-text-proof/', views.ImageProofUpdate.as_view(), name="image-proof-update"),
-    path('proofs/ordering/', views.ProofSetOrder.as_view(), name="proof-set-order"),
+    path('image-proof/<str:pk>/delete/', views.ImageProofDelete.as_view(), name="image-proof-delete"),
+    path('text-proof/<str:pk>/delete/', views.TextProofDelete.as_view(), name="text-proof-delete"),
+    # path('proofs/ordering/', views.ProofSetOrder.as_view(), name="proof-set-order"),
     path('user-accounts/', views.UserAccountList.as_view(), name="user-account-list"),
     path('user-accounts/create/', views.UserAccountCreate.as_view(), name="user-account-create"),
 ]

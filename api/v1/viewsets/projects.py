@@ -1,10 +1,7 @@
-from rest_framework.permissions import IsAuthenticated
 from guardian.shortcuts import get_objects_for_user
 from vulnman.api.viewsets import VulnmanModelViewSet
-from vulnman.api.viewsets import ProjectRelatedObjectViewSet
 from apps.projects import models
 from apps.projects.api.v1 import serializers
-from apps.projects.api.v1 import permissions
 
 
 class ProjectViewSet(VulnmanModelViewSet):
@@ -18,19 +15,5 @@ class ProjectViewSet(VulnmanModelViewSet):
                 use_groups=False, with_superuser=False,
                 accept_global_perms=False, klass=models.Project)
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context["project"] = self.get_object()
-        return context
-
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
-
-
-class ProjectContributorViewSet(ProjectRelatedObjectViewSet):
-    serializer_class = serializers.ProjectContributorSerializer
-    permission_classes = [IsAuthenticated, permissions.AddContributorPermission]
-    search_fields = ["user__username"]
-
-    def get_queryset(self):
-        return models.ProjectContributor.objects.all()

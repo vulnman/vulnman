@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from vulnman.api.serializers import ProjectRelatedObjectSerializer
-from vulnman.utils.markdown import md_to_clean_html
 from apps.findings import models
 from apps.assets.models import ASSET_TYPES_CHOICES, WebApplication, WebRequest, Host, Service
 
@@ -10,30 +9,6 @@ class UserAccountSerializer(ProjectRelatedObjectSerializer):
         model = models.UserAccount
         fields = ["username", "password", "role", "account_compromised", "project"]
 
-
-class TextProofSerializer(ProjectRelatedObjectSerializer):
-    class Meta:
-        model = models.TextProof
-        fields = ["order", "pk", "name", "description", "text", "project", "vulnerability"]
-        read_only_fields = ["pk"]
-
-
-class ImageProofSerializer(ProjectRelatedObjectSerializer):
-    class Meta:
-        model = models.ImageProof
-        fields = ["pk", "order", "name", "description", "image", "caption"]
-
-
-class TemplateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Template
-        fields = ["uuid", "vulnerability_id", "cwe_ids", "name", "description", "recommendation", "categories"]
-        read_only_fields = ["uuid"]
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data["description"] = md_to_clean_html(data["description"])
-        return data
 
 class VulnerabilitySerializer(ProjectRelatedObjectSerializer):
     template_id = serializers.CharField()

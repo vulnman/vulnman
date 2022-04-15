@@ -46,9 +46,10 @@
 
                         </div>
                         <div class="float-end">
-                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-create-modal">
-                                <i class="fa fa-file"></i> Create Report
-                            </a>
+                            <button id="create-report-button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-create-modal">
+                                <i class="fa fa-file"></i>
+                                <span id="create-report-button-spin"></span>Create Report
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -151,13 +152,35 @@ id_recommendation.on("blur", function(){
     });
 });
 
+$('#submit-id-submit').click(function(event){
+    $('#report-create-modal').modal('hide');
+    var report_type = $("#id_report_type option").filter(":selected").val();
+    var name = $('#id_name').val();
+    $.ajax({
+        type: "POST",
+        url: "{% url 'api:v1:report-create-report' %}",
+        dataType: "json",
+        data: {"project": "{{project.pk}}", "report_type": report_type, "name": name},
+        success: function(data){
+            $('#create-report-button-spin').addClass("spinner-border spinner-border-sm");
+            $('#create-report-button').attr("disabled", "disabled")
+            setInterval(function(){
+                checkTaskStatus(data.task_id)
+            }, 5 * 1000);
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+        }
+    })
+});
+
 
 function createDraftReport(){
     $.ajax({
         type: "POST",
         url: "{% url 'api:v1:report-create-report' %}",
         dataType: "json",
-        data: {"project": "{{project.pk}}", "report_type": "draft"},
+        data: {"project": "{{project.pk}}", "report_type": "draft", "name":""},
         success: function(data){
             $('#report-status-info').html("");
             $('#report-status-info').html('<div class="spinner-border spinner-border-sm" role="status"></div>')
