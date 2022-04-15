@@ -161,7 +161,9 @@
                                                             <i class="fa fa-edit"></i>
                                                         </a>
                                                     {% endif %}
-                                                    <button class="btn btn-outline-danger" onclick="deleteProof('{{proof.pk}}')"><i class="fa fa-trash"></i></button>
+                                                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ proof.pk }}">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
                                                 </div>
                                                 <p><strong>{{ proof.name }}</strong></p>
                                                 <p>{{ proof.description|md_to_html }}</p>
@@ -183,6 +185,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% include 'modals/delete_object.html' with obj=proof %}
+
                             {% empty %}
                                 <div class="">
                                     <p>No proofs yet!</p>
@@ -269,7 +273,7 @@
             </div>
         </div>
         {% csrf_token %}
-    
+
         {% include 'modals/delete_object.html' with obj=vuln %}
     </div>
 {% endblock %}

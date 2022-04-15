@@ -257,6 +257,10 @@ class Proof(VulnmanProjectModel):
 class TextProof(Proof):
     text = models.TextField(help_text="Markdown supported!")
 
+    def get_absolute_delete_url(self):
+        return reverse_lazy(
+            "projects:findings:text-proof-delete",
+            kwargs={"pk": self.pk})
 
 class ImageProof(Proof):
     caption = models.CharField(max_length=128, blank=True, null=True)
@@ -266,6 +270,11 @@ class ImageProof(Proof):
         with open(self.image.path, "rb") as image_f:
             encoded = base64.b64encode(image_f.read())
             return "data:image/png;base64, %s" % encoded.decode()
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy(
+            "projects:findings:image-proof-delete",
+            kwargs={"pk": self.pk})
 
 
 class Template(BaseVulnerability):

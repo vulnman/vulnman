@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+    {{ webapp }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-3">
+
+        <h3 class="text-center">Web Application: {{ webapp }}</h3>
+        <hr/>
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <div class="float-end">
+                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#form-modal-{{ webapp_update_form.instance.pk }}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ webapp.pk }}">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-text">
+                            <p><strong>Base URL:</strong><span class="float-end">{{ webapp.base_url }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-text">
+                            <p><strong>Web Requests:</strong><span class="float-end">{{ webapp.webrequest_set.count }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-text">
+                            <p><strong>Vulnerabilities:</strong><span class="float-end">{{ webapp.vulnerability_set.count }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <h4 class="text-center">Vulnerabilities</h4>
+                <hr/>
+
+
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Severity</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vuln in webapp.vulnerability_set.all %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'projects:findings:vulnerability-detail' vuln.pk %}">
+                                        {{ vuln.template.vulnerability_id }}/{{vuln.name }}
+                                    </a>
+                                </td>
+                                <td>{{ vuln.get_severity_display }}</td>
+                                <td>{{ vuln.get_status_display}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% include 'modals/delete_object.html' with obj=webapp %}
+
+    {% include 'forms/form_modal.html' with title="Update Web Application" form=webapp_update_form %}
+
+{% endblock content %}

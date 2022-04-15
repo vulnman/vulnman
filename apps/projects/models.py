@@ -153,7 +153,7 @@ class ProjectContributor(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.user.username
 
     def get_role_permission_map(self):
         # TODO: maybe not allow a pentester to delete a project?

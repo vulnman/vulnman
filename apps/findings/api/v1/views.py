@@ -8,24 +8,6 @@ class UserAccountViewSet(ProjectRelatedObjectViewSet):
     serializer_class = serializers.UserAccountSerializer
 
 
-class TemplateViewSet(GenericListRetrieveModelViewSet):
-    queryset = models.Template.objects.all()
-    serializer_class = serializers.TemplateSerializer
-    search_fields = ["name", "vulnerability_id", "description"]
-
-
-class ProofViewSet(ProjectRelatedObjectViewSet):
-    def get_queryset(self):
-        if models.TextProof.objects.filter(pk=self.kwargs.get("pk")).exists():
-            return models.TextProof.objects.filter(pk=self.kwargs.get("pk"))
-        return models.ImageProof.objects.filter(pk=self.kwargs.get("pk"))
-    
-    def get_serializer_class(self):
-        if models.TextProof.objects.filter(pk=self.kwargs.get("pk")).exists():
-            return serializers.TextProofSerializer
-        return serializers.ImageProofSerializer
-
-
 class TextProofViewSet(ProjectRelatedObjectCreateViewSet):
     queryset = models.TextProof.objects.all()
     serializer_class = serializers.TextProofSerializer

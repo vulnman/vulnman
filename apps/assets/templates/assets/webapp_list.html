@@ -17,28 +17,22 @@
             </div>
         </div>
 
-        <ul class="list-group mt-3">
-            {% for webapp in webapps %}
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="float-start">{{ webapp }}</div>
-                            <div class="float-end">
-                                <a class="btn btn-sm btn-outline-warning" href="{% url 'projects:assets:webapp-update' webapp.pk %}">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <button class="btn btn-sm btn-outline-primary" onclick="removeAsset('{{webapp.pk}}')"><i class="fa fa-trash"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <small>{{ webapp.base_url }}</small>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+        <table class="table table-hover table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Base URL</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for webapp in webapps %}
+                    <tr>
+                        <td><a href="{% url 'projects:assets:webapp-detail' webapp.pk %}">{{ webapp.name }}</a></td>
+                        <td>{{ webapp.base_url }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <!-- Create Modal -->
@@ -58,23 +52,3 @@
 
     {% include "navigation/pagination.html" %}
 {% endblock content %}
-
-{% block extra_scripts %}
-<script>
-    function removeAsset(asset_id){
-        $.ajax({
-            type: "DELETE",
-            url: "/api/v1/assets/webapplications/" + asset_id + "/",
-            dataType: "json",
-            data: {},
-            success: function(data){
-                location.reload()
-                // console.log(data)
-            },
-            beforeSend: function(xhr){
-                xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
-            }
-        });
-    }
-</script>
-{% endblock %}

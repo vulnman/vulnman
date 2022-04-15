@@ -54,6 +54,7 @@ class PentestReportForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_action = "projects:reporting:report-create"
+        self.helper.form_tag = False
         self.helper.layout = layout.Layout(
             layout.Row(
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
