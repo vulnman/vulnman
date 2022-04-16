@@ -59,6 +59,7 @@ class ProjectViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
         self.assertEqual(self.project.webapplication_set.count(), 0)
     """
 
+"""
 class ProjectContributorViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
     def setUp(self):
         self.init_mixin()
@@ -78,3 +79,4 @@ class ProjectContributorViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
         self.assertEqual(self.denied_pentester.has_perm("projects.view_project", self.project), True)
         self.assertEqual(self.denied_pentester.has_perm("projects.change_project", self.project), True)
         self.assertEqual(self.denied_pentester.has_perm("projects.delete_project", self.project), True)
+"""
