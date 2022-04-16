@@ -11,3 +11,4 @@ local_settings.py
 site
 custom
 frontend/node_modules
+resources/vuln_templates
