@@ -208,7 +208,7 @@
                         <p><strong>Recommendation: </strong></p>
                         <p>{{ vuln.template.recommendation | md_to_html }}</p>
 
-                        {% if vuln.reference_set.all %}
+                        {% if vuln.template.reference_set.all %}
                             <p><strong>References: </strong></p>
                             <ul>
                                 <li>{{ reference }}</li>
@@ -310,22 +310,6 @@
         });
         $("#sortable").disableSelection();
     });
-
-    function deleteProof(pk, text_proof){
-        if (text_proof === true){
-            var url = "/api/v1/vulnerabilities/text-proof/" + pk + "/"
-        } else {
-            var url = "/api/v1/vulnerabilities/image-proofs/" + pk + "/"
-        }
-        $.ajax({
-            type: "DELETE",
-            url: url,
-            dataType: "json",
-            success: function(data) {
-                location.reload();
-            }
-        });
-    }
 
     $('#text-proof-form #id_text').attr("required", false);
 
