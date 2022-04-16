@@ -18,7 +18,7 @@ celery==5.2.3
 django-celery-results==2.2.0
 redis==4.1.4
 matplotlib==3.5.1
-defusedxml==0.7.1
 django-cors-headers==3.11.0
 pygments==2.11.2
 django-filter==21.1
+gitpython==3.1.27
