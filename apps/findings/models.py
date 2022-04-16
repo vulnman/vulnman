@@ -57,7 +57,6 @@ class BaseVulnerability(VulnmanModel):
     recommendation = models.TextField()
     vulnerability_id = models.CharField(max_length=256)
     cwe_ids = models.ManyToManyField(CWEEntry)
-    categories = models.ManyToManyField(VulnerabilityCategory)
     # references = models.ForeignKey(VulnerabiltiyReference)
 
     class Meta:
@@ -262,6 +261,7 @@ class TextProof(Proof):
             "projects:findings:text-proof-delete",
             kwargs={"pk": self.pk})
 
+
 class ImageProof(Proof):
     caption = models.CharField(max_length=128, blank=True, null=True)
     image = models.ImageField(max_length=256, upload_to=project_pocs_path)
@@ -279,6 +279,8 @@ class ImageProof(Proof):
 
 class Template(BaseVulnerability):
     vulnerability_id = models.CharField(max_length=256, unique=True)
+    category = models.ForeignKey(
+        VulnerabilityCategory, on_delete=models.PROTECT, null=True)
 
     class Meta:
         ordering = ['vulnerability_id']
