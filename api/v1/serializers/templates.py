@@ -8,7 +8,7 @@ class TemplateSerializer(serializers.ModelSerializer):
         model = models.Template
         fields = [
             "uuid", "vulnerability_id", "cwe_ids", "name",
-            "description", "recommendation", "categories"]
+            "description", "recommendation", "category"]
         read_only_fields = ["uuid"]
 
     def to_representation(self, instance):
