@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load markdown %}
+{% load static %}
+
+
+{% block title %}
+    Task {{ task.name }}
+{% endblock %}
+
+{% block extra_head %}
+<link href="{% static 'css/codehilite.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-3">
+
+        <h3>{{ task.name }}</h3>
+        <div class="row">
+            <div class="col-sm-12">
+                <p>{{ task.get_status_display }} <strong>{{ task.creator}}</strong> opened this task {{ task.date_created | timesince }} ago</p>
+            </div>
+        <hr/>
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <div class="float-end">
+                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#form-modal-{{ service_update_form.instance.pk }}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ task.pk }}">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <p><strong>{{ task.creator}}</p>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ task.task.description | md_to_html }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# include 'modals/delete_object.html' with obj=service #}
+    {# include 'forms/form_modal.html' with title="Update Service" form=service_update_form #}
+
+{% endblock content %}

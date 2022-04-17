@@ -6,4 +6,6 @@ class AssetsConfig(AppConfig):
     name = 'apps.assets'
 
     def ready(self):
-        from apps.assets import signals
+        # TODO: use this one again
+        # from apps.assets import signals
+        pass

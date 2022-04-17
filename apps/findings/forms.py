@@ -72,6 +72,10 @@ class ImageProofForm(forms.ModelForm):
                 bootstrap5.FloatingField("caption", wrapper_class="col-sm-12"),
                 bootstrap5.Field("description", wrapper_class="col-sm-12"),
                 bootstrap5.Field("image", wrapper_class="col-sm-12")
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )
 

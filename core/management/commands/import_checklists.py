@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from apps.methodologies import models
+from core.models import Task, TaskCondition
 
 
 class Command(BaseCommand):
@@ -30,11 +30,11 @@ class Command(BaseCommand):
         with open(filename, "r") as f:
             item = yaml.safe_load(f)
             description = self._get_description(filename)
-            task, created = models.Task.objects.update_or_create(task_id=item["id"], defaults={"name": item["name"], "description": description})
+            task, created = Task.objects.update_or_create(task_id=item["id"], defaults={"name": item["name"], "description": description})
             for cond in item.get("on_assets", []):
-                models.TaskCondition.objects.update_or_create(task=task, asset_type=cond)
+                TaskCondition.objects.update_or_create(task=task, asset_type=cond)
             # remove legacy conditions
-            for cond in models.TaskCondition.objects.filter(task=task):
+            for cond in TaskCondition.objects.filter(task=task):
                 if cond.asset_type not in item.get("on_assets"):
                     cond.delete()
             if created:

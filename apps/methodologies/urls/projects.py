@@ -1,10 +1,11 @@
 from django.urls import path
-from apps.methodologies import views
+from core.views import tasks as views
 
 
 app_name = "methodologies"
 
 
 urlpatterns = [
-    path("todos/", views.ProjectToDos.as_view(), name="project-todos-list"),
+    path("todos/", views.ProjectTaskList.as_view(), name="project-task-list"),
+    path("todos/<str:pk>/", views.ProjectTaskDetail.as_view(), name="project-task-detail"),
 ]
