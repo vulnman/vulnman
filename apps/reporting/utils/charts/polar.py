@@ -65,7 +65,7 @@ def radar_factory(num_vars, frame='circle'):
             half = (len(texts) - 1) // 2
             for t in texts[1:half]:
                 t.set_horizontalalignment('left')
-            for t in texts[-half + 1:]:
+            for t in texts[half + 1:]:
                 t.set_horizontalalignment('right')
 
         def _gen_axes_patch(self):
@@ -109,7 +109,7 @@ class VulnCategoryPolarChart:
         amount = []
         for cat in categories:
             counter = Vulnerability.objects.filter(
-                project=project, template__categories__name=cat.name).count()
+                project=project, template__category__name=cat.name).count()
             if counter and len(labels) <= 10:
                 labels.append(cat.display_name)
                 amount.append(counter)
@@ -126,7 +126,7 @@ class VulnCategoryPolarChart:
         ax.plot(theta, amount)
         ax.fill(theta, amount, "b", alpha=0.25)
         ax.set_varlabels(labels)
-        ax.tick_params(axis='both', which='major', pad=10)
+        ax.tick_params(axis='both', which='major')
 
         ax.set_theta_direction(-1)
         ax.set_yticklabels([])
