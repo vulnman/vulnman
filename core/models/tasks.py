@@ -33,12 +33,11 @@ class Task(VulnmanModel):
 class TaskCondition(VulnmanModel):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     asset_type = models.CharField(choices=ASSET_TYPES_CHOICES, max_length=128)
+    name = models.CharField(max_length=128, default="always")
     condition = models.CharField(max_length=256, null=True, blank=True)
-    is_regex = models.BooleanField(default=False)
-    on_pentest = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = [('task', 'asset_type', 'condition', 'is_regex')]
+        unique_together = [('task', 'asset_type', 'name', 'condition')]
 
 
 class AssetTask(VulnmanProjectModel):
