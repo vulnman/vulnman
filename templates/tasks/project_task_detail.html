@@ -15,31 +15,46 @@
 {% block content %}
 
     <div class="container mt-3">
-
-        <h3>{{ task.name }}</h3>
         <div class="row">
             <div class="col-sm-12">
-                <p>{{ task.get_status_display }} <strong>{{ task.creator}}</strong> opened this task {{ task.date_created | timesince }} ago</p>
-            </div>
-        <hr/>
-        <div class="row mt-3">
-            <div class="col-sm-12">
-                <div class="float-end">
-                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#form-modal-{{ service_update_form.instance.pk }}">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ task.pk }}">
-                        <i class="fa fa-trash"></i>
-                    </a>
+                <div class="clearfix">
+                    <div class="float-start">
+                        <h4>{{ task.name }}</h4>
+                    </div>
+                    <div class="float-end">
+                        <button class="btn btn-outline-warning" disabled data-bs-toggle="modal" data-bs-target="#form-modal-{{ service_update_form.instance.pk }}">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger" disabled data-bs-toggle="modal" data-bs-target="#delete-modal-{{ task.pk }}">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <p>
+                    <strong>{{ task.get_creator_display }}</strong> opened this task {{ task.date_created | timesince }} ago
+                </p>
+            </div>
+            <hr/>
         </div>
 
         <div class="row mt-3">
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <p><strong>{{ task.creator}}</p>
+                        <p>
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    <strong>{{ task.get_creator_display }}</strong>
+                                </div>
+                                <div class="float-end">
+                                    {% include 'components/task_status_badge.html' %}
+                                </div>
+                            </div>
+                        </p>
                     </div>
                     <div class="card-body">
                         <p>{{ task.task.description | md_to_html }}</p>
