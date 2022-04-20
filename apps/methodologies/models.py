@@ -15,7 +15,7 @@ TASK_STATUS_CHOICES = [
 ]
 
 
-class Task(VulnmanModel):
+class Task2(VulnmanModel):
     task_id = models.CharField(max_length=128)
     name = models.CharField(max_length=128)
     description = models.TextField()
@@ -30,8 +30,8 @@ class Task(VulnmanModel):
         unique_together = [("task_id",)]
 
 
-class TaskCondition(VulnmanModel):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+class TaskCondition2(VulnmanModel):
+    task = models.ForeignKey(Task2, on_delete=models.CASCADE)
     asset_type = models.CharField(choices=ASSET_TYPES_CHOICES, max_length=128)
     condition = models.CharField(max_length=256, null=True, blank=True)
     is_regex = models.BooleanField(default=False)
@@ -41,8 +41,8 @@ class TaskCondition(VulnmanModel):
         unique_together = [('task', 'asset_type', 'condition', 'is_regex')]
 
 
-class AssetTask(VulnmanProjectModel):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+class AssetTask2(VulnmanProjectModel):
+    task = models.ForeignKey(Task2, on_delete=models.CASCADE)
     status = models.PositiveIntegerField(default=0)
     asset_webapp = models.ForeignKey(
         'assets.WebApplication', on_delete=models.CASCADE, null=True,

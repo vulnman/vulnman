@@ -1,0 +1,29 @@
+<form method="POST" action="{% url 'projects:methodologies:project-task-status-update' task.pk %}" id="task-status-form">
+    {% csrf_token %}
+    <div class="btn-group" role="group" aria-label="task status group">
+        <input type="radio" class="btn-check" name="status" id="task-status-open" value="0" autocomplete="off" {% if task.status == 0%}checked{% endif %}>
+        <label class="btn btn-outline-primary" for="task-status-open">Open</label>
+
+        <input type="radio" class="btn-check" name="status" id="task-status-closed" value="1" autocomplete="off" {% if task.status == 1%}checked{% endif %}>
+        <label class="btn btn-outline-primary" for="task-status-closed">Closed</label>
+
+        <input type="radio" class="btn-check" name="status" id="task-status-to-review" value="2" autocomplete="off" {% if task.status == 2 %}checked{% endif %}>
+        <label class="btn btn-outline-primary" for="task-status-to-review">To Review</label>
+
+        <input type="radio" class="btn-check" name="status" id="task-status-not-tested" value="3" autocomplete="off" {% if task.status == 3%}checked{% endif %}>
+        <label class="btn btn-outline-primary" for="task-status-not-tested">Not Tested</label>
+
+        <input type="radio" class="btn-check" name="status" id="task-status-not-applicable" value="4" autocomplete="off" {% if task.status == 4 %}checked{% endif %}>
+        <label class="btn btn-outline-primary" for="task-status-not-applicable">Not Applicable</label>
+    </div>
+</form>
+
+<script>
+    $(function(){
+        $('#task-status-form').on("change", "input:radio", function(){
+            $('#task-status-form').submit();
+
+        });
+    });
+
+</script>

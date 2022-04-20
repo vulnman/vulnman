@@ -1,7 +1,8 @@
 from django.urls import reverse_lazy
 from vulnman.views import generic
 from apps.methodologies import forms
-from apps.methodologies import models
+from core import models
+
 
 class TaskList(generic.VulnmanAuthListView):
     template_name = "methodologies/methodology_list.html"
