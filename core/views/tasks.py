@@ -1,4 +1,3 @@
-from django.urls import reverse_lazy
 from vulnman.views import generic
 from core import models
 from core.forms import tasks as forms
