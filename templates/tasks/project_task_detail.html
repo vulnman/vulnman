@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load markdown %}
+{% load static %}
+
+
+{% block title %}
+    Task {{ task.name }}
+{% endblock %}
+
+{% block extra_head %}
+<link href="{% static 'css/codehilite.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="clearfix">
+                    <div class="float-start">
+                        <h4>{{ task.name }}</h4>
+                    </div>
+                    <div class="float-end">
+                        <button class="btn btn-outline-warning" disabled data-bs-toggle="modal" data-bs-target="#form-modal-{{ service_update_form.instance.pk }}">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger" disabled data-bs-toggle="modal" data-bs-target="#delete-modal-{{ task.pk }}">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <p>
+                    <strong>{{ task.get_creator_display }}</strong> opened this task {{ task.date_created | timesince }} ago
+                </p>
+            </div>
+            <hr/>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <p>
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    <strong>{{ task.get_creator_display }}</strong>
+                                </div>
+                                <div class="float-end">
+                                    {% include 'components/task_status_badge.html' %}
+                                </div>
+                            </div>
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ task.task.description | md_to_html }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# include 'modals/delete_object.html' with obj=service #}
+    {# include 'forms/form_modal.html' with title="Update Service" form=service_update_form #}
+
+{% endblock content %}

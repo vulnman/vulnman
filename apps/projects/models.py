@@ -78,7 +78,7 @@ class Project(models.Model):
             assign_perm(perm, user_or_group=self.creator, obj=self)
 
     def get_open_todos(self):
-        return self.assettask_set.filter(~Q(status=0))
+        return self.assettask_set.filter(~Q(status=1))
 
     def get_compromised_accounts(self):
         return self.useraccount_set.filter(account_compromised=True)
