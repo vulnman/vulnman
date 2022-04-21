@@ -38,10 +38,6 @@ class VulnerabilityCategory(VulnmanModel):
         verbose_name_plural = "Vulnerability Categories"
 
 
-class VulnerabilityReference(VulnmanModel):
-    url = models.URLField()
-
-
 class CWEEntry(VulnmanModel):
     entry = models.CharField(max_length=32, unique=True)
 
@@ -57,7 +53,6 @@ class BaseVulnerability(VulnmanModel):
     recommendation = models.TextField()
     vulnerability_id = models.CharField(max_length=256)
     cwe_ids = models.ManyToManyField(CWEEntry)
-    # references = models.ForeignKey(VulnerabiltiyReference)
 
     class Meta:
         abstract = True
@@ -297,7 +292,8 @@ class Template(BaseVulnerability):
 
 class Reference(VulnmanModel):
     name = models.CharField(max_length=128)
-    template = models.ForeignKey(Template, on_delete=models.CASCADE, null=True, blank=True)
+    template = models.ForeignKey(
+        Template, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name

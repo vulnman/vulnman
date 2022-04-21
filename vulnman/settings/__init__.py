@@ -25,7 +25,6 @@ base_settings = [
     "apps.py",
     "database.py",
     "orig.py",
-    "plugins.py",
     "reporting.py",
     "rest_framework.py",
     optional(os.path.join(BASE_DIR, "local_settings.py"))

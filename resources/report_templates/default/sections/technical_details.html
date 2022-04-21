@@ -24,6 +24,15 @@
         <h4>Recommendation</h4>
         <p>{{ template.recommendation|md_to_html }}</p>
     </section>
+    {% if template.reference_set.count %}
+    <section>
+        <h4>References</h4>
+        <ul>
+            {% for ref in template.reference_set.all %}
+                <li><a href="{{ ref.name }}">{{ ref.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
     <div class="page-break"></div>
 
