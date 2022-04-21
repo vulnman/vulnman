@@ -141,14 +141,16 @@
             <div class="col-sm-12 col-md-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <p class="card-text">Dummy Chart Card</p>
+                        <p class="card-text">Hosts by Services</p>
+                        <canvas id="most-services-host-chart"></canvas>
                     </div>
                 </div>
             </div>
             <div class="col-sm-12 col-md-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <p class="card-text">Dummy Chart Card</p>
+                        <p class="card-text">Vulnerability Categories</p>
+                        <canvas id="wordmap-chart"></canvas>
                     </div>
                 </div>
             </div>
@@ -230,36 +232,131 @@
         }, 1000);
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/chart.js' %}"></script>
     <script>
-        const severity_chart_config = {
-            type: "doughnut",
-            data: {
-                labels: ["Critical", "High", "Medium", "Low", "Informational"],
-                datasets: [
-                    {
-                        label: "Vulnerabilities by Severity",
-                        data: {{vulnerability_severities|safe}},
-                        backgroundColor: ["{{Vulnerability.SEVERITY_COLOR_CRITICAL}}", "{{Vulnerability.SEVERITY_COLOR_HIGH}}",
-                            "{{Vulnerability.SEVERITY_COLOR_MEDIUM}}", "{{Vulnerability.SEVERITY_COLOR_LOW}}",
-                            "{{Vulnerability.SEVERITY_COLOR_INFORMATIONAL}}"
-                        ],
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
+        var severity_chart = new Chart(
+            document.getElementById("severity-chart"), {
+                type: "doughnut",
+                data: {
+                    labels: ["Critical", "High", "Medium", "Low", "Informational"],
+                    datasets: [
+                        {
+                            label: "Vulnerabilities by Severity",
+                            data: [],
+                            backgroundColor: [],
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
                     }
                 }
             }
-        }
-        const severity_chart = new Chart(
-            document.getElementById("severity-chart"),
-            severity_chart_config
         )
+
+        var hosts_by_service_chart = new Chart(
+            document.getElementById("most-services-host-chart"), {
+                type: "bar",
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: "Host Services",
+                            data: [],
+                            backgroundColor: 'rgba(0,119,204,0.5)',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        )
+
+        var wordmap_chart = new Chart(
+            document.getElementById("wordmap-chart"), {
+                type: "radar",
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            data: [],
+                            backgroundColor: 'rgba(255, 0, 0 ,0.2)',
+                            borderColor: 'rgba(255, 0, 0 ,0.5)'
+                        }
+                    ]
+                },
+                options: {
+                    title: {
+                        display: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'white'
+                            },
+                            pointLabels: {
+                                fontColor: 'white' // labels around the edge like 'Running'
+                                },
+                            grid: {
+                                color: 'white'
+                            },
+                            ticks: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            })
+
+        getVulnsBySeverity()
+        getHostsByServices()
+        getVulnCategoryCount()
+
+        function getVulnsBySeverity(){
+            $.get('/api/v1/projects/{{project.pk}}/vulns_by_severity/', function(data, status){
+                if(status === "success"){
+                    severity_chart.data.datasets[0].backgroundColor = data.colors;
+                    severity_chart.data.datasets[0].data = data.severities;
+                    severity_chart.update();
+                }
+            });
+        }
+
+        function getHostsByServices(){
+            $.get('/api/v1/projects/{{project.pk}}/hosts_by_services/', function(data, status){
+                if(status === "success"){
+                    hosts_by_service_chart.data.labels = data.ips;
+                    hosts_by_service_chart.data.datasets[0].data = data.counts;
+                    hosts_by_service_chart.update();
+                }
+            });
+        }
+
+        function getVulnCategoryCount(){
+            $.get('/api/v1/projects/{{project.pk}}/vuln_category_counts/', function(data, status){
+                if(status === "success"){
+                    wordmap_chart.data.labels = data.labels;
+                    wordmap_chart.data.datasets[0].data = data.data;
+                    wordmap_chart.update();
+                }
+            });
+        }
     </script>
 
 {% endblock extra_scripts %}

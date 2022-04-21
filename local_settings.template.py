@@ -37,7 +37,6 @@
 # Reporting
 # #########
 
-# Report Template
 # Report Templates
 # REPORT_TEMPLATES = {
 #    "default": {
