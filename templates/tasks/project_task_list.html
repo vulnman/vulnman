@@ -10,6 +10,11 @@
 
     <div class="container mt-3">
         <div class="clearfix">
+            <div class="float-start">
+                <button data-bs-toggle="modal" data-bs-target="#filter-modal" class="btn btn-outline-secondary">
+                    <i class="fa fa-filter"></i>
+                </button>
+            </div>
             <div class="float-end">
                 <button class="btn btn-primary" disabled data-bs-toggle="modal" data-bs-target="#create-modal">
                     <i class="fa fa-plus"></i>
@@ -51,4 +56,43 @@
             </div>
         </div>
     </div>
+
+    <div class="modal" tabindex="-1" id="filter-modal" aria-labelledby="filter-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filter-modal-label">Filter Tasks</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="form">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="status" aria-label="Status" name="status">
+                                <option selected value="0">Open</option>
+                                <option value="1">Closed</option>
+                                <option value="2">To Review</option>
+                                <option value="3">Not Tested</option>
+                                <option value="4">Not Applicable</option>
+                            </select>
+                            <label for="status">Status</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" name="name" id="name" class="form-control" value="{{ request.GET.name }}">
+                            <label for="name">Name</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <div class="clearfix">
+                                <div class="float-end">
+                                    <a class="btn btn-outline-secondary" href="{% url 'projects:methodologies:project-task-list'%}"><i class="fa fa-times"></i> Reset</a>
+
+                                    <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock content %}

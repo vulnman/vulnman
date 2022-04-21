@@ -1,6 +1,6 @@
-from django.urls import reverse_lazy
+import django_filters.views
 from vulnman.views import generic
-from apps.methodologies import forms
+from apps.methodologies import filters
 from core import models
 
 
@@ -11,7 +11,15 @@ class TaskList(generic.VulnmanAuthListView):
     model = models.Task
 
 
-class ProjectToDos(generic.ProjectListView):
+class ProjectToDos(django_filters.views.FilterMixin, generic.ProjectListView):
     template_name = "methodologies/project_tasks.html"
     context_object_name = "todos"
     model = models.AssetTask
+    filterset_class = filters.ProjectTaskFilter
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs).filter(
+            project=self.get_project())
+        filterset = self.filterset_class(
+            self.request.GET, queryset=qs)
+        return filterset.qs
