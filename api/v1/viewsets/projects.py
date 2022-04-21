@@ -1,7 +1,9 @@
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from guardian.shortcuts import get_objects_for_user
 from vulnman.api.viewsets import VulnmanModelViewSet
 from apps.projects import models
-from apps.projects.api.v1 import serializers
+from api.v1.serializers import project as serializers
 
 
 class ProjectViewSet(VulnmanModelViewSet):
@@ -17,3 +19,30 @@ class ProjectViewSet(VulnmanModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
+
+    @action(detail=True, methods=['get'])
+    def vulns_by_severity(self, request, pk=None):
+        serializer = serializers.StatsVulnsBySeveritySerializer(
+            instance=self.get_object(),
+            data=request.data)
+        if serializer.is_valid():
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, 400)
+
+    @action(detail=True, methods=['get'])
+    def hosts_by_services(self, request, pk=None):
+        serializer = serializers.StatsHostsByServicesSerializer(
+            instance=self.get_object(),
+            data=request.data)
+        if serializer.is_valid():
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, 400)
+
+    @action(detail=True, methods=['get'])
+    def vuln_category_counts(self, request, pk=None):
+        serializer = serializers.StatsVulnCategoryCountSerializer(
+            instance=self.get_object(),
+            data=request.data)
+        if serializer.is_valid():
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, 400)

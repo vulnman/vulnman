@@ -53,13 +53,6 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
-        context["Vulnerability"] = Vulnerability
-        obj = self.get_object()
-        context["vulnerability_severities"] = []
-        for sev in SEVERITY_CHOICES:
-            context["vulnerability_severities"].append(
-                obj.vulnerability_set.filter(severity=sev[0]).count()
-            )
         if self.object:
             self.request.session['project_pk'] = str(self.get_object().pk)
         return self.render_to_response(context)
