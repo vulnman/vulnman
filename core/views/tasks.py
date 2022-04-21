@@ -1,12 +1,22 @@
+import django_filters.views
 from vulnman.views import generic
 from core import models
 from core.forms import tasks as forms
+from apps.methodologies import filters
 
 
-class ProjectTaskList(generic.ProjectListView):
+class ProjectTaskList(django_filters.views.FilterMixin, generic.ProjectListView):
     context_object_name = "tasks"
     model = models.AssetTask
     template_name = "tasks/project_task_list.html"
+    filterset_class = filters.ProjectTaskFilter
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs).filter(
+            project=self.get_project())
+        filterset = self.filterset_class(
+            self.request.GET, queryset=qs)
+        return filterset.qs
 
 
 class ProjectTaskDetail(generic.ProjectDetailView):
