@@ -27,7 +27,8 @@ class PentestReport(VulnmanProjectModel):
         return "0.1"
 
     def get_absolute_delete_url(self):
-        return reverse_lazy('projects:reporting:report-delete', kwargs={'pk': self.pk})
+        return reverse_lazy('projects:reporting:report-delete', kwargs={
+            'pk': self.pk})
 
     class Meta:
         ordering = ["-date_created"]
