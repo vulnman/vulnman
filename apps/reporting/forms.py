@@ -49,6 +49,7 @@ class ReportManagementSummaryForm(forms.ModelForm):
             layout.Row(
                 bootstrap5.Field("evaluation", wrapper_class="col-sm-12"),
                 bootstrap5.Field("recommendation", wrapper_class="col-sm-12"),
+                css_class="g-2"
             )
         )
 
@@ -72,7 +73,8 @@ class PentestReportForm(forms.ModelForm):
                 bootstrap5.FloatingField(
                     "report_type", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField(
-                    "report_template", wrapper_class="col-sm-12")
+                    "report_template", wrapper_class="col-sm-12"),
+                css_class="g-2"
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
