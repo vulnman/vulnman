@@ -73,7 +73,7 @@ class StatsVulnCategoryCountSerializer(serializers.ModelSerializer):
         return VulnerabilityCategory.objects.filter(
             template__vulnerability__project=obj).annotate(
                 count=Count('template__vulnerability__pk')).values_list(
-                    "name", flat=True)
+                    "display_name", flat=True)
 
     def get_data(self, obj):
         return VulnerabilityCategory.objects.filter(
