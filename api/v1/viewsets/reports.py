@@ -27,7 +27,9 @@ class ReportViewSet(viewsets.ProjectRelatedObjectRetrieveViewSet):
                 serializer.validated_data["project"].reportinformation.pk,
                 serializer.validated_data["report_type"],
                 name=serializer.validated_data.get("name", None),
-                creator=self.request.user.username)
+                creator=self.request.user.username,
+                report_template=serializer.validated_data.get(
+                    'report_template', 'default'))
             serializer.validated_data["project"] = serializer.validated_data[
                 "project"].pk
             return Response({"task_id": report_task.task_id})

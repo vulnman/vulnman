@@ -21,6 +21,7 @@ class WebApplicationForm(forms.ModelForm):
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField("base_url", wrapper_class="col-sm-12"),
                 bootstrap5.Field("description", wrapper_class="col-sm-12"),
+                css_class="g-2"
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
@@ -44,7 +45,8 @@ class WebRequestCreateForm(forms.ModelForm):
                 bootstrap5.FloatingField("web_app", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField("url", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField("parameter", wrapper_class="col-sm-12"),
-                bootstrap5.Field("description", wrapper_class="col-sm-12")
+                bootstrap5.Field("description", wrapper_class="col-sm-12"),
+                css_class="g-2"
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
@@ -65,11 +67,13 @@ class HostCreateForm(forms.ModelForm):
         self.helper.layout = layout.Layout(
             layout.Row(
                 bootstrap5.FloatingField("ip", wrapper_class="col-sm-12 col-md-6"),
-                bootstrap5.FloatingField("operating_system", wrapper_class="col-sm-12 col-md-6")
+                bootstrap5.FloatingField("operating_system", wrapper_class="col-sm-12 col-md-6"),
+                css_class="g-2"
             ),
             layout.Row(
                 bootstrap5.FloatingField("accessibility", wrapper_class="col-sm-12 col-md-6"),
-                bootstrap5.FloatingField("dns", wrapper_class="col-sm-12 col-md-6")
+                bootstrap5.FloatingField("dns", wrapper_class="col-sm-12 col-md-6"),
+                css_class="g-2"
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
@@ -103,15 +107,18 @@ class ServiceCreateForm(forms.ModelForm):
         self.helper.layout = layout.Layout(
             layout.Row(
                 bootstrap5.FloatingField("host", wrapper_class="col-sm-12 col-md-6"),
-                bootstrap5.FloatingField("port", wrapper_class="col-sm-12 col-md-6")
+                bootstrap5.FloatingField("port", wrapper_class="col-sm-12 col-md-6"),
+                css_class="g-2"
             ),
             layout.Row(
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12 col-md-6"),
-                bootstrap5.FloatingField("protocol", wrapper_class="col-sm-12 col-md-6")
+                bootstrap5.FloatingField("protocol", wrapper_class="col-sm-12 col-md-6"),
+                css_class="g-2"
             ),
             layout.Row(
                 bootstrap5.FloatingField("state", wrapper_class="col-sm-12 col-md-6"),
-                bootstrap5.FloatingField("banner", wrapper_class="col-sm-12 col-md-6")
+                bootstrap5.FloatingField("banner", wrapper_class="col-sm-12 col-md-6"),
+                css_class="g-2"
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
