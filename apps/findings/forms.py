@@ -49,7 +49,8 @@ class TextProofForm(forms.ModelForm):
             layout.Row(
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
                 bootstrap5.Field("description", wrapper_class="col-sm-12"),
-                bootstrap5.Field("text", wrapper_class="col-sm-12")
+                bootstrap5.Field("text", wrapper_class="col-sm-12"),
+                css_class="g-2"
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
@@ -71,7 +72,8 @@ class ImageProofForm(forms.ModelForm):
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField("caption", wrapper_class="col-sm-12"),
                 bootstrap5.Field("description", wrapper_class="col-sm-12"),
-                bootstrap5.Field("image", wrapper_class="col-sm-12")
+                bootstrap5.Field("image", wrapper_class="col-sm-12"),
+                css_class="g-2"
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
@@ -97,18 +99,22 @@ class VulnerabilityCVSSBaseForm(forms.ModelForm):
             layout.Row(
                 bootstrap5.FloatingField("cvss_av", wrapper_class="col-sm-12 col-md-6"),
                 bootstrap5.FloatingField("cvss_ac", wrapper_class="col-sm-12 col-md-6"),
+                css_class="g-2"
             ),
             layout.Row(
                 bootstrap5.FloatingField("cvss_pr", wrapper_class="col-sm-12 col-md-6"),
                 bootstrap5.FloatingField("cvss_ui", wrapper_class="col-sm-12 col-md-6"),
+                css_class="g-2"
             ),
             layout.Row(
                 bootstrap5.FloatingField("cvss_s", wrapper_class="col-sm-12 col-md-6"),
                 bootstrap5.FloatingField("cvss_c", wrapper_class="col-sm-12 col-md-6"),
+                css_class="g-2"
             ),
             layout.Row(
                 bootstrap5.FloatingField("cvss_i", wrapper_class="col-sm-12 col-md-6"),
                 bootstrap5.FloatingField("cvss_a", wrapper_class="col-sm-12 col-md-6"),
+                css_class="g-2"
             )
         )
 
@@ -186,25 +192,6 @@ class VulnerabilityForm(forms.ModelForm):
         )
 
 
-class ReferenceInline(NamedInlineFormSetFactory):
-    model = models.Reference
-    fields = ["name"]
-    factory_kwargs = {'extra': 1, 'can_delete': True, 'max_num': 4}
-
-    def construct_formset(self):
-        formset = super().construct_formset()
-        formset.helper = FormHelper()
-        formset.helper.form_tag = False
-        formset.helper.disable_csrf = True
-        formset.helper.render_unmentioned_fields = True
-        formset.helper.layout = layout.Layout(
-            layout.Row(
-                layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12 col-md-12")
-            )
-        )
-        return formset
-
-
 class UserAccountForm(forms.ModelForm):
     class Meta:
         model = models.UserAccount
@@ -219,8 +206,8 @@ class UserAccountForm(forms.ModelForm):
                 bootstrap5.FloatingField("username", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField("password", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField("role", wrapper_class="col-sm-12"),
-                bootstrap5.Field("account_compromised", wrapper_class="col-sm-12")
-
+                bootstrap5.Field("account_compromised", wrapper_class="col-sm-12"),
+                css_class="g-2"
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),

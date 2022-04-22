@@ -10,6 +10,11 @@ python manage.py migrate
 echo "Collect static files"
 python manage.py collectstatic --noinput
 
+echo "Update vulnerability templates"
+python manage.py update_vulnerability_templates
+
+echo "Update checklists"
+python manage.py update_checklists
 
 python manage.py create_secret_key
 
