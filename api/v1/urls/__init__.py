@@ -12,6 +12,22 @@ router.register(
     "projects", viewsets.projects.ProjectViewSet,
     basename="project")
 
+
+router.register(
+    "hosts", viewsets.HostViewSet, basename="host"
+)
+
+router.register(
+    "services", viewsets.ServiceViewSet, basename="service")
+
+router.register(
+    "webapplications", viewsets.WebApplicationViewSet,
+    basename="webapplication")
+
+router.register(
+    "webrequests", viewsets.WebRequestViewSet, basename="webrequest")
+
+
 router.register(
     "vulnerabilities/templates", viewsets.templates.TemplateViewSet,
     basename="vulnerability-template")

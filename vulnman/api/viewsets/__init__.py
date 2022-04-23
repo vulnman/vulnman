@@ -12,6 +12,11 @@ class VulnmanModelViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins
     # filter_backends = [filters.ObjectPermissionsFilter]
 
 
+class VulnmanReadOnlyModelViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    permission_classes = [BaseObjectPermission, IsAuthenticated]
+    filter_backends = [SearchFilter]
+
+
 class ProjectRelatedObjectViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, ProjectRelatedObjectPermission]
     filter_backends = [SearchFilter]
