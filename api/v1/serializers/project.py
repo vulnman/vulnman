@@ -3,14 +3,22 @@ from rest_framework import serializers
 from vulnman.api.serializers import AssignObjectPermissionsModelSerializer
 from apps.projects import models
 from apps.findings.models import Vulnerability, SEVERITY_CHOICES, VulnerabilityCategory
+from api.v1.serializers.assets import WebApplicationSerializer, WebRequestSerializer
+from api.v1.serializers.assets import HostSerializer, ServiceSerializer
 
 
 class ProjectSerializer(AssignObjectPermissionsModelSerializer):
+    # TODO: use session and seperate endpoint to fetch these
+    # information like the AgentHost, ... endpoint do
+    assets_webapplication = WebApplicationSerializer(source="webapplication_set", read_only=True, many=True)
+    assets_webrequest = WebRequestSerializer(source="webrequest_set", many=True, read_only=True)
+    assets_host = HostSerializer(source="host_set", many=True, read_only=True)
+    assets_service = ServiceSerializer(source="service_set", many=True, read_only=True)
 
     class Meta:
         model = models.Project
-        fields = ["uuid", "name", "start_date", "end_date"]
-        read_only_fields = ["uuid"]
+        fields = ["uuid", "name", "start_date", "end_date", "assets_webapplication", "assets_webrequest", "assets_host", "assets_service"]
+        read_only_fields = ["uuid", "assets_webapplication", "assets_webrequest", "assets_host", "assets_service"]
 
     def get_permissions_map(self, created):
         current_user = self.context["request"].user
@@ -73,7 +81,7 @@ class StatsVulnCategoryCountSerializer(serializers.ModelSerializer):
         return VulnerabilityCategory.objects.filter(
             template__vulnerability__project=obj).annotate(
                 count=Count('template__vulnerability__pk')).values_list(
-                    "name", flat=True)
+                    "display_name", flat=True)
 
     def get_data(self, obj):
         return VulnerabilityCategory.objects.filter(
