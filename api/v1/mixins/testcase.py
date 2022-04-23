@@ -36,3 +36,13 @@ class VulnmanAPITestCaseMixin(object):
     def create_project_token(self, project, user):
         return self.create_instance(
             ProjectAPIToken, project=project, user=user)
+
+    def login_with_project(self, user, project):
+        # login using session and credentials
+        self.client.force_login(user)
+        self._set_session_variable("project_pk", str(project.pk))
+
+    def _set_session_variable(self, key, value):
+        session = self.client.session
+        session[key] = value
+        session.save()

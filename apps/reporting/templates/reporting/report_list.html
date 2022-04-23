@@ -14,7 +14,7 @@
                 </div>
                 <div class="row">
                     {% if project.get_draft_report %}
-                        <small><i id="report-status-info">Updated at {{ project.get_draft_report.date_updated|date:'Y-M-d H:m:i' }}</i></small>
+                        <small><i id="report-status-info">Updated at {{ project.get_draft_report.date_updated|date:'Y-M-d H:i:s' }}</i></small>
                     {% endif %}
                 </div>
             </div>
