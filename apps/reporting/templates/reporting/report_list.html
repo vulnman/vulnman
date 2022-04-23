@@ -155,12 +155,13 @@ id_recommendation.on("blur", function(){
 $('#submit-id-submit').click(function(event){
     $('#report-create-modal').modal('hide');
     var report_type = $("#id_report_type option").filter(":selected").val();
+    var report_template = $('#id_report_template option').filter(":selected").val();
     var name = $('#id_name').val();
     $.ajax({
         type: "POST",
         url: "{% url 'api:v1:report-create-report' %}",
         dataType: "json",
-        data: {"project": "{{project.pk}}", "report_type": report_type, "name": name},
+        data: {"project": "{{project.pk}}", "report_type": report_type, "name": name, "report_template": report_template},
         success: function(data){
             $('#create-report-button-spin').addClass("spinner-border spinner-border-sm");
             $('#create-report-button').attr("disabled", "disabled")
