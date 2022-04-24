@@ -8,6 +8,8 @@ on:
       - published
       - prereleased
       - released
+      - edited
+      - created
 
 env:
   REGISTRY: ghcr.io
