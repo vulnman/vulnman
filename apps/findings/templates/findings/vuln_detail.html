@@ -211,7 +211,9 @@
                         {% if vuln.template.reference_set.all %}
                             <p><strong>References: </strong></p>
                             <ul>
-                                <li>{{ reference }}</li>
+                                {% for reference in vuln.template.reference_set.all %}
+                                    <li>{{ reference }}</li>
+                                {% endfor %}
                             </ul>
                         {% endif %}
                     </div>

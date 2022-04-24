@@ -21,3 +21,7 @@ class WebApplication(BaseAsset):
         return reverse_lazy(
             "projects:assets:webapp-delete",
             kwargs={"pk": self.pk})
+
+    def get_absolute_url(self):
+        return reverse_lazy(
+            "projects:assets:webapp-detail", kwargs={"pk": self.pk})

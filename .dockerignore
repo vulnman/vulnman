@@ -2,10 +2,10 @@
 docs
 docker/Dockerfile
 .idea
+.vscode
 db.sqlite3
 local_settings.py
 static_files
 uploads
 venv
 __pycache__
-mkdocs.yml
