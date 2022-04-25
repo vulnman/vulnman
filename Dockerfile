@@ -3,6 +3,8 @@ FROM python:3-bullseye
 COPY . /app
 WORKDIR /app
 
+RUN apt update && apt install -y fonts-font-awesome
+
 RUN pip install -r requirements.txt && \
     pip install psycopg2-binary && python manage.py create_secret_key
 
