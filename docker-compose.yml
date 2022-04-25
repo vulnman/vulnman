@@ -2,9 +2,7 @@ version: '3'
 
 services:
   vulnman-web:
-    image: vulnman-web
-    build:
-      context: './'
+    image: ghcr.io/vulnman/vulnman:latest
     volumes:
       - './local_settings.py:/app/local_settings.py'
       - '/tmp/volumes/vulnman/static:/app/static_files'
@@ -17,9 +15,7 @@ services:
       - celery
 
   celery:
-    build:
-      context: './'
-    image: vulnman-web
+    image: ghcr.io/vulnman/vulnman:latest
     entrypoint: celery -A vulnman worker -l INFO
     volumes:
       - './local_settings.py:/app/local_settings.py'
@@ -28,7 +24,7 @@ services:
       - redis
 
   db:
-    image: postgres:13.0-alpine
+    image: postgres:latest-alpine
     volumes:
       - '/tmp/volumes/vulnman/db:/var/lib/postgresql/data'
     environment:
