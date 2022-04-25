@@ -131,7 +131,7 @@ class VulnCategoryPolarChart:
         ax.set_theta_direction(-1)
         ax.set_yticklabels([])
 
-        plt.savefig(s, format="png", bbox_inches="tight", transpartent=True)
+        plt.savefig(s, format="png", bbox_inches="tight", transparent=True)
         plt.close()
         s = base64.b64encode(s.getvalue()).decode().replace("\n", "")
-        return "data:image/png;base64,{data}".format(data=s)
+        return "<img id='categories-chart' src=data:image/png;base64,{data}>".format(data=s)

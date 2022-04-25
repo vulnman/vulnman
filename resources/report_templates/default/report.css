@@ -378,3 +378,19 @@ code {
   background-position: center;
   background-size: contain;
 }
+
+#severity-chart {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  height: 8cm;
+  max-width: 8cm;
+}
+
+#categories-chart {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  height: 8cm;
+  max-width: 9cm;
+}
