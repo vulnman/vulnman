@@ -1,5 +1,6 @@
 import io
 import base64
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from apps.findings.models import Vulnerability, SEVERITY_CHOICES
 
@@ -22,7 +23,9 @@ class SeverityDonutChart:
                 # labels.append(sev.capitalize())
                 labels.append(amount)
                 colors.append(Vulnerability.SEVERITY_COLORS[sev[1]])
-        fig, ax = plt.subplots(figsize=(8, 8), dpi=100)
+        plt.rcParams['svg.fonttype'] = "none"
+        mpl.rcParams['text.usetex'] = False
+        fig, ax = plt.subplots(figsize=(8, 8), dpi=300)
         ax.axis('equal')
         width = 0.35
         outside, labels = ax.pie(
@@ -34,7 +37,8 @@ class SeverityDonutChart:
         plt.setp(outside, width=width, edgecolor='white')
         ax.text(
             0, 0, text, ha="center", size=20, fontweight="bold", va="center")
-        plt.savefig(s, format="png", bbox_inches="tight")
+        plt.savefig(s, format="png", bbox_inches="tight", transparent=True)
         plt.close()
         s = base64.b64encode(s.getvalue()).decode().replace("\n", "")
-        return "data:image/png;base64,{data}".format(data=s)
+        return "<img id='severity-chart' src=data:image/png;base64,{data}>".format(data=s)
+
