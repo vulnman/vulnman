@@ -15,6 +15,6 @@ CELERY_RESULT_BACKEND = 'django-db'
 # Report Templates
 REPORT_TEMPLATES = {
     "default": {
-        "CSS": ["report.css", "fontawesome.min.css"]
+        "CSS": ["css/report.css", "css/fontawesome.min.css"]
     }
 }
