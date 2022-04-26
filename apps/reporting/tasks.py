@@ -3,6 +3,7 @@ from celery import shared_task
 from django.conf import settings
 from django.template.loader import render_to_string
 from weasyprint import HTML
+from weasyprint.text.fonts import FontConfiguration
 from apps.reporting.models import PentestReport, ReportInformation
 from apps.findings.models import Template
 from apps.reporting.utils import charts
@@ -75,8 +76,10 @@ def do_create_report(report_pk, report_type, report_template=None, creator=None,
     jinja_template = report_template +\
         "/report.html"
     raw_source = render_to_string(jinja_template, context)
+    font_config = FontConfiguration()
     pdf_source = HTML(string=raw_source).write_pdf(
-        stylesheets=get_stylesheets(report_template))
+        stylesheets=get_stylesheets(report_template),
+        font_config=font_config)
     if report_type == "draft":
         qs = PentestReport.objects.filter(project=project)
         if qs.exists() and not name:

@@ -51,6 +51,8 @@ def radar_factory(num_vars, frame='circle'):
 
         def _close_line(self, line):
             x, y = line.get_data()
+            if len(x) == 0:
+                return
             # FIXME: markers at x[0], y[0] get doubled-up
             if x[0] != x[-1]:
                 x = np.append(x, x[0])
