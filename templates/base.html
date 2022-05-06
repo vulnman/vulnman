@@ -13,6 +13,9 @@
         <!-- Sidebar -->
         {% if project %}
             {% include 'navigation/sidebar/sidebar.html' %}
+        {% else %}
+        <div id="sidebar-wrapper" style="width: 0px;">
+        </div>
         {% endif %}
         <div id="page-content-wrapper">
            <!-- Top navigation -->
