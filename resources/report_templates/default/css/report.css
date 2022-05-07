@@ -90,14 +90,13 @@ html {
 
 h1 {
   break-before: always;
-  font-size: 26pt;
+  font-size: 26px;
   string-set: heading content();
 }
 
 h2 {
   font-size: 22px;
-  /*margin-bottom: 1.2em;*/
-  margin-bottom: 1.0 em;
+  /*margin-bottom: 1.0 em;*/
 }
 
 h3 {
@@ -391,6 +390,6 @@ code {
   margin-left: auto;
   margin-right: auto;
   display: block;
-  height: 8cm;
-  max-width: 9cm;
+  height: 7cm;
+  max-width: 8.5cm;
 }

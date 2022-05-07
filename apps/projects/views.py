@@ -1,11 +1,8 @@
 from django.urls import reverse_lazy
-from django.conf import settings
-from django.utils import timezone
 from django.db.models import Q
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from apps.projects import models
 from apps.projects import forms
-from apps.findings.models import Vulnerability, SEVERITY_CHOICES
 from vulnman.views import generic
 from vulnman.mixins.permission import NonObjectPermissionRequiredMixin
 
