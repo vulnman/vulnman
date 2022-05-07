@@ -27,6 +27,8 @@ router.register(
 router.register(
     "webrequests", viewsets.WebRequestViewSet, basename="webrequest")
 
+router.register(
+    "tasks", viewsets.TaskViewSet, basename="task")
 
 router.register(
     "vulnerabilities/templates", viewsets.templates.TemplateViewSet,
