@@ -1,10 +1,7 @@
-from django.db.models import Q
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
 from vulnman.views import generic
 from apps.findings import models
 from apps.findings import forms
-from apps.findings.utils import cvss
 from apps.assets.models import WebApplication, WebRequest, Host
 
 
@@ -93,7 +90,6 @@ class AddImageProof(generic.ProjectCreateView):
     def form_invalid(self, form):
         print(form.errors)
         return super().form_invalid(form)
-
 
     def form_valid(self, form):
         vuln = self.get_project().vulnerability_set.filter(pk=self.kwargs.get('pk'))
@@ -209,6 +205,9 @@ class UserAccountList(generic.ProjectListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["account_create_form"] = forms.UserAccountForm()
+        context["account_update_forms"] = []
+        for qs in self.get_queryset():
+            context["account_update_forms"].append(forms.UserAccountUpdateForm(instance=qs))
         return context
 
 
@@ -217,6 +216,24 @@ class UserAccountCreate(generic.ProjectCreateView):
     model = models.UserAccount
     form_class = forms.UserAccountForm
     success_url = reverse_lazy("projects:findings:user-account-list")
+
+
+class UserAccountUpdate(generic.ProjectUpdateView):
+    http_method_names = ["post"]
+    model = models.UserAccount
+    form_class = forms.UserAccountUpdateForm
+    success_url = reverse_lazy("projects:findings:user-account-list")
+
+
+class UserAccountDelete(generic.ProjectDeleteView):
+    model = models.UserAccount
+    http_method_names = ["post"]
+
+    def get_success_url(self):
+        return reverse_lazy('projects:findings:user-account-list')
+
+    def get_queryset(self):
+        return models.UserAccount.objects.filter(project=self.get_project())
 
 
 class VulnerabilityCVSSUpdate(generic.ProjectUpdateView):

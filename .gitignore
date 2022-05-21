@@ -1,6 +1,7 @@
 venv
 __pycache__
 .idea
+.vscode
 db.sqlite3
 *.xml
 docs/_build

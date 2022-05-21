@@ -22,4 +22,5 @@ urlpatterns = [
     # path('proofs/ordering/', views.ProofSetOrder.as_view(), name="proof-set-order"),
     path('user-accounts/', views.UserAccountList.as_view(), name="user-account-list"),
     path('user-accounts/create/', views.UserAccountCreate.as_view(), name="user-account-create"),
+    path('user-accounts/<str:pk>/delete/', views.UserAccountDelete.as_view(), name="user-account-delete")
 ]
