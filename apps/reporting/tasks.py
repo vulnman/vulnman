@@ -49,6 +49,23 @@ def get_stylesheets(report_template):
 
 
 @shared_task
+def export_single_vulnerability(vulnerability):
+    context = {
+        "vulnerability": vulnerability,
+        "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
+    }
+    # TODO: do not hardcode this one
+    report_template = "default"
+    template = "default/exported_vulnerability.html"
+    raw_source = render_to_string(template, context)
+    font_config = FontConfiguration()
+    pdf_source = HTML(string=raw_source).write_pdf(
+        stylesheets=get_stylesheets(report_template),
+        font_config=font_config)
+    return pdf_source
+
+
+@shared_task
 def do_create_report(report_pk, report_type, report_template=None, creator=None, name=None):
     """Celery task for create PDF pentesting reports
 
@@ -91,16 +108,16 @@ def do_create_report(report_pk, report_type, report_template=None, creator=None,
         else:
             if not name:
                 # work in progress report
-                report = PentestReport.objects.create(
+                PentestReport.objects.create(
                     project=project, report_type="draft",
                     raw_source=raw_source,
                     pdf_source=pdf_source)
             else:
-                report = PentestReport.objects.create(
+                PentestReport.objects.create(
                     project=project, report_type="draft",
                     raw_source=raw_source, name=name,
                     pdf_source=pdf_source)
     else:
-        report = PentestReport.objects.create(
+        PentestReport.objects.create(
             project=project, name=name, report_type=report_type,
             raw_source=raw_source, pdf_source=pdf_source)

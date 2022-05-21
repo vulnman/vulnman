@@ -38,71 +38,7 @@
 
     <section id="template-{{ template.pk}}-vulnerbilities">
     {% for vulnerability in template|get_vulns_for_project:project %}
-        <!-- Header Table -->
-        <section id="vuln-{{ vulnerability.pk}}-header">
-            <h3 id="vuln-{{vulnerability.pk}}-title">
-                <span class="fa-layers text-{{ vulnerability.get_severity_display|lower }}">
-                    <i class="fas fa-bookmark"></i>
-                    <span class="fa-layers-text" data-fa-transform="shrink-8 down-3" style="font-weight:900"></span>
-                </span>
-                {{ vulnerability.template.name }} - {{ vulnerability.name }}
-            </h3>
-
-            <table class="table-bordered">
-                <tr>
-                    <th>Severity</th>
-                    <td class="text-{{ vulnerability.get_severity_display|lower }}">{{ vulnerability.get_severity_display|capfirst }}</td>
-                </tr>
-                <tr>
-                    <th>Status</th>
-                    <td>{{ vulnerability.get_status_display }}</td>
-                </tr>
-                {% if project.cvss_required %}
-                    <tr>
-                        <th>CVSS-Vector</th>
-                        <td>{{ vulnerability.cvss_get_vector_string}} ({{vulnerability.cvss_get_base_score}})</td>
-                    </tr>
-                {% endif %}
-                <tr>
-                    <th>Affected Component</th>
-                    <td>{{ vulnerability.asset }} ({{ vulnerability.asset.asset_type }})</td>
-                </tr>
-                <tr>
-                    <th>Category</th>
-                    <td>{{ vulnerability.template.category }}</td>
-                </tr>
-                {% if vulnerability.cve_id %}
-                <tr>
-                    <th>CVE-ID</th>
-                    <td>{{ vulnerability.cve_id}}</td>
-                </tr>
-                {% endif %}
-                {% if vulnerability.user_account %}
-                <tr>
-                    <th>Tested Account</th>
-                    <td>{{ vulnerability.user_account }}</td>
-                </tr>
-                {% endif %}
-            </table>
-        </section>
-        <section id="proofs-{{vulnerability.pk}}">
-            {% for proof in vulnerability.proofs %}
-                {% if proof.description %}
-                    {{ proof.description|md_to_html }}
-                    {% if proof.image %}
-                        <figure>
-                            <img src="{{ proof.base64_encoded_image }}" alt="proof-image" style="width: 100%; max-width: 100%; height:auto;">
-                            {% if proof.caption %}
-                                <figcaption>{{ proof.caption }}</figcaption>
-                            {% endif %}
-                        </figure>
-                    {% endif %}
-                {% endif %}
-                {% if proof.text %}
-                    {{ proof.text|md_to_html }}
-                {% endif %}
-            {% endfor %}
-        </section>
+        {% include 'default/sections/single_vulnerability.html' %}
     {% endfor %}
     </section>
     {% if not forloop.last %}
