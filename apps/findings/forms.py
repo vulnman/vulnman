@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
-from vulnman.forms import NamedInlineFormSetFactory, CodeMirrorWidget
+from vulnman.forms import CodeMirrorWidget
 
 
 class TemplateForm(forms.ModelForm):
@@ -214,3 +214,9 @@ class UserAccountForm(forms.ModelForm):
                             wrapper_class="col-sm-12 col-md-6")
             )
         )
+
+
+class UserAccountUpdateForm(UserAccountForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper.form_action = "projects:findings:user-account-update"

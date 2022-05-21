@@ -312,6 +312,9 @@ class UserAccount(VulnmanProjectModel):
     def __str__(self):
         return self.username
 
+    def get_absolute_delete_url(self):
+        return reverse_lazy("projects:findings:user-account-delete", kwargs={"pk": self.pk})
+
 
 @receiver(models.signals.post_delete, sender=ImageProof)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
