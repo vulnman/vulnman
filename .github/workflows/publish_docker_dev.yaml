@@ -37,5 +37,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: "development"
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: vulnman/vulnman:development
