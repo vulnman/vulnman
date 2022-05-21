@@ -59,7 +59,7 @@ class ProjectDetail(generic.VulnmanAuthDetailView):
                                     models.Project.objects.filter(pk=self.kwargs.get('pk')), use_groups=False, accept_global_perms=False)
 
 
-class ProjectUpdate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthUpdateWithInlinesView):
+class ProjectUpdate(generic.VulnmanAuthUpdateView):
     template_name = "projects/project_create.html"
     form_class = forms.ProjectForm
     model = models.Project
@@ -71,19 +71,6 @@ class ProjectUpdate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthUpdateW
     def get_queryset(self):
         return get_objects_for_user(self.request.user, "change_project",
                                     models.Project.objects.filter(pk=self.kwargs.get('pk')))
-
-    def form_valid(self, form):
-        instance = form.save()
-        for pentester in form.cleaned_data.get('pentesters'):
-            assign_perm("projects.pentest_project", pentester, instance)
-            assign_perm("projects.view_project", pentester, instance)
-        return super().form_valid(form)
-
-    def get_initial(self):
-        from guardian.shortcuts import get_users_with_perms
-        initial = super().get_initial()
-        initial["pentesters"] = get_users_with_perms(self.get_object(), with_group_users=False)
-        return initial
 
 
 class ProjectUpdateClose(generic.ProjectRedirectView):
