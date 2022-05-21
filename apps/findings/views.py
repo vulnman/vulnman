@@ -1,7 +1,9 @@
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from vulnman.views import generic
 from apps.findings import models
 from apps.findings import forms
+from apps.reporting.tasks import export_single_vulnerability
 from apps.assets.models import WebApplication, WebRequest, Host
 
 
@@ -120,6 +122,16 @@ class VulnDetail(generic.ProjectDetailView):
         return context
 
 
+class VulnerabilityExport(generic.ProjectDetailView):
+    model = models.Vulnerability
+
+    def render_to_response(self, context, **response_kwargs):
+        result = export_single_vulnerability(self.get_object())
+        response = HttpResponse(result, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        return response
+
+
 class VulnUpdate(generic.ProjectUpdateView):
     model = models.Vulnerability
     form_class = forms.VulnerabilityForm
@@ -152,7 +164,7 @@ class VulnUpdate(generic.ProjectUpdateView):
     def get_initial(self):
         initial = super().get_initial()
         initial["template_id"] = self.get_object().template.vulnerability_id
-        initial["f_asset"] = (self.get_object().asset.pk, self.get_object().name )
+        initial["f_asset"] = (self.get_object().asset.pk, self.get_object().name)
         return initial
 
     def get_form_kwargs(self):

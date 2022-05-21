@@ -67,11 +67,7 @@
   @top-center { content: none !important}
   @top-right { content: none !important }
 }
-@page :first {
-  background: url(../cover.png) no-repeat center;
-  background-size: cover;
-  margin: 0;
-}
+
 @page chapter {
   background: #2c3e50;
   @top-left { content: none }
