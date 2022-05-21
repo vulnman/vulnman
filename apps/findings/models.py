@@ -187,7 +187,7 @@ class Vulnerability(BaseCVSS, VulnmanProjectModel):
     asset_host = models.ForeignKey('assets.Host', on_delete=models.CASCADE, null=True, blank=True)
     asset_service = models.ForeignKey('assets.Service', on_delete=models.CASCADE, null=True, blank=True)
 
-    auth_required = models.BooleanField(default=False)
+    auth_required = models.BooleanField(default=False)  # not yet used
     user_account = models.ForeignKey('findings.UserAccount', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
