@@ -19,7 +19,9 @@
         {% endif %}
         <div id="page-content-wrapper">
            <!-- Top navigation -->
+            {% if not hide_navbar %}
             {% include 'navigation/topnav/navbar.html' %}
+            {% endif %}
             <!-- Page Content -->
             <div class="container-fluid">
                 <div class="mt-4">

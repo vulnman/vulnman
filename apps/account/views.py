@@ -1,5 +1,4 @@
 from django.contrib.auth import views
-from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from apps.account import forms
 from vulnman.mixins import ThemeMixin
@@ -12,6 +11,7 @@ class Login(ThemeMixin, views.LoginView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['TEMPLATE_HIDE_BREADCRUMBS'] = True
+        context['hide_navbar'] = True
         return context
 
 

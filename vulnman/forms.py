@@ -20,7 +20,7 @@ class CodeMirrorWidget(forms.Textarea):
     @property
     def media(self):
         js = ['js/jquery.min.js', 'js/codemirror/codemirror.min.js', 'js/codemirror/markdown.min.js']
-        css = ['css/codemirror.min.css', 'css/custom.codemirror.css']
+        css = ['css/codemirror.min.css']
         return forms.Media(
             css={'all': css},
             js=js
