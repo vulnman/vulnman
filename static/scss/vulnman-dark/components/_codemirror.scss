@@ -1,0 +1,12 @@
+
+.CodeMirror {
+  color: $sidebar-link-color !important;
+  background-color: $sidebar-bg !important;
+  border: 1px solid $input-border-color !important;
+  border-radius: $input-border-radius !important;
+
+  div.CodeMirror-cursor {
+    border-left: 1px solid white;
+
+  }
+}

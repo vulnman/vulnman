@@ -7,5 +7,5 @@ class ThemeMixin(object):
     """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['css_theme_file'] = "css/themes/%s.min.css" % settings.VULNMAN_CSS_THEME
+        context['custom_css_file'] = settings.CUSTOM_CSS_FILE
         return context
