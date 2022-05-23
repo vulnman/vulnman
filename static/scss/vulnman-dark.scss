@@ -27,13 +27,8 @@
 @import "bootstrap-5.0/dropdown";
 @import "bootstrap-5.0/button-group";
 @import "bootstrap-5.0/nav";
-
-@import "vulnman-dark/navbar";
 @import "bootstrap-5.0/navbar";
-
-@import "vulnman-dark/card";
 @import "bootstrap-5.0/card";
-
 @import "bootstrap-5.0/accordion";
 @import "bootstrap-5.0/breadcrumb";
 @import "bootstrap-5.0/pagination";
@@ -55,4 +50,5 @@
 
 // Utilities
 @import "bootstrap-5.0/utilities/api";
-// scss-docs-end import-stack
+
+@import "vulnman-dark/vulnman-dark-bs";

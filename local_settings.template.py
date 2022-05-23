@@ -12,8 +12,8 @@
 # CSRF_TRUSTED_ORIGINS = ['http://localhost','http://127.0.0.1']
 
 
-# CSS theme
-# VULNMAN_CSS_THEME = "flatly"
+# Custom CSS File
+# CUSTOM_CSS_FILE = '/static/css/mystyle.css
 
 # #################
 # Database Settings

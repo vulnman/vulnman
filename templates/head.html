@@ -2,9 +2,9 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">-->
 <link href="{% static 'css/vulnman/vulnman-dark.css' %}" rel="stylesheet">
-<link href="{% static 'css/sidebar.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<!--<link href="{% static css_theme_file %}" rel="stylesheet">-->
+{% if custom_css_file %}
+<link rel="stylesheet" href="{{ custom_css_file }}">
+{% endif %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
