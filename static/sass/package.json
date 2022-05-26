@@ -1,0 +1,17 @@
+{
+  "name": "vulnman-bootstrap",
+  "description": "Vulnman Bootstrap Theme",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "blockomat2100",
+  "bugs": "",
+  "files": [],
+  "keywords": [],
+  "main": "",
+  "scripts": {},
+  "dependencies": {
+    "bootstrap": "^5.1.3",
+    "select2": "^4.1.0-rc.0",
+    "select2-bootstrap-5-theme": "^1.3.0"
+  }
+}

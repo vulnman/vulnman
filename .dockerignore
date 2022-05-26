@@ -9,3 +9,4 @@ static_files
 uploads
 venv
 __pycache__
+static/sass
