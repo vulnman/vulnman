@@ -4,7 +4,7 @@ from vulnman.views import generic
 from apps.findings import models
 from apps.findings import forms
 from apps.reporting.tasks import export_single_vulnerability
-from apps.assets.models import WebApplication, WebRequest, Host
+from apps.assets.models import WebApplication, WebRequest, Host, Service
 
 
 class TemplateList(generic.VulnmanAuthListView):
@@ -39,6 +39,8 @@ class VulnCreate(generic.ProjectCreateView):
             form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
         elif form.cleaned_data["asset_type"] == Host.ASSET_TYPE:
             form.instance.asset_host = Host.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
+        elif form.cleaned_data["asset_type"] == Service.ASSET_TYPE:
+            form.instance.asset_service = Service.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
         else:
             form.add_error("asset_type", "invalid asset type")
             return super().form_invalid(form)

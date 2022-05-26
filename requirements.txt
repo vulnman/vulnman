@@ -3,7 +3,6 @@ django-widget-tweaks==1.4.12
 cvss==2.3
 django-extra-views==0.14.0
 djangorestframework==3.13.1
-python-libnmap==0.7.2
 Pillow==9.1.0
 markdown==3.3.6
 bleach==4.1.0
@@ -13,7 +12,6 @@ weasyprint==54.2
 django-crispy-forms==1.13.0
 crispy-bootstrap5==0.6
 django-guardian==2.4.0
-django-split-settings==1.1.0
 celery==5.2.3
 django-celery-results==2.2.0
 redis==4.1.4
@@ -23,3 +21,4 @@ pygments==2.11.2
 django-filter==21.1
 gitpython==3.1.27
 pyaml==21.10.1
+django-autocomplete-light==3.9.4

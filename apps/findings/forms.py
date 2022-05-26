@@ -128,9 +128,7 @@ class ProofOrderingForm(forms.Form):
 
 
 class VulnerabilityForm(forms.ModelForm):
-    template_id = forms.CharField(label="Template", widget=forms.TextInput(attrs={
-        'autocomplete':'off'
-    }))
+    template_id = forms.CharField(label="Template", widget=forms.Select())
     f_asset = forms.ChoiceField(choices=[], label="Asset")
 
     class Meta:
@@ -146,6 +144,9 @@ class VulnerabilityForm(forms.ModelForm):
             d_name = "%s (%s)" % (i.name, "Web Request")
             choices.append((str(i.pk), d_name))
         for i in project.host_set.all():
+            d_name = "%s (%s)" % (str(i), "Host")
+            choices.append((str(i.pk), d_name))
+        for i in project.service_set.all():
             d_name = "%s (%s)" % (str(i), "Host")
             choices.append((str(i.pk), d_name))
         return choices

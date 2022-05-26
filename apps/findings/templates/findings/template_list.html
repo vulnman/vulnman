@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Templates
+    Templates
 {% endblock %}
 
 {% block content %}
@@ -11,10 +11,10 @@ Templates
             <input class="form-control" id="search-template">
             <label for="search-template">Search</label>
         </div>
-
         <div class="list-group mt-3" id="template-list">
             {% for template in templates %}
-                <a class="list-group-item list-group-item-action" href="" data-bs-toggle="modal" data-id="{{template.pk}}" data-bs-target="#template-detail-modal">
+                <a class="list-group-item list-group-item-action" href="" data-bs-toggle="modal"
+                   data-id="{{ template.pk }}" data-bs-target="#template-detail-modal">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="clearfix">
@@ -28,7 +28,8 @@ Templates
                         <div class="col-sm-12">
                             <div class="clearfix">
                                 <div class="float-start">
-                                    <small class="text-muted"><i>Last updated: {{ template.date_updated|timesince }} ago</i></small>
+                                    <small class="text-muted"><i>Last updated: {{ template.date_updated|timesince }}
+                                        ago</i></small>
                                 </div>
                             </div>
                         </div>
@@ -55,39 +56,39 @@ Templates
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-    $('#template-detail-modal').on('show.bs.modal', function(e){
-        $.ajax({
-            type: "GET",
-            url: "/api/v1/vulnerabilities/templates/" + e.relatedTarget.dataset['id'] + "/",
-            dataType: "json",
-            success: function(data) {
-                $("#template-detail-modal-label").text(data.name);
-                $("#template-detail-modal .modal-body").html("<h5>Description</h5>" + data.description + "<br/><h5>Recommendation</h5>" + data.recommendation)
-            }
-          });
-    });
+    <script>
+        $('#template-detail-modal').on('show.bs.modal', function (e) {
+            $.ajax({
+                type: "GET",
+                url: "/api/v1/vulnerabilities/templates/" + e.relatedTarget.dataset['id'] + "/",
+                dataType: "json",
+                success: function (data) {
+                    $("#template-detail-modal-label").text(data.name);
+                    $("#template-detail-modal .modal-body").html("<h5>Description</h5>" + data.description + "<br/><h5>Recommendation</h5>" + data.recommendation)
+                }
+            });
+        });
 
-    $('#search-template').on('input', function(){
-        $.ajax({
-            type: "GET",
-            url: "/api/v1/vulnerabilities/templates/?search=" + $('#search-template').val(),
-            dataType: "json",
-            success: function(data) {
-                var results = data["results"];
-                $('#template-list').html("");
-                $.each(results, function(k, v){
-                    console.log(v)
-                    $('#template-list').append(
-                        '<a class="list-group-item list-group-item-action" data-bs-toggle="modal" data-id="' + v.uuid + '" data-bs-target="#template-detail-modal">' +
+        $('#search-template').on('input', function () {
+            $.ajax({
+                type: "GET",
+                url: "/api/v1/vulnerabilities/templates/?search=" + $('#search-template').val(),
+                dataType: "json",
+                success: function (data) {
+                    var results = data["results"];
+                    $('#template-list').html("");
+                    $.each(results, function (k, v) {
+                        console.log(v)
+                        $('#template-list').append(
+                            '<a class="list-group-item list-group-item-action" data-bs-toggle="modal" data-id="' + v.uuid + '" data-bs-target="#template-detail-modal">' +
                             '<div class="row"><div class="col-sm-12"><div class="clearfix"><div class="float-start">' + v.vulnerability_id + '</div></div></div></div>' +
                             '<div class="row"><div class="col-sm-12"><div class="clearfix"><div class="float-start">' +
                             '<small class="text-muted"><i>Last updated: 0 minutes ago</i></small></div></div></div></div>' +
-                        '</a>'
-                    )
-                });
-            }
-        })
-    });
-</script>
+                            '</a>'
+                        )
+                    });
+                }
+            })
+        });
+    </script>
 {% endblock extra_scripts %}

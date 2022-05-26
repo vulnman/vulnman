@@ -13,3 +13,4 @@ site
 custom
 resources/vuln_templates
 resources/checklists
+static/sass/node_modules
