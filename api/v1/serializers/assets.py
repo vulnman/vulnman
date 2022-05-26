@@ -66,6 +66,7 @@ class WebApplicationSerializer(ProjectRelatedObjectSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data["asset_type"] = models.WebApplication.ASSET_TYPE_CHOICE[1]
+        data["display_name"] = instance.name
         return data
 
 
@@ -77,6 +78,7 @@ class WebRequestSerializer(ProjectRelatedObjectSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data["asset_type"] = models.WebRequest.ASSET_TYPE_CHOICE[1]
+        data["display_name"] = instance.name
         return data
 
 
@@ -90,6 +92,7 @@ class HostSerializer(ProjectRelatedObjectSerializer):
         data = super().to_representation(instance)
         data["asset_type"] = models.Host.ASSET_TYPE_CHOICE[1]
         data["name"] = str(instance)
+        data["display_name"] = str(instance)
         return data
 
 
@@ -102,4 +105,5 @@ class ServiceSerializer(ProjectRelatedObjectSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data["asset_type"] = models.Service.ASSET_TYPE_CHOICE[1]
+        data["display_name"] = "%s:%s (%s)" % (instance.host.ip, instance.port, instance.name)
         return data

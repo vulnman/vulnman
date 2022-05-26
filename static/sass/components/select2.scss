@@ -1,0 +1,24 @@
+@import "../node_modules/select2/src/scss/core";
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/utilities";
+
+@import "../themes/dark/variables";
+
+@import "../node_modules/select2-bootstrap-5-theme/src/include-all";
+
+
+.form-floating {
+    .select2-container--bootstrap-5 {
+        .select2-selection {
+            height: $form-floating-height;
+            padding: $form-floating-padding-y $form-floating-padding-x;
+
+            > .select2-selection__rendered {
+                margin-top: .6rem;
+                margin-left: .25rem;
+            }
+        }
+    }
+}
