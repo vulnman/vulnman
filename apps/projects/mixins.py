@@ -6,6 +6,7 @@ from apps.projects.models import Project
 
 
 class ProjectMixin(LoginRequiredMixin, UserPassesTestMixin):
+    # TODO: legacy?
     allowed_project_roles = []
 
     def get_project(self):

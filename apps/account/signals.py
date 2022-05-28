@@ -7,7 +7,9 @@ from rest_framework.authtoken.models import Token
 GROUP_PERMISSION_MAP = {
     "management": {
         "permissions": {
-            "projects.Project": ["add_project", "view_project", "change_project", "delete_project", "add_contributor"],
+            "projects.Project": [
+                "add_project", "view_project", "change_project", "delete_project", "add_contributor",
+                "add_client", "view_client", "change_client", "delete_client"],
         }
     },
     "pentester": {

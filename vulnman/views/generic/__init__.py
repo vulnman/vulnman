@@ -8,6 +8,6 @@ from vulnman.views.generic.vulnman import (
 
 from vulnman.views.generic.project import (
     ProjectListView, ProjectUpdateView, ProjectCreateView, ProjectDetailView, ProjectDeleteView,
-    ProjectCreateWithInlinesView, ProjectUpdateWithInlinesView, ProjectTemplateView, ProjectFormView,
+    ProjectCreateWithInlinesView, ProjectTemplateView, ProjectFormView,
     ProjectRedirectView
 )

@@ -11,9 +11,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'projects:project-list' %}">Projects</a>
                     </li>
+                    {% if perms.projects.view_client %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'clients:client-list' %}">Clients</a>
                     </li>
+                    {% endif %}
                 {% endif %}
                 {% if request.user.is_authenticated %}
                     <li class="nav-item dropdown">

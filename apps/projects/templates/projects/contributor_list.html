@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block title %}
     Contributors
@@ -58,20 +59,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="add-contributor-form">
-                            {% csrf_token %}
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="username">
-                                <label for="username">Username</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <select class="form-select" id="role" aria-label="role">
-                                <option value="pentester">Pentester</option>
-                                </select>
-                                <label for="role">Role</label>
-                            </div>
-                            <button class="form-control btn btn-primary">Add</button>
-                        </form>
+                        {% crispy create_form %}
                     </div>
                 </div>
             </div>
