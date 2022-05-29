@@ -1,6 +1,6 @@
 import secrets
 from uuid import uuid4
-from guardian.shortcuts import assign_perm, remove_perm
+from guardian.shortcuts import assign_perm, remove_perm, get_users_with_perms
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -51,13 +51,9 @@ class Project(models.Model):
         remove_perm("projects.delete_project", self.creator, self)
         remove_perm("projects.add_contributor", self.creator, self)
 
-    def is_contributor(self, user):
-        if self.creator == user:
-            return True
-        return self.projectcontributor_set.filter(user=user).exists()
-
     def get_assets(self):
-        assets = list(self.webapplication_set.all()) + list(self.webrequest_set.all()) + list(self.host_set.all())
+        assets = list(self.webapplication_set.all()) + list(self.webrequest_set.all()) + list(self.host_set.all()) + \
+                 list(self.service_set.all())
         return assets
 
     def get_draft_report(self):
@@ -140,10 +136,15 @@ class ClientContact(models.Model):
 
 class ProjectContributor(models.Model):
     ROLE_PENTESTER = "pentester"
+    ROLE_READ_ONLY = "ro"
 
     CONTRIBUTOR_ROLE_CHOICES = [
         (ROLE_PENTESTER, "Pentester"),
+        (ROLE_READ_ONLY, "Read Only")
     ]
+
+    ROLE_PENTESTER_PERMISSIONS = ["projects.view_project", "projects.change_project"]
+    ROLE_READ_ONLY_PERMISSIONS = ["projects.view_project"]
 
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -155,32 +156,19 @@ class ProjectContributor(models.Model):
     def __str__(self):
         return self.user.username
 
-    def get_role_permission_map(self):
-        # TODO: maybe not allow a pentester to delete a project?
-        # There is no endpoint for this at the moment
-        # but this may change soon.
-        return {
-            ProjectContributor.ROLE_PENTESTER: [
-                "projects.view_project", "projects.change_project",
-                "projects.delete_project"]
-        }
-
     def save(self, *args, **kwargs):
         obj = super().save(*args, **kwargs)
         self.assign_role_permissions(self.role)
         return obj
 
     def assign_role_permissions(self, role):
-        perm_map = self.get_role_permission_map()
-        if perm_map.get(role):
-            for perm in perm_map[role]:
-                assign_perm(perm, user_or_group=self.user, obj=self.project)
-
-    def clear_perms(self):
-        perm_map = self.get_role_permission_map()
-        for role in self.get_role_permission_map().keys():
-            for perm in perm_map[role]:
-                remove_perm(perm, self.user, self.project)
+        perms = []
+        if role == ProjectContributor.ROLE_PENTESTER:
+            perms = ProjectContributor.ROLE_PENTESTER_PERMISSIONS
+        elif role == ProjectContributor.ROLE_READ_ONLY:
+            perms = ProjectContributor.ROLE_READ_ONLY_PERMISSIONS
+        for perm in perms:
+            assign_perm(perm, user_or_group=self.user, obj=self.project)
 
     def get_project(self):
         return self.project

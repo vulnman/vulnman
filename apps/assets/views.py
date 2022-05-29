@@ -42,7 +42,7 @@ class WebApplicationUpdate(generic.ProjectUpdateView):
 
 
 class WebRequestList(generic.ProjectListView):
-    template_name = "assets/webreqests_list.html"
+    template_name = "assets/webrequest_list.html"
     context_object_name = "webrequests"
 
     def get_queryset(self):
@@ -102,8 +102,8 @@ class ServiceList(django_filters.views.FilterMixin, generic.ProjectListView):
     filterset_class = filters.ServiceFilter
     model = models.Service
 
-    def get_queryset(self, *args, **kwargs):
-        qs = super().get_queryset(*args, **kwargs).filter(
+    def get_queryset(self):
+        qs = super().get_queryset().filter(
             project=self.get_project())
         filterset = self.filterset_class(self.request.GET, queryset=qs)
         return filterset.qs

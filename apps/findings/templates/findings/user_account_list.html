@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load guardian_tags %}
 
 {% block title %}
     User Accounts
 {% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item active">User Accounts</li>
-    </ol>
-{% endblock %}
-
 
 {% block content %}
+    <h3 class="text-center">User Accounts</h3>
+    <hr/>
     <div class="container mt-3">
         <div class="clearfix">
             <div class="float-end">
+                {% get_obj_perms request.user for project as "project_perms" %}
+                {% if "change_project" in project_perms %}
                 <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#account-create-modal">
                     <i class="fa fa-plus"></i>
                 </a>
+                {% endif %}
             </div>
         </div>
 

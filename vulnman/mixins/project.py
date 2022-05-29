@@ -8,7 +8,8 @@ from apps.projects.models import Project
 class ProjectMixin(LoginRequiredMixin, UserPassesTestMixin):
 
     def get_objects_for_user(self, perm, obj, use_groups=False):
-        return get_objects_for_user(self.request.user, perm, obj, use_groups=use_groups, accept_global_perms=False, with_superuser=False)
+        return get_objects_for_user(
+            self.request.user, perm, obj, use_groups=use_groups, accept_global_perms=False, with_superuser=False)
 
     def get_project(self):
         if not self.request.session.get('project_pk'):
@@ -22,14 +23,9 @@ class ProjectMixin(LoginRequiredMixin, UserPassesTestMixin):
         project = self.get_project()
         if not project:
             raise PermissionDenied
-        if not project.is_contributor(self.request.user):
-            raise PermissionDenied
-        if self.request.method in ["POST"] and self.request.user.has_perm("change_project", project):
-            return True
-        elif self.request.method in ["GET"] and self.request.user.has_perm("view_project", project):
+        if self.request.user.has_perm("view_project", project):
             return True
         return False
-        
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

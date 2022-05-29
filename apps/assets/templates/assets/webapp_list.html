@@ -1,19 +1,23 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-
+{% load guardian_tags %}
 
 {% block title %}
     Web Applications
 {% endblock %}
 
 {% block content %}
-
+    <h3 class="text-center">Web Applications</h3>
+    <hr/>
     <div class="container mt-3">
         <div class="clearfix">
             <div class="float-end">
+                {% get_obj_perms request.user for project as "project_perms" %}
+                {% if "change_project" in project_perms %}
                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#webapp-create-modal">
                     <i class="fa fa-plus"></i>
                 </a>
+                {% endif %}
             </div>
         </div>
 

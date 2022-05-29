@@ -1,4 +1,5 @@
 from django import forms
+from django.urls import reverse_lazy
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_bootstrap5 import bootstrap5
@@ -102,10 +103,11 @@ class ContributorForm(forms.ModelForm):
         model = models.ProjectContributor
         fields = ["username", "role"]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, project=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_tag = False
+        if project:
+            self.helper.form_action = reverse_lazy("projects:contributor-create", kwargs={"pk": project.pk})
         self.helper.layout = layout.Layout(
             layout.Row(
                 layout.Div(bootstrap5.FloatingField("username"), css_class="col-sm-12"),
@@ -113,6 +115,10 @@ class ContributorForm(forms.ModelForm):
             layout.Row(
                 layout.Div(bootstrap5.FloatingField("role"), css_class="col-sm-12"),
             ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
+            )
         )
 
 

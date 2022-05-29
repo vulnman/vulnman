@@ -10,8 +10,8 @@ class VulnmanAPITestCaseMixin(object):
     def init_mixin(self):
         self.project_pentester = self.create_user("pentester1", "changeme")
         self.denied_pentester = self.create_user("pentester2", "changeme")
-        self.project_pentester.groups.add(Group.objects.get(name="pentester"))
-        self.denied_pentester.groups.add(Group.objects.get(name="pentester"))
+        self.project_pentester.groups.add(Group.objects.get(name="Pentesters"))
+        self.denied_pentester.groups.add(Group.objects.get(name="Pentesters"))
         self.project = self.create_project(creator=self.project_pentester)
         # self.assign_pentester_permissions(self.project_pentester, self.project)
 
