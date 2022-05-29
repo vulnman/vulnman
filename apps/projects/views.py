@@ -6,7 +6,7 @@ from guardian.mixins import PermissionRequiredMixin
 from apps.projects import models
 from apps.projects import forms
 from vulnman.views import generic
-from vulnman.mixins.permission import NonObjectPermissionRequiredMixin
+from vulnman.mixins.permission import NonObjectPermissionRequiredMixin, ObjectPermissionRequiredMixin
 
 
 class ProjectList(generic.VulnmanAuthListView):
@@ -100,11 +100,13 @@ class ProjectUpdateClose(PermissionRequiredMixin, generic.ProjectRedirectView):
         return super().post(request, *args, **kwargs)
 
 
-class ClientList(NonObjectPermissionRequiredMixin, generic.VulnmanAuthListView):
+class ClientList(ObjectPermissionRequiredMixin, generic.VulnmanAuthListView):
     template_name = "projects/client_list.html"
     context_object_name = "clients"
     model = models.Client
     permission_required = ["projects.view_client"]
+    raise_exception = True
+    return_403 = True
 
 
 class ClientDetail(NonObjectPermissionRequiredMixin, generic.VulnmanAuthDetailView):
@@ -115,6 +117,7 @@ class ClientDetail(NonObjectPermissionRequiredMixin, generic.VulnmanAuthDetailVi
 
 
 class ClientCreate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthCreateWithInlinesView):
+    # TODO: deprecate *inlinesview
     template_name = "projects/client_create.html"
     model = models.Client
     permission_required = ["projects.add_client"]

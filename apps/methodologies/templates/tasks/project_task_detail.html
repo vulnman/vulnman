@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% load markdown %}
 {% load static %}
+{% load guardian_tags %}
 
 
 {% block title %}
@@ -52,7 +53,10 @@
                                     <strong>{{ task.get_creator_display }}</strong>
                                 </div>
                                 <div class="float-end">
+                                    {% get_obj_perms request.user for project as "project_perms" %}
+                                    {% if "change_project" in project_perms %}
                                     {% include 'components/task_status_badge.html' %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </p>

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-
+{% load guardian_tags %}
 
 {% block title %}
     {{ webapp }}
@@ -12,6 +12,8 @@
 
         <h3 class="text-center">Web Application: {{ webapp }}</h3>
         <hr/>
+        {% get_obj_perms request.user for project as "project_perms" %}
+        {% if "change_project" in project_perms %}
         <div class="row mt-3">
             <div class="col-sm-12">
                 <div class="float-end">
@@ -24,7 +26,7 @@
                 </div>
             </div>
         </div>
-
+        {% endif %}
         <div class="row mt-3">
             <div class="col-sm-12 col-md-4">
                 <div class="card">
