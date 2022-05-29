@@ -27,10 +27,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'guardian.backends.ObjectPermissionBackend',
-)
+]
 
 ROOT_URLCONF = 'vulnman.urls'
 
@@ -206,12 +206,16 @@ REST_FRAMEWORK = {
     ]
 }
 
-
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
 ]
+AUTH_LDAP_SERVER_URI = None
 
 try:
     from local_settings import *
 except ImportError:
     pass
+
+
+if AUTH_LDAP_SERVER_URI:
+    AUTHENTICATION_BACKENDS.append("django_auth_ldap.backend.LDAPBackend")

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load project_contribs %}
+{% load guardian_tags %}
 
 {% block title %}
     {{ project.name }}
@@ -19,13 +21,16 @@
                         {% if request.user == project.creator %}
                             Creator
                         {% else %}
-                            Pentester
+                            {{ project|get_project_role:request.user }}
                         {% endif %}
                     </p>
                 </div>
                 <div class="float-end">
+                    {% get_obj_perms request.user for project as "project_perms" %}
+                    {% if "change_project" in project_perms %}
                     <a class="btn btn-outline-warning" href="{% url 'projects:project-update' project.pk %}"><i class="fa fa-edit"></i></a>
                     <a class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#close-project-modal"><i class="fa fa-times"></i></a>
+                    {% endif %}
                 </div>
             </div>
         {% endif %}

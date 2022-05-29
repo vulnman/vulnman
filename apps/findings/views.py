@@ -18,14 +18,12 @@ class VulnList(generic.ProjectListView):
     template_name = "findings/vulnerability_list.html"
     context_object_name = "vulns"
     model = models.Vulnerability
-    allowed_project_roles = ["pentester", "read-only"]
 
 
 class VulnCreate(generic.ProjectCreateView):
     model = models.Vulnerability
     form_class = forms.VulnerabilityForm
     template_name = "findings/vulnerability_create.html"
-    allowed_project_roles = ["pentester"]
 
     def form_valid(self, form):
         if not models.Template.objects.filter(vulnerability_id=form.cleaned_data["template_id"]).exists():
@@ -60,7 +58,7 @@ class AddTextProof(generic.ProjectCreateView):
     def form_valid(self, form):
         vuln = self.get_project().vulnerability_set.filter(pk=self.kwargs.get('pk'))
         if not vuln.exists():
-            self.form.add_errors("name", "Vulnerability does not exist!")
+            form.add_error("name", "Vulnerability does not exist!")
             return super().form_invalid(form)
         form.instance.vulnerability = vuln.get()
         form.instance.project = self.get_project()
@@ -98,7 +96,7 @@ class AddImageProof(generic.ProjectCreateView):
     def form_valid(self, form):
         vuln = self.get_project().vulnerability_set.filter(pk=self.kwargs.get('pk'))
         if not vuln.exists():
-            self.form.add_errors("name", "Vulnerability does not exist!")
+            form.add_error("name", "Vulnerability does not exist!")
             return super().form_invalid(form)
         form.instance.vulnerability = vuln.get()
         form.instance.project = self.get_project()
@@ -206,6 +204,9 @@ class ProofSetOrder(generic.ProjectFormView):
             proof = models.TextProof.objects.get(pk=form.cleaned_data["pk"])
         elif models.ImageProof.objects.filter(project=self.get_project(), pk=form.cleaned_data["pk"]).exists():
             proof = models.ImageProof.objects.get(pk=form.cleaned_data["pk"])
+        else:
+            form.add_error("pk", "Invalid choice")
+            return super().form_invalid(form)
         proof.order = form.cleaned_data["pk"]
         proof.save()
         return super().form_valid(form)

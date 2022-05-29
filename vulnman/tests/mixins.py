@@ -14,9 +14,9 @@ class VulnmanTestMixin(object):
         self.pentester1 = self._create_user("pentester", "changeme")
         self.pentester2 = self._create_user("pentester2", "changeme")
         self.manager = self._create_user("manager", "changeme")
-        self.manager.groups.add(Group.objects.get(name="management"))
-        self.pentester1.groups.add(Group.objects.get(name="pentester"))
-        self.pentester2.groups.add(Group.objects.get(name="pentester"))
+        self.manager.groups.add(Group.objects.get(name="Management"))
+        self.pentester1.groups.add(Group.objects.get(name="Pentesters"))
+        self.pentester2.groups.add(Group.objects.get(name="Pentesters"))
         self.project1 = self._create_project(creator=self.pentester1)
         self.project2 = self._create_project(creator=self.pentester2)
 

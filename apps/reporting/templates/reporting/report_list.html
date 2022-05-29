@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load guardian_tags %}
 
 {% block title %}
     Reports
@@ -15,6 +16,8 @@
                 <div class="row">
                     {% if project.get_draft_report %}
                         <small><i id="report-status-info">Updated at {{ project.get_draft_report.date_updated|date:'Y-M-d H:i:s' }}</i></small>
+                    {% else %}
+                        <small><i id="report-status-info">No draft report created yet!</i></small>
                     {% endif %}
                 </div>
             </div>
@@ -22,8 +25,11 @@
                 <div class="row">
                     <div class="clearfix">
                         <div class="float-end">
-                            <button class="btn btn-primary" onclick="createDraftReport()" id="report-draft-create-btn"><i class="fa fa-file"></i> Create Draft</button>
+                            {% get_obj_perms request.user for project as "project_perms" %}
+                            {% if "change_project" in project_perms %}
+                                <button class="btn btn-primary" onclick="createDraftReport()" id="report-draft-create-btn"><i class="fa fa-file"></i> Create Draft</button>
                             {% csrf_token %}
+                            {% endif %}
                             {% if project.get_draft_report %}
                                 <a class="btn btn-primary" target="_blank" href="{% url 'projects:reporting:report-download' project.get_draft_report.pk %}" rel="noopener noreferrer">
                                     <i class="fa fa-download"></i> Download
@@ -43,13 +49,15 @@
                     <div class="clearfix">
                         <div class="float-start">
                             <h4>Pentest Reports</h4>
-
                         </div>
                         <div class="float-end">
+                            {% get_obj_perms request.user for project as "project_perms" %}
+                            {% if "change_project" in project_perms %}
                             <button id="create-report-button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-create-modal">
                                 <i class="fa fa-file"></i>
                                 <span id="create-report-button-spin"></span>Create Report
                             </button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -64,9 +72,12 @@
                                         <h4>{{ report.name }}</h4>
                                     </div>
                                     <div class="float-end">
+                                        {% get_obj_perms request.user for project as "project_perms" %}
+                                        {% if "change_project" in project_perms %}
                                         <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ report.pk }}">
                                             <i class="fa fa-trash"></i>
                                         </a>
+                                        {% endif %}
                                         <a class="btn btn-primary" target="_blank" href="{% url 'projects:reporting:report-download' report.pk %}" rel="noopener noreferrer">
                                             <i class="fa fa-download"></i> Download
                                         </a>
@@ -101,7 +112,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="modal fade" id="report-create-modal" tabindex="-1" aria-labelledby="report-create-modal">
         <div class="modal-dialog">
@@ -190,6 +200,9 @@ function createDraftReport(){
                 checkTaskStatus(data.task_id)
             }, 5 * 1000);
         },
+        error: function(data) {
+            alert("Could not create report!\n" + JSON.stringify(data.responseText))
+        },
         beforeSend: function(xhr){
             xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
         }
@@ -204,11 +217,11 @@ function checkTaskStatus(task_id){
         success: function(data){
             if (data.status === "SUCCESS"){
                 location.reload();
+            } else {
+                console.log(data);
             }
         }
     });
 }
-
-
 </script>
 {% endblock extra_scripts %}
