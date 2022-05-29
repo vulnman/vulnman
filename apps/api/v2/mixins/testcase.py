@@ -11,8 +11,8 @@ class VulnmanAPITestCaseMixin(object):
     def init_mixin(self):
         self.pentester1 = self.create_user("pentester1", "changeme")
         self.pentester2 = self.create_user("pentester2", "changeme")
-        self.pentester1.groups.add(Group.objects.get(name="pentester"))
-        self.pentester2.groups.add(Group.objects.get(name="pentester"))
+        self.pentester1.groups.add(Group.objects.get(name="Pentesters"))
+        self.pentester2.groups.add(Group.objects.get(name="Pentesters"))
         self.project1 = self.create_project(creator=self.pentester1)
         self.project2 = self.create_project(creator=self.pentester2)
 
