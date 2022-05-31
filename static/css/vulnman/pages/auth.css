@@ -6,38 +6,38 @@ body {
   height: 100vh;
   overflow-x: hidden;
 }
-
 #auth #auth-left {
   height: 100%;
-  background: url(/static/images/logo.png), linear-gradient(90deg, #1e1e2d, #1e1e2d);
-  background-size: auto;
+  background: linear-gradient(90deg, #1e1e2d, #1e1e2d);
+  background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
 }
-
+#auth #auth-logo {
+  height: 100%;
+  background: url(/static/images/logo-home.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 70% 70%;
+}
 #auth #auth-right {
   padding: 5rem 8rem;
 }
-
 #auth #auth-right .auth-title {
   font-size: 4rem;
   margin-bottom: 1rem;
 }
-
 #auth #auth-right .auth-subtitle {
   font-size: 1.7rem;
   line-height: 2.5rem;
   color: #a8aebb;
 }
-
 #auth #auth-right .auth-logo {
   margin-bottom: 7rem;
 }
-
 #auth #auth-right .auth-logo img {
   height: 2rem;
 }
-
 @media screen and (max-width: 767px) {
   #auth #auth-right {
     padding: 5rem;
@@ -48,5 +48,3 @@ body {
     padding: 5rem 3rem;
   }
 }
-
-/*# sourceMappingURL=auth.css.map */

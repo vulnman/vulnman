@@ -13,6 +13,7 @@
     <div class="row h-100">
         <div class="col-lg-7 d-lg-block">
             <div id="auth-left">
+                <div id="auth-logo"></div>
             </div>
         </div>
 
@@ -21,7 +22,13 @@
                 <div class="center">
                     <h1 class="auth-title">Log in.</h1>
                     <p class="auth-subtitle mb-5">Log in to your vulnman account.</p>
-
+                    {% if form.errors %}
+                        {% for field, error in form.errors.items %}
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                     <form action="{% url 'account:login' %}" method="post">
                         {% csrf_token %}
                         <div class="form-group position-relative has-icon-left mb-4">
