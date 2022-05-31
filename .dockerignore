@@ -10,3 +10,4 @@ uploads
 venv
 __pycache__
 static/sass
+.sass-cache
