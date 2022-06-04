@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load guardian_tags %}
 
 {% block title %}
     Contributors
@@ -22,6 +23,7 @@
         {% endif %}
 
         <ul class="list-group mt-3">
+            {% get_obj_perms request.user for project as "project_perms" %}
             {% for contributor in contributors %}
                 <li class="list-group-item">
                     <div class="row">
@@ -30,8 +32,10 @@
                                 {{ contributor.user.username}}
                             </div>
                             <div class="float-end">
-                                {% if request.user == project.creator %}
-                                <button class="btn btn-outline-primary" onclick="removeContributor('{{contributor.pk}}')"><i class="fa fa-trash"></i>
+                                {% if "add_contributor" in project_perms %}
+                                <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ contributor.pk }}">
+                                    <i class="fa fa-trash"></i>
+                                </a>
                                 {% endif %}
                             </div>
                         </div>
@@ -42,6 +46,7 @@
                         </div>
                     </div>
                 </li>
+                {% include 'modals/delete_object.html' with obj=contributor %}
             {% empty %}
                 <li class="list-group-item">
                     No Contributors

@@ -13,12 +13,12 @@ The report generation should be as simple as possible to allow the analyst to fo
 
 
 ## Features
-Features are listed in the [documentation](https://vulnman.github.io/docs).
+Features are listed in the [documentation](https://vulnman.github.io/doc).
 
 ## Documentation
 
 ### Online
-The documentation can be found under [https://vulnman.github.io/docs](https://vulnman.github.io/docs).
+The documentation can be found under [https://vulnman.github.io/docs](https://vulnman.github.io/doc).
 
 ### Build locally
 You can build the documentation locally using jekyll.

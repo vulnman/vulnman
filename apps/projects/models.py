@@ -43,6 +43,9 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse_lazy("projects:project-detail", kwargs={"pk": self.pk})
+
     def archive_project(self):
         for contributor in self.projectcontributor_set.all():
             remove_perm("projects.change_project", contributor.user, self)
@@ -172,6 +175,9 @@ class ProjectContributor(models.Model):
 
     def get_project(self):
         return self.project
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy("projects:contributor-delete", kwargs={"pk": self.pk})
 
     class Meta:
         unique_together = [("user", "project")]

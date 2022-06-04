@@ -12,3 +12,4 @@ class ClientAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Project)
 admin.site.register(models.Client, ClientAdmin)
+admin.site.register(models.ProjectContributor)
