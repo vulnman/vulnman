@@ -1,10 +1,13 @@
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.template.loader import render_to_string
 from django.contrib.auth.models import User
+from django.conf import settings
 from guardian.shortcuts import get_objects_for_user
 from guardian.mixins import PermissionRequiredMixin
 from apps.projects import models
 from apps.projects import forms
+from core.tasks.send_mail import send_mail_task
 from vulnman.views import generic
 from vulnman.mixins.permission import NonObjectPermissionRequiredMixin, ObjectPermissionRequiredMixin
 
@@ -151,7 +154,23 @@ class ProjectContributorCreate(generic.ProjectCreateView):
             form.add_error("username", "Username not found!")
             return super().form_invalid(form)
         form.instance.user = user.get()
+        if settings.EMAIL_BACKEND:
+            send_mail_task.delay(
+                "vulnman - New Project %s" % self.get_project().name,
+                render_to_string("emails/new_project_contributor.html", context={
+                    "obj": form.instance, "request": self.request, "project": self.get_project()}),
+                form.instance.user.email
+            )
         return super().form_valid(form)
+
+
+class ProjectContributorDelete(generic.ProjectDeleteView):
+    http_method_names = ["post"]
+    permission_required = ["projects.add_contributor"]
+    model = models.ProjectContributor
+
+    def get_success_url(self):
+        return reverse_lazy("projects:contributor-list", kwargs={"pk": self.get_project().pk})
 
 
 class ProjectTokenList(generic.ProjectListView):

@@ -33,4 +33,5 @@ urlpatterns = [
     path('<str:pk>/close/', views.ProjectUpdateClose.as_view(), name="project-close"),
     path('<str:pk>/contributors/', views.ProjectContributorList.as_view(), name="contributor-list"),
     path('<str:pk>/contributors/create/', views.ProjectContributorCreate.as_view(), name="contributor-create"),
+    path('<str:pk>/contributors/delete/', views.ProjectContributorDelete.as_view(), name="contributor-delete")
 ]
