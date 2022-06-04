@@ -147,7 +147,8 @@ INSTALLED_APPS = [
     'apps.findings.apps.FindingsConfig',
     'apps.assets.apps.AssetsConfig',
     'core.apps.CoreConfig',
-    'api.apps.ApiConfig'
+    'api.apps.ApiConfig',
+    'apps.responsible_disc.apps.ResponsibleDiscConfig',
 ]
 
 

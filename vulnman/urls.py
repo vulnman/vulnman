@@ -27,5 +27,6 @@ urlpatterns = [
     path('clients/', include('apps.projects.urls.clients')),
     path('vulnerability-templates/', include('apps.findings.urls.global')),
     path('methodologies/', include('apps.methodologies.urls.global')),
+    path('responsible-disclosure/', include('apps.responsible_disc.urls')),
     path('', include('apps.dashboard.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
