@@ -1,5 +1,6 @@
 import base64
 from django.db import models
+from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 
 
@@ -53,6 +54,15 @@ class Vulnerability(models.Model):
             return self.severity
         return self.template.severity
 
+    def get_absolute_url(self):
+        return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.pk})
+
+    @property
+    def proofs(self):
+        proofs = list(self.textproof_set.all()) + list(self.imageproof_set.all())
+        proofs.sort(key=lambda proof: proof.order or 0)
+        return proofs
+
 
 def get_proof_path(instance, filename):
     return "uploads/responsible_disclosure/%s/%s/%s" % (instance.user.pk, instance.pk, filename)
@@ -76,6 +86,9 @@ class Proof(models.Model):
 class TextProof(Proof):
     text = models.TextField(help_text="Markdown supported!")
 
+    def get_absolute_delete_url(self):
+        return reverse_lazy("responsible_disc:text-proof-delete", kwargs={"pk": self.pk})
+
 
 class ImageProof(Proof):
     caption = models.CharField(max_length=128, blank=True, null=True)
@@ -86,3 +99,5 @@ class ImageProof(Proof):
             encoded = base64.b64encode(image_f.read())
             return "data:image/png;base64, %s" % encoded.decode()
 
+    def get_absolute_delete_url(self):
+        return reverse_lazy("responsible_disc:image-proof-delete", kwargs={"pk": self.pk})

@@ -148,7 +148,6 @@ INSTALLED_APPS = [
     'apps.assets.apps.AssetsConfig',
     'core.apps.CoreConfig',
     'api.apps.ApiConfig',
-    'apps.responsible_disc.apps.ResponsibleDiscConfig',
 ]
 
 
@@ -211,6 +210,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
 ]
 AUTH_LDAP_SERVER_URI = None
+RESPONSIBLE_DISCLOSURE_APP_ENABLE = False
+
 
 try:
     from local_settings import *
@@ -218,5 +219,9 @@ except ImportError:
     pass
 
 
+# Enable LDAP authentication backend, if LDAP_SERVER_URI is configured
 if AUTH_LDAP_SERVER_URI:
     AUTHENTICATION_BACKENDS.append("django_auth_ldap.backend.LDAPBackend")
+
+if RESPONSIBLE_DISCLOSURE_APP_ENABLE:
+    INSTALLED_APPS.append('apps.responsible_disc.apps.ResponsibleDiscConfig')

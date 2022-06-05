@@ -1,1 +1,1 @@
-from vulnman.mixins.theme import ThemeMixin
+from vulnman.mixins.theme import ThemeMixin, VulnmanContextMixin
