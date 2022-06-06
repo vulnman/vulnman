@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
-from api.v1.mixins import VulnmanAPITestCaseMixin
+from api.v1.mixins.testcase import VulnmanAPITestCaseMixin
 
 
 class ProjectViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
