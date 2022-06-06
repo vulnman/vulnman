@@ -188,28 +188,13 @@ class VulnDelete(generic.ProjectDeleteView):
 class TextProofDelete(generic.ProjectDeleteView):
     model = models.TextProof
     http_method_names = ["post"]
+    permission_required = ["projects.change_project"]
 
     def get_success_url(self):
         return reverse_lazy('projects:findings:vulnerability-list')
 
     def get_queryset(self):
         return models.TextProof.objects.filter(project=self.get_project())
-
-
-class ProofSetOrder(generic.ProjectFormView):
-    http_method_names = ["post"]
-
-    def form_valid(self, form):
-        if models.TextProof.objects.filter(project=self.get_project(), pk=form.cleaned_data["pk"]).exists():
-            proof = models.TextProof.objects.get(pk=form.cleaned_data["pk"])
-        elif models.ImageProof.objects.filter(project=self.get_project(), pk=form.cleaned_data["pk"]).exists():
-            proof = models.ImageProof.objects.get(pk=form.cleaned_data["pk"])
-        else:
-            form.add_error("pk", "Invalid choice")
-            return super().form_invalid(form)
-        proof.order = form.cleaned_data["pk"]
-        proof.save()
-        return super().form_valid(form)
 
 
 class UserAccountList(generic.ProjectListView):
@@ -243,6 +228,7 @@ class UserAccountUpdate(generic.ProjectUpdateView):
 class UserAccountDelete(generic.ProjectDeleteView):
     model = models.UserAccount
     http_method_names = ["post"]
+    permission_required = ["projects.change_project"]
 
     def get_success_url(self):
         return reverse_lazy('projects:findings:user-account-list')

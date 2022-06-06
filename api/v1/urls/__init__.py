@@ -35,7 +35,7 @@ router.register(
     basename="vulnerability-template")
 
 router.register(
-    "vulnerabilities/proofs", viewsets.vulnerability.ProofViewSet,
+    "vulnerabilities/proofs", viewsets.ProofViewSet,
     basename="vulnerability-proof")
 
 router.register(

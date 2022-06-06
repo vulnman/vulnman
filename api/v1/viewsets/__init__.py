@@ -5,3 +5,4 @@ from api.v1.viewsets import projects
 from api.v1.viewsets import reports
 from api.v1.viewsets.session.assets import *
 from api.v1.viewsets.checklists import *
+from api.v1.viewsets.session.vulnerability import *

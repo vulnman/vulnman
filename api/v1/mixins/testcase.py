@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 from django.urls import reverse_lazy
 from guardian.shortcuts import assign_perm
 from ddf import G
-from apps.projects.models import Project
+from apps.projects.models import Project, ProjectContributor
 from apps.projects.models import ProjectAPIToken
 
 
@@ -20,6 +20,9 @@ class VulnmanAPITestCaseMixin(object):
         email = "{username}@example.com".format(username=username)
         return User.objects.create_user(
             username, password=password, is_staff=is_staff, email=email)
+
+    def add_contributor(self, user, project, role=ProjectContributor.ROLE_PENTESTER):
+        return ProjectContributor.objects.create(user=user, project=project, role=role)
 
     def get_url(self, endpoint, **kwargs):
         return reverse_lazy(endpoint, kwargs=kwargs)
