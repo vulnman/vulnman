@@ -1,7 +1,7 @@
 from django.test import TestCase
 from vulnman.tests.mixins import VulnmanTestMixin
 from apps.assets import models
-from apps.projects.models import ProjectContributor
+from apps.projects.models import ProjectContributor, ProjectAPIToken
 
 
 class ProjectUserRolesTestCase(TestCase, VulnmanTestMixin):
@@ -35,3 +35,10 @@ class ProjectUserRolesTestCase(TestCase, VulnmanTestMixin):
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(models.Host.objects.count(), 1)
+
+    def test_api_token_wiped(self):
+        contributor = self.add_contributor(self.pentester2, self.project1)
+        self._create_instance(ProjectAPIToken, user=self.pentester2, project=self.project1)
+        self.assertEqual(ProjectAPIToken.objects.count(), 1)
+        contributor.delete()
+        self.assertEqual(ProjectAPIToken.objects.count(), 0)

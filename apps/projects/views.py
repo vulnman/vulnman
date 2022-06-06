@@ -191,6 +191,7 @@ class ProjectTokenCreate(generic.ProjectCreateView):
     http_method_names = ["post"]
     form_class = forms.ProjectAPITokenForm
     success_url = reverse_lazy("projects:token-list")
+    permission_required = ["projects.change_project"]
 
     def get_queryset(self):
         return models.ProjectAPIToken.objects.filter(project=self.get_project(), user=self.request.user)

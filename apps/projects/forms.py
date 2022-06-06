@@ -10,7 +10,6 @@ from crispy_forms.bootstrap import FormActions
 
 
 class ProjectForm(forms.ModelForm):
-
     class Meta:
         model = models.Project
         fields = ["client", "start_date", "end_date", "name", "cvss_required", "pentest_method"]
@@ -49,7 +48,6 @@ class ProjectForm(forms.ModelForm):
 
 
 class ClientForm(forms.ModelForm):
-
     class Meta:
         model = models.Client
         fields = ["name", "street", "city", "country", "zip"]
@@ -125,7 +123,8 @@ class ContributorForm(forms.ModelForm):
 class ProjectAPITokenForm(forms.ModelForm):
     class Meta:
         model = models.ProjectAPIToken
-        fields = ["name", ]
+        fields = ["name", "date_valid"]
+        widgets = {'date_valid': DateInput()}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -136,8 +135,10 @@ class ProjectAPITokenForm(forms.ModelForm):
                 layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12")
             ),
             layout.Row(
-                FormActions(layout.Submit("submit", "Submit",
-                    css_class="btn btn-primary w-100"),
-                    wrapper_class="col-sm-12 col-md-6")
+                layout.Div(bootstrap5.FloatingField("date_valid"), css_class="col-sm-12")
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )

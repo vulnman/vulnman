@@ -72,7 +72,9 @@ class Project(models.Model):
     def assign_creator_permissions(self):
         if not self.creator:
             return
-        perms = ["projects.add_contributor", "projects.view_project", "projects.change_project", "projects.delete_project"]
+        perms = [
+            "projects.add_contributor", "projects.view_project", "projects.change_project", "projects.delete_project"
+        ]
         for perm in perms:
             assign_perm(perm, user_or_group=self.creator, obj=self)
 
@@ -188,6 +190,7 @@ class ProjectAPIToken(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=32)
+    date_valid = models.DateField()
 
     @classmethod
     def generate_key(cls):
