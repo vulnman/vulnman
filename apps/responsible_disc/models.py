@@ -2,6 +2,7 @@ import base64
 from django.db import models
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
+from vulnman.models import VulnmanModel
 
 
 class Vulnerability(models.Model):
@@ -40,6 +41,7 @@ class Vulnerability(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="resp_vulnerability_set")
     vendor = models.CharField(max_length=128)
     vendor_homepage = models.URLField()
+    vendor_email = models.EmailField(null=True)
     affected_product = models.CharField(max_length=256)
     affected_versions = models.CharField(max_length=256)
     fixed_version = models.CharField(max_length=100, null=True, blank=True)
@@ -101,3 +103,23 @@ class ImageProof(Proof):
 
     def get_absolute_delete_url(self):
         return reverse_lazy("responsible_disc:image-proof-delete", kwargs={"pk": self.pk})
+
+
+class VulnerabilityLog(VulnmanModel):
+    ACTION_VULNERABILITY_CREATION = 0
+    ACTION_VENDOR_NOTIFIED = 1
+    ACTION_VENDOR_COMMUNICATION = 2
+    ACTION_VENDOR_ANNOUNCE_FIXED = 3
+    ACTION_FIX_CONFIRMED = 4
+    ACTION_INTERNAL_LOG = 100
+
+    ACTION_CHOICES = [
+        (ACTION_VENDOR_NOTIFIED, "Notified vendor"),
+        (ACTION_VULNERABILITY_CREATION, "Vulnerability found"),
+        (ACTION_VENDOR_ANNOUNCE_FIXED, "Vendor announces fix"),
+        (ACTION_VENDOR_COMMUNICATION, "Communication with vendor"),
+        (ACTION_FIX_CONFIRMED, "Fix confirmed")
+    ]
+    vulnerability = models.ForeignKey('responsible_disc.Vulnerability', on_delete=models.CASCADE)
+    action = models.PositiveIntegerField(choices=ACTION_CHOICES)
+    message = models.TextField(blank=True, null=True)

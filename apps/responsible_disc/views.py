@@ -1,8 +1,10 @@
 from django.urls import reverse_lazy
+from django.http import HttpResponse
 from vulnman.views import generic
 from apps.findings.models import Template
 from apps.responsible_disc import models
 from apps.responsible_disc import forms
+from apps.responsible_disc import tasks
 
 
 class VulnerabilityList(generic.VulnmanAuthListView):
@@ -84,7 +86,7 @@ class TextProofDelete(generic.VulnmanAuthDeleteView):
     http_method_names = ["post"]
 
     def get_success_url(self):
-        return reverse_lazy('responsible_disc:vulnerability-list')
+        return reverse_lazy('responsible_disc:vulnerability-detail', kwargs={"pk": self.get_object().vulnerability.pk})
 
     def get_queryset(self):
         return models.TextProof.objects.filter(vulnerability__user=self.request.user)
@@ -95,7 +97,33 @@ class ImageProofDelete(generic.VulnmanAuthDeleteView):
     http_method_names = ["post"]
 
     def get_success_url(self):
-        return reverse_lazy('responsible_disc:vulnerability-list')
+        return reverse_lazy('responsible_disc:vulnerability-detail', kwargs={"pk": self.get_object().vulnerability.pk})
 
     def get_queryset(self):
         return models.ImageProof.objects.filter(vulnerability__user=self.request.user)
+
+
+class VulnerabilityExport(generic.VulnmanAuthDetailView):
+    model = models.Vulnerability
+
+    def render_to_response(self, context, **response_kwargs):
+        result = tasks.export_single_vulnerability(self.get_object())
+        response = HttpResponse(result, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        return response
+
+
+class VulnerabilityNotifyVendor(generic.VulnmanAuthUpdateView):
+    form_class = forms.VulnerabilityNotificationForm
+    http_method_names = ["post"]
+
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(user=self.request.user)
+
+    def form_valid(self, form):
+        if not form.instance.vendor_email:
+            form.add_error("empty", "No vendor email set")
+            return super().form_invalid(form)
+        tasks.notify_vendor.delay(str(form.instance.pk))
+        form.instance.status = models.Vulnerability.STATUS_VENDOR_NOTIFIED
+        return super().form_valid(form)

@@ -114,3 +114,10 @@ class VulnerabilityForm(forms.ModelForm):
             )
         )
 
+
+class VulnerabilityNotificationForm(forms.ModelForm):
+    empty = forms.CharField(required=False)
+
+    class Meta:
+        model = models.Vulnerability
+        fields = ["empty"]

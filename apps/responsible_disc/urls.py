@@ -13,6 +13,9 @@ urlpatterns = [
          name="vulnerability-add-text-proof"),
     path('vulnerabilities/<str:pk>/add-image-proof/', views.AddImageProof.as_view(),
          name="vulnerability-add-image-proof"),
+    path('vulnerabilities/<str:pk>/export-pdf/', views.VulnerabilityExport.as_view(), name="vulnerability-export-pdf"),
+    path('vulnerabilities/<str:pk>/notify-vendor/',
+         views.VulnerabilityNotifyVendor.as_view(), name="vulnerability-notify-vendor"),
 
     path('proofs/text/<str:pk>/delete/', views.TextProofDelete.as_view(), name="text-proof-delete"),
     path('proofs/image/<str:pk>/delete/', views.ImageProofDelete.as_view(), name="image-proof-delete"),
