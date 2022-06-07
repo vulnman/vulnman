@@ -1,7 +1,7 @@
 from django.core.exceptions import ImproperlyConfigured
 from vulnman.mixins.project import ProjectMixin
 from vulnman.mixins.permission import ObjectPermissionRequiredMixin
-from vulnman.views.generic.vulnman import (
+from vulnman.core.views.generics.vulnman import (
     VulnmanAuthDetailView, VulnmanAuthListView, VulnmanAuthCreateView, VulnmanAuthUpdateView, VulnmanAuthDeleteView,
     VulnmanAuthCreateWithInlinesView, VulnmanAuthTemplateView, VulnmanAuthFormView,
     VulnmanAuthRedirectView

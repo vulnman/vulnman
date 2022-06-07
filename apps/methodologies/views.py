@@ -1,10 +1,11 @@
 import django_filters.views
 from vulnman.views import generic
+from vulnman.core.views import generics
 from apps.methodologies import filters
 from core import models
 
 
-class TaskList(generic.VulnmanAuthListView):
+class TaskList(generics.VulnmanAuthListView):
     template_name = "methodologies/methodology_list.html"
     context_object_name = "methodologies"
     extra_context = {'TEMPLATE_HIDE_BREADCRUMBS': True}

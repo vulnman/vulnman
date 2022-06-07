@@ -9,10 +9,11 @@ from apps.projects import models
 from apps.projects import forms
 from core.tasks.send_mail import send_mail_task
 from vulnman.views import generic
+from vulnman.core.views import generics
 from vulnman.mixins.permission import NonObjectPermissionRequiredMixin, ObjectPermissionRequiredMixin
 
 
-class ProjectList(generic.VulnmanAuthListView):
+class ProjectList(generics.VulnmanAuthListView):
     template_name = "projects/project_list.html"
     context_object_name = "projects"
 
@@ -38,7 +39,7 @@ class ProjectList(generic.VulnmanAuthListView):
         return super().get(request, *args, **kwargs)
 
 
-class ProjectCreate(NonObjectPermissionRequiredMixin, generic.VulnmanCreateView):
+class ProjectCreate(NonObjectPermissionRequiredMixin, generics.VulnmanCreateView):
     http_method_names = ["post"]
     form_class = forms.ProjectForm
     model = models.Project
@@ -50,7 +51,7 @@ class ProjectCreate(NonObjectPermissionRequiredMixin, generic.VulnmanCreateView)
         return super().form_valid(form)
 
 
-class ProjectDetail(PermissionRequiredMixin, generic.VulnmanAuthDetailView):
+class ProjectDetail(PermissionRequiredMixin, generics.VulnmanAuthDetailView):
     template_name = "projects/project_detail.html"
     raise_exception = True
     return_403 = True
@@ -69,7 +70,7 @@ class ProjectDetail(PermissionRequiredMixin, generic.VulnmanAuthDetailView):
                                     use_groups=False, accept_global_perms=False, with_superuser=False)
 
 
-class ProjectUpdate(PermissionRequiredMixin, generic.VulnmanAuthUpdateView):
+class ProjectUpdate(PermissionRequiredMixin, generics.VulnmanAuthUpdateView):
     template_name = "projects/project_create.html"
     form_class = forms.ProjectForm
     model = models.Project
@@ -103,7 +104,7 @@ class ProjectUpdateClose(PermissionRequiredMixin, generic.ProjectRedirectView):
         return super().post(request, *args, **kwargs)
 
 
-class ClientList(ObjectPermissionRequiredMixin, generic.VulnmanAuthListView):
+class ClientList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
     template_name = "projects/client_list.html"
     context_object_name = "clients"
     model = models.Client
@@ -112,14 +113,14 @@ class ClientList(ObjectPermissionRequiredMixin, generic.VulnmanAuthListView):
     return_403 = True
 
 
-class ClientDetail(NonObjectPermissionRequiredMixin, generic.VulnmanAuthDetailView):
+class ClientDetail(NonObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
     template_name = "projects/client_detail.html"
     context_object_name = "client"
     model = models.Client
     permission_required = ["projects.view_client"]
 
 
-class ClientCreate(NonObjectPermissionRequiredMixin, generic.VulnmanAuthCreateWithInlinesView):
+class ClientCreate(NonObjectPermissionRequiredMixin, generics.VulnmanAuthCreateWithInlinesView):
     # TODO: deprecate *inlinesview
     template_name = "projects/client_create.html"
     model = models.Client
