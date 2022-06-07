@@ -13,7 +13,6 @@ app_name = "v1"
 
 router = DefaultRouter()
 
-router.register("projects/contributors", projects_views.ProjectContributorViewSet, basename="project-contributor")
 router.register("projects", projects_views.ProjectViewSet, basename="project")
 router.register("user-accounts", findings_views.UserAccountViewSet, basename="user-account")
 router.register("vulnerabilities/text-proof", findings_views.TextProofViewSet, basename="text-proof")

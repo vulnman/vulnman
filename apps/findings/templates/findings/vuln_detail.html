@@ -182,7 +182,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-1 my-auto">
-                                            <i class="fa fa-grip-vertical draggable-icon fa-2xl float-end" data-proof-pk="{{ proof.pk }}"
+                                            <i class="fa fa-arrows-up-down draggable-icon fa-2xl float-end" data-proof-pk="{{ proof.pk }}"
                                                 data-id="{{ forloop.counter }}"
                                                 data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
                                             </i>
@@ -285,7 +285,7 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+<script src="{% static 'js/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
 <script>
     $(function() {
         $.ajaxSetup({
@@ -295,6 +295,7 @@
         });
 
         $("#sortable").sortable({
+            handle: '.draggable-icon',
             update: function ($item, container, _super, event) {
                 var proof_ids = [];
                 $('#sortable .draggable-icon').each(function (i) {

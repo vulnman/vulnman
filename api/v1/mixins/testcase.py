@@ -1,9 +1,10 @@
 from uuid import uuid4
 from django.contrib.auth.models import User, Group
+from django.utils import timezone
 from django.urls import reverse_lazy
 from guardian.shortcuts import assign_perm
 from ddf import G
-from apps.projects.models import Project
+from apps.projects.models import Project, ProjectContributor
 from apps.projects.models import ProjectAPIToken
 
 
@@ -21,6 +22,9 @@ class VulnmanAPITestCaseMixin(object):
         return User.objects.create_user(
             username, password=password, is_staff=is_staff, email=email)
 
+    def add_contributor(self, user, project, role=ProjectContributor.ROLE_PENTESTER):
+        return ProjectContributor.objects.create(user=user, project=project, role=role)
+
     def get_url(self, endpoint, **kwargs):
         return reverse_lazy(endpoint, kwargs=kwargs)
 
@@ -34,8 +38,9 @@ class VulnmanAPITestCaseMixin(object):
         assign_perm(perm, user_or_group=user_or_group, obj=obj)
 
     def create_project_token(self, project, user):
+        date_valid = timezone.now() + timezone.timedelta(days=3)
         return self.create_instance(
-            ProjectAPIToken, project=project, user=user)
+            ProjectAPIToken, project=project, user=user, date_valid=date_valid)
 
     def login_with_project(self, user, project):
         # login using session and credentials

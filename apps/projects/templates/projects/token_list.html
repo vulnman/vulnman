@@ -33,7 +33,7 @@ Tokens
                                     <p>{{ token.key|truncatechars:54 }}</p>
                                 </div>
                                 <div class="float-end">
-                                    <a class="btn btn-outline-info" onclick="copyToClipboard('{{token.pk}}')" data-toggle="tooltip" title="Copied" class="copy-button">
+                                    <a class="btn btn-outline-info copy-button" onclick="copyToClipboard('{{token.pk}}')" data-toggle="tooltip" title="Copied">
                                         <i class="fa fa-copy"></i>
                                     </a>
                                     <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ token.pk }}">
@@ -47,7 +47,7 @@ Tokens
                         <div class="col-sm-12">
                             <div class="clearfix">
                                 <div class="float-start">
-                                    <small class="text-muted"><i>Last updated: 0m ago</i></small>
+                                    <small class="text-muted"><i>Date valid: {{ token.date_valid }}</i></small>
                                 </div>
                             </div>
                         </div>
