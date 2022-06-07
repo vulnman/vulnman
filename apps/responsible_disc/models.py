@@ -65,7 +65,7 @@ class Vulnerability(models.Model):
 
 
 def get_proof_path(instance, filename):
-    return "uploads/responsible_disclosure/%s/%s/%s" % (instance.user.pk, instance.pk, filename)
+    return "uploads/responsible_disclosure/%s/%s/%s" % (instance.user.pk, instance.vulnerability.pk, filename)
 
 
 class Proof(models.Model):
