@@ -114,6 +114,7 @@
 
 #####################################
 # Responsible Disclosure Application
+# NOTE: This feature is under active development
 #####################################
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = "smtp.example.com"
