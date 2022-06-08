@@ -42,3 +42,6 @@ def notify_vendor(vulnerability_pk):
                         bcc=[vulnerability.user.email])
     mail.attach("details.pdf", pdf_source, "application/pdf")
     mail.send()
+    models.VulnerabilityLog.objects.create(message="Notification Mail sent.",
+                                           vulnerability=vulnerability,
+                                           action=models.VulnerabilityLog.ACTION_VENDOR_NOTIFIED)

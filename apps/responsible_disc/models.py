@@ -59,11 +59,22 @@ class Vulnerability(models.Model):
     def get_absolute_url(self):
         return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.pk})
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            super().save(*args, **kwargs)
+            VulnerabilityLog.objects.create(action=VulnerabilityLog.ACTION_VULNERABILITY_CREATION,
+                                            vulnerability=self, message="Vulnerability created in vulnman")
+            return
+        return super().save(*args, **kwargs)
+
     @property
     def proofs(self):
         proofs = list(self.textproof_set.all()) + list(self.imageproof_set.all())
         proofs.sort(key=lambda proof: proof.order or 0)
         return proofs
+
+    def get_public_timeline(self):
+        return self.vulnerabilitylog_set.filter(~models.Q(action=VulnerabilityLog.ACTION_INTERNAL_LOG))
 
 
 def get_proof_path(instance, filename):
@@ -123,3 +134,7 @@ class VulnerabilityLog(VulnmanModel):
     vulnerability = models.ForeignKey('responsible_disc.Vulnerability', on_delete=models.CASCADE)
     action = models.PositiveIntegerField(choices=ACTION_CHOICES)
     message = models.TextField(blank=True, null=True)
+
+    class Meta:
+        ordering = ["date_created"]
+
