@@ -104,7 +104,9 @@ class ImageProofDelete(generic.VulnmanAuthDeleteView):
 
 
 class VulnerabilityExport(generic.VulnmanAuthDetailView):
-    model = models.Vulnerability
+
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(user=self.request.user)
 
     def render_to_response(self, context, **response_kwargs):
         result = tasks.export_single_vulnerability(self.get_object())
@@ -127,3 +129,41 @@ class VulnerabilityNotifyVendor(generic.VulnmanAuthUpdateView):
         tasks.notify_vendor.delay(str(form.instance.pk))
         form.instance.status = models.Vulnerability.STATUS_VENDOR_NOTIFIED
         return super().form_valid(form)
+
+
+class VulnUpdate(generic.VulnmanAuthUpdateView):
+    model = models.Vulnerability
+    form_class = forms.VulnerabilityForm
+    template_name = "responsible_disc/vulnerability_create.html"
+
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(user=self.request.user)
+
+    def form_valid(self, form):
+        if not Template.objects.filter(vulnerability_id=form.cleaned_data["template_id"]).exists():
+            form.add_error("template_id", "Template does not exist!")
+            return super().form_invalid(form)
+        form.instance.template = Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
+        if not form.cleaned_data.get('severity'):
+            form.instance.severity = form.instance.template.severity
+        return super().form_valid(form)
+
+
+class VulnDelete(generic.VulnmanAuthDeleteView):
+    http_method_names = ["post"]
+    success_url = reverse_lazy('responsible_disc:vulnerability-list')
+
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(user=self.request.user)
+
+
+class VulnerabilityAdvisoryExport(generic.VulnmanAuthDetailView):
+
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(user=self.request.user)
+
+    def render_to_response(self, context, **response_kwargs):
+        result = tasks.export_advisory(self.get_object())
+        response = HttpResponse(result, content_type='plain/text')
+        response['Content-Disposition'] = 'attachment; filename="advisory.md"'
+        return response

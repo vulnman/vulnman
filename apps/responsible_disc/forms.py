@@ -62,6 +62,7 @@ class VulnerabilityForm(forms.ModelForm):
         model = models.Vulnerability
         fields = [
             "template_id", "name", "status", "cve_id", "severity", "cve_request_id", "vendor", "vendor_homepage",
+            "vendor_email",
             "fixed_version", "affected_versions", "affected_product"]
 
     def __init__(self, *args, **kwargs):
@@ -89,10 +90,13 @@ class VulnerabilityForm(forms.ModelForm):
             ),
             layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField("vendor"), css_class="col-sm-12 col-md-6",
+                    bootstrap5.FloatingField("vendor"), css_class="col-sm-12 col-md-4",
                 ),
                 layout.Div(
-                    bootstrap5.FloatingField('vendor_homepage'), css_class="col-sm-12 col-md-6",
+                    bootstrap5.FloatingField("vendor_email"), css_class="col-sm-12 col-md-4",
+                ),
+                layout.Div(
+                    bootstrap5.FloatingField('vendor_homepage'), css_class="col-sm-12 col-md-4",
                 )
             ),
             layout.Row(

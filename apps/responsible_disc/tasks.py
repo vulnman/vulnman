@@ -26,6 +26,17 @@ def export_single_vulnerability(vulnerability):
 
 
 @shared_task
+def export_advisory(vulnerability):
+    context = {
+        "vulnerability": vulnerability,
+        "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
+    }
+    template = "responsible_disc/reporting/advisory.md"
+    raw_source = render_to_string(template, context)
+    return raw_source
+
+
+@shared_task
 def notify_vendor(vulnerability_pk):
     vulnerability = models.Vulnerability.objects.get(pk=vulnerability_pk)
     pdf_source = export_single_vulnerability(vulnerability)

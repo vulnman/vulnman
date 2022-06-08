@@ -59,6 +59,9 @@ class Vulnerability(models.Model):
     def get_absolute_url(self):
         return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.pk})
 
+    def get_absolute_delete_url(self):
+        return reverse_lazy("responsible_disc:vulnerability-delete", kwargs={"pk": self.pk})
+
     def save(self, *args, **kwargs):
         if not self.pk:
             super().save(*args, **kwargs)
