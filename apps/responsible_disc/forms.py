@@ -4,6 +4,7 @@ from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
 from vulnman.forms import CodeMirrorWidget
+from vulnman.forms import DateInput
 from apps.responsible_disc import models
 
 
@@ -125,3 +126,32 @@ class VulnerabilityNotificationForm(forms.ModelForm):
     class Meta:
         model = models.Vulnerability
         fields = ["empty"]
+
+
+class VulnerabilityLogForm(forms.ModelForm):
+    class Meta:
+        model = models.VulnerabilityLog
+        fields = ["custom_date", "action", "message"]
+        widgets = {
+            'custom_date': DateInput
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("custom_date"), css_class="col-sm-12 col-md-6",
+                ),
+                layout.Div(
+                    bootstrap5.FloatingField('action'), css_class="col-sm-12 col-md-6",
+                )
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("message"), css_class="col-sm-12",
+                ),
+            )
+        )

@@ -1,3 +1,4 @@
+import django_filters.views
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from vulnman.views import generic
@@ -5,14 +6,20 @@ from apps.findings.models import Template
 from apps.responsible_disc import models
 from apps.responsible_disc import forms
 from apps.responsible_disc import tasks
+from apps.responsible_disc import filters
 
 
-class VulnerabilityList(generic.VulnmanAuthListView):
+class VulnerabilityList(django_filters.views.FilterMixin, generic.VulnmanAuthListView):
     template_name = "responsible_disc/vulnerability_list.html"
     context_object_name = "vulnerabilities"
+    filterset_class = filters.VulnerabilityFilter
+    model = models.Vulnerability
 
     def get_queryset(self):
-        return models.Vulnerability.objects.filter(user=self.request.user)
+        qs = super().get_queryset().filter(
+            user=self.request.user)
+        filterset = self.filterset_class(self.request.GET, queryset=qs)
+        return filterset.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -43,6 +50,7 @@ class VulnerabilityDetail(generic.VulnmanAuthDetailView):
         context = super().get_context_data(**kwargs)
         context["text_proof_form"] = forms.TextProofForm()
         context["image_proof_form"] = forms.ImageProofForm()
+        context["log_form"] = forms.VulnerabilityLogForm()
         return context
 
     def get_queryset(self):
@@ -62,6 +70,23 @@ class AddImageProof(generic.VulnmanAuthCreateView):
         form.instance.vulnerability = vuln.get()
         form.instance.user = self.request.user
         self.success_url = vuln.get().get_absolute_url()
+        return super().form_valid(form)
+
+
+class VulnerabilityLogCreate(generic.VulnmanAuthCreateView):
+    http_method_names = ["post"]
+    form_class = forms.VulnerabilityLogForm
+
+    def get_queryset(self):
+        return models.VulnerabilityLog.objects.filter(user=self.request.user)
+
+    def form_valid(self, form):
+        vulnerability = models.Vulnerability.objects.filter(pk=self.kwargs.get('pk'), user=self.request.user)
+        if not vulnerability.exists():
+            form.add_error("action", "Vulnerability does not exist!")
+            return super().form_invalid(form)
+        form.instance.vulnerability = vulnerability.get()
+        self.success_url = vulnerability.get().get_absolute_url()
         return super().form_valid(form)
 
 
@@ -167,3 +192,25 @@ class VulnerabilityAdvisoryExport(generic.VulnmanAuthDetailView):
         response = HttpResponse(result, content_type='plain/text')
         response['Content-Disposition'] = 'attachment; filename="advisory.md"'
         return response
+
+
+class TextProofUpdate(generic.VulnmanAuthUpdateView):
+    template_name = "findings/proof_update.html"
+    form_class = forms.TextProofForm
+
+    def get_queryset(self):
+        return models.TextProof.objects.filter(vulnerability__user=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})
+
+
+class ImageProofUpdate(generic.VulnmanAuthUpdateView):
+    template_name = "findings/proof_update.html"
+    form_class = forms.ImageProofForm
+
+    def get_queryset(self):
+        return models.ImageProof.objects.filter(vulnerability__user=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})

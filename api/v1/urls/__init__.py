@@ -49,6 +49,11 @@ router.register(
     "report-information", viewsets.reports.ReportInformationViewSet,
     basename="report-information")
 
+router.register(
+    "responsible-disclosure/proofs", viewsets.responsible_disc.ProofViewSet,
+    basename="responsible-disc-proof"
+)
+
 
 urlpatterns = router.urls
 

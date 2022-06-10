@@ -28,7 +28,7 @@
 
 ## Details
 {% for proof in vulnerability.proofs %}
-{{ proof.description }}
+{{ proof.description|safe }}
 
-{{ proof.text }}
+{{ proof.text|safe }}
 {% endfor %}

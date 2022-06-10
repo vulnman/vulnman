@@ -6,3 +6,4 @@ from api.v1.viewsets import reports
 from api.v1.viewsets.session.assets import *
 from api.v1.viewsets.checklists import *
 from api.v1.viewsets.session.vulnerability import *
+from api.v1.viewsets.session import responsible_disc

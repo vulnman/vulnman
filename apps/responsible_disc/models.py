@@ -8,14 +8,16 @@ from vulnman.models import VulnmanModel
 class Vulnerability(models.Model):
     STATUS_OPEN = 0
     STATUS_FIXED = 1
-    STATUS_VENDOR_NOTIFIED = 2
-    STATUS_VENDOR_ACK = 3
+    STATUS_WONT_FIX = 2
+    STATUS_PUBLISHED_FIXED = 3
+    STATUS_PUBLISHED_UNFIXED = 4
 
     STATUS_CHOICES = [
         (STATUS_OPEN, "Open"),
-        (STATUS_VENDOR_NOTIFIED, "Vendor Notified"),
-        (STATUS_VENDOR_ACK, "Vendor Acknowledged"),
         (STATUS_FIXED, "Fixed"),
+        (STATUS_WONT_FIX, "Wont Fix"),
+        (STATUS_PUBLISHED_FIXED, "Published (fixed)"),
+        (STATUS_PUBLISHED_UNFIXED, "Published (unfixed)")
     ]
 
     SEVERITY_INFORMATIONAL = 0
@@ -79,6 +81,9 @@ class Vulnerability(models.Model):
     def get_public_timeline(self):
         return self.vulnerabilitylog_set.filter(~models.Q(action=VulnerabilityLog.ACTION_INTERNAL_LOG))
 
+    def get_timeline(self):
+        return self.vulnerabilitylog_set.all()
+
 
 def get_proof_path(instance, filename):
     return "uploads/responsible_disclosure/%s/%s/%s" % (instance.user.pk, instance.vulnerability.pk, filename)
@@ -125,6 +130,7 @@ class VulnerabilityLog(VulnmanModel):
     ACTION_VENDOR_COMMUNICATION = 2
     ACTION_VENDOR_ANNOUNCE_FIXED = 3
     ACTION_FIX_CONFIRMED = 4
+    ACTION_PUBLISHED = 5
     ACTION_INTERNAL_LOG = 100
 
     ACTION_CHOICES = [
@@ -132,12 +138,14 @@ class VulnerabilityLog(VulnmanModel):
         (ACTION_VULNERABILITY_CREATION, "Vulnerability found"),
         (ACTION_VENDOR_ANNOUNCE_FIXED, "Vendor announces fix"),
         (ACTION_VENDOR_COMMUNICATION, "Communication with vendor"),
-        (ACTION_FIX_CONFIRMED, "Fix confirmed")
+        (ACTION_FIX_CONFIRMED, "Fix confirmed"),
+        (ACTION_PUBLISHED, "Advisory published"),
+        (ACTION_INTERNAL_LOG, "Custom Internal Log")
     ]
     vulnerability = models.ForeignKey('responsible_disc.Vulnerability', on_delete=models.CASCADE)
+    custom_date = models.DateTimeField(null=True, blank=True)
     action = models.PositiveIntegerField(choices=ACTION_CHOICES)
     message = models.TextField(blank=True, null=True)
 
     class Meta:
         ordering = ["date_created"]
-

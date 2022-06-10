@@ -21,7 +21,11 @@ urlpatterns = [
          name="vulnerability-export-advisory"),
     path('vulnerabilities/<str:pk>/notify-vendor/',
          views.VulnerabilityNotifyVendor.as_view(), name="vulnerability-notify-vendor"),
+    path('vulnerabilities/<int:pk>/add-log-item/', views.VulnerabilityLogCreate.as_view(),
+         name="vulnerability-log-create"),
 
-    path('proofs/text/<str:pk>/delete/', views.TextProofDelete.as_view(), name="text-proof-delete"),
-    path('proofs/image/<str:pk>/delete/', views.ImageProofDelete.as_view(), name="image-proof-delete"),
+    path('proofs/text/<int:pk>/delete/', views.TextProofDelete.as_view(), name="text-proof-delete"),
+    path('proofs/text/<int:pk>/update/', views.TextProofUpdate.as_view(), name="text-proof-update"),
+    path('proofs/image/<int:pk>/delete/', views.ImageProofDelete.as_view(), name="image-proof-delete"),
+    path('proofs/image/<int:pk>/update/', views.ImageProofUpdate.as_view(), name="image-proof-update")
 ]
