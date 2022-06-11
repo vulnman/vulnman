@@ -51,8 +51,6 @@ class ProofViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
         proof1 = self.create_instance(models.TextProof, vulnerability=vuln)
         self.create_instance(models.ImageProof, vulnerability=vuln)
         self.add_contributor(self.pentester2, project=self.project1, role=ProjectContributor.ROLE_READ_ONLY)
-        from guardian.shortcuts import get_user_perms
-        print(get_user_perms(self.pentester2, self.project1))
         url = self.get_url("api:v1:vulnerability-proof-detail", pk=str(proof1.pk))
         self.login_with_project(self.pentester2, self.project1)
         data = {"order": "1", "pk": str(proof1.pk)}

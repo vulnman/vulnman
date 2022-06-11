@@ -1,5 +1,5 @@
 import django_filters
-from core import models
+from apps.methodologies import models
 
 
 class ProjectTaskFilter(django_filters.FilterSet):

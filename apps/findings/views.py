@@ -91,7 +91,6 @@ class AddImageProof(generic.ProjectCreateView):
     form_class = forms.ImageProofForm
 
     def form_invalid(self, form):
-        print(form.errors)
         return super().form_invalid(form)
 
     def form_valid(self, form):

@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 from api.v1.mixins.testcase import VulnmanAPITestCaseMixin
-from core.models import tasks as models
+from apps.methodologies import models
 
 
 class ChecklistViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):

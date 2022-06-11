@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from core import models
 from vulnman.utils.markdown import md_to_clean_html
+from apps.methodologies import models
 
 
 class TaskSerializer(serializers.ModelSerializer):
