@@ -1,0 +1,13 @@
+{
+  "name": "vulnman",
+  "description": "Use this file to get Github alerts on vulnerabilities in client-side dependencies",
+  "version": "1.0.0",
+  "dependencies": {
+    "bootstrap": "^5.1.3",
+    "codemirror": "^5.65.5",
+    "chart.js": "^3.8.0",
+    "jquery": "^3.6.0",
+    "select2": "^4.1.0-rc.0",
+    "jquery-ui": "^1.13.1"
+  }
+}

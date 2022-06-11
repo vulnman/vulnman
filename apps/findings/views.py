@@ -255,4 +255,4 @@ class ImageProofDelete(generic.ProjectDeleteView):
         return reverse_lazy('projects:findings:vulnerability-list')
 
     def get_queryset(self):
-        return models.TextProof.objects.filter(project=self.get_project())
+        return models.ImageProof.objects.filter(project=self.get_project())

@@ -1,0 +1,37 @@
+{% if vulnerability.get_timeline %}
+<div class="container mt-3 py-3">
+    <div class="card">
+        <div class="card-body" style="overflow-x: auto !important; white-space: nowrap;">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="horizontal-timeline">
+                        <ul class="list-inline items">
+                            {% for log in vulnerability.get_timeline %}
+                                <li class="list-inline-item items-list">
+                                    <div class="px-3">
+                                        <div class="badge bg-info p-2">
+                                            {% if log.custom_date %}
+                                            {{ log.custom_date|date }}
+                                            {% else %}
+                                            {{ log.date_created|date }}
+                                            {% endif %}
+                                        </div>
+                                        <h5 class="pt-2">{{ log.get_action_display }}</h5>
+                                        {% if log.message %}
+                                        <p class="text-muted">{{ log.message|truncatechars:64 }}</p>
+                                        {% else %}
+                                        <p class="text-muted">-</p>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

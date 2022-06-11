@@ -5,23 +5,23 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 from vulnman.core.views import mixins
 
 
-class VulnmanListView(mixins.ThemeMixin, generic.ListView):
+class VulnmanListView(mixins.VulnmanContextMixin, generic.ListView):
     pass
 
 
-class VulnmanDetailView(mixins.ThemeMixin, generic.DetailView):
+class VulnmanDetailView(mixins.VulnmanContextMixin, generic.DetailView):
     pass
 
 
-class VulnmanUpdateView(mixins.ThemeMixin, SuccessMessageMixin, generic.UpdateView):
+class VulnmanUpdateView(mixins.VulnmanContextMixin, SuccessMessageMixin, generic.UpdateView):
     success_message = "Object updated successfully"
 
 
-class VulnmanDeleteView(mixins.ThemeMixin, generic.DeleteView):
+class VulnmanDeleteView(mixins.VulnmanContextMixin, generic.DeleteView):
     pass
 
 
-class VulnmanCreateView(mixins.ThemeMixin, SuccessMessageMixin, generic.CreateView):
+class VulnmanCreateView(mixins.VulnmanContextMixin, SuccessMessageMixin, generic.CreateView):
     success_message = "Object created successfully"
 
 
