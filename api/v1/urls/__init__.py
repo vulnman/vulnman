@@ -1,4 +1,5 @@
 from django.urls import path, include
+from django.conf import settings
 from rest_framework.routers import DefaultRouter
 from api.v1 import viewsets
 
@@ -49,10 +50,11 @@ router.register(
     "report-information", viewsets.reports.ReportInformationViewSet,
     basename="report-information")
 
-router.register(
-    "responsible-disclosure/proofs", viewsets.responsible_disc.ProofViewSet,
-    basename="responsible-disc-proof"
-)
+if settings.RESPONSIBLE_DISCLOSURE_APP_ENABLE:
+    router.register(
+        "responsible-disclosure/proofs", viewsets.responsible_disc.ProofViewSet,
+        basename="responsible-disc-proof"
+    )
 
 
 urlpatterns = router.urls

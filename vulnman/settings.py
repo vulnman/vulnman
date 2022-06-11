@@ -148,6 +148,7 @@ INSTALLED_APPS = [
     'apps.assets.apps.AssetsConfig',
     'core.apps.CoreConfig',
     'api.apps.ApiConfig',
+    'apps.responsible_disc.apps.ResponsibleDiscConfig',
 ]
 
 
@@ -222,6 +223,3 @@ except ImportError:
 # Enable LDAP authentication backend, if LDAP_SERVER_URI is configured
 if AUTH_LDAP_SERVER_URI:
     AUTHENTICATION_BACKENDS.append("django_auth_ldap.backend.LDAPBackend")
-
-if RESPONSIBLE_DISCLOSURE_APP_ENABLE:
-    INSTALLED_APPS.append('apps.responsible_disc.apps.ResponsibleDiscConfig')
