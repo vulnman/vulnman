@@ -1,8 +1,8 @@
 from django.contrib.auth import views
 from django.urls import reverse_lazy
 from apps.account import forms
-from vulnman.mixins import ThemeMixin
-from vulnman.views import generic
+from vulnman.core.views.mixins import ThemeMixin
+from vulnman.core.views import generics
 
 
 class Login(ThemeMixin, views.LoginView):
@@ -19,7 +19,7 @@ class Logout(views.LogoutView):
     pass
 
 
-class Profile(generic.VulnmanAuthTemplateView):
+class Profile(generics.VulnmanAuthTemplateView):
     template_name = "account/profile.html"
 
     def get_context_data(self, **kwargs):

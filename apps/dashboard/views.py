@@ -1,4 +1,4 @@
-from vulnman.views import generic
+from vulnman.core.views import generics
 from django.views.generic import RedirectView
 from django.urls import reverse_lazy
 
@@ -10,5 +10,5 @@ class Index(RedirectView):
         return reverse_lazy('account:login')
 
 
-class Dashboard(generic.VulnmanAuthTemplateView):
+class Dashboard(generics.VulnmanAuthTemplateView):
     template_name = "dashboard/dashboard.html"

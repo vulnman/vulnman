@@ -2,7 +2,7 @@ from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView
-from vulnman import mixins
+from vulnman.core.views import mixins
 
 
 class VulnmanListView(mixins.VulnmanContextMixin, generic.ListView):

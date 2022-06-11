@@ -13,12 +13,14 @@ class VulnmanTestMixin(object):
         self.user2 = self._create_user("dummyuser2", "changeme")
         self.pentester1 = self._create_user("pentester", "changeme")
         self.pentester2 = self._create_user("pentester2", "changeme")
+        self.read_only1 = self._create_user("readonly1", "changeme")
         self.manager = self._create_user("manager", "changeme")
         self.manager.groups.add(Group.objects.get(name="Management"))
         self.pentester1.groups.add(Group.objects.get(name="Pentesters"))
         self.pentester2.groups.add(Group.objects.get(name="Pentesters"))
         self.project1 = self._create_project(creator=self.pentester1)
         self.project2 = self._create_project(creator=self.pentester2)
+        self.add_contributor(self.read_only1, self.project1, role=ProjectContributor.ROLE_READ_ONLY)
 
     def add_contributor(self, user, project, role=ProjectContributor.ROLE_PENTESTER):
         return ProjectContributor.objects.create(user=user, project=project, role=role)
