@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.urls import reverse_lazy
+from vulnman.core.views import generics
 from vulnman.views import generic
 from apps.findings import models
 from apps.findings import forms
@@ -7,7 +8,7 @@ from apps.reporting.tasks import export_single_vulnerability
 from apps.assets.models import WebApplication, WebRequest, Host, Service
 
 
-class TemplateList(generic.VulnmanAuthListView):
+class TemplateList(generics.VulnmanAuthListView):
     model = models.Template
     paginate_by = 20
     template_name = "findings/template_list.html"
@@ -90,7 +91,6 @@ class AddImageProof(generic.ProjectCreateView):
     form_class = forms.ImageProofForm
 
     def form_invalid(self, form):
-        print(form.errors)
         return super().form_invalid(form)
 
     def form_valid(self, form):

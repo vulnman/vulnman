@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from core.models import Task, TaskCondition
+from apps.methodologies.models import Task, TaskCondition
 
 
 class Command(BaseCommand):

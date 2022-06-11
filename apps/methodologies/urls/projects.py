@@ -1,5 +1,5 @@
 from django.urls import path
-from core.views import tasks as views
+from apps.methodologies import views
 
 
 app_name = "methodologies"

@@ -38,10 +38,8 @@ class ProjectPermission(BaseObjectPermission):
             perms = view.get_object_permissions_required()
         else:
             if request.method in SAFE_METHODS:
-                print(1)
                 perms = ["projects.view_project"]
             elif request.method.lower() == "delete":
-                print(2)
                 perms = ["projects.delete_project"]
             elif request.method.lower() == "post":
                 perms = ["projects.add_project"]
