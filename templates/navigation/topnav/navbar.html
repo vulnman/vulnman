@@ -16,6 +16,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'projects:project-list' %}">Projects</a>
                     </li>
+                    {% if RESPONSIBLE_DISCLOSURE_APP_ENABLE %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'responsible_disc:vulnerability-list' %}">Responsible Disclosure</a>
+                    </li>
+                    {% endif %}
                     {% if perms.projects.view_client %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'clients:client-list' %}">Clients</a>

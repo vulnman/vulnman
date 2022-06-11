@@ -27,5 +27,10 @@ urlpatterns = [
     path('clients/', include('apps.projects.urls.clients')),
     path('vulnerability-templates/', include('apps.findings.urls.global')),
     path('methodologies/', include('apps.methodologies.urls.global')),
-    path('', include('apps.dashboard.urls'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.RESPONSIBLE_DISCLOSURE_APP_ENABLE:
+    urlpatterns += [path('responsible-disclosure/', include('apps.responsible_disc.urls'))]
+
+urlpatterns += [path('', include('apps.dashboard.urls'))]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
