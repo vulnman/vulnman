@@ -1,7 +1,7 @@
 import django_filters.views
 from django.urls import reverse_lazy
 from django.http import HttpResponse
-from vulnman.views import generic
+from vulnman.core.views import generics
 from apps.findings.models import Template
 from apps.responsible_disc import models
 from apps.responsible_disc import forms
@@ -9,7 +9,7 @@ from apps.responsible_disc import tasks
 from apps.responsible_disc import filters
 
 
-class VulnerabilityList(django_filters.views.FilterMixin, generic.VulnmanAuthListView):
+class VulnerabilityList(django_filters.views.FilterMixin, generics.VulnmanAuthListView):
     template_name = "responsible_disc/vulnerability_list.html"
     context_object_name = "vulnerabilities"
     filterset_class = filters.VulnerabilityFilter
@@ -27,7 +27,7 @@ class VulnerabilityList(django_filters.views.FilterMixin, generic.VulnmanAuthLis
         return context
 
 
-class VulnerabilityCreate(generic.VulnmanAuthCreateView):
+class VulnerabilityCreate(generics.VulnmanAuthCreateView):
     form_class = forms.VulnerabilityForm
     template_name = "responsible_disc/vulnerability_create.html"
 
@@ -42,7 +42,7 @@ class VulnerabilityCreate(generic.VulnmanAuthCreateView):
         return super().form_valid(form)
 
 
-class VulnerabilityDetail(generic.VulnmanAuthDetailView):
+class VulnerabilityDetail(generics.VulnmanAuthDetailView):
     template_name = "responsible_disc/vulnerability_detail.html"
     context_object_name = "vuln"
 
@@ -57,7 +57,7 @@ class VulnerabilityDetail(generic.VulnmanAuthDetailView):
         return models.Vulnerability.objects.filter(user=self.request.user)
 
 
-class AddImageProof(generic.VulnmanAuthCreateView):
+class AddImageProof(generics.VulnmanAuthCreateView):
     http_method_names = ["post"]
     model = models.ImageProof
     form_class = forms.ImageProofForm
@@ -73,7 +73,7 @@ class AddImageProof(generic.VulnmanAuthCreateView):
         return super().form_valid(form)
 
 
-class VulnerabilityLogCreate(generic.VulnmanAuthCreateView):
+class VulnerabilityLogCreate(generics.VulnmanAuthCreateView):
     http_method_names = ["post"]
     form_class = forms.VulnerabilityLogForm
 
@@ -90,7 +90,7 @@ class VulnerabilityLogCreate(generic.VulnmanAuthCreateView):
         return super().form_valid(form)
 
 
-class AddTextProof(generic.VulnmanAuthCreateView):
+class AddTextProof(generics.VulnmanAuthCreateView):
     http_method_names = ["post"]
     model = models.TextProof
     form_class = forms.TextProofForm
@@ -106,7 +106,7 @@ class AddTextProof(generic.VulnmanAuthCreateView):
         return super().form_valid(form)
 
 
-class TextProofDelete(generic.VulnmanAuthDeleteView):
+class TextProofDelete(generics.VulnmanAuthDeleteView):
     model = models.TextProof
     http_method_names = ["post"]
 
@@ -117,7 +117,7 @@ class TextProofDelete(generic.VulnmanAuthDeleteView):
         return models.TextProof.objects.filter(vulnerability__user=self.request.user)
 
 
-class ImageProofDelete(generic.VulnmanAuthDeleteView):
+class ImageProofDelete(generics.VulnmanAuthDeleteView):
     model = models.ImageProof
     http_method_names = ["post"]
 
@@ -128,7 +128,7 @@ class ImageProofDelete(generic.VulnmanAuthDeleteView):
         return models.ImageProof.objects.filter(vulnerability__user=self.request.user)
 
 
-class VulnerabilityExport(generic.VulnmanAuthDetailView):
+class VulnerabilityExport(generics.VulnmanAuthDetailView):
 
     def get_queryset(self):
         return models.Vulnerability.objects.filter(user=self.request.user)
@@ -140,7 +140,7 @@ class VulnerabilityExport(generic.VulnmanAuthDetailView):
         return response
 
 
-class VulnerabilityNotifyVendor(generic.VulnmanAuthUpdateView):
+class VulnerabilityNotifyVendor(generics.VulnmanAuthUpdateView):
     form_class = forms.VulnerabilityNotificationForm
     http_method_names = ["post"]
 
@@ -156,7 +156,7 @@ class VulnerabilityNotifyVendor(generic.VulnmanAuthUpdateView):
         return super().form_valid(form)
 
 
-class VulnUpdate(generic.VulnmanAuthUpdateView):
+class VulnUpdate(generics.VulnmanAuthUpdateView):
     model = models.Vulnerability
     form_class = forms.VulnerabilityForm
     template_name = "responsible_disc/vulnerability_create.html"
@@ -174,7 +174,7 @@ class VulnUpdate(generic.VulnmanAuthUpdateView):
         return super().form_valid(form)
 
 
-class VulnDelete(generic.VulnmanAuthDeleteView):
+class VulnDelete(generics.VulnmanAuthDeleteView):
     http_method_names = ["post"]
     success_url = reverse_lazy('responsible_disc:vulnerability-list')
 
@@ -182,7 +182,7 @@ class VulnDelete(generic.VulnmanAuthDeleteView):
         return models.Vulnerability.objects.filter(user=self.request.user)
 
 
-class VulnerabilityAdvisoryExport(generic.VulnmanAuthDetailView):
+class VulnerabilityAdvisoryExport(generics.VulnmanAuthDetailView):
 
     def get_queryset(self):
         return models.Vulnerability.objects.filter(user=self.request.user)
@@ -194,7 +194,7 @@ class VulnerabilityAdvisoryExport(generic.VulnmanAuthDetailView):
         return response
 
 
-class TextProofUpdate(generic.VulnmanAuthUpdateView):
+class TextProofUpdate(generics.VulnmanAuthUpdateView):
     template_name = "findings/proof_update.html"
     form_class = forms.TextProofForm
 
@@ -205,7 +205,7 @@ class TextProofUpdate(generic.VulnmanAuthUpdateView):
         return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})
 
 
-class ImageProofUpdate(generic.VulnmanAuthUpdateView):
+class ImageProofUpdate(generics.VulnmanAuthUpdateView):
     template_name = "findings/proof_update.html"
     form_class = forms.ImageProofForm
 
