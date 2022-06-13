@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from vulnman.tests.mixins import VulnmanTestMixin
 from apps.responsible_disc import models
 from apps.findings.models import Template
@@ -8,11 +8,13 @@ class VulnerabilityListView(TestCase, VulnmanTestMixin):
     def setUp(self) -> None:
         self.init_mixin()
 
+    @tag('not-default')
     def test_listview_forbidden(self):
         url = self.get_url("responsible_disc:vulnerability-list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
 
+    @tag('not-default')
     def test_listview(self):
         url = self.get_url("responsible_disc:vulnerability-list")
         vuln1 = self._create_instance(models.Vulnerability, user=self.pentester1)
@@ -23,6 +25,7 @@ class VulnerabilityListView(TestCase, VulnmanTestMixin):
         self.assertEqual(len(response.context["vulnerabilities"]), 1)
         self.assertEqual(response.context["vulnerabilities"][0], vuln1)
 
+    @tag('not-default')
     def test_createview(self):
         template = self._create_instance(Template)
         url = self.get_url("responsible_disc:vulnerability-create")
