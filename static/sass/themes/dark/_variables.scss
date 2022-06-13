@@ -181,7 +181,7 @@ $accordion-button-active-icon:  url("data:image/svg+xml,<svg xmlns='http://www.w
 // List group
 $list-group-bg:                     $sidebar-bg;
 $list-group-color:                  #afb0be;
-$list-group-border-color:           rgba($gray-400, .125) !default;
+$list-group-border-color:           rgba($gray-400, .100);
 $list-group-border-width:           $border-width !default;
 $list-group-border-radius:          $border-radius !default;
 
@@ -203,7 +203,6 @@ $list-group-action-color:           $gray-700;
 $list-group-action-active-bg:       lighten($list-group-bg, 10%);
 $list-group-action-hover-color:     $list-group-color;
 
-$list-group-border-color:           rgba($black, .125);
 $list-group-active-color:           $white;
 $list-group-active-bg:              #435ebe;
 $list-group-active-border-color:    $list-group-active-bg;
