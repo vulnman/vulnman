@@ -30,4 +30,4 @@ jobs:
     - name: Run Tests
       run: |
         pip install -r requirements-dev.txt
-        python manage.py test
+        python manage.py test --exclude-tag=not-default
