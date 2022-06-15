@@ -7,17 +7,11 @@ from vulnman.models import VulnmanModel
 
 class Vulnerability(models.Model):
     STATUS_OPEN = 0
-    STATUS_FIXED = 1
-    STATUS_WONT_FIX = 2
-    STATUS_PUBLISHED_FIXED = 3
-    STATUS_PUBLISHED_UNFIXED = 4
+    STATUS_CLOSED = 1
 
     STATUS_CHOICES = [
         (STATUS_OPEN, "Open"),
-        (STATUS_FIXED, "Fixed"),
-        (STATUS_WONT_FIX, "Wont Fix"),
-        (STATUS_PUBLISHED_FIXED, "Published (fixed)"),
-        (STATUS_PUBLISHED_UNFIXED, "Published (unfixed)")
+        (STATUS_CLOSED, "Closed")
     ]
 
     SEVERITY_INFORMATIONAL = 0
@@ -47,8 +41,10 @@ class Vulnerability(models.Model):
     affected_product = models.CharField(max_length=256)
     affected_versions = models.CharField(max_length=256)
     fixed_version = models.CharField(max_length=100, null=True, blank=True)
-    cve_id = models.CharField(max_length=32, null=True, blank=True)
-    cve_request_id = models.CharField(max_length=32, null=True, blank=True)
+    cve_id = models.CharField(max_length=32, null=True, blank=True, verbose_name="CVE-ID")
+    cve_request_id = models.CharField(max_length=32, null=True, blank=True, verbose_name="CVE Request ID")
+    is_published = models.BooleanField(default=False)
+    is_fixed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -83,6 +79,9 @@ class Vulnerability(models.Model):
 
     def get_timeline(self):
         return self.vulnerabilitylog_set.all()
+
+    class Meta:
+        ordering = ["-date_created"]
 
 
 def get_proof_path(instance, filename):

@@ -3652,8 +3652,8 @@ textarea.form-control-lg {
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
   color: #495057;
-  background-color: #fff;
-  border-color: #dee2e6 #dee2e6 #fff;
+  background-color: rgba(44, 44, 58, 0.85);
+  border-color: #dee2e6 #dee2e6 rgba(44, 44, 58, 0.85);
 }
 .nav-tabs .dropdown-menu {
   margin-top: -1px;
@@ -10689,6 +10689,36 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
 }
 .table.table-lg tr td, .table.table-lg tr th {
   padding: 1.3rem;
+}
+
+.nav-pills .nav-link.active {
+  box-shadow: 0 2px 10px rgba(13, 110, 253, 0.5);
+}
+
+.nav-tabs {
+  border: none;
+}
+.nav-tabs .nav-link {
+  border: none;
+}
+.nav-tabs .nav-link:hover {
+  border: none;
+  text-shadow: 0 0 2px rgba(13, 110, 253, 0.3);
+}
+.nav-tabs .nav-link.active {
+  border: none;
+  position: relative;
+  color: #0d6efd;
+}
+.nav-tabs .nav-link.active:after {
+  content: "";
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background-color: #0d6efd;
+  left: 0;
+  box-shadow: 0 2px 5px rgba(13, 110, 253, 0.5);
 }
 
 .select2-container {

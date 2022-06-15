@@ -321,6 +321,7 @@ $form-textarea-title-bg:             lighten($input-bg,10%);
 // Navs
 $nav-link-disabled-color:           $gray-600;
 $nav-tabs-border-color:             $gray-300;
+$nav-tabs-link-active-bg:           rgba(44, 44, 58, 0.85);
 $nav-tabs-link-hover-border-color:  $gray-200 $gray-200 $nav-tabs-border-color;
 $nav-tabs-link-active-border-color: $gray-300 $gray-300 $nav-tabs-link-active-bg;
 
