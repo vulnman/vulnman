@@ -23,6 +23,7 @@ urlpatterns = [
          views.VulnerabilityNotifyVendor.as_view(), name="vulnerability-notify-vendor"),
     path('vulnerabilities/<int:pk>/add-log-item/', views.VulnerabilityLogCreate.as_view(),
          name="vulnerability-log-create"),
+    path('vulnerabilities/<int:pk>/timeline/', views.VulnerabilityTimeline.as_view(), name="vulnerability-timeline"),
 
     path('proofs/text/<int:pk>/delete/', views.TextProofDelete.as_view(), name="text-proof-delete"),
     path('proofs/text/<int:pk>/update/', views.TextProofUpdate.as_view(), name="text-proof-update"),

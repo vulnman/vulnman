@@ -1,4 +1,6 @@
 from django.test import TestCase, tag
+from django.conf import settings
+from django.urls import reverse
 from vulnman.tests.mixins import VulnmanTestMixin
 from apps.responsible_disc import models
 from apps.findings.models import Template
@@ -39,3 +41,19 @@ class VulnerabilityListView(TestCase, VulnmanTestMixin):
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(models.Vulnerability.objects.count(), 1)
+
+    @tag('not-default')
+    def test_detail_view(self):
+        vuln = self._create_instance(models.Vulnerability, user=self.pentester1)
+        url = self.get_url("responsible_disc:vulnerability-detail", pk=vuln.pk)
+        self.client.force_login(self.pentester1)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    @tag('not-default')
+    def test_detail_view_forbidden(self):
+        vuln = self._create_instance(models.Vulnerability, user=self.pentester1)
+        url = self.get_url("responsible_disc:vulnerability-detail", pk=vuln.pk)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse(settings.LOGIN_URL) + "?next=" + url)

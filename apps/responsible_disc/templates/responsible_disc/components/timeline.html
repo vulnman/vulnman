@@ -1,35 +1,46 @@
 {% if vulnerability.get_timeline %}
-<div class="container mt-3 py-3">
+<div class="container">
     <div class="card">
-        <div class="card-body" style="overflow-x: auto !important; white-space: nowrap;">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="horizontal-timeline">
-                        <ul class="list-inline items">
-                            {% for log in vulnerability.get_timeline %}
-                                <li class="list-inline-item items-list">
-                                    <div class="px-3">
-                                        <div class="badge bg-info p-2">
-                                            {% if log.custom_date %}
-                                            {{ log.custom_date|date }}
-                                            {% else %}
-                                            {{ log.date_created|date }}
-                                            {% endif %}
-                                        </div>
-                                        <h5 class="pt-2">{{ log.get_action_display }}</h5>
-                                        {% if log.message %}
-                                        <p class="text-muted">{{ log.message|truncatechars:64 }}</p>
-                                        {% else %}
-                                        <p class="text-muted">-</p>
-                                        {% endif %}
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-
-                    </div>
-
-                </div>
+        <div class="card-body">
+            <div class="py-3 px-5">
+                <ul class="timeline-with-icons">
+                    {% for log in vulnerability.get_timeline %}
+                    <li class="timeline-item mb-5">
+                            <span class="timeline-icon">
+                                {% if log.action == 0 %}
+                                    <i class="fa fa-crosshairs text-primary fa-sm fa-fw"></i>
+                                {% elif log.action == 1 %}
+                                    <i class="fa fa-envelope text-primary fa-sm fa-fw"></i>
+                                {% elif log.action == 2 %}
+                                    <i class="fa fa-comments text-primary fa-sm fa-fw"></i>
+                                {% elif log.action == 3 %}
+                                    <i class="fa fa-comments text-primary fa-sm fa-fw"></i>
+                                {% elif log.action == 4 %}
+                                    <i class="fa fa-bug-slash text-primary fa-sm fa-fw"></i>
+                                {% elif log.action == 5 %}
+                                    <i class="fa fa-envelope-open-text text-primary fa-sm fa-fw"></i>
+                                {% else %}
+                                <i class="fa fa-asterisk text-primary fa-sm fa-fw"></i>
+                                {% endif %}
+                            </span>
+                        <h5 class="fw-bold">{{ log.get_action_display }}</h5>
+                        <p class="text-muted mb-2 fw-bold">
+                            {% if log.custom_date %}
+                                {{ log.custom_date|date }}
+                            {% else %}
+                                {{ log.date_created|date }}
+                            {% endif %}
+                        </p>
+                        <p class="text-muted">
+                            {% if log.message %}
+                            {{ log.message|linebreaksbr }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </p>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>

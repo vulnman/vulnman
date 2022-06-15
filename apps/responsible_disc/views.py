@@ -1,5 +1,6 @@
 import django_filters.views
 from django.urls import reverse_lazy
+from django.db.models import Count
 from django.http import HttpResponse
 from vulnman.core.views import generics
 from apps.findings.models import Template
@@ -18,12 +19,19 @@ class VulnerabilityList(django_filters.views.FilterMixin, generics.VulnmanAuthLi
     def get_queryset(self):
         qs = super().get_queryset().filter(
             user=self.request.user)
+        if not self.request.GET.get("status"):
+            qs = qs.filter(status=models.Vulnerability.STATUS_OPEN)
         filterset = self.filterset_class(self.request.GET, queryset=qs)
         return filterset.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["create_form"] = forms.VulnerabilityForm()
+        context["open_status_counts"] = models.Vulnerability.objects.filter(
+            user=self.request.user, status=models.Vulnerability.STATUS_OPEN).values("status").annotate(Count('status'))
+        context["closed_status_counts"] = models.Vulnerability.objects.filter(
+            user=self.request.user,
+            status=models.Vulnerability.STATUS_CLOSED).values("status").annotate(Count('status'))
         return context
 
 
@@ -50,6 +58,18 @@ class VulnerabilityDetail(generics.VulnmanAuthDetailView):
         context = super().get_context_data(**kwargs)
         context["text_proof_form"] = forms.TextProofForm()
         context["image_proof_form"] = forms.ImageProofForm()
+        return context
+
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(user=self.request.user)
+
+
+class VulnerabilityTimeline(generics.VulnmanAuthDetailView):
+    template_name = "responsible_disc/vulnerability_timeline.html"
+    context_object_name = "vuln"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
         context["log_form"] = forms.VulnerabilityLogForm()
         return context
 
@@ -86,7 +106,10 @@ class VulnerabilityLogCreate(generics.VulnmanAuthCreateView):
             form.add_error("action", "Vulnerability does not exist!")
             return super().form_invalid(form)
         form.instance.vulnerability = vulnerability.get()
-        self.success_url = vulnerability.get().get_absolute_url()
+        if form.cleaned_data["action"] == models.VulnerabilityLog.ACTION_PUBLISHED:
+            form.instance.vulnerability.status = models.Vulnerability.STATUS_CLOSED
+            form.instance.vulnerability.save()
+        self.success_url = form.instance.vulnerability.get_absolute_url()
         return super().form_valid(form)
 
 
@@ -152,7 +175,6 @@ class VulnerabilityNotifyVendor(generics.VulnmanAuthUpdateView):
             form.add_error("empty", "No vendor email set")
             return super().form_invalid(form)
         tasks.notify_vendor.delay(str(form.instance.pk))
-        form.instance.status = models.Vulnerability.STATUS_VENDOR_NOTIFIED
         return super().form_valid(form)
 
 

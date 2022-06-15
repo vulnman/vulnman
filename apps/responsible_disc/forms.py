@@ -13,7 +13,7 @@ class TextProofForm(forms.ModelForm):
         model = models.TextProof
         fields = ["name", "description", "text"]
         widgets = {
-            "text": CodeMirrorWidget()
+            "text": CodeMirrorWidget(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -37,6 +37,9 @@ class ImageProofForm(forms.ModelForm):
     class Meta:
         model = models.ImageProof
         fields = ["name", "description", "image", "caption"]
+        widgets = {
+            "description": CodeMirrorWidget()
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -63,13 +66,12 @@ class VulnerabilityForm(forms.ModelForm):
         model = models.Vulnerability
         fields = [
             "template_id", "name", "status", "cve_id", "severity", "cve_request_id", "vendor", "vendor_homepage",
-            "vendor_email",
+            "vendor_email", "is_fixed", "is_published",
             "fixed_version", "affected_versions", "affected_product"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_tag = False
         self.helper.layout = layout.Layout(
             layout.Row(
                 layout.Div(
@@ -91,24 +93,28 @@ class VulnerabilityForm(forms.ModelForm):
             ),
             layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField("vendor"), css_class="col-sm-12 col-md-4",
+                    bootstrap5.FloatingField("vendor"), css_class="col-sm-12 col-md-6",
                 ),
                 layout.Div(
-                    bootstrap5.FloatingField("vendor_email"), css_class="col-sm-12 col-md-4",
+                    bootstrap5.FloatingField('affected_product'), css_class="col-sm-12 col-md-6"
+                ),
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("vendor_email"), css_class="col-sm-12 col-md-6",
                 ),
                 layout.Div(
-                    bootstrap5.FloatingField('vendor_homepage'), css_class="col-sm-12 col-md-4",
+                    bootstrap5.FloatingField('vendor_homepage'), css_class="col-sm-12 col-md-6",
                 )
             ),
             layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField('affected_product'), css_class="col-sm-12 col-md-4"
+                    bootstrap5.FloatingField('affected_versions'), css_class="col-sm-12"
                 ),
+            ),
+            layout.Row(
                 layout.Div(
-                    bootstrap5.FloatingField('affected_versions'), css_class="col-sm-12 col-md-4"
-                ),
-                layout.Div(
-                    bootstrap5.FloatingField('fixed_version'), css_class="col-sm-12 col-md-4"
+                    bootstrap5.FloatingField('fixed_version'), css_class="col-sm-12"
                 )
             ),
             layout.Row(
@@ -116,6 +122,18 @@ class VulnerabilityForm(forms.ModelForm):
                     bootstrap5.FloatingField("cve_id"), css_class="col-sm-12 col-md-6",
                 ),
                 layout.Div(bootstrap5.FloatingField("cve_request_id"), css_class="col-sm-12 col-md-6"),
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.Field("is_fixed"), css_class="col-sm-12 col-md-6"
+                ),
+                layout.Div(
+                    bootstrap5.Field("is_published"), css_class="col-sm-12 col-md-6"
+                )
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )
 
