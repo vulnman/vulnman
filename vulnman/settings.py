@@ -82,6 +82,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = "account:login"
 LOGIN_REDIRECT_URL = "projects:project-list"
 LOGOUT_REDIRECT_URL = "account:login"
+AUTH_USER_MODEL = 'account.User'
 
 
 # Internationalization

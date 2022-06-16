@@ -2,7 +2,9 @@ import django_filters.views
 from django.urls import reverse_lazy
 from django.db.models import Count
 from django.http import HttpResponse
+from guardian.shortcuts import get_objects_for_user
 from vulnman.core.views import generics
+from vulnman.mixins.permission import VulnmanPermissionRequiredMixin
 from apps.findings.models import Template
 from apps.responsible_disc import models
 from apps.responsible_disc import forms
@@ -17,8 +19,8 @@ class VulnerabilityList(django_filters.views.FilterMixin, generics.VulnmanAuthLi
     model = models.Vulnerability
 
     def get_queryset(self):
-        qs = super().get_queryset().filter(
-            user=self.request.user)
+        qs = get_objects_for_user(self.request.user, "responsible_disc.view_vulnerability", models.Vulnerability,
+                                  use_groups=False, with_superuser=False, accept_global_perms=False)
         if not self.request.GET.get("status"):
             qs = qs.filter(status=models.Vulnerability.STATUS_OPEN)
         filterset = self.filterset_class(self.request.GET, queryset=qs)
@@ -35,9 +37,10 @@ class VulnerabilityList(django_filters.views.FilterMixin, generics.VulnmanAuthLi
         return context
 
 
-class VulnerabilityCreate(generics.VulnmanAuthCreateView):
+class VulnerabilityCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateView):
     form_class = forms.VulnerabilityForm
     template_name = "responsible_disc/vulnerability_create.html"
+    permission_required = ["responsible_disc.add_vulnerability"]
 
     def form_valid(self, form):
         if not Template.objects.filter(vulnerability_id=form.cleaned_data["template_id"]).exists():

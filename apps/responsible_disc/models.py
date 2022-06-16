@@ -1,7 +1,7 @@
 import base64
 from django.db import models
 from django.urls import reverse_lazy
-from django.contrib.auth.models import User
+from django.conf import settings
 from vulnman.models import VulnmanModel
 
 
@@ -34,7 +34,7 @@ class Vulnerability(models.Model):
     name = models.CharField(max_length=128)
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_OPEN)
     severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="resp_vulnerability_set")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="resp_vulnerability_set")
     vendor = models.CharField(max_length=128)
     vendor_homepage = models.URLField()
     vendor_email = models.EmailField(null=True)

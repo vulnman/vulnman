@@ -3,7 +3,7 @@ from uuid import uuid4
 from guardian.shortcuts import assign_perm, remove_perm, get_users_with_perms
 from django.db import models
 from django.db.models import Q
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.urls import reverse_lazy
 
 
@@ -34,7 +34,7 @@ class Project(models.Model):
     client = models.ForeignKey('projects.Client', on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     status = models.PositiveIntegerField(choices=PENTEST_STATUS_CHOICES, default=PENTEST_STATUS_OPEN)
     name = models.CharField(max_length=128)
     pentest_method = models.PositiveIntegerField(choices=PENTEST_METHOD_CHOICES, default=PENTEST_METHOD_GREYBOX)
@@ -96,7 +96,7 @@ class Client(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=128, unique=True)
     street = models.CharField(max_length=128)
     city = models.CharField(max_length=128)
@@ -122,7 +122,7 @@ class ClientContact(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     email = models.EmailField()
@@ -155,7 +155,7 @@ class ProjectContributor(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     role = models.CharField(max_length=16, choices=CONTRIBUTOR_ROLE_CHOICES)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -188,7 +188,7 @@ class ProjectContributor(models.Model):
 class ProjectAPIToken(models.Model):
     key = models.CharField(max_length=512, primary_key=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=32)
     date_valid = models.DateField()
 

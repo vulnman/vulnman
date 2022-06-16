@@ -1,0 +1,8 @@
+<ul class="list-group">
+    {% for vuln in user.resp_vulnerability_set.all|slice:10 %}
+    <li class="list-group-item list-group-item-action">
+        <h5>{{ vuln.template.name }} in <i>{{ vuln.vendor }} {{ vuln.affected_product }}</i></h5>
+        <p class="text-muted">created on {{ vuln.date_created|date }}</p>
+    </li>
+    {% endfor %}
+</ul>

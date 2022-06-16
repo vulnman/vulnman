@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from rest_framework import serializers
 from apps.projects import models
 from vulnman.api.serializers import AssignObjectPermissionsModelSerializer
@@ -6,17 +6,17 @@ from vulnman.api.serializers import ProjectRelatedObjectSerializer
 from api.v1.serializers.assets import WebApplicationSerializer, WebRequestSerializer
 from api.v1.serializers.assets import HostSerializer, ServiceSerializer
 from apps.findings.api.v1.serializers import VulnerabilitySerializer
+from apps.account.models import User
 
 
 class ClientSerializer(ProjectRelatedObjectSerializer):
     class Meta:
         model = models.Client
         fields = ["uuid", "name"]
-        read_onyl_fields = ["uuid"]
+        read_only_fields = ["uuid"]
 
 
 class ProjectSerializer(AssignObjectPermissionsModelSerializer):
-    vulnerabilities = serializers.PrimaryKeyRelatedField(source="vulnerability_set", read_only=True, many=True)
     user_accounts = serializers.PrimaryKeyRelatedField(source="useraccount_set", read_only=True, many=True)
     tasks = serializers.PrimaryKeyRelatedField(source="assettask_set", read_only=True, many=True)
     contributors = serializers.PrimaryKeyRelatedField(source="projectcontributor_set", read_only=True, many=True)

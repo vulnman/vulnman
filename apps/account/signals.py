@@ -1,9 +1,3 @@
-from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from rest_framework.authtoken.models import Token
-
-
 GROUP_PERMISSION_MAP = {
     "Management": {
         "permissions": {
@@ -15,6 +9,15 @@ GROUP_PERMISSION_MAP = {
     "Pentesters": {
         "permissions": {
             "projects.Project": ["add_project", "view_project", "change_project", "delete_project", "add_contributor"],
+            "responsible_disc.Vulnerability": [
+                "add_vulnerability", "view_vulnerability", "change_vulnerability", "delete_vulnerability"]
+        }
+    },
+    "Vendors": {
+        "permissions": {
+            "responsible_disc.Vulnerability": [
+                "view_vulnerability"
+            ]
         }
     }
 }
@@ -41,9 +44,3 @@ def populate_groups_and_permission(sender, **kwargs):
             for perm in group_value["permissions"][perm_key]:
                 permission, _created = Permission.objects.get_or_create(codename=perm, content_type=content_type)
                 group.permissions.add(permission)
-
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
