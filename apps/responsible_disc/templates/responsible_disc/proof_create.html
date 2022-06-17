@@ -27,3 +27,10 @@
         </div>
     </div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+    $('#id_text').attr("required", false);
+    $('#id_description').attr("required", false);
+</script>
+{% endblock %}

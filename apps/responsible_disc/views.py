@@ -248,4 +248,5 @@ class ImageProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreate
 
     def form_valid(self, form):
         form.instance.vulnerability = self.get_object()
+        form.instance.user = self.request.user
         return super().form_valid(form)
