@@ -64,6 +64,7 @@ class PentestReportCreate(generic.ProjectCreateView):
         tasks.do_create_report.delay(
             self.get_project().reportinformation.pk,
             form.cleaned_data["report_type"],
+            self.request.build_absolute_uri() + self.request.user.profile.get_absolute_url(),
             creator=self.request.user.username,
             name=form.cleaned_data["name"])
         return HttpResponseRedirect(self.get_success_url())

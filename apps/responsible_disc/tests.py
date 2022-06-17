@@ -73,3 +73,26 @@ class VulnerabilityListView(TestCase, VulnmanTestMixin):
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(models.Vulnerability.objects.count(), 0)
+
+
+class TextProofViewsTextCase(TestCase, VulnmanTestMixin):
+    def setUp(self) -> None:
+        self.init_mixin()
+
+    @tag('not-default')
+    def test_text_proof_create(self):
+        vulnerability = self._create_instance(models.Vulnerability, user=self.pentester1)
+        url = self.get_url("responsible_disc:text-proof-create", pk=vulnerability.pk)
+        data = {"name": "test", "description": "lorem", "text": "ipsum"}
+        # unauth
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 403)
+        # permission denied
+        self.client.force_login(self.pentester2)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 403)
+        # allowed
+        self.client.force_login(self.pentester1)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+
