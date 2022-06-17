@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     {{ user.username }}'s Profile
@@ -10,8 +11,8 @@
         <div class="row">
             <div class="col-sm-12 col-md-3">
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                    <img class="rounded-circle mt-3" width="150px"
-                         src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-2.webp"
+                    <img class="rounded-circle mt-3 bg-white" width="150px"
+                         src="{% static 'images/avatar.svg' %}"
                          alt="Profile Image">
                     <span class="font-weight-bold">{{ user.first_name }} {{ user.last_name }}</span><span
                         class="text-muted mt-2">{{ user.username }}</span><span></span>
