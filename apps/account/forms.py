@@ -1,9 +1,11 @@
 from django.urls import reverse_lazy
+from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
+from apps.account import models
 
 
 class ChangePasswordForm(PasswordChangeForm):
@@ -33,3 +35,9 @@ class ChangePasswordForm(PasswordChangeForm):
                 )
             )
         )
+
+
+class InviteVendorForm(forms.ModelForm):
+    class Meta:
+        model = models.InviteCode
+        fields = ["email"]

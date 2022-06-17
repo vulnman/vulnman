@@ -57,3 +57,19 @@ class VulnerabilityListView(TestCase, VulnmanTestMixin):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse(settings.LOGIN_URL) + "?next=" + url)
+
+    @tag('not-default')
+    def test_vuln_create_vendor(self):
+        template = self._create_instance(Template)
+        url = self.get_url("responsible_disc:vulnerability-create")
+        payload = {"template_id": template.vulnerability_id, "name": "TestVuln",
+                   "status": models.Vulnerability.STATUS_OPEN, "vendor": "TestVendor",
+                   "vendor_homepage": "https://example.com", "vendor_email": "admin@example.com",
+                   "affected_product": "Test Product", "affected_versions": "<1.0.0",
+                   "severity": ""
+                   }
+        vendor = self._create_user("vendor", "changeme", is_vendor=True)
+        self.client.force_login(vendor)
+        response = self.client.post(url, payload)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(models.Vulnerability.objects.count(), 0)

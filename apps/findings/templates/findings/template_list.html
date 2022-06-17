@@ -37,7 +37,18 @@
                     </div>
                 </a>
             {% empty %}
-                <li class="list-group-item">No templates here!</li>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row d-flex flex-column-reverse text-center p-5">
+                            <div class="align-items-center">
+                                <p><i class="fa fa-bugs fa-fw fa-xl"></i></p>
+                                <h4>There aren't any Vulnerability Templates!</h4>
+                                <p class="text-muted">Templates need to be configured server-side. Contact your
+                                    admin!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         </div>
 

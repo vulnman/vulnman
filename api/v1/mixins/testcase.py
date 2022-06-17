@@ -1,11 +1,12 @@
 from uuid import uuid4
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.utils import timezone
 from django.urls import reverse_lazy
 from guardian.shortcuts import assign_perm
 from ddf import G
 from apps.projects.models import Project, ProjectContributor
 from apps.projects.models import ProjectAPIToken
+from apps.account.models import User
 
 
 class VulnmanAPITestCaseMixin(object):

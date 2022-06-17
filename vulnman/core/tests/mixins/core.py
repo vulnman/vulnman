@@ -1,8 +1,9 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.urls import reverse_lazy
 from django.utils import timezone
 from ddf import G
 from apps.projects.models import Project, Client, ProjectContributor
+from apps.account.models import User
 
 
 class CoreObjectsTestCaseMixin(object):

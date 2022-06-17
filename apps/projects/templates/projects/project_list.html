@@ -2,7 +2,7 @@
 {% load guardian_tags %}
 
 {% block title %}
-Projects
+    Projects
 {% endblock %}
 
 {% block content %}
@@ -12,11 +12,13 @@ Projects
         <div class="clearfix">
             <div class="float-end">
                 {% if show_archived %}
-                    <a class="btn btn-outline-info" href="{% url 'projects:project-list' %}" data-toggle="tooltip" title="Show all projects!">
+                    <a class="btn btn-outline-info" href="{% url 'projects:project-list' %}" data-toggle="tooltip"
+                       title="Show all projects!">
                         <i class="fa fa-list-alt"></i>
                     </a>
                 {% else %}
-                    <a class="btn btn-outline-info" href="{% url 'projects:project-list' %}?archived=1" data-toggle="tooltip" title="Show archived projects!">
+                    <a class="btn btn-outline-info" href="{% url 'projects:project-list' %}?archived=1"
+                       data-toggle="tooltip" title="Show archived projects!">
                         <i class="fa fa-archive"></i>
                     </a>
                 {% endif %}
@@ -35,7 +37,7 @@ Projects
                         <div class="col-sm-12">
                             <div class="clearfix">
                                 <div class="float-start">
-                                    <p>{{ project }} ({{project.client}})</p>
+                                    <p>{{ project }} ({{ project.client }})</p>
                                 </div>
                             </div>
                         </div>
@@ -44,14 +46,26 @@ Projects
                         <div class="col-sm-12">
                             <div class="clearfix">
                                 <div class="float-start">
-                                    <small class="text-muted"><i>Last updated: {{ project.date_updated|timesince }} ago</i></small>
+                                    <small class="text-muted"><i>Last updated: {{ project.date_updated|timesince }}
+                                        ago</i></small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </a>
             {% empty %}
-                <li class="list-group-item">No projects here!</li>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row d-flex flex-column-reverse text-center p-5">
+                            <div class="align-items-center">
+                                <p><i class="fa fa-circle-nodes fa-fw fa-xl"></i></p>
+                                <h4>There aren't any Projects!</h4>
+                                <p class="text-muted">Go ahead and create one using the button above!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             {% endfor %}
         </div>
 
