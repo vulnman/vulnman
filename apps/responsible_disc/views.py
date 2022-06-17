@@ -4,7 +4,7 @@ from django.db.models import Count
 from django.http import HttpResponse
 from guardian.shortcuts import get_objects_for_user
 from vulnman.core.views import generics
-from vulnman.mixins.permission import VulnmanPermissionRequiredMixin
+from vulnman.mixins.permission import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
 from apps.findings.models import Template
 from apps.responsible_disc import models
 from apps.responsible_disc import forms
@@ -80,22 +80,6 @@ class VulnerabilityTimeline(generics.VulnmanAuthDetailView):
         return models.Vulnerability.objects.filter(user=self.request.user)
 
 
-class AddImageProof(generics.VulnmanAuthCreateView):
-    http_method_names = ["post"]
-    model = models.ImageProof
-    form_class = forms.ImageProofForm
-
-    def form_valid(self, form):
-        vuln = models.Vulnerability.objects.filter(pk=self.kwargs.get('pk'), user=self.request.user)
-        if not vuln.exists():
-            form.add_error("name", "Vulnerability does not exist!")
-            return super().form_invalid(form)
-        form.instance.vulnerability = vuln.get()
-        form.instance.user = self.request.user
-        self.success_url = vuln.get().get_absolute_url()
-        return super().form_valid(form)
-
-
 class VulnerabilityLogCreate(generics.VulnmanAuthCreateView):
     http_method_names = ["post"]
     form_class = forms.VulnerabilityLogForm
@@ -113,22 +97,6 @@ class VulnerabilityLogCreate(generics.VulnmanAuthCreateView):
             form.instance.vulnerability.status = models.Vulnerability.STATUS_CLOSED
             form.instance.vulnerability.save()
         self.success_url = form.instance.vulnerability.get_absolute_url()
-        return super().form_valid(form)
-
-
-class AddTextProof(generics.VulnmanAuthCreateView):
-    http_method_names = ["post"]
-    model = models.TextProof
-    form_class = forms.TextProofForm
-
-    def form_valid(self, form):
-        vuln = models.Vulnerability.objects.filter(pk=self.kwargs.get('pk'), user=self.request.user)
-        if not vuln.exists():
-            form.add_error("name", "Vulnerability does not exist!")
-            return super().form_invalid(form)
-        form.instance.vulnerability = vuln.get()
-        form.instance.user = self.request.user
-        self.success_url = vuln.get().get_absolute_url()
         return super().form_valid(form)
 
 
@@ -239,3 +207,45 @@ class ImageProofUpdate(generics.VulnmanAuthUpdateView):
 
     def get_success_url(self):
         return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})
+
+
+class TextProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
+    template_name = "responsible_disc/proof_create.html"
+    form_class = forms.TextProofForm
+    permission_required = ["responsible_disc.change_vulnerability"]
+
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(pk=self.kwargs.get('pk'))
+
+    def get_success_url(self):
+        return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.get_object().pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["vuln"] = self.get_object()
+        return context
+
+    def form_valid(self, form):
+        form.instance.vulnerability = self.get_object()
+        return super().form_valid(form)
+
+
+class ImageProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
+    template_name = "responsible_disc/proof_create.html"
+    form_class = forms.ImageProofForm
+    permission_required = ["responsible_disc.change_vulnerability"]
+
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(pk=self.kwargs.get('pk'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["vuln"] = self.get_object()
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.get_object().pk})
+
+    def form_valid(self, form):
+        form.instance.vulnerability = self.get_object()
+        return super().form_valid(form)

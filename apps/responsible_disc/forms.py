@@ -14,6 +14,7 @@ class TextProofForm(forms.ModelForm):
         fields = ["name", "description", "text"]
         widgets = {
             "text": CodeMirrorWidget(),
+            "description": CodeMirrorWidget()
         }
 
     def __init__(self, *args, **kwargs):

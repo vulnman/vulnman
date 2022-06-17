@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Update Proof{% endblock %}
+
+
+{% block content %}
+    <div class="container mt-3">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'responsible_disc:vulnerability-list' %}">Responsible
+                    Disclosure</a></li>
+                <li class="breadcrumb-item"><a href="{{ vuln.get_absolute_url }}">{{ vuln.template.vulnerability_id }}
+                    / {{ vuln.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Create Proof</li>
+            </ol>
+        </nav>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <div class="card-title">
+                    <h4>Create Proof</h4>
+                </div>
+                {% crispy form %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
