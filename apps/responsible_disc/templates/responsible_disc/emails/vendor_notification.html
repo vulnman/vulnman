@@ -1,6 +1,6 @@
 Hello {{ vulnerability.vendor }},
 
-one of our security researchers found a "{{ vulnerability.template }}" vulnerability in your {{ vulnerability.affected_product }} product.
+one of our security researchers ({{ vulnerability.user.username }}) found a "{{ vulnerability.template }}" vulnerability in your {{ vulnerability.affected_product }} product.
 The affected versions of the product are {{ vulnerability.affected_versions }}.
 
 Further information are attached.

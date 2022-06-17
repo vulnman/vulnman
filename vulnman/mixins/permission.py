@@ -1,6 +1,7 @@
 from collections.abc import Iterable
 from django.contrib.auth.mixins import UserPassesTestMixin
 from guardian.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin as DJPermissionRequiredMixin
 
 
 class NonObjectPermissionRequiredMixin(UserPassesTestMixin):
@@ -21,5 +22,10 @@ class NonObjectPermissionRequiredMixin(UserPassesTestMixin):
 
 
 class ObjectPermissionRequiredMixin(PermissionRequiredMixin):
+    raise_exception = True
+    return_403 = True
+
+
+class VulnmanPermissionRequiredMixin(DJPermissionRequiredMixin):
     raise_exception = True
     return_403 = True

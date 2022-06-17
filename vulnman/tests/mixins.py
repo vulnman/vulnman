@@ -1,10 +1,11 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse_lazy
 from apps.projects.models import Project, Client, ProjectContributor
 from ddf import G
 from guardian.shortcuts import assign_perm
+from apps.account.models import User
 
 
 class VulnmanTestMixin(object):
@@ -25,9 +26,9 @@ class VulnmanTestMixin(object):
     def add_contributor(self, user, project, role=ProjectContributor.ROLE_PENTESTER):
         return ProjectContributor.objects.create(user=user, project=project, role=role)
 
-    def _create_user(self, username, password, is_staff=False):
+    def _create_user(self, username, password, is_staff=False, **kwargs):
         email = "%s@example.com" % username
-        return User.objects.create_user(username, password=password, is_staff=is_staff, email=email)
+        return User.objects.create_user(username, password=password, is_staff=is_staff, email=email, **kwargs)
 
     def assign_perm(self, perm, user_or_group, obj=None):
         assign_perm(perm, user_or_group=user_or_group, obj=obj)

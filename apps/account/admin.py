@@ -1,18 +1,15 @@
 from django.contrib import admin
-from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from apps.account import models
 
 
-class ProfileInline(admin.StackedInline):
-    model = models.Profile
-    can_delete = False
-    max_num = 1
+class CustomUserAdmin(UserAdmin):
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'password1', 'password2', 'is_staff', 'is_active', 'is_pentester')}
+        ),
+    )
 
 
-class ExtendedUserAdmin(UserAdmin):
-    inlines = [ProfileInline]
-
-
-admin.site.unregister(User)
-admin.site.register(User, ExtendedUserAdmin)
+admin.site.register(models.User, CustomUserAdmin)

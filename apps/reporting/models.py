@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.core import signing
 from django.utils import timezone
-from django.contrib.auth.models import User
+from django.conf import settings
 from uuid import uuid4
 from vulnman.models import VulnmanProjectModel
 
@@ -38,12 +38,12 @@ class ReportInformation(VulnmanProjectModel):
     REPORT_DEFAULT_TITLE = "Vulnerability Report"
     project = models.OneToOneField("projects.Project", on_delete=models.CASCADE)
     creator = models.ForeignKey(
-        User, on_delete=models.SET_NULL, related_name="created_reportinformation_set",
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name="created_reportinformation_set",
         null=True, blank=True)
     evaluation = models.TextField(null=True, blank=True)
     recommendation = models.TextField(null=True, blank=True)
     author = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True,
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True,
         related_name="reportinformation_set")
     title = models.CharField(max_length=256, null=True, blank=True)
 
