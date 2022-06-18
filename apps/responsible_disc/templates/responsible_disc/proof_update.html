@@ -13,25 +13,38 @@
                     Disclosure</a></li>
                 <li class="breadcrumb-item"><a href="{{ vuln.get_absolute_url }}">{{ vuln.template.vulnerability_id }}
                     / {{ vuln.name }}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Create Proof</li>
+                <li class="breadcrumb-item active" aria-current="page">Update Proof</li>
             </ol>
         </nav>
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <div class="float-end">
+                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ form.instance.pk }}">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
 
         <div class="card mt-3">
             <div class="card-body">
                 <div class="card-title">
-                    <h4>Create Proof</h4>
+                    <h4>Update Proof</h4>
                 </div>
                 {% crispy form %}
             </div>
         </div>
     </div>
 
+    {% include 'modals/delete_object.html' with obj=form.instance %}
+
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-    $('#id_text').attr("required", false);
-    $('#id_description').attr("required", false);
-</script>
+    <script>
+        $('#id_text').attr("required", false);
+        $('#id_description').attr("required", false);
+    </script>
 {% endblock %}

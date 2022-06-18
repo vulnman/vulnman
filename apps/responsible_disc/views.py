@@ -188,8 +188,13 @@ class VulnerabilityAdvisoryExport(generics.VulnmanAuthDetailView):
 
 
 class TextProofUpdate(generics.VulnmanAuthUpdateView):
-    template_name = "findings/proof_update.html"
+    template_name = "responsible_disc/proof_update.html"
     form_class = forms.TextProofForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["vuln"] = self.get_object().vulnerability
+        return context
 
     def get_queryset(self):
         return models.TextProof.objects.filter(vulnerability__user=self.request.user)
@@ -199,8 +204,13 @@ class TextProofUpdate(generics.VulnmanAuthUpdateView):
 
 
 class ImageProofUpdate(generics.VulnmanAuthUpdateView):
-    template_name = "findings/proof_update.html"
+    template_name = "responsible_disc/proof_update.html"
     form_class = forms.ImageProofForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["vuln"] = self.get_object().vulnerability
+        return context
 
     def get_queryset(self):
         return models.ImageProof.objects.filter(vulnerability__user=self.request.user)
