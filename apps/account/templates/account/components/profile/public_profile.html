@@ -1,0 +1,81 @@
+{% load static %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-3">
+        <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+            <img class="rounded-circle mt-3 bg-white" width="150px"
+                 src="{% static 'images/avatar.svg' %}"
+                 alt="Profile Image">
+            <span class="font-weight-bold">
+                        {% if user.profile.public_real_name %}
+                            {{ user.first_name }} {{ user.last_name }}
+                        {% endif %}
+                    </span>
+            <span class="text-muted mt-2">{{ user.username }}</span>
+            {% if user.profile.public_email_address %}
+                <span class="text-muted mt-2">
+                        {{ user.email }}
+                    </span>
+            {% endif %}
+            <div class="row mt-3 w-100">
+                {% if request.user == user %}
+                    <a class="btn btn-outline-primary" href="{% url 'account:profile-update' %}">Edit Profile</a>
+                    <a class="btn btn-outline-info mt-2" href="{% url 'account:change-password' %}">Change Password</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Profile Center Content -->
+    <div class="col-sm-12 col-md-9">
+        <div class="p-3 py-5">
+            <ul class="nav nav-tabs border-bottom border-secondary" id="secondary-nav">
+                <li class="nav-item"><a class="nav-link active" href="">Overview</a></li>
+            </ul>
+
+            <div class="row mt-3">
+                <div class="col-sm-12 col-md-6">
+                    <div class="card">
+                        <div class="card-body px-3 py-4-5">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="stats-icon">
+                                        <i class="fa fa-bug fa-2x py-2"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <h6 class="text-muted font-semibold">Responsible Disclosed</h6>
+                                    <h6 class="font-extrabold mb-0">{{ user.resp_vulnerability_set.count }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="card">
+                        <div class="card-body px-3 py-4-5">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="stats-icon">
+                                        <i class="fa fa-list-check fa-2x py-2"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <h6 class="text-muted font-semibold">Completed Projects</h6>
+                                    <h6 class="font-extrabold mb-0">{{ user.profile.get_completed_projects }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-sm-12">
+                    <h4>Latest Responsible Disclosure Vulnerabilities</h4>
+                    <hr/>
+                    {% include 'account/components/profile/latest_resp_vulns_list.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

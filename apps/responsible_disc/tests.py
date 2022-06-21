@@ -95,4 +95,3 @@ class TextProofViewsTextCase(TestCase, VulnmanTestMixin):
         self.client.force_login(self.pentester1)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-
