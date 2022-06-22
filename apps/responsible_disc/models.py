@@ -148,3 +148,11 @@ class VulnerabilityLog(VulnmanModel):
 
     class Meta:
         ordering = ["date_created"]
+
+
+class VulnerabilityComment(VulnmanModel):
+    vulnerability = models.ForeignKey(Vulnerability, on_delete=models.CASCADE)
+    text = models.TextField()
+
+    class Meta:
+        ordering = ["date_created"]
