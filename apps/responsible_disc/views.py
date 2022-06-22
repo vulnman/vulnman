@@ -1,7 +1,7 @@
 import django_filters.views
 from django.urls import reverse_lazy
 from django.db.models import Count
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from guardian.shortcuts import get_objects_for_user
 from vulnman.core.views import generics
 from vulnman.mixins.permission import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
@@ -259,4 +259,54 @@ class ImageProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreate
     def form_valid(self, form):
         form.instance.vulnerability = self.get_object()
         form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class CommentList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
+    template_name = "responsible_disc/comment_list.html"
+    permission_required = ["responsible_disc.view_vulnerability"]
+    context_object_name = "comments"
+    paginate_by = 200
+
+    def get_permission_object(self):
+        qs = models.Vulnerability.objects.filter(pk=self.kwargs.get('pk'))
+        try:
+            obj = qs.get()
+        except models.Vulnerability.DoesNotExist:
+            return Http404("No such vulnerability found!")
+        return obj
+
+    def get_queryset(self):
+        return models.VulnerabilityComment.objects.filter(vulnerability__pk=self.kwargs.get("pk"))
+
+    def get_context_data(self, **kwargs):
+        kwargs["vuln"] = models.Vulnerability.objects.get(pk=self.kwargs.get("pk"))
+        kwargs["new_comment_form"] = forms.NewCommentForm(kwargs["vuln"])
+        return super().get_context_data(**kwargs)
+
+
+class CommentCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
+    permission_required = ["responsible_disc.change_vulnerability"]
+    http_method_names = ["post"]
+    form_class = forms.NewCommentForm
+
+    def get_success_url(self):
+        return reverse_lazy("responsible_disc:comment-list", kwargs={"pk": self.kwargs.get("pk")})
+
+    def get_permission_object(self):
+        qs = models.Vulnerability.objects.filter(pk=self.kwargs.get('pk'))
+        try:
+            obj = qs.get()
+        except models.Vulnerability.DoesNotExist:
+            return Http404("No such vulnerability found!")
+        return obj
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["vuln"] = self.get_permission_object()
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.vulnerability = self.get_permission_object()
+        form.instance.creator = self.request.user
         return super().form_valid(form)

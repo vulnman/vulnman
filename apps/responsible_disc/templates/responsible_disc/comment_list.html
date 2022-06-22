@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load markdown %}
+{% load static %}
+{% load guardian_tags %}
+
+{% block title %}
+    Vulnerability Comment
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'responsible_disc:vulnerability-list' %}">Responsible
+                    Disclosure</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ vuln.template.vulnerability_id }}
+                    / {{ vuln.name }}</li>
+            </ol>
+        </nav>
+
+        <!-- Sub nav -->
+        <ul class="nav nav-tabs border-bottom border-secondary" id="secondary-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'responsible_disc:vulnerability-detail' vuln.pk %}">Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'responsible_disc:vulnerability-timeline' vuln.pk %}">Timeline</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'responsible_disc:comment-list' vuln.pk %}">Comments</a>
+            </li>
+        </ul>
+
+        {% for comment in comments %}
+            <div class="card mt-3">
+                <div class="card-header">
+                    <strong>
+                        {% if comment.creator.pentester_profile %}
+                        <a href="{{ comment.creator.profile.get_absolute_url }}">{{ comment.creator.username }}</a>
+                        {% else %}
+                        {{ comment.creator.username }}
+                        {% endif %}
+                    </strong>
+                    <span> commented {{ comment.date_created|timesince }} ago</span>
+                </div>
+                <div class="card-body">
+                    <div class="">
+                        {{ comment.text|md_to_html }}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="row d-flex flex-column-reverse text-center p-5">
+                        <div class="align-items-center">
+                            <p><i class="fa fa-bug fa-fw fa-xl"></i></p>
+                            <h4>There aren't any Comments!</h4>
+                            <p class="text-muted">Go ahead and create one using the form below.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="border-top border-secondary mt-5">
+            <div class="mt-3">
+                {% crispy new_comment_form %}
+            </div>
+        </div>
+
+        {% include 'navigation/pagination.html' %}
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$('#id_text').attr("required", false);
+</script>
+{% endblock extra_scripts %}
