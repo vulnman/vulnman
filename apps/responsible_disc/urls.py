@@ -23,6 +23,11 @@ urlpatterns = [
     path('vulnerabilities/<int:pk>/proofs/text/create/', views.TextProofCreate.as_view(), name="text-proof-create"),
     path('vulnerabilities/<int:pk>/proofs/image/create/', views.ImageProofCreate.as_view(), name="image-proof-create"),
 
+    # comments
+    path('vulnerabilities/<int:pk>/comments/', views.CommentList.as_view(), name="comment-list"),
+    path('vulnerabilities/<int:pk>/comments/create/', views.CommentCreate.as_view(), name="comment-create"),
+
+    # proofs
     path('proofs/text/<int:pk>/delete/', views.TextProofDelete.as_view(), name="text-proof-delete"),
     path('proofs/text/<int:pk>/update/', views.TextProofUpdate.as_view(), name="text-proof-update"),
     path('proofs/image/<int:pk>/delete/', views.ImageProofDelete.as_view(), name="image-proof-delete"),

@@ -1,4 +1,5 @@
 from django import forms
+from django.urls import reverse_lazy
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
@@ -172,5 +173,29 @@ class VulnerabilityLogForm(forms.ModelForm):
                 layout.Div(
                     bootstrap5.FloatingField("message"), css_class="col-sm-12",
                 ),
+            )
+        )
+
+
+class NewCommentForm(forms.ModelForm):
+    class Meta:
+        model = models.VulnerabilityComment
+        fields = ["text"]
+        widgets = {
+            "text": CodeMirrorWidget()
+        }
+
+    def __init__(self, vuln, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['text'].label = False
+        self.helper = FormHelper()
+        self.helper.form_action = reverse_lazy("responsible_disc:comment-create", kwargs={"pk": vuln.pk})
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.Field("text", wrapper_class="col-sm-12")
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Comment", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )
