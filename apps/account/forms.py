@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 from django import forms
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
@@ -35,12 +35,6 @@ class ChangePasswordForm(PasswordChangeForm):
                 )
             )
         )
-
-
-class InviteVendorForm(forms.ModelForm):
-    class Meta:
-        model = models.InviteCode
-        fields = ["email"]
 
 
 class UpdatePentesterProfileForm(forms.ModelForm):
@@ -86,3 +80,34 @@ class UpdatePentesterProfileForm(forms.ModelForm):
                 )
             )
         )
+
+
+class PasswordSetForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("new_password1")
+                )
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("new_password2")
+                )
+            ),
+            layout.Row(
+                FormActions(
+                    layout.Submit('submit', 'Activate',
+                                  css_class="btn-primary justify-content-center w-100"),
+                    wrapper_class="col-sm-12 col-md-6"
+                )
+            )
+        )
+
+    def save(self, *args, **kwargs):
+        user = super().save(*args, **kwargs)
+        user.is_active = True
+        user.save()
+        return user

@@ -10,7 +10,7 @@ def vulnerability_creator_permissions(sender, instance=None, created=False, **kw
     # assign vulnerability permission to user
     if created:
         perms = ["responsible_disc.view_vulnerability", "responsible_disc.change_vulnerability",
-                 "responsible_disc.delete_vulnerability"]
+                 "responsible_disc.delete_vulnerability", "responsible_disc.invite_vendor"]
         for perm in perms:
             assign_perm(perm, instance.user, instance)
 

@@ -1,5 +1,3 @@
-import secrets
-from uuid import uuid4
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager, Group
 from django.urls import reverse_lazy
@@ -53,18 +51,6 @@ class PentesterProfile(models.Model):
 
 class VendorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="vendor_profile")
-
-
-class InviteCode(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    user_created = models.ForeignKey(User, on_delete=models.CASCADE)
-    email = models.EmailField()
-    token = models.CharField(max_length=512)
-
-    @staticmethod
-    def generate_token():
-        return secrets.token_hex(32)
 
 
 @receiver(post_save, sender=User)

@@ -9,5 +9,6 @@ urlpatterns = [
     path('profile/update/', views.ProfileUpdate.as_view(), name="profile-update"),
     path('profile/<str:slug>/', views.Profile.as_view(), name="user-profile"),
     path('change-password/', views.ChangePassword.as_view(), name="change-password"),
-    # path('vendor/invite/', views.InviteVendor.as_view(), name="invite-vendor"),
+
+    path('activate/<str:uidb64>/<str:token>/', views.ActivateAccount.as_view(), name="activate-account")
 ]

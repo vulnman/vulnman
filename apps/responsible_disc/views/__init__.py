@@ -53,9 +53,10 @@ class VulnerabilityCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCr
         return super().form_valid(form)
 
 
-class VulnerabilityDetail(generics.VulnmanAuthDetailView):
+class VulnerabilityDetail(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
     template_name = "responsible_disc/vulnerability_detail.html"
     context_object_name = "vuln"
+    permission_required = ["responsible_disc.view_vulnerability"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -64,12 +65,13 @@ class VulnerabilityDetail(generics.VulnmanAuthDetailView):
         return context
 
     def get_queryset(self):
-        return models.Vulnerability.objects.filter(user=self.request.user)
+        return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
 
-class VulnerabilityTimeline(generics.VulnmanAuthDetailView):
+class VulnerabilityTimeline(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
     template_name = "responsible_disc/vulnerability_timeline.html"
     context_object_name = "vuln"
+    permission_required = ["responsible_disc.view_vulnerability"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -77,7 +79,7 @@ class VulnerabilityTimeline(generics.VulnmanAuthDetailView):
         return context
 
     def get_queryset(self):
-        return models.Vulnerability.objects.filter(user=self.request.user)
+        return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
 
 class VulnerabilityLogCreate(generics.VulnmanAuthCreateView):
@@ -310,3 +312,6 @@ class CommentCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateVie
         form.instance.vulnerability = self.get_permission_object()
         form.instance.creator = self.request.user
         return super().form_valid(form)
+
+
+from apps.responsible_disc.views.vendor import InviteVendor

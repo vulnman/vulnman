@@ -1,3 +1,4 @@
+import uuid
 from django import forms
 from django.urls import reverse_lazy
 from crispy_forms.helper import FormHelper
@@ -7,6 +8,8 @@ from crispy_bootstrap5 import bootstrap5
 from vulnman.forms import CodeMirrorWidget
 from vulnman.forms import DateInput
 from apps.responsible_disc import models
+from apps.account.models import User
+from django.contrib.auth.forms import PasswordResetForm, _unicode_ci_compare
 
 
 class TextProofForm(forms.ModelForm):
@@ -198,4 +201,63 @@ class NewCommentForm(forms.ModelForm):
                 FormActions(layout.Submit("submit", "Comment", css_class="btn btn-primary w-100"),
                             wrapper_class="col-sm-12 col-md-6")
             )
+        )
+
+
+"""
+class InviteVendorForm(forms.ModelForm):
+    class Meta:
+        model = InviteCode
+        fields = ["email"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.FloatingField("email", wrapper_class="col-sm-12")
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Comment", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
+            )
+        )
+"""
+
+
+class InviteVendorForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.FloatingField("email", wrapper_class="col-sm-12")
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
+            )
+        )
+
+    def get_users(self, email):
+        """Given an email, return matching user(s) who should receive a reset.
+
+        This allows subclasses to more easily customize the default policies
+        that prevent inactive users and users with unusable passwords from
+        resetting their password.
+        """
+        email_field_name = User.get_email_field_name()
+        qs = User.objects.filter(
+            **{
+                "%s__iexact" % email_field_name: email,
+                "is_active": False,
+            }
+        )
+        if not qs.exists():
+            user = User.objects.create(
+                username="vendor-%s" % uuid.uuid4(), email=email, is_vendor=True, is_active=False)
+        return (
+            u
+            for u in qs
+            if _unicode_ci_compare(email, getattr(u, email_field_name))
         )
