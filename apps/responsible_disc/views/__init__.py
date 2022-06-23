@@ -2,10 +2,11 @@ import django_filters.views
 from django.urls import reverse_lazy
 from django.db.models import Count
 from django.http import HttpResponse, Http404
-from guardian.shortcuts import get_objects_for_user
+from guardian.shortcuts import get_objects_for_user, get_users_with_perms, get_user_perms, remove_perm
 from vulnman.core.views import generics
 from vulnman.mixins.permission import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
 from apps.findings.models import Template
+from apps.account.models import User
 from apps.responsible_disc import models
 from apps.responsible_disc import forms
 from apps.responsible_disc import tasks
@@ -288,7 +289,7 @@ class CommentList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
 
 
 class CommentCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
-    permission_required = ["responsible_disc.change_vulnerability"]
+    permission_required = ["responsible_disc.add_comment"]
     http_method_names = ["post"]
     form_class = forms.NewCommentForm
 
@@ -311,6 +312,57 @@ class CommentCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateVie
     def form_valid(self, form):
         form.instance.vulnerability = self.get_permission_object()
         form.instance.creator = self.request.user
+        return super().form_valid(form)
+
+
+class ManageAccessList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
+    template_name = "responsible_disc/vulnerability_manage_access.html"
+    context_object_name = "users"
+    permission_required = ["responsible_disc.view_vulnerability"]
+
+    def get_queryset(self):
+        obj = self.get_permission_object()
+        return get_users_with_perms(obj, with_group_users=False, with_superusers=False)
+
+    def get_permission_object(self):
+        try:
+            obj = models.Vulnerability.objects.get(pk=self.kwargs.get("pk"))
+        except models.Vulnerability.DoesNotExist:
+            return Http404("No such vulnerability found!")
+        return obj
+
+    def get_context_data(self, **kwargs):
+        kwargs["vuln"] = self.get_permission_object()
+        return super().get_context_data(**kwargs)
+
+
+class UnshareVulnerabilityFromUser(ObjectPermissionRequiredMixin, generics.VulnmanAuthFormView):
+    http_method_names = ["post"]
+    permission_required = ["responsible_disc.invite_vendor"]
+    form_class = forms.UnshareVulnerability
+
+    def get_success_url(self):
+        return self.get_permission_object().get_absolute_url()
+
+    def get_permission_object(self):
+        try:
+            obj = models.Vulnerability.objects.get(pk=self.kwargs.get('pk'))
+        except models.Vulnerability.DoesNotExist:
+            return Http404("No such vulnerability found!")
+        return obj
+
+    def form_valid(self, form):
+        obj = self.get_permission_object()
+        try:
+            qs = get_users_with_perms(obj)
+            user = qs.get(email=form.cleaned_data["email"])
+        except User.DoesNotExist:
+            form.add_error("email", "User not found!")
+            return super().form_invalid(form)
+        perms = get_user_perms(user, obj)
+        for perm in perms:
+            perm = "responsible_disc.%s" % perm
+            remove_perm(perm, user_or_group=user, obj=obj)
         return super().form_valid(form)
 
 

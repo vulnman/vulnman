@@ -82,6 +82,9 @@ class Vulnerability(models.Model):
 
     class Meta:
         ordering = ["-date_created"]
+        permissions = [
+            ("add_comment", "Add Comment")
+        ]
 
 
 def get_proof_path(instance, filename):

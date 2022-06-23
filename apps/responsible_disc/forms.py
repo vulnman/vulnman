@@ -261,3 +261,10 @@ class InviteVendorForm(PasswordResetForm):
             for u in qs
             if _unicode_ci_compare(email, getattr(u, email_field_name))
         )
+
+
+class UnshareVulnerability(forms.Form):
+    email = forms.EmailField()
+
+    class Meta:
+        fields = ["email"]

@@ -55,7 +55,7 @@ class VulnerabilityListView(TestCase, VulnmanTestMixin):
         vuln = self._create_instance(models.Vulnerability, user=self.pentester1)
         url = self.get_url("responsible_disc:vulnerability-detail", pk=vuln.pk)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 403)
         self.assertRedirects(response, reverse(settings.LOGIN_URL) + "?next=" + url)
 
     @tag('not-default')

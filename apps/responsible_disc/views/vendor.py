@@ -1,5 +1,6 @@
 import uuid
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
+from django.urls import reverse
 from django.conf import settings
 from guardian.shortcuts import assign_perm
 from vulnman.mixins.permission import ObjectPermissionRequiredMixin
@@ -36,10 +37,16 @@ class InviteVendor(ObjectPermissionRequiredMixin, PasswordResetView):
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
+        # FIXME: this view is ugly!
+        # TODO: check if user is vuln.user and through error
         qs = User.objects.filter(email=form.cleaned_data.get('email'))
+        perms = ["responsible_disc.view_vulnerability", "responsible_disc.add_comment"]
         if qs.filter(is_active=True).exists():
-            form.add_error("email", "Already taken!")
-            return super().form_invalid(form)
+            user = qs.get()
+            for perm in perms:
+                assign_perm(perm, user_or_group=user, obj=self.get_permission_object())
+            # TODO: send notification mail to user that a new vulnerability was shared with him
+            return HttpResponseRedirect(self.get_success_url())
         if not qs.exists():
             user = User.objects.create(
                 username="vendor-%s" % uuid.uuid4(), email=form.cleaned_data["email"], is_vendor=True, is_active=False)
@@ -47,5 +54,6 @@ class InviteVendor(ObjectPermissionRequiredMixin, PasswordResetView):
         else:
             user = User.objects.get(email=form.cleaned_data["email"])
             self.extra_email_context["new_user"] = user
-        assign_perm("responsible_disc.view_vulnerability", user_or_group=user, obj=self.get_permission_object())
+        for perm in perms:
+            assign_perm(perm, user_or_group=user, obj=self.get_permission_object())
         return super().form_valid(form)
