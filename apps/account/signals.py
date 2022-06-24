@@ -10,16 +10,15 @@ GROUP_PERMISSION_MAP = {
         "permissions": {
             "projects.Project": ["add_project", "view_project", "change_project", "delete_project", "add_contributor"],
             "responsible_disc.Vulnerability": [
-                "add_vulnerability", "view_vulnerability", "change_vulnerability", "delete_vulnerability"],
-            "account.User": [
-                "invite_vendor"
+                "add_vulnerability", "view_vulnerability", "change_vulnerability", "delete_vulnerability",
+                "invite_vendor", "add_comment"
             ]
         }
     },
     "Vendors": {
         "permissions": {
             "responsible_disc.Vulnerability": [
-                "view_vulnerability"
+                "view_vulnerability", "add_comment"
             ]
         }
     }

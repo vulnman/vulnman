@@ -2,10 +2,11 @@ import django_filters.views
 from django.urls import reverse_lazy
 from django.db.models import Count
 from django.http import HttpResponse, Http404
-from guardian.shortcuts import get_objects_for_user
+from guardian.shortcuts import get_objects_for_user, get_users_with_perms, get_user_perms, remove_perm
 from vulnman.core.views import generics
 from vulnman.mixins.permission import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
 from apps.findings.models import Template
+from apps.account.models import User
 from apps.responsible_disc import models
 from apps.responsible_disc import forms
 from apps.responsible_disc import tasks
@@ -53,9 +54,10 @@ class VulnerabilityCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCr
         return super().form_valid(form)
 
 
-class VulnerabilityDetail(generics.VulnmanAuthDetailView):
+class VulnerabilityDetail(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
     template_name = "responsible_disc/vulnerability_detail.html"
     context_object_name = "vuln"
+    permission_required = ["responsible_disc.view_vulnerability"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -64,12 +66,13 @@ class VulnerabilityDetail(generics.VulnmanAuthDetailView):
         return context
 
     def get_queryset(self):
-        return models.Vulnerability.objects.filter(user=self.request.user)
+        return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
 
-class VulnerabilityTimeline(generics.VulnmanAuthDetailView):
+class VulnerabilityTimeline(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
     template_name = "responsible_disc/vulnerability_timeline.html"
     context_object_name = "vuln"
+    permission_required = ["responsible_disc.view_vulnerability"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -77,7 +80,7 @@ class VulnerabilityTimeline(generics.VulnmanAuthDetailView):
         return context
 
     def get_queryset(self):
-        return models.Vulnerability.objects.filter(user=self.request.user)
+        return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
 
 class VulnerabilityLogCreate(generics.VulnmanAuthCreateView):
@@ -122,10 +125,11 @@ class ImageProofDelete(generics.VulnmanAuthDeleteView):
         return models.ImageProof.objects.filter(vulnerability__user=self.request.user)
 
 
-class VulnerabilityExport(generics.VulnmanAuthDetailView):
+class VulnerabilityExport(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
+    permission_required = ["responsible_disc.view_vulnerability"]
 
     def get_queryset(self):
-        return models.Vulnerability.objects.filter(user=self.request.user)
+        return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
     def render_to_response(self, context, **response_kwargs):
         result = tasks.export_single_vulnerability(self.get_object())
@@ -149,13 +153,14 @@ class VulnerabilityNotifyVendor(generics.VulnmanAuthUpdateView):
         return super().form_valid(form)
 
 
-class VulnUpdate(generics.VulnmanAuthUpdateView):
+class VulnUpdate(ObjectPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
     model = models.Vulnerability
     form_class = forms.VulnerabilityForm
+    permission_denied_message = ["responsible_disc.change_vulnerability"]
     template_name = "responsible_disc/vulnerability_create.html"
 
     def get_queryset(self):
-        return models.Vulnerability.objects.filter(user=self.request.user)
+        return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
     def form_valid(self, form):
         if not Template.objects.filter(vulnerability_id=form.cleaned_data["template_id"]).exists():
@@ -175,10 +180,11 @@ class VulnDelete(generics.VulnmanAuthDeleteView):
         return models.Vulnerability.objects.filter(user=self.request.user)
 
 
-class VulnerabilityAdvisoryExport(generics.VulnmanAuthDetailView):
+class VulnerabilityAdvisoryExport(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
+    permission_required = ["responsible_disc.view_vulnerability"]
 
     def get_queryset(self):
-        return models.Vulnerability.objects.filter(user=self.request.user)
+        return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
     def render_to_response(self, context, **response_kwargs):
         result = tasks.export_advisory(self.get_object())
@@ -187,17 +193,25 @@ class VulnerabilityAdvisoryExport(generics.VulnmanAuthDetailView):
         return response
 
 
-class TextProofUpdate(generics.VulnmanAuthUpdateView):
+class TextProofUpdate(ObjectPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
     template_name = "responsible_disc/proof_update.html"
     form_class = forms.TextProofForm
+    permission_required = ["responsible_disc.change_vulnerability"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["vuln"] = self.get_object().vulnerability
         return context
 
+    def get_permission_object(self):
+        try:
+            obj = self.get_queryset().get().vulnerability
+        except models.Vulnerability.DoesNotExist:
+            return Http404("No such vulnerability found")
+        return obj
+
     def get_queryset(self):
-        return models.TextProof.objects.filter(vulnerability__user=self.request.user)
+        return models.TextProof.objects.filter(pk=self.kwargs.get("pk"))
 
     def get_success_url(self):
         return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})
@@ -286,7 +300,7 @@ class CommentList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
 
 
 class CommentCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
-    permission_required = ["responsible_disc.change_vulnerability"]
+    permission_required = ["responsible_disc.add_comment"]
     http_method_names = ["post"]
     form_class = forms.NewCommentForm
 
@@ -310,3 +324,59 @@ class CommentCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateVie
         form.instance.vulnerability = self.get_permission_object()
         form.instance.creator = self.request.user
         return super().form_valid(form)
+
+
+class ManageAccessList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
+    template_name = "responsible_disc/vulnerability_manage_access.html"
+    context_object_name = "users"
+    permission_required = ["responsible_disc.view_vulnerability"]
+
+    def get_queryset(self):
+        obj = self.get_permission_object()
+        return get_users_with_perms(obj, with_group_users=False, with_superusers=False)
+
+    def get_permission_object(self):
+        try:
+            obj = models.Vulnerability.objects.get(pk=self.kwargs.get("pk"))
+        except models.Vulnerability.DoesNotExist:
+            return Http404("No such vulnerability found!")
+        return obj
+
+    def get_context_data(self, **kwargs):
+        kwargs["vuln"] = self.get_permission_object()
+        return super().get_context_data(**kwargs)
+
+
+class UnshareVulnerabilityFromUser(ObjectPermissionRequiredMixin, generics.VulnmanAuthFormView):
+    http_method_names = ["post"]
+    permission_required = ["responsible_disc.invite_vendor"]
+    form_class = forms.UnshareVulnerability
+
+    def get_success_url(self):
+        return self.get_permission_object().get_absolute_url()
+
+    def get_permission_object(self):
+        try:
+            obj = models.Vulnerability.objects.get(pk=self.kwargs.get('pk'))
+        except models.Vulnerability.DoesNotExist:
+            return Http404("No such vulnerability found!")
+        return obj
+
+    def form_valid(self, form):
+        obj = self.get_permission_object()
+        try:
+            qs = get_users_with_perms(obj)
+            user = qs.get(email=form.cleaned_data["email"])
+        except User.DoesNotExist:
+            form.add_error("email", "User not found!")
+            return super().form_invalid(form)
+        if user == obj.user:
+            form.add_error("email", "Cannot remove creator!")
+            return super().form_invalid(form)
+        perms = get_user_perms(user, obj)
+        for perm in perms:
+            remove_perm(perm, user_or_group=user, obj=obj)
+        return super().form_valid(form)
+
+
+from apps.responsible_disc.views.vendor import InviteVendor

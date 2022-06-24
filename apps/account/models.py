@@ -1,11 +1,10 @@
-import secrets
-from uuid import uuid4
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager, Group
 from django.urls import reverse_lazy
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
 from apps.projects.models import Project
+from apps.account import signals
 
 
 class UserAccountManager(UserManager):
@@ -55,18 +54,6 @@ class VendorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="vendor_profile")
 
 
-class InviteCode(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    user_created = models.ForeignKey(User, on_delete=models.CASCADE)
-    email = models.EmailField()
-    token = models.CharField(max_length=512)
-
-    @staticmethod
-    def generate_token():
-        return secrets.token_hex(32)
-
-
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.is_pentester:
@@ -87,3 +74,6 @@ def save_user_profile(sender, instance, **kwargs):
         instance.pentester_profile.save()
     elif instance.is_vendor:
         instance.vendor_profile.save()
+
+
+post_migrate.connect(signals.populate_groups_and_permission, sender=None)

@@ -1,6 +1,4 @@
 from django.test import TestCase, tag
-from django.conf import settings
-from django.urls import reverse
 from vulnman.tests.mixins import VulnmanTestMixin
 from apps.responsible_disc import models
 from apps.findings.models import Template
@@ -55,8 +53,7 @@ class VulnerabilityListView(TestCase, VulnmanTestMixin):
         vuln = self._create_instance(models.Vulnerability, user=self.pentester1)
         url = self.get_url("responsible_disc:vulnerability-detail", pk=vuln.pk)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse(settings.LOGIN_URL) + "?next=" + url)
+        self.assertEqual(response.status_code, 403)
 
     @tag('not-default')
     def test_vuln_create_vendor(self):
@@ -95,3 +92,22 @@ class TextProofViewsTextCase(TestCase, VulnmanTestMixin):
         self.client.force_login(self.pentester1)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
+
+    @tag('not-default')
+    def test_text_proof_update(self):
+        vulnerability = self._create_instance(models.Vulnerability, user=self.pentester1)
+        self._create_instance(models.TextProof, vulnerability=vulnerability)
+        url = self.get_url("responsible_disc:text-proof-update", pk=vulnerability.pk)
+        data = {"name": "test2", "description": "lorem2", "text": "ipsum"}
+        # unauth
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 403)
+        # permission denied
+        self.client.force_login(self.pentester2)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 403)
+        # allowed
+        self.client.force_login(self.pentester1)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(models.TextProof.objects.filter(name="test2").count(), 1)

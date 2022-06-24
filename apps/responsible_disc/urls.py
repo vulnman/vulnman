@@ -23,6 +23,12 @@ urlpatterns = [
     path('vulnerabilities/<int:pk>/proofs/text/create/', views.TextProofCreate.as_view(), name="text-proof-create"),
     path('vulnerabilities/<int:pk>/proofs/image/create/', views.ImageProofCreate.as_view(), name="image-proof-create"),
 
+    path('vulnerabilities/<int:pk>/vendor/invite/', views.InviteVendor.as_view(), name="invite-vendor"),
+
+    path('vulnerabilities/<int:pk>/manage-access/', views.ManageAccessList.as_view(), name="manage-access"),
+    path('vulnerabilities/<int:pk>/unshare/', views.UnshareVulnerabilityFromUser.as_view(),
+         name="unshare-vulnerability"),
+
     # comments
     path('vulnerabilities/<int:pk>/comments/', views.CommentList.as_view(), name="comment-list"),
     path('vulnerabilities/<int:pk>/comments/create/', views.CommentCreate.as_view(), name="comment-create"),
