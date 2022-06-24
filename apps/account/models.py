@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager, Group
 from django.urls import reverse_lazy
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
 from apps.projects.models import Project
+from apps.account import signals
 
 
 class UserAccountManager(UserManager):
@@ -73,3 +74,6 @@ def save_user_profile(sender, instance, **kwargs):
         instance.pentester_profile.save()
     elif instance.is_vendor:
         instance.vendor_profile.save()
+
+
+post_migrate.connect(signals.populate_groups_and_permission, sender=None)
