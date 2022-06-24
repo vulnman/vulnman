@@ -1,6 +1,5 @@
 import uuid
 from django.http import Http404, HttpResponseRedirect
-from django.urls import reverse
 from django.conf import settings
 from guardian.shortcuts import assign_perm
 from vulnman.mixins.permission import ObjectPermissionRequiredMixin
@@ -38,7 +37,6 @@ class InviteVendor(ObjectPermissionRequiredMixin, PasswordResetView):
 
     def form_valid(self, form):
         # FIXME: this view is ugly!
-        # TODO: check if user is vuln.user and through error
         qs = User.objects.filter(email=form.cleaned_data.get('email'))
         perms = ["responsible_disc.view_vulnerability", "responsible_disc.add_comment"]
         if qs.filter(is_active=True).exists():
