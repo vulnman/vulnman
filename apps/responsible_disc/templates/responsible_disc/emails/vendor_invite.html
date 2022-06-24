@@ -1,0 +1,14 @@
+Hello,
+
+One of our security researchers has shared a vulnerability with you through a "vulnman" instance that affects one of your products.
+
+You are receiving this email because the researcher has invited you to the instance to enable secure information sharing.
+After activating your account, you can use a comment feature to ask further questions about the vulnerability with the finder.
+
+
+Your activation link is: {{ protocol }}://{{ domain }}{% url 'account:activate-account' uidb64=uid token=token %}
+
+
+Your vulnman username is: {{ new_user.username }}
+
+*vulnman is an open-source penetration testing and responsible disclosure management application*.

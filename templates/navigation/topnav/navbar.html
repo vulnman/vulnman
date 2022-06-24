@@ -35,8 +35,10 @@
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{% url 'findings:template-list' %}">Vulnerability
                                 Templates</a>
+                            {% if request.user.pentester_profile %}
                             <a class="dropdown-item" href="{% url 'methodology:methodology-list' %}">Checklists</a>
                             <a class="dropdown-item" href="{% url 'account:user-profile' request.user.username %}">Profile</a>
+                            {% endif %}
                             {% if request.user.is_staff %}
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank" rel="noopener">Administration</a>

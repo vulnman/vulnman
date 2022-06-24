@@ -1,0 +1,15 @@
+<!-- Sub nav -->
+<ul class="nav nav-tabs border-bottom border-secondary" id="secondary-nav">
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.view_name == "responsible_disc:vulnerability-detail" %} active{% endif %}" href="{% url 'responsible_disc:vulnerability-detail' vuln.pk %}">Details</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.view_name == "responsible_disc:vulnerability-timeline" %} active{% endif %}" href="{% url 'responsible_disc:vulnerability-timeline' vuln.pk %}">Timeline</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.view_name == "responsible_disc:comment-list" %} active{% endif %}" href="{% url 'responsible_disc:comment-list' vuln.pk %}">Comments</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.view_name == "responsible_disc:manage-access" %} active{% endif %}" href="{% url 'responsible_disc:manage-access' vuln.pk %}">Manage Access</a>
+    </li>
+</ul>

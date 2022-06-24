@@ -1,10 +1,14 @@
-from django.http.response import Http404
+from django.utils import timezone
+from django.conf import settings
+from django.http.response import Http404, HttpResponseRedirect
 from django.contrib.auth import views
+from django.contrib.auth.forms import SetPasswordForm
 from django.urls import reverse_lazy
 from apps.account import forms
 from apps.account import models
 from vulnman.core.views.mixins import ThemeMixin, VulnmanContextMixin
 from vulnman.core.views import generics
+from apps.account.token import account_activation_token
 
 
 class Login(ThemeMixin, views.LoginView):
@@ -69,20 +73,8 @@ class ChangePassword(VulnmanContextMixin, views.PasswordChangeView):
         return reverse_lazy('account:user-profile', kwargs={'slug': self.request.user.username})
 
 
-"""
-# Not yet used
-class InviteVendor(DJPermissionRequiredMixin, generics.VulnmanAuthCreateView):
-    template_name = "account/invite_vendor.html"
-    form_class = forms.InviteVendorForm
-    success_url = reverse_lazy("responsible_disc:vulnerability-list")
-    permission_required = ["account.invite_vendor"]
-
-    def form_valid(self, form):
-        form.instance.token = models.InviteCode.generate_token()
-        form.instance.user_created = self.request.user
-        # generate unique username to not disclose vendor data with vulnerability disclosure
-        models.User.objects.create(
-            username="vendor-%s" % uuid.uuid4(), email=form.instance.email, is_vendor=True, is_active=False)
-        # TODO: send mail to vendor
-        return super().form_valid(form)
-"""
+class ActivateAccount(views.PasswordResetConfirmView, VulnmanContextMixin):
+    template_name = "account/activate_account.html"
+    form_class = forms.PasswordSetForm
+    token_generator = account_activation_token
+    success_url = reverse_lazy(settings.LOGIN_URL)

@@ -1,4 +1,5 @@
 from django.test import TestCase, tag
+from guardian.shortcuts import assign_perm
 from vulnman.tests.mixins import VulnmanTestMixin
 from apps.responsible_disc import models
 
@@ -37,3 +38,13 @@ class CommentViewTestCase(TestCase, VulnmanTestMixin):
         self.assertEqual(models.VulnerabilityComment.objects.filter(
             text=data["text"],
             vulnerability=self.vuln1).count(), 1)
+
+    @tag('not-default')
+    def test_comment_shared(self):
+        url = self.get_url("responsible_disc:comment-create", pk=self.vuln1.pk)
+        data = {"text": "lorem ipsum"}
+        assign_perm("responsible_disc.add_comment", user_or_group=self.pentester2, obj=self.vuln1)
+        self.client.force_login(self.pentester2)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(models.VulnerabilityComment.objects.filter(text=data["text"]).count(), 1)
