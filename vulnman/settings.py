@@ -216,7 +216,7 @@ AUTH_LDAP_SERVER_URI = None
 RESPONSIBLE_DISCLOSURE_APP_ENABLE = False
 RESPONSIBLE_DISCLOSURE_MAIL_FROM = "vulnman@example.com"
 # delete external users after 90 days (e.g. vendors)
-INACTIVE_EXTERNAL_USER_DELETE_DAYS = 2
+INACTIVE_EXTERNAL_USER_DELETE_DAYS = 90
 
 try:
     from local_settings import *

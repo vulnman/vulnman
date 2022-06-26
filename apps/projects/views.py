@@ -7,7 +7,7 @@ from guardian.mixins import PermissionRequiredMixin
 from apps.projects import models
 from apps.projects import forms
 from apps.account.models import User
-from core.tasks.send_mail import send_mail_task
+from core.tasks import send_mail_task
 from vulnman.views import generic
 from vulnman.core.views import generics
 from vulnman.mixins.permission import NonObjectPermissionRequiredMixin, ObjectPermissionRequiredMixin
