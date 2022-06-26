@@ -24,7 +24,7 @@ services:
       - redis
 
   db:
-    image: postgres:latest-alpine
+    image: postgres:alpine
     volumes:
       - '/tmp/volumes/vulnman/db:/var/lib/postgresql/data'
     environment:
