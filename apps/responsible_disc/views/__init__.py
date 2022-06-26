@@ -28,14 +28,24 @@ class VulnerabilityList(django_filters.views.FilterMixin, generics.VulnmanAuthLi
         return filterset.qs
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["create_form"] = forms.VulnerabilityForm()
-        context["open_status_counts"] = models.Vulnerability.objects.filter(
-            user=self.request.user, status=models.Vulnerability.STATUS_OPEN).values("status").annotate(Count('status'))
-        context["closed_status_counts"] = models.Vulnerability.objects.filter(
-            user=self.request.user,
-            status=models.Vulnerability.STATUS_CLOSED).values("status").annotate(Count('status'))
-        return context
+        if not self.request.session.get("rd_vulns_filters"):
+            self.request.session["rd_vulns_filters"] = dict(self.request.GET)
+        if not self.request.GET:
+            self.request.session["rd_vulns_filters"] = {}
+        for key, value in self.request.GET.items():
+            self.request.session["rd_vulns_filters"][key] = value
+        qs = get_objects_for_user(self.request.user, "responsible_disc.view_vulnerability", models.Vulnerability,
+                                  use_groups=False, with_superuser=False, accept_global_perms=False)
+        qs_filters = self.request.GET.copy()
+        if qs_filters.get("status"):
+            del qs_filters["status"]
+        filterset = self.filterset_class(qs_filters, queryset=qs)
+        qs = filterset.qs
+        kwargs["open_vulns_count"] = qs.filter(
+            status=models.Vulnerability.STATUS_OPEN).count()
+        kwargs["closed_vulns_count"] = qs.filter(
+            status=models.Vulnerability.STATUS_CLOSED).count()
+        return super().get_context_data(**kwargs)
 
 
 class VulnerabilityCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateView):
@@ -156,7 +166,7 @@ class VulnerabilityNotifyVendor(generics.VulnmanAuthUpdateView):
 class VulnUpdate(ObjectPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
     model = models.Vulnerability
     form_class = forms.VulnerabilityForm
-    permission_denied_message = ["responsible_disc.change_vulnerability"]
+    permission_required = ["responsible_disc.change_vulnerability"]
     template_name = "responsible_disc/vulnerability_create.html"
 
     def get_queryset(self):

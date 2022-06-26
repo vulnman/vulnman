@@ -9,4 +9,3 @@ def get_project_role(project, user):
     if qs.exists():
         return qs.get().get_role_display()
     return
-
