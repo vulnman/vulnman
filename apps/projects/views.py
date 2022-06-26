@@ -1,37 +1,52 @@
 from django.urls import reverse_lazy
-from django.db.models import Q
+from urllib.parse import urlencode
 from django.template.loader import render_to_string
 from django.conf import settings
+import django_filters.views
 from guardian.shortcuts import get_objects_for_user
 from guardian.mixins import PermissionRequiredMixin
 from apps.projects import models
 from apps.projects import forms
+from apps.projects import filters
 from apps.account.models import User
-from core.tasks.send_mail import send_mail_task
+from core.tasks import send_mail_task
 from vulnman.views import generic
 from vulnman.core.views import generics
-from vulnman.mixins.permission import NonObjectPermissionRequiredMixin, ObjectPermissionRequiredMixin
+from vulnman.mixins.permission import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
 
 
-class ProjectList(generics.VulnmanAuthListView):
+class ProjectList(django_filters.views.FilterMixin, generics.VulnmanAuthListView):
     template_name = "projects/project_list.html"
     context_object_name = "projects"
+    filterset_class = filters.ProjectFilter
 
     def get_queryset(self):
         qs = get_objects_for_user(self.request.user, "projects.view_project", models.Project,
                                   use_groups=False, accept_global_perms=False, with_superuser=False)
-        if self.request.GET.get('archived'):
-            qs = qs.filter(status=models.Project.PENTEST_STATUS_CLOSED)
-        else:
-            qs = qs.filter(~Q(status=models.Project.PENTEST_STATUS_CLOSED))
-        return qs
+        if not self.request.GET.get("status"):
+            qs = qs.filter(status=models.Project.PENTEST_STATUS_OPEN)
+        filterset = self.filterset_class(self.request.GET, queryset=qs)
+        return filterset.qs
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["create_project_form"] = forms.ProjectForm(form_action="projects:project-create")
-        if self.request.GET.get('archived'):
-            context["show_archived"] = True
-        return context
+        if self.request.GET and not self.request.session.get("project_filters"):
+            self.request.session["project_filters"] = dict(self.request.GET)
+        if not self.request.GET:
+            self.request.session["project_filters"] = {}
+        for key, value in self.request.GET.items():
+            self.request.session["project_filters"][key] = value
+        qs = get_objects_for_user(self.request.user, "projects.view_project", models.Project,
+                                  use_groups=False, accept_global_perms=False, with_superuser=False)
+        qs_filters = self.request.GET.copy()
+        if qs_filters.get("status"):
+            del qs_filters["status"]
+        filterset = self.filterset_class(qs_filters, queryset=qs)
+        qs = filterset.qs
+        kwargs["open_status_count"] = qs.filter(
+            status=models.Project.PENTEST_STATUS_OPEN).count()
+        kwargs["closed_status_count"] = qs.filter(
+            status=models.Project.PENTEST_STATUS_CLOSED).count()
+        return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):
         if self.request.session.get('project_pk'):
@@ -39,22 +54,20 @@ class ProjectList(generics.VulnmanAuthListView):
         return super().get(request, *args, **kwargs)
 
 
-class ProjectCreate(NonObjectPermissionRequiredMixin, generics.VulnmanCreateView):
-    http_method_names = ["post"]
+class ProjectCreate(VulnmanPermissionRequiredMixin, generics.VulnmanCreateView):
     form_class = forms.ProjectForm
     model = models.Project
     success_url = reverse_lazy("projects:project-list")
     permission_required = "projects.add_project"
+    template_name = "projects/project_create.html"
 
     def form_valid(self, form):
         form.instance.creator = self.request.user
         return super().form_valid(form)
 
 
-class ProjectDetail(PermissionRequiredMixin, generics.VulnmanAuthDetailView):
+class ProjectDetail(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDetailView):
     template_name = "projects/project_detail.html"
-    raise_exception = True
-    return_403 = True
     permission_required = ["projects.view_project"]
 
     def get(self, request, *args, **kwargs):
@@ -70,13 +83,11 @@ class ProjectDetail(PermissionRequiredMixin, generics.VulnmanAuthDetailView):
                                     use_groups=False, accept_global_perms=False, with_superuser=False)
 
 
-class ProjectUpdate(PermissionRequiredMixin, generics.VulnmanAuthUpdateView):
+class ProjectUpdate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
     template_name = "projects/project_create.html"
     form_class = forms.ProjectForm
     model = models.Project
     permission_required = ["projects.change_project"]
-    return_403 = True
-    raise_exception = True
 
     def get_success_url(self):
         return reverse_lazy('projects:project-detail', kwargs={'pk': self.kwargs.get('pk')})
@@ -113,14 +124,14 @@ class ClientList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
     return_403 = True
 
 
-class ClientDetail(NonObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
+class ClientDetail(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDetailView):
     template_name = "projects/client_detail.html"
     context_object_name = "client"
     model = models.Client
     permission_required = ["projects.view_client"]
 
 
-class ClientCreate(NonObjectPermissionRequiredMixin, generics.VulnmanAuthCreateWithInlinesView):
+class ClientCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateWithInlinesView):
     # TODO: deprecate *inlinesview
     template_name = "projects/client_create.html"
     model = models.Client

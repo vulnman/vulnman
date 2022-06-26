@@ -1,0 +1,20 @@
+<a class="list-group-item list-group-item-action" href="{{ project.get_absolute_url }}">
+    <div class="row">
+        <div class="col-sm-12">
+            {% if project.status == 0 %}
+                <i class="fa fa-dot-circle text-success"></i>
+            {% elif vuln.status == 1 %}
+                <i class="fa fa-check text-secondary"></i>
+            {% elif vuln.status == 2 %}
+                <i class="fa fa-bug text-warning"></i>
+            {% endif %}
+            <strong class="p-2">[{{ project.client.name }}] {{ project.name }}</strong>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 d-flex">
+            <small class="p-2 text-muted">opened on {{ project.date_created|date }}, updated
+                on {{ project.date_updated|date }}</small>
+        </div>
+    </div>
+</a>
