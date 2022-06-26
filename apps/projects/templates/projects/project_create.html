@@ -1,12 +1,44 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}
-Create Project
-{% endblock %}
+
+{% block title %}Create Project{% endblock %}
+
+
+{% block extra_head %}
+    <link href="{% static 'vendor/select2/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/vulnman/components/select2.css' %}" rel="stylesheet"/>
+    <script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+{% endblock extra_head %}
+
 
 {% block content %}
     <div class="container mt-3">
-        {% crispy form %}
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+                {% if request.resolver_match.url_name == "project-update" %}
+                    <li class="breadcrumb-item active">{{ project.name }}</li>
+                {% else %}
+                <li class="breadcrumb-item active">New</li>
+                {% endif %}
+            </ol>
+        </nav>
+
+        <div class="card">
+            <div class="card-body">
+                {% if request.resolver_match.url_name == "project-update" %}
+                <h4 class="card-title">Update Project</h4>
+                {% else %}
+                <h4 class="card-title">Create New Project</h4>
+                {% endif %}
+                <hr/>
+
+                {% crispy form %}
+            </div>
+        </div>
     </div>
+
 {% endblock %}

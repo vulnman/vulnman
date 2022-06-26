@@ -1,0 +1,17 @@
+<div class="row">
+    <!-- Search bar -->
+    <div class="col-sm-12 col-md-6">
+        <form class="d-flex justify-content-between">
+            <input type="text" class="form-control" name="q" placeholder="Search ..."
+                   {% if request.GET.q %}value="{{ request.GET.q }}"{% endif %}>
+            <button class="btn btn-outline-secondary"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    {% if perms.projects.add_project %}
+        <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
+            <a class="btn btn-primary" href="{% url 'projects:project-create' %}">
+                <i class="fa fa-plus"></i> New Project
+            </a>
+        </div>
+    {% endif %}
+</div>
