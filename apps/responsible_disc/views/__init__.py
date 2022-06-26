@@ -19,18 +19,19 @@ class VulnerabilityList(django_filters.views.FilterMixin, generics.VulnmanAuthLi
     filterset_class = filters.VulnerabilityFilter
     model = models.Vulnerability
 
-    def get_queryset(self, skip_status_filter=False):
+    def get_queryset(self):
         qs = get_objects_for_user(self.request.user, "responsible_disc.view_vulnerability", models.Vulnerability,
                                   use_groups=False, with_superuser=False, accept_global_perms=False)
-        if not skip_status_filter:
-            if not self.request.GET.get("status"):
-                qs = qs.filter(status=models.Vulnerability.STATUS_OPEN)
+        if not self.request.GET.get("status"):
+            qs = qs.filter(status=models.Vulnerability.STATUS_OPEN)
         filterset = self.filterset_class(self.request.GET, queryset=qs)
         return filterset.qs
 
     def get_context_data(self, **kwargs):
         if not self.request.session.get("rd_vulns_filters"):
             self.request.session["rd_vulns_filters"] = dict(self.request.GET)
+        if not self.request.GET:
+            self.request.session["rd_vulns_filters"] = {}
         for key, value in self.request.GET.items():
             self.request.session["rd_vulns_filters"][key] = value
         qs = get_objects_for_user(self.request.user, "responsible_disc.view_vulnerability", models.Vulnerability,

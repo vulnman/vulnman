@@ -31,6 +31,8 @@ class ProjectList(django_filters.views.FilterMixin, generics.VulnmanAuthListView
     def get_context_data(self, **kwargs):
         if self.request.GET and not self.request.session.get("project_filters"):
             self.request.session["project_filters"] = dict(self.request.GET)
+        if not self.request.GET:
+            self.request.session["project_filters"] = {}
         for key, value in self.request.GET.items():
             self.request.session["project_filters"][key] = value
         qs = get_objects_for_user(self.request.user, "projects.view_project", models.Project,
