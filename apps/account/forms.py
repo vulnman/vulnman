@@ -5,6 +5,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
+from vulnman.forms import CodeMirrorWidget
 from apps.account import models
 
 
@@ -44,8 +45,12 @@ class UpdatePentesterProfileForm(forms.ModelForm):
     class Meta:
         model = models.PentesterProfile
         fields = [
-            "is_public", "public_real_name", "public_email_address", "first_name", "last_name"
+            "is_public", "public_real_name", "public_email_address", "first_name", "last_name",
+            "bio"
         ]
+        widgets = {
+            "bio": CodeMirrorWidget()
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -59,6 +64,11 @@ class UpdatePentesterProfileForm(forms.ModelForm):
             layout.Row(
                 layout.Div(
                     bootstrap5.FloatingField("last_name"), css_class="col-sm-12"
+                )
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.Field("bio"), css_class="col-sm-12"
                 )
             ),
             layout.Row(
