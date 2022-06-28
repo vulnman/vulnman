@@ -1,0 +1,189 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-28 20:32+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: apps/reporting/templates/report_templates/default/sections/contacts.html:5
+#: resources/report_templates/default/sections/contacts.html:5
+msgid "Contacts"
+msgstr "Kontakte"
+
+#: apps/reporting/templates/report_templates/default/sections/contacts.html:10
+#: resources/report_templates/default/sections/contacts.html:10
+msgid "Customer"
+msgstr "Kunde"
+
+#: resources/report_templates/default/sections/toc.html:4
+msgid "Table of contents"
+msgstr "Inhaltsverzeichnis"
+
+#: resources/report_templates/default/sections/toc.html:6
+msgid "Overview"
+msgstr "Übersicht"
+
+#: resources/report_templates/default/sections/toc.html:13
+msgid "Management Summary"
+msgstr "Management Summary"
+
+#: resources/report_templates/default/sections/toc.html:20
+msgid "Vulnerability Details"
+msgstr "Schwachstellendetails"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:6
+msgid "Vulnerability Overview"
+msgstr "Schwachstellenübersicht"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:11
+msgid "Vulnerability Risk Definition and Criteria"
+msgstr "Risikodefinitionen und Kriterien"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:14
+msgid ""
+"\n"
+"            The risk ratings assigned to each vulnerability are determined "
+"by averaging several aspects of the exploit\n"
+"            and the environment, including reputation, difficulty,\n"
+"            and criticality.\n"
+"            "
+msgstr ""
+"\n"
+"            Die Risikoeinstufungen, die jeder Schwachstelle zugewiesen "
+"werden, werden durch den Durchschnitt mehrerer Aspekte des Exploits\n"
+" und der Umgebung, einschließlich des Rufs, der Schwierigkeit, \n"
+" und Kritikalität.\n"
+"            "
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:22
+msgid "Critical"
+msgstr "Kritisch"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:24
+msgid ""
+"\n"
+"                    Critical vulnerabilities pose a serious threat to an "
+"organization's security, and should be fixed\n"
+"                    immediately.\n"
+"                    They may provide a total compromise of the target "
+"environment, or similar critical impacts.\n"
+"                    "
+msgstr ""
+"\n"
+"                    Kritische Schwachstellen stellen eine ernsthafte "
+"Bedrohung für die Sicherheit einer Sicherheit einer Organisation dar und "
+"sollten sofort behoben werden. sofort behoben werden. \n"
+"                    Sie können eine vollständige Kompromittierung der "
+"Zielumgebung Umgebung oder ähnliche kritische Auswirkungen haben.\n"
+"                    "
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:32
+msgid "High"
+msgstr "Hoch"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:34
+msgid ""
+"\n"
+"                    High risk vulnerabilities provide a serious risk to the "
+"company environment and should\n"
+"                    be corrected promptly. These issues can significantly "
+"affect the organization's security\n"
+"                    posture.\n"
+"                    "
+msgstr ""
+"\n"
+"                    Schwachstellen mit hohem Risiko stellen eine ernsthafte "
+"Gefahr für die Unternehmensumgebung dar und sollten umgehend behoben werden. "
+"Diese Probleme können sich erheblich  die Sicherheit des Unternehmens "
+"beeinträchtigen\n"
+" auswirken. \n"
+"                    "
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:42
+msgid "Medium"
+msgstr "Mittel"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:44
+msgid ""
+"\n"
+"                        Medium severity vulnerabilities represent a moderate "
+"risk to the environment. They may\n"
+"                    require additional context before remediation but should "
+"be remediated after critical\n"
+"                    and high risks.\n"
+"                    "
+msgstr ""
+"\n"
+"                        Schwachstellen mittleren Schweregrades stellen ein "
+"mittleres Risiko für die Umwelt dar. Sie können \n"
+" zusätzlichen Kontext vor der Behebung erfordern, sollten aber  nach "
+"kritischen und hohen Risiken und hohen Risiken behoben werden.\n"
+"                    "
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:53
+msgid "Low"
+msgstr "Niedrig"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:55
+msgid ""
+"\n"
+"                    Low severity vulnerabilities provide minimal risk to the "
+"target environment, and often\n"
+"                    theoretical in nature. Remediation of low risks is often "
+"a lower priority than other\n"
+"                    security hardening techniques.\n"
+"                    "
+msgstr ""
+"\n"
+"                    Schwachstellen mit geringem Schweregrad stellen ein "
+"minimales Risiko für die Zielumgebung und sind oft  theoretischer Natur. Die "
+"Behebung von Schwachstellen mit geringem Risiko hat oft  eine geringere "
+"Priorität als andere\n"
+" Sicherheitshärtungstechniken.\n"
+"                    "
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:63
+msgid "Informational"
+msgstr "Informationell"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:65
+msgid ""
+"\n"
+"                    Informational vulnerabilities have little-or-no impact "
+"to the target scope by themselves.\n"
+"                    They are included however, as they may be a risk when "
+"combined with other\n"
+"                    circumstances or technologies not currently in place. "
+"Remediation of informational items\n"
+"                    is not necessary.\n"
+"                    "
+msgstr ""
+"\n"
+"                    Informationelle Schwachstellen haben wenig oder gar "
+"keine Auswirkungen auf den Zielbereich selbst.\n"
+"                    Sie sind jedoch enthalten, da sie ein Risiko darstellen "
+"können, wenn in Kombination mit anderen Umständen oder Technologien, die "
+"derzeit nicht vorhanden sind. Die Beseitigung von Informationslücken\n"
+" ist nicht erforderlich.\n"
+"   "
+
+#: vulnman/settings.py:231
+msgid "German"
+msgstr "Deutsch"
+
+#: vulnman/settings.py:232
+msgid "English"
+msgstr "Englisch"

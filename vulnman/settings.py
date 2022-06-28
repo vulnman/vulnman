@@ -20,6 +20,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -122,6 +123,8 @@ SESSION_COOKIE_SECURE = True
 
 
 INSTALLED_APPS = [
+    # before django.contrib.admin to support django admin integration
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -217,6 +220,18 @@ RESPONSIBLE_DISCLOSURE_APP_ENABLE = False
 RESPONSIBLE_DISCLOSURE_MAIL_FROM = "vulnman@example.com"
 # delete external users after 90 days (e.g. vendors)
 INACTIVE_EXTERNAL_USER_DELETE_DAYS = 90
+
+# Translation settings
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
+gettext = lambda s: s
+LANGUAGES = (
+    ('de', gettext('German')),
+    ('en', gettext('English')),
+)
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
 
 try:
     from local_settings import *

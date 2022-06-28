@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% load guardian_tags %}
 
+
 {% block title %}
     Reports
 {% endblock %}
@@ -167,11 +168,12 @@ $('#submit-id-submit').click(function(event){
     var report_type = $("#id_report_type option").filter(":selected").val();
     var report_template = $('#id_report_template option').filter(":selected").val();
     var name = $('#id_name').val();
+    var language = $('#id_language').val();
     $.ajax({
         type: "POST",
         url: "{% url 'api:v1:report-create-report' %}",
         dataType: "json",
-        data: {"project": "{{project.pk}}", "report_type": report_type, "name": name, "report_template": report_template},
+        data: {"project": "{{project.pk}}", "report_type": report_type, "name": name, "report_template": report_template, "language": language},
         success: function(data){
             $('#create-report-button-spin').addClass("spinner-border spinner-border-sm");
             $('#create-report-button').attr("disabled", "disabled")

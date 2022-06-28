@@ -28,6 +28,7 @@ class ReportViewSet(viewsets.ProjectRelatedObjectRetrieveViewSet):
                 serializer.validated_data["report_type"],
                 name=serializer.validated_data.get("name", None),
                 creator=self.request.user.username,
+                language=serializer.validated_data.get("language"),
                 report_template=serializer.validated_data.get(
                     'report_template', 'default'))
             serializer.validated_data["project"] = serializer.validated_data[

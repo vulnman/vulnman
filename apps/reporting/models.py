@@ -1,9 +1,6 @@
 from django.db import models
 from django.urls import reverse_lazy
-from django.core import signing
-from django.utils import timezone
 from django.conf import settings
-from uuid import uuid4
 from vulnman.models import VulnmanProjectModel
 
 
@@ -18,6 +15,7 @@ class PentestReport(VulnmanProjectModel):
     report_type = models.CharField(max_length=16, choices=REPORT_TYPE_CHOICES)
     raw_source = models.TextField(null=True, blank=True)
     pdf_source = models.BinaryField(null=True, blank=True)
+    language = models.CharField(choices=settings.LANGUAGES, default="en", max_length=6)
 
     def __str__(self):
         return self.get_report_type_display()
@@ -59,35 +57,3 @@ class ReportInformation(VulnmanProjectModel):
 #    change = models.CharField(choices=[], max_length=512)
 #    user = models.ForeignKey(User, on_delete=models.CASCADE)
 #    date = models.DateField()
-
-
-class ReportShareToken(models.Model):
-    # TODO: not in use! legacy
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    report = models.OneToOneField(PentestReport, on_delete=models.CASCADE)
-    share_token = models.CharField(max_length=512, null=True, blank=True)
-    date_expires = models.DateTimeField()
-
-    def save(self, *args, **kwargs):
-        # save instance twice, because we need the ID which is set by the
-        # database!
-        super().save(*args, **kwargs)
-        if not self.share_token:
-            self._create_token()
-            self.save(update_fields=["share_token"])
-
-    def _create_token(self):
-        signer = signing.TimestampSigner()
-        self.share_token = signer.sign_object({"report": str(self.uuid)})
-
-    @classmethod
-    def is_expired(cls, token):
-        signer = signing.TimestampSigner()
-        try:
-            value = signer.unsign_object(token)
-        except signing.SignatureExpired:
-            return True
-        if value:
-            return not cls.objects.filter(
-                pk=value.get("report"), date_expires__gt=timezone.now()).exists()
-        return True

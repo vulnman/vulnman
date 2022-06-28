@@ -1,6 +1,7 @@
 import os
 from celery import shared_task
 from django.conf import settings
+from django.utils import translation
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from weasyprint.text.fonts import FontConfiguration
@@ -66,7 +67,7 @@ def export_single_vulnerability(vulnerability):
 
 
 @shared_task
-def do_create_report(report_pk, report_type, report_template=None, creator=None, name=None):
+def do_create_report(report_pk, report_type, report_template=None, creator=None, name=None, language="en"):
     """Celery task for create PDF pentesting reports
 
     Args:
@@ -74,6 +75,7 @@ def do_create_report(report_pk, report_type, report_template=None, creator=None,
         report_type (str): _description_
         creator (User, optional): _description_. Defaults to None.
     """
+    translation.activate(language)
     if not report_template:
         report_template = "default"
     reportinformation = ReportInformation.objects.get(pk=report_pk)

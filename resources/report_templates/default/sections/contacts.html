@@ -1,12 +1,13 @@
 {% load markdown %}
+{% load i18n %}
 
 <article id="contacts" class="chapter">
-    <h1 class="chapter-title" id="contacts-title">Contacts</h1>
+    <h1 class="chapter-title" id="contacts-title">{% translate "Contacts" %}</h1>
 </article>
 
 
 <article>
-    <h2>Customer</h2>
+    <h2>{% translate "Customer" %}</h2>
 
     <p><strong>{{ project.client.name }}</strong></p>
     <p>

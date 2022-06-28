@@ -66,7 +66,9 @@ class PentestReportCreate(generic.ProjectCreateView):
             form.cleaned_data["report_type"],
             self.request.build_absolute_uri() + self.request.user.profile.get_absolute_url(),
             creator=self.request.user.username,
-            name=form.cleaned_data["name"])
+            name=form.cleaned_data["name"],
+            language=form.cleaned_data["language"]
+        )
         return HttpResponseRedirect(self.get_success_url())
 
 
