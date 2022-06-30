@@ -1,12 +1,8 @@
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from rest_framework import status
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.viewsets import GenericViewSet
 from django_celery_results.models import TaskResult
 from vulnman.api import viewsets
 from apps.reporting import models
-from apps.reporting import tasks
 from api.v1.serializers import reports as serializers
 
 """

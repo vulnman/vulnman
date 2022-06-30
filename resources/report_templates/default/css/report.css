@@ -430,10 +430,11 @@ code {
     max-width: 8cm;
 }
 
+.chart-container {
+    display: flex;
+    justify-content: center;
+}
+
 #categories-chart {
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    height: 7cm;
-    max-width: 8.5cm;
+
 }

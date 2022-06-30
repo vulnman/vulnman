@@ -5,7 +5,6 @@ from django.utils import translation
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from weasyprint.text.fonts import FontConfiguration
-from apps.reporting.models import PentestReport, Report
 from apps.reporting import models
 from apps.findings.models import Template
 from apps.reporting.utils import charts
@@ -65,65 +64,6 @@ def export_single_vulnerability(vulnerability):
         stylesheets=get_stylesheets(report_template),
         font_config=font_config)
     return pdf_source
-
-
-@shared_task
-def do_create_report_legacy(report_pk, report_type, report_template=None, creator=None, name=None, language="en"):
-    """Celery task for create PDF pentesting reports
-
-    Args:
-        report_pk (str): _description_
-        report_type (str): _description_
-        creator (User, optional): _description_. Defaults to None.
-    """
-    translation.activate(language)
-    if not report_template:
-        report_template = "default"
-    reportinformation = ReportInformation.objects.get(pk=report_pk)
-    project = reportinformation.get_project()
-    templates = get_sorted_vuln_templates(project)
-    context = {
-        "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
-        "creator": creator,
-        'templates': templates,
-        "report": reportinformation, "project": project,
-        'report_type': report_type,
-        'SEVERITY_CHART_SRC': charts.SeverityDonutChart().create_image(
-            project),
-        'CATEGORY_POLAR_CHART': charts.VulnCategoryPolarChart().create_image(
-            project)
-    }
-    jinja_template = report_template +\
-        "/report.html"
-    raw_source = render_to_string(jinja_template, context)
-    font_config = FontConfiguration()
-    pdf_source = HTML(string=raw_source).write_pdf(
-        stylesheets=get_stylesheets(report_template),
-        font_config=font_config)
-    if report_type == "draft":
-        qs = PentestReport.objects.filter(project=project)
-        if qs.exists() and not name:
-            report = PentestReport.objects.get(
-                project=project, report_type="draft", name="")
-            report.raw_source = raw_source
-            report.pdf_source = pdf_source
-            report.save()
-        else:
-            if not name:
-                # work in progress report
-                PentestReport.objects.create(
-                    project=project, report_type="draft",
-                    raw_source=raw_source,
-                    pdf_source=pdf_source)
-            else:
-                PentestReport.objects.create(
-                    project=project, report_type="draft",
-                    raw_source=raw_source, name=name,
-                    pdf_source=pdf_source)
-    else:
-        PentestReport.objects.create(
-            project=project, name=name, report_type=report_type,
-            raw_source=raw_source, pdf_source=pdf_source)
 
 
 @shared_task

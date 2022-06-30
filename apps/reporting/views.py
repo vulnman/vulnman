@@ -25,9 +25,7 @@ class ReportCreate(generic.ProjectCreateView):
 
 class ReportDetail(generic.ProjectDetailView):
     template_name = "reporting/report_detail.html"
-
-    def get_queryset(self):
-        return models.Report.objects.filter(pk=self.kwargs.get("pk"))
+    model = models.Report
 
     def get_context_data(self, **kwargs):
         kwargs["report_mgmt_summary_form"] = forms.ReportManagementSummaryForm(
@@ -44,7 +42,7 @@ class ReportReleaseList(generic.ProjectListView):
     context_object_name = "releases"
 
     def get_context_data(self, **kwargs):
-        kwargs["report"] = models.Report.objects.get(pk=self.kwargs.get("pk"))
+        kwargs["report"] = models.Report.objects.get(pk=self.kwargs.get("pk"), project=self.get_project())
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):

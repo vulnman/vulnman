@@ -14,10 +14,16 @@ def get_report_templates():
 class Report(VulnmanProjectModel):
     REPORT_DEFAULT_TITLE = "Vulnerability Report"
     REPORT_TYPE_PDF = 0
+    REPORT_TYPE_JSON = 1
 
     REPORT_TYPE_CHOICES = [
-
+        (REPORT_TYPE_PDF, "PDF"),
+        (REPORT_TYPE_JSON, "JSON")
     ]
+    REPORT_TYPE_CONTENT_TYPES = {
+        REPORT_TYPE_PDF: "application/pdf",
+        REPORT_TYPE_JSON: "application/json"
+    }
 
     name = models.CharField(max_length=128, default="Report")
     creator = models.ForeignKey(
@@ -31,7 +37,7 @@ class Report(VulnmanProjectModel):
     title = models.CharField(max_length=256, null=True, blank=True)
     language = models.CharField(choices=settings.LANGUAGES, default="en", max_length=6)
     template = models.CharField(choices=get_report_templates(), default="default", max_length=64)
-    # report_type = models.PositiveIntegerField(choices=REPORT_TYPE_CHOICES, default=0)
+    report_type = models.PositiveIntegerField(choices=REPORT_TYPE_CHOICES, default=0)
 
     def get_report_title(self):
         if self.title:
@@ -40,6 +46,9 @@ class Report(VulnmanProjectModel):
 
     def get_absolute_url(self):
         return reverse_lazy("projects:reporting:report-detail", kwargs={"pk": self.pk})
+
+    class Meta:
+        ordering = ["-date_created"]
 
 
 class ReportRelease(VulnmanProjectModel):
@@ -62,34 +71,8 @@ class ReportRelease(VulnmanProjectModel):
     def get_absolute_delete_url(self):
         return reverse_lazy("projects:reporting:report-release-delete", kwargs={"pk": self.pk})
 
-
-# legacy
-class PentestReport(VulnmanProjectModel):
-    REPORT_TYPE_DRAFT = "draft"
-    REPORT_TYPE_RELEASE = "release"
-
-    REPORT_TYPE_CHOICES = [
-        (REPORT_TYPE_DRAFT, "Draft"), (REPORT_TYPE_RELEASE, "Release")
-    ]
-    name = models.CharField(max_length=128)
-    report_type = models.CharField(max_length=16, choices=REPORT_TYPE_CHOICES)
-    raw_source = models.TextField(null=True, blank=True)
-    pdf_source = models.BinaryField(null=True, blank=True)
-
-    def __str__(self):
-        return self.get_report_type_display()
-
-    @property
-    def version(self):
-        return "0.1"
-
-    def get_absolute_delete_url(self):
-        return reverse_lazy('projects:reporting:report-delete', kwargs={
-            'pk': self.pk})
-
     class Meta:
         ordering = ["-date_created"]
-
 
 
 # class ReportVersion(VulnmanProjectModel):

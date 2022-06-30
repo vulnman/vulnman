@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-28 20:32+0200\n"
+"POT-Creation-Date: 2022-06-30 07:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,123 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: apps/reporting/templates/report_templates/default/sections/contacts.html:5
 #: resources/report_templates/default/sections/contacts.html:5
 msgid "Contacts"
 msgstr "Kontakte"
 
-#: apps/reporting/templates/report_templates/default/sections/contacts.html:10
 #: resources/report_templates/default/sections/contacts.html:10
 msgid "Customer"
 msgstr "Kunde"
+
+#: resources/report_templates/default/sections/cover.html:9
+msgid "Author"
+msgstr "Autor"
+
+#: resources/report_templates/default/sections/cover.html:13
+msgid "Version"
+msgstr "Version"
+
+#: resources/report_templates/default/sections/cover.html:17
+msgid "Date"
+msgstr "Datum"
+
+#: resources/report_templates/default/sections/cover.html:20
+msgid "Generator"
+msgstr "Generator"
+
+#: resources/report_templates/default/sections/intro.html:5
+msgid "Introduction"
+msgstr "Einleitung"
+
+#: resources/report_templates/default/sections/intro.html:11
+msgid ""
+"\n"
+"        This report contains the results of a vulnerability assessment of "
+"your systems.\n"
+"        "
+msgstr ""
+"\n"
+"        Dieser Bericht enthält die Ergebnisse einer Schwachstellenanalyse "
+"Ihrer Systeme. \n"
+"        "
+
+#: resources/report_templates/default/sections/intro.html:16
+msgid ""
+"The report includes a management summary that summarizes the findings and "
+"provides a brief recommendation for remediation of the vulnerabilities.\n"
+"            "
+msgstr ""
+"Der Bericht enthält eine Managementzusammenfassung, die die Ergebnisse "
+"zusammenfasst und eine kurze Empfehlung für die Behebung der Schwachstellen "
+"enthält.\n"
+"            "
+
+#: resources/report_templates/default/sections/intro.html:19
+msgid ""
+"\n"
+"        To reproduce the vulnerabilities, they are described with technical "
+"details at the end of the report.\n"
+"        An assessment regarding criticality is provided.\n"
+"             "
+msgstr ""
+"\n"
+"        Um die Schwachstellen zu reproduzieren, werden sie mit technischen "
+"Details am Ende des Berichts beschrieben.\n"
+"        Es wird eine Einschätzung der Kritikalität gegeben.\n"
+"             "
+
+#: resources/report_templates/default/sections/mgmt_summary.html:5
+#: resources/report_templates/default/sections/toc.html:13
+msgid "Management Summary"
+msgstr "Management Summary"
+
+#: resources/report_templates/default/sections/mgmt_summary.html:10
+msgid "Evaluation"
+msgstr "Bewertung"
+
+#: resources/report_templates/default/sections/mgmt_summary.html:14
+msgid "Recommendation"
+msgstr "Empfehlung"
+
+#: resources/report_templates/default/sections/scope.html:3
+msgid "Scope"
+msgstr "Geltungsbereich"
+
+#: resources/report_templates/default/sections/scope.html:7
+msgid ""
+"\n"
+"    The scope contains the following assets:\n"
+"    "
+msgstr ""
+"\n"
+"Der Geltungsbereich umfasst die folgenden Vermögenswerte: \n"
+"   "
+
+#: resources/report_templates/default/sections/scope.html:20
+msgid "No description provided"
+msgstr "Keine Beschreibung vorhanden"
+
+#: resources/report_templates/default/sections/technical_details.html:6
+msgid "Technical Details"
+msgstr "Technische Details"
+
+#: resources/report_templates/default/sections/technical_details.html:11
+msgid ""
+"\n"
+"        This section contains a list of all vulnerabilities found and how to "
+"reproduce them.\n"
+"        Impact and criticality information is provided for each "
+"vulnerability.\n"
+"        Recommendations for remediation are also included.\n"
+"        "
+msgstr ""
+"\n"
+"        Dieser Abschnitt enthält eine Liste aller gefundenen Schwachstellen "
+"und wie man zu reproduzieren. \n"
+"        Informationen zu Auswirkungen und Kritikalität werden für jede "
+"Schwachstelle angegeben.Schwachstelle.\n"
+"        Empfehlungen zur Behebung sind ebenfalls enthalten.\n"
+"        "
 
 #: resources/report_templates/default/sections/toc.html:4
 msgid "Table of contents"
@@ -35,10 +143,6 @@ msgstr "Inhaltsverzeichnis"
 #: resources/report_templates/default/sections/toc.html:6
 msgid "Overview"
 msgstr "Übersicht"
-
-#: resources/report_templates/default/sections/toc.html:13
-msgid "Management Summary"
-msgstr "Management Summary"
 
 #: resources/report_templates/default/sections/toc.html:20
 msgid "Vulnerability Details"
@@ -179,6 +283,74 @@ msgstr ""
 "derzeit nicht vorhanden sind. Die Beseitigung von Informationslücken\n"
 " ist nicht erforderlich.\n"
 "   "
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:78
+msgid "Vulnerability Categories"
+msgstr "Schwachstellen-Kategorien"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:80
+msgid ""
+"\n"
+"            The vulnerabilities found were divided into categories.\n"
+"            These provide an overview of the area in which the most errors "
+"were found.\n"
+"            "
+msgstr ""
+"\n"
+"            Die gefundenen Schwachstellen wurden in Kategorien eingeteilt.\n"
+"            Diese geben einen Überblick über den Bereich, in dem die meisten "
+"Fehler  gefunden wurden.\n"
+"            "
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:86
+msgid ""
+"\n"
+"            In the case of clear deflections, consideration should be given "
+"to appropriate countermeasures in these areas.\n"
+"            "
+msgstr ""
+"\n"
+"            Bei deutlichen Ablenkungen sollte über geeignete über geeignete "
+"Gegenmaßnahmen in diesen Bereichen nachgedacht werden.\n"
+"            "
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:96
+msgid "Vulnerabilities by Risk Level"
+msgstr "Schwachstellen nach Risikostufe"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:98
+msgid ""
+"\n"
+"            The following vulnerabilities were found within each risk "
+"level.\n"
+"            "
+msgstr ""
+"\n"
+"            Die folgenden Schwachstellen wurden innerhalb der einzelnen "
+"Risiko level.\n"
+"            "
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:109
+msgid "Vulnerabilities"
+msgstr "Schwachstellen"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:111
+msgid ""
+"The following table lists the vulnerabilities found in order of their "
+"criticality"
+msgstr ""
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:116
+msgid "Vulnerability"
+msgstr "Schwachstelle"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:117
+msgid "Findings"
+msgstr "Funde"
+
+#: resources/report_templates/default/sections/vulnerability_overview.html:118
+msgid "Risk Level"
+msgstr "Risiko-Stufe"
 
 #: vulnman/settings.py:231
 msgid "German"
