@@ -37,6 +37,7 @@ class User(AbstractUser):
 class PentesterProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="pentester_profile")
     is_public = models.BooleanField(default=True)
+    bio = models.TextField(null=True, blank=True)
     public_real_name = models.BooleanField(default=False, help_text="Show your real name on public profile page")
     public_email_address = models.BooleanField(default=False, help_text="Show email address on public profile page")
 

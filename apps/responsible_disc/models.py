@@ -1,4 +1,5 @@
 import base64
+from uuid import uuid4
 from django.db import models
 from django.urls import reverse_lazy
 from django.conf import settings
@@ -88,12 +89,13 @@ class Vulnerability(models.Model):
 
 
 def get_proof_path(instance, filename):
-    return "uploads/responsible_disclosure/%s/%s/%s" % (instance.user.pk, instance.vulnerability.pk, filename)
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid4(), ext)
+    return "uploads/responsible_disclosure/%s/%s/%s" % (instance.vulnerability.user.pk,
+                                                        instance.vulnerability.pk, filename)
 
 
 class Proof(models.Model):
-    # TODO: some of duplicate code stuff is flying around here
-    # Improve this
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True, null=True)
     order = models.PositiveIntegerField(null=True)
