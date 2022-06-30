@@ -1,6 +1,7 @@
 import cvss
 import os
 import base64
+from uuid import uuid4
 from django.db import models
 from django.urls import reverse_lazy
 from django.dispatch import receiver
@@ -147,6 +148,8 @@ class BaseCVSS(models.Model):
 
 
 def project_pocs_path(instance, filename):
+    ext = filename.split(".")[-1]
+    filename = "%s.%s" % (uuid4(), ext)
     return "uploads/proofs/projects/%s/%s" % (instance.pk, filename)
 
 

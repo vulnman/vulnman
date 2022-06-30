@@ -1,4 +1,5 @@
 {% load static %}
+{% load markdown %}
 
 <div class="row">
     <div class="col-sm-12 col-md-3">
@@ -23,6 +24,18 @@
                     <a class="btn btn-outline-info mt-2" href="{% url 'account:change-password' %}">Change Password</a>
                 {% endif %}
             </div>
+
+            {% if user.profile.bio %}
+                <div class="row mt-5">
+                    <p><strong>About Me</strong></p>
+                </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    {{ user.profile.bio|md_to_html }}
+                </div>
+            </div>
+            {% endif %}
+
         </div>
     </div>
     <!-- Profile Center Content -->
@@ -43,7 +56,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Responsible Disclosed</h6>
+                                    <h6 class="text-muted font-semibold">Responsibly Disclosed</h6>
                                     <h6 class="font-extrabold mb-0">{{ user.resp_vulnerability_set.count }}</h6>
                                 </div>
                             </div>
@@ -68,7 +81,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="row mt-3">
                 <div class="col-sm-12">
                     <h4>Latest Responsible Disclosure Vulnerabilities</h4>
