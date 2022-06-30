@@ -5,7 +5,8 @@ from django.utils import translation
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from weasyprint.text.fonts import FontConfiguration
-from apps.reporting.models import PentestReport, ReportInformation
+from apps.reporting.models import PentestReport, Report
+from apps.reporting import models
 from apps.findings.models import Template
 from apps.reporting.utils import charts
 
@@ -67,7 +68,7 @@ def export_single_vulnerability(vulnerability):
 
 
 @shared_task
-def do_create_report(report_pk, report_type, report_template=None, creator=None, name=None, language="en"):
+def do_create_report_legacy(report_pk, report_type, report_template=None, creator=None, name=None, language="en"):
     """Celery task for create PDF pentesting reports
 
     Args:
@@ -123,3 +124,63 @@ def do_create_report(report_pk, report_type, report_template=None, creator=None,
         PentestReport.objects.create(
             project=project, name=name, report_type=report_type,
             raw_source=raw_source, pdf_source=pdf_source)
+
+
+@shared_task
+def do_create_report(report_release_pk):
+    """Celery task for create PDF pentest reports
+    """
+    try:
+        report_release = models.ReportRelease.objects.get(pk=report_release_pk)
+    except models.ReportRelease.DoesNotExist:
+        return False, "No such report release found!"
+
+    # activate django language support in celery task
+    translation.activate(report_release.report.language)
+
+    # load vulnerability templates
+    project = report_release.project
+    vulnerability_templates = get_sorted_vuln_templates(project=project)
+    context = {
+        "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
+        "templates": vulnerability_templates, "release": report_release,
+        "project": project, "SEVERITY_CHART_SRC": charts.SeverityDonutChart().create_image(project),
+        "CATEGORY_POLAR_CHART": charts.VulnCategoryPolarChart().create_image(project)
+    }
+
+    jinja_template = report_release.report.template + "/report.html"
+    raw_source = render_to_string(jinja_template, context)
+    font_config = FontConfiguration()
+    pdf_source = HTML(string=raw_source).write_pdf(
+        stylesheets=get_stylesheets(report_release.report.template),
+        font_config=font_config)
+    report_release.raw_source = raw_source
+    report_release.compiled_source = pdf_source
+    report_release.save()
+    return True, "Report Release created!"
+    """
+    if report_type == "draft":
+        qs = PentestReport.objects.filter(project=project)
+        if qs.exists() and not name:
+            report = PentestReport.objects.get(
+                project=project, report_type="draft", name="")
+            report.raw_source = raw_source
+            report.pdf_source = pdf_source
+            report.save()
+        else:
+            if not name:
+                # work in progress report
+                PentestReport.objects.create(
+                    project=project, report_type="draft",
+                    raw_source=raw_source,
+                    pdf_source=pdf_source)
+            else:
+                PentestReport.objects.create(
+                    project=project, report_type="draft",
+                    raw_source=raw_source, name=name,
+                    pdf_source=pdf_source)
+    else:
+        PentestReport.objects.create(
+            project=project, name=name, report_type=report_type,
+            raw_source=raw_source, pdf_source=pdf_source)
+    """

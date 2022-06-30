@@ -13,18 +13,19 @@
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active">Reports</li>
+                <li class="breadcrumb-item"><a href="{% url 'projects:reporting:report-list' %}">Reports</a></li>
+                <li class="breadcrumb-item active">{{ report.name }}</li>
             </ol>
         </nav>
 
-        <div class="row">
-            <!-- Search bar -->
-            {# include 'responsible_disc/components/vulnerability_searchbar.html' #}
+        {% include 'reporting/components/sub_nav.html' %}
+
+        <div class="row mt-3">
 
             {% if perms.projects.change_project %}
                 <div class="col-sm-12 d-flex flex-column-reverse align-items-end">
-                    <a class="btn btn-primary" href="{% url 'projects:reporting:report-create' %}">
-                        <i class="fa fa-plus"></i> New Report
+                    <a class="btn btn-primary" href="{% url 'projects:reporting:report-release-create' report.pk %}">
+                        <i class="fa fa-plus"></i> New Release
                     </a>
                 </div>
             {% endif %}
@@ -33,7 +34,9 @@
         <div class="card mt-3">
             <div class="card-header border-bottom">
                 <div class="row">
-                    <div class="col-sm-12 d-flex flex-column-reverse align-items-end">
+                    <div class="col-sm-12 col-md-6 d-flex">
+                    </div>
+                    <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
                         <div class="dropdown">
                             <a class="btn dropdown-toggle" href="#" role="button" id="dropdown-menu-sort"
                                data-bs-toggle="dropdown" aria-expanded="false">
@@ -47,11 +50,21 @@
                 </div>
             </div>
             <div class="list-group list-group-flush">
-                {% for report in reports %}
-                    <a class="list-group-item list-group-item-action" href="{{ report.get_absolute_url }}">
+                {% for report in releases %}
+                    <div class="list-group-item list-group-item-action">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <strong class="p-2">{{ report.name }}</strong>
+                            <div class="col-sm-12 col-md-6 d-flex">
+                                <strong class="p-2">
+                                    <a class="text-decoration-none" style="color: inherit;" href="{% url 'projects:reporting:report-release-update' report.pk %}">
+                                        {{ report.name }}
+                                    </a>
+
+                                </strong>
+                            </div>
+                            <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
+                                <span class="pt-2">
+                                    <a class="btn btn-outline-secondary" href="{{ report.get_absolute_url }}" target="_blank">Download</a>
+                                </span>
                             </div>
                         </div>
                         <div class="row">
@@ -59,8 +72,9 @@
                                 <small class="p-2 text-muted">opened on {{ report.date_created|date }}, updated
                                     on {{ report.date_updated|date }}</small>
                             </div>
+
                         </div>
-                    </a>
+                    </div>
                 {% empty %}
                    {% include 'reporting/components/report_list_blankslate.html' %}
                 {% endfor %}

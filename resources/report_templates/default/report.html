@@ -1,8 +1,8 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>{{ report.get_report_title}}</title>
-    <meta name="description" content="{{ report.get_report_title }}">
+    <title>{{ release.report.get_report_title}}</title>
+    <meta name="description" content="{{ release.report.get_report_title }}">
 
     <style>
         @page {
@@ -32,7 +32,7 @@
     </style>
 </head>
 
-<body {% if report_type == "draft" %}class="draft"{% endif %}>
+<body {% if release.release_type == "draft" %}class="draft"{% endif %}>
 
     {% include 'default/sections/cover.html' %}
 

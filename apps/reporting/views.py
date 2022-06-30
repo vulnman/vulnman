@@ -1,5 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponse
-from django.db.models import Q
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.urls import reverse_lazy
 from vulnman.views import generic
 from apps.reporting import models, forms
@@ -8,73 +7,107 @@ from apps.reporting import tasks
 
 class ReportList(generic.ProjectListView):
     template_name = "reporting/report_list.html"
-    paginate_by = 20
     context_object_name = "reports"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # if len(self.get_queryset()):
-        context["report_mgmt_summary_form"] = forms.ReportManagementSummaryForm(
-            initial={
-                "recommendation": self.get_project().reportinformation.recommendation,
-                "evaluation": self.get_project().reportinformation.evaluation
-            })
-        context["report_create_form"] = forms.PentestReportForm()
-        return context
+    def get_queryset(self):
+        return models.Report.objects.filter(project=self.get_project())
+
+
+class ReportCreate(generic.ProjectCreateView):
+    template_name = "reporting/report_create.html"
+    form_class = forms.ReportCreateForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["project"] = self.get_project()
+        return kwargs
+
+
+class ReportDetail(generic.ProjectDetailView):
+    template_name = "reporting/report_detail.html"
 
     def get_queryset(self):
-        return models.PentestReport.objects.filter(~Q(name=""), project=self.get_project())
+        return models.Report.objects.filter(pk=self.kwargs.get("pk"))
+
+    def get_context_data(self, **kwargs):
+        kwargs["report_mgmt_summary_form"] = forms.ReportManagementSummaryForm(
+            initial={
+                "recommendation": self.get_object().recommendation,
+                "evaluation": self.get_object().evaluation
+            }
+        )
+        return super().get_context_data(**kwargs)
 
 
-class PentestReportDraftCreate(generic.ProjectCreateView):
+class ReportReleaseList(generic.ProjectListView):
+    template_name = "reporting/report_releases.html"
+    context_object_name = "releases"
+
+    def get_context_data(self, **kwargs):
+        kwargs["report"] = models.Report.objects.get(pk=self.kwargs.get("pk"))
+        return super().get_context_data(**kwargs)
+
+    def get_queryset(self):
+        return models.ReportRelease.objects.filter(report__pk=self.kwargs.get("pk"),
+                                                   report__project=self.get_project())
+
+
+class ReportReleaseDelete(generic.ProjectDeleteView):
     http_method_names = ["post"]
-    form_class = forms.PentestReportDraftForm
+
+    def get_queryset(self):
+        return models.ReportRelease.objects.filter(report__project=self.get_project())
 
     def get_success_url(self):
-        return reverse_lazy("projects:reporting:report-list")
+        return reverse_lazy("projects:reporting:report-release-list", kwargs={"pk": self.get_object().report.pk})
+
+
+class ReportReleaseCreate(generic.ProjectCreateView):
+    template_name = "reporting/report_create.html"
+    form_class = forms.ReportReleaseForm
+
+    def get_success_url(self):
+        return reverse_lazy("projects:reporting:report-release-list", kwargs={"pk": self.kwargs.get("pk")})
+
+    def get_report(self):
+        try:
+            obj = models.Report.objects.get(pk=self.kwargs.get("pk"), project=self.get_project())
+        except models.Report.DoesNotExist:
+            return Http404()
+        return obj
+
+    def get_queryset(self):
+        return models.ReportRelease.objects.filter(report__pk=self.kwargs.get("pk"))
 
     def form_valid(self, form):
-        tasks.do_create_report.delay(
-            self.get_project().reportinformation.pk, "draft",
-            creator=self.request.user.username)
+        form.instance.project = self.get_project()
+        form.instance.report = self.get_report()
+        form.instance.creator = self.request.user
+        instance = form.save()
+        task = tasks.do_create_report.delay(instance.pk)
+        self.request.session["active_report_task"] = (task.task_id, str(instance.pk))
         return HttpResponseRedirect(self.get_success_url())
 
 
-class PentestReportDownload(generic.ProjectDetailView):
+class ReportReleaseUpdate(generic.ProjectUpdateView):
+    template_name = "reporting/report_release_update.html"
+    form_class = forms.ReportReleaseUpdateForm
+
+    def get_queryset(self):
+        return models.ReportRelease.objects.filter(pk=self.kwargs.get("pk"), project=self.get_project())
+
+    def get_success_url(self):
+        return reverse_lazy("projects:reporting:report-release-list")
+
+
+class ReportReleaseDetail(generic.ProjectDetailView):
     context_object_name = "report"
 
     def get_queryset(self):
-        return models.PentestReport.objects.filter(project=self.get_project())
+        return models.ReportRelease.objects.filter(project=self.get_project())
 
     def render_to_response(self, context, **response_kwargs):
         obj = self.get_object()
-        response = HttpResponse(obj.pdf_source, content_type='application/pdf')
+        response = HttpResponse(obj.compiled_source, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="report.pdf"'
         return response
-
-
-class PentestReportCreate(generic.ProjectCreateView):
-    http_method_names = ["post"]
-    form_class = forms.PentestReportForm
-
-    def get_success_url(self):
-        return reverse_lazy("projects:reporting:report-list")
-
-    def form_valid(self, form):
-        tasks.do_create_report.delay(
-            self.get_project().reportinformation.pk,
-            form.cleaned_data["report_type"],
-            self.request.build_absolute_uri() + self.request.user.profile.get_absolute_url(),
-            creator=self.request.user.username,
-            name=form.cleaned_data["name"],
-            language=form.cleaned_data["language"]
-        )
-        return HttpResponseRedirect(self.get_success_url())
-
-
-class PentestReportDelete(generic.ProjectDeleteView):
-    http_method_names = ["post"]
-    success_url = reverse_lazy("projects:reporting:report-list")
-
-    def get_queryset(self):
-        return models.PentestReport.objects.filter(project=self.get_project())

@@ -9,7 +9,7 @@ from apps.reporting import models
 from apps.reporting import tasks
 from api.v1.serializers import reports as serializers
 
-
+"""
 class ReportViewSet(viewsets.ProjectRelatedObjectRetrieveViewSet):
     queryset = models.PentestReport.objects.all()
     serializer_class = serializers.ReportSerializer
@@ -35,6 +35,7 @@ class ReportViewSet(viewsets.ProjectRelatedObjectRetrieveViewSet):
                 "project"].pk
             return Response({"task_id": report_task.task_id})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+"""
 
 
 class ReportTaskResultViewSet(RetrieveModelMixin, GenericViewSet):
@@ -45,7 +46,6 @@ class ReportTaskResultViewSet(RetrieveModelMixin, GenericViewSet):
     lookup_field = "task_id"
 
 
-class ReportInformationViewSet(viewsets.ProjectRelatedObjectViewSet):
-    # TODO: do not allow delete
-    queryset = models.ReportInformation
-    serializer_class = serializers.PentestReportInformationSerializer
+class ReportViewSet(viewsets.ProjectRelatedDontDestroyObjectViewSet):
+    queryset = models.Report
+    serializer_class = serializers.ReportSerializer

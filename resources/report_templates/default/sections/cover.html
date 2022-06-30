@@ -1,15 +1,11 @@
 <article id="cover">
-    <h1>{{ report.get_report_title }}</h1>
+    <h1>{{ release.report.get_report_title }}</h1>
     <h2>{{ project.name }}</h2>
     <h3>{{ project.client.name }}</h3>
     <table id="cover-footer">
         <tr>
             <td>Author:</td>
-            {% if creator %}
-            <td>{{ creator }}</td>
-            {% else %}
-            <td>{{ report.author }}</td>
-            {% endif %}
+            <td>{{ release.report.author }}</td>
         </tr>
         <tr>
             <td>Version:</td>
