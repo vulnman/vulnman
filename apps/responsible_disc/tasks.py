@@ -2,9 +2,7 @@ from celery import shared_task
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
-from weasyprint import HTML
-from weasyprint.text.fonts import FontConfiguration
-from apps.reporting.tasks import get_stylesheets
+from apps.reporting.utils import report_gen
 from apps.responsible_disc import models
 
 
@@ -18,11 +16,9 @@ def export_single_vulnerability(vulnerability):
     report_template = "default"
     template = "responsible_disc/reporting/exported_vulnerability.html"
     raw_source = render_to_string(template, context)
-    font_config = FontConfiguration()
-    pdf_source = HTML(string=raw_source).write_pdf(
-        stylesheets=get_stylesheets(report_template),
-        font_config=font_config)
-    return pdf_source
+    report_generator = report_gen.ReportGenerator(report_template)
+    compiled_source = report_generator.generate(raw_source)
+    return compiled_source
 
 
 @shared_task

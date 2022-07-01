@@ -1,14 +1,10 @@
-import os
-import sass
 from celery import shared_task
 from django.conf import settings
 from django.utils import translation
 from django.template.loader import render_to_string
-from weasyprint import HTML, CSS
-from weasyprint.text.fonts import FontConfiguration
 from apps.reporting import models
 from apps.findings.models import Template
-from apps.reporting.utils import charts
+from apps.reporting.utils import charts, report_gen
 
 
 def get_sorted_vuln_templates(project):
@@ -31,30 +27,6 @@ def get_sorted_vuln_templates(project):
     return templates
 
 
-def get_stylesheets(report_template):
-    """get full path of report stylesheets for weasyprint
-
-    Args:
-        report_template (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    css_paths = []
-    report_template_path = "resources/report_templates/" + report_template
-    css_list = settings.REPORT_TEMPLATES.get(report_template).get("CSS", [])
-    for css in css_list:
-        css_paths.append(
-            os.path.join(settings.BASE_DIR, report_template_path + "/" + css)
-        )
-    # append sass files
-    sass_path = os.path.join(report_template_path, "scss/main.scss")
-    if os.path.exists(sass_path):
-        compiled_scss = sass.compile(filename=sass_path, output_style="compressed")
-        css_paths.append(CSS(string=compiled_scss))
-    return css_paths
-
-
 @shared_task
 def export_single_vulnerability(vulnerability):
     context = {
@@ -63,13 +35,11 @@ def export_single_vulnerability(vulnerability):
     }
     # TODO: do not hardcode this one
     report_template = "default"
-    template = "default/exported_vulnerability.html"
+    template = "report_templates/default/exported_vulnerability.html"
     raw_source = render_to_string(template, context)
-    font_config = FontConfiguration()
-    pdf_source = HTML(string=raw_source).write_pdf(
-        stylesheets=get_stylesheets(report_template),
-        font_config=font_config)
-    return pdf_source
+    report_generator = report_gen.ReportGenerator(report_template)
+    compiled_source = report_generator.generate(raw_source)
+    return compiled_source
 
 
 @shared_task
@@ -94,39 +64,13 @@ def do_create_report(report_release_pk):
         "CATEGORY_POLAR_CHART": charts.VulnCategoryPolarChart().create_image(project)
     }
 
-    jinja_template = report_release.report.template + "/report.html"
+    jinja_template = "report_templates/" + report_release.report.template + "/report.html"
     raw_source = render_to_string(jinja_template, context)
-    font_config = FontConfiguration()
-    pdf_source = HTML(string=raw_source).write_pdf(
-        stylesheets=get_stylesheets(report_release.report.template),
-        font_config=font_config)
+
+    report_generator = report_gen.ReportGenerator(report_release.report.template)
+    compiled_source = report_generator.generate(raw_source)
+
     report_release.raw_source = raw_source
-    report_release.compiled_source = pdf_source
+    report_release.compiled_source = compiled_source
     report_release.save()
     return True, "Report Release created!"
-    """
-    if report_type == "draft":
-        qs = PentestReport.objects.filter(project=project)
-        if qs.exists() and not name:
-            report = PentestReport.objects.get(
-                project=project, report_type="draft", name="")
-            report.raw_source = raw_source
-            report.pdf_source = pdf_source
-            report.save()
-        else:
-            if not name:
-                # work in progress report
-                PentestReport.objects.create(
-                    project=project, report_type="draft",
-                    raw_source=raw_source,
-                    pdf_source=pdf_source)
-            else:
-                PentestReport.objects.create(
-                    project=project, report_type="draft",
-                    raw_source=raw_source, name=name,
-                    pdf_source=pdf_source)
-    else:
-        PentestReport.objects.create(
-            project=project, name=name, report_type=report_type,
-            raw_source=raw_source, pdf_source=pdf_source)
-    """

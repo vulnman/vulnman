@@ -53,8 +53,7 @@ TEMPLATES = [
         'NAME': 'report_templates',
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            # BASE_DIR / 'report_templates', BASE_DIR / 'vulnman/report_templates',
-            BASE_DIR / 'resources/report_templates'
+            BASE_DIR / 'resources/templates'
         ],
         'APP_DIRS': False
     },
@@ -190,7 +189,7 @@ CELERY_RESULT_BACKEND = 'django-db'
 # Report Templates
 REPORT_TEMPLATES = {
     "default": {
-        "CSS": ["css/report.css", "css/fontawesome.min.css", "css/codehilite.css"]
+        "CSS": ["css/fontawesome.min.css", "css/codehilite.css"]
     }
 }
 

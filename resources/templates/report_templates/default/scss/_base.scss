@@ -184,71 +184,7 @@ table {
   }
 }
 
-/* TABLE OF CONTENTS */
 
-#contents {
-  break-before: right;
-  break-after: left;
-  page: no-chapter;
-  break-before: avoid !important;
-  break-after: avoid !important;
-
-  h2 {
-    font-size: 20pt;
-    font-weight: 400;
-    margin-bottom: 3cm;
-  }
-
-  h3 {
-    font-weight: 500;
-    margin: 3em 0 1em;
-
-    &::before {
-      background: #2c3e50;
-      content: '';
-      display: block;
-      height: .08cm;
-      margin-bottom: .25cm;
-      width: 2cm;
-    }
-  }
-
-  ul {
-    list-style: none;
-    padding-left: 0;
-
-    li {
-      border-top: .25pt solid #c1c1c1;
-      margin: .25cm 0;
-      padding-top: .25cm;
-
-      &::before {
-        color: black;
-        content: '• ';
-        font-size: 40pt;
-        line-height: 16pt;
-        vertical-align: bottom;
-      }
-
-      a {
-        color: inherit;
-        text-decoration-line: inherit;
-
-        &::before {
-          content: target-text(attr(href));
-        }
-
-        &::after {
-          color: black;
-          content: target-counter(attr(href), page);
-          float: right;
-        }
-      }
-    }
-  }
-}
-
-/* END TABLE OF CONTENTS */
 
 .float-start {
   float: left;
@@ -302,36 +238,24 @@ table {
   }
 }
 
-/* Clear floats after the columns */
-
-/*
-.row {
-  display: flex;
-}
-
-.col {
-  flex: 1;
-  padding: 1em;
-}*/
-
 .text-critical {
-  color: #9c1720;
+  color: $critical-color;
 }
 
 .text-high {
-  color: #d13c0f;
+  color: $high-color;
 }
 
 .text-medium {
-  color: #e8971e;
+  color: $medium-color;
 }
 
 .text-low {
-  color: #2075f5;
+  color: $low-color;
 }
 
-.text-informational, .text-information {
-  color: #059D1D;
+.text-informational {
+  color: $informational-color;
 }
 
 .text-critical a, .text-high a, .text-medium a, .text-low a, .text-info a, .text-informational a {
@@ -364,7 +288,7 @@ code {
 
 .draft {
   z-index: -2;
-  background: url(../draft.png);
+  background: url(file://images/draft.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
