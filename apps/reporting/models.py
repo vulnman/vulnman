@@ -1,6 +1,9 @@
 from django.db import models
 from django.urls import reverse_lazy
+from django.core import signing
+from django.utils import timezone
 from django.conf import settings
+from uuid import uuid4
 from vulnman.models import VulnmanProjectModel
 
 
@@ -46,6 +49,9 @@ class Report(VulnmanProjectModel):
 
     def get_absolute_url(self):
         return reverse_lazy("projects:reporting:report-detail", kwargs={"pk": self.pk})
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy("projects:reporting:report-delete", kwargs={"pk": self.pk})
 
     class Meta:
         ordering = ["-date_created"]
