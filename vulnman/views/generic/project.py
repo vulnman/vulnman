@@ -28,6 +28,7 @@ class ProjectDetailView(ObjectPermissionRequiredMixin, ProjectMixin, VulnmanAuth
     DetailView for an object that belongs to a project of mine
     """
     permission_required = ["projects.view_project"]
+    return_403 = True
 
     def get_permission_object(self):
         return self.get_project()
@@ -54,13 +55,15 @@ class ProjectListView(ObjectPermissionRequiredMixin, ProjectMixin, VulnmanAuthLi
     paginate_by = 25
     permission_required = ["projects.view_project"]
     raise_exception = True
+    return_403 = True
 
     def get_permission_object(self):
         return self.get_project()
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.filter(project=self.get_project())
+        # return qs.filter(project=self.get_project())
+        return qs
 
 
 class ProjectDeleteView(ObjectPermissionRequiredMixin, ProjectMixin, VulnmanAuthDeleteView):

@@ -59,7 +59,32 @@ def radar_factory(num_vars, frame='circle'):
                 y = np.append(y, y[0])
                 line.set_data(x, y)
 
-        def set_varlabels(self, labels):
+        def set_varlabels(self, labels, **kwargs):
+            """
+            angles = np.degrees(theta)
+            self.set_thetagrids(angles, labels, **kwargs)
+            for label, angle in zip(self.get_xticklabels(), angles):
+                if angle in (0, 180):
+                    label.set_horizonalalignment("center")
+                elif 0 < angle < 180:
+                    label.set_horizonalalignment("right")
+                else:
+                    label.set_horizonalalignment("left")
+            """
+            angles = np.degrees(theta)
+            labels_with_newlines = [
+                label.replace(' ', '\n') for label in labels]
+            _lines, texts = self.set_thetagrids(
+                angles, labels_with_newlines)
+            for t, angle in zip(texts, angles):
+                if angle in (0, 180):
+                    t.set_horizontalalignment("center")
+                elif 0 < angle < 180:
+                    t.set_horizontalalignment("right")
+                else:
+                    t.set_horizontalalignment("left")
+
+            """
             labels_with_newlines = [
                 label.replace(' ', '\n') for label in labels]
             _lines, texts = self.set_thetagrids(
@@ -69,6 +94,7 @@ def radar_factory(num_vars, frame='circle'):
                 t.set_horizontalalignment('left')
             for t in texts[half + 1:]:
                 t.set_horizontalalignment('right')
+            """
 
         def _gen_axes_patch(self):
             # The Axes patch must be centered at (0.5, 0.5) and of radius 0.5
@@ -102,7 +128,7 @@ def radar_factory(num_vars, frame='circle'):
     return theta
 
 
-class VulnCategoryPolarChart:
+class VulnCategoryPolarChart2:
 
     def create_image(self, project):
         s = io.BytesIO()
@@ -118,11 +144,11 @@ class VulnCategoryPolarChart:
         # amount.append(amount[0])
         # Initialise the spider plot by setting figure size
         # and polar projection
-        plt.figure(figsize=(5, 5))
+        plt.figure(figsize=(2, 2))
         plt.subplot(polar=True)
         # Start here
         theta = radar_factory(len(labels))
-        fig = plt.figure(figsize=(5, 5))
+        fig = plt.figure(figsize=(2, 2), dpi=300)
         ax = fig.add_subplot(111, projection='radar')
 
         ax.plot(theta, amount)
@@ -132,6 +158,49 @@ class VulnCategoryPolarChart:
 
         ax.set_theta_direction(-1)
         ax.set_yticklabels([])
+
+        plt.savefig(s, format="png", bbox_inches="tight", transparent=True)
+        plt.close()
+        s = base64.b64encode(s.getvalue()).decode().replace("\n", "")
+        return "<img id='categories-chart' src=data:image/png;base64,{data}>".format(data=s)
+
+
+
+class VulnCategoryPolarChart:
+
+    def create_image(self, project):
+        s = io.BytesIO()
+        categories = VulnerabilityCategory.objects.all()
+        labels = []
+        amount = []
+        for cat in categories:
+            counter = Vulnerability.objects.filter(
+                project=project, template__category__name=cat.name).count()
+            if counter and len(labels) <= 10:
+                labels.append(cat.display_name)
+                amount.append(counter)
+
+        theta = radar_factory(len(labels))
+        fix, ax = plt.subplots(figsize=[6, 3], subplot_kw={"projection": "radar"})
+        plt.tight_layout(pad=1.0)
+
+        ax.plot(theta, amount)
+        ax.fill(theta, amount, "b", alpha=0.25)
+        ax.set_varlabels(labels, size=10)
+        # ax.tick_params(axis='both', which='major')
+        # ax.set_theta_direction(-1)
+        ax.set_yticklabels([])
+
+        if not amount:
+            max_value = 0
+        else:
+            max_value = max(amount)
+        max_value += 4 - (max_value % 4)
+        ticks = np.linspace(0, max_value, 5, dtype=int)
+        ax.set_rgrids(ticks)
+        ax.set_ylim((0, max_value))
+        for tick in ticks[1:]:
+            ax.text(0, tick, " %s" % tick, transform=ax.transData, size=10, va="top", ha="left")
 
         plt.savefig(s, format="png", bbox_inches="tight", transparent=True)
         plt.close()

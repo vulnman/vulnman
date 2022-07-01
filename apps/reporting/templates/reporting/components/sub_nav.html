@@ -1,0 +1,12 @@
+<!-- Sub nav -->
+<ul class="nav nav-tabs border-bottom border-secondary" id="secondary-nav">
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.view_name == "projects:reporting:report-detail" %} active{% endif %}" href="{% url 'projects:reporting:report-detail' report.pk %}">Details</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link">Version History</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.view_name == "projects:reporting:report-release-list" %} active{% endif %}" href="{% url 'projects:reporting:report-release-list' report.pk %}">Releases</a>
+    </li>
+</ul>

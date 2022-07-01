@@ -1,10 +1,11 @@
 import os
 from celery import shared_task
 from django.conf import settings
+from django.utils import translation
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from weasyprint.text.fonts import FontConfiguration
-from apps.reporting.models import PentestReport, ReportInformation
+from apps.reporting import models
 from apps.findings.models import Template
 from apps.reporting.utils import charts
 
@@ -66,37 +67,38 @@ def export_single_vulnerability(vulnerability):
 
 
 @shared_task
-def do_create_report(report_pk, report_type, report_template=None, creator=None, name=None):
-    """Celery task for create PDF pentesting reports
-
-    Args:
-        report_pk (str): _description_
-        report_type (str): _description_
-        creator (User, optional): _description_. Defaults to None.
+def do_create_report(report_release_pk):
+    """Celery task for create PDF pentest reports
     """
-    if not report_template:
-        report_template = "default"
-    reportinformation = ReportInformation.objects.get(pk=report_pk)
-    project = reportinformation.get_project()
-    templates = get_sorted_vuln_templates(project)
+    try:
+        report_release = models.ReportRelease.objects.get(pk=report_release_pk)
+    except models.ReportRelease.DoesNotExist:
+        return False, "No such report release found!"
+
+    # activate django language support in celery task
+    translation.activate(report_release.report.language)
+
+    # load vulnerability templates
+    project = report_release.project
+    vulnerability_templates = get_sorted_vuln_templates(project=project)
     context = {
         "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
-        "creator": creator,
-        'templates': templates,
-        "report": reportinformation, "project": project,
-        'report_type': report_type,
-        'SEVERITY_CHART_SRC': charts.SeverityDonutChart().create_image(
-            project),
-        'CATEGORY_POLAR_CHART': charts.VulnCategoryPolarChart().create_image(
-            project)
+        "templates": vulnerability_templates, "release": report_release,
+        "project": project, "SEVERITY_CHART_SRC": charts.SeverityDonutChart().create_image(project),
+        "CATEGORY_POLAR_CHART": charts.VulnCategoryPolarChart().create_image(project)
     }
-    jinja_template = report_template +\
-        "/report.html"
+
+    jinja_template = report_release.report.template + "/report.html"
     raw_source = render_to_string(jinja_template, context)
     font_config = FontConfiguration()
     pdf_source = HTML(string=raw_source).write_pdf(
-        stylesheets=get_stylesheets(report_template),
+        stylesheets=get_stylesheets(report_release.report.template),
         font_config=font_config)
+    report_release.raw_source = raw_source
+    report_release.compiled_source = pdf_source
+    report_release.save()
+    return True, "Report Release created!"
+    """
     if report_type == "draft":
         qs = PentestReport.objects.filter(project=project)
         if qs.exists() and not name:
@@ -121,3 +123,4 @@ def do_create_report(report_pk, report_type, report_template=None, creator=None,
         PentestReport.objects.create(
             project=project, name=name, report_type=report_type,
             raw_source=raw_source, pdf_source=pdf_source)
+    """

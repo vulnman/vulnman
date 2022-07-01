@@ -46,9 +46,9 @@ router.register(
     "reports/tasks", viewsets.reports.ReportTaskResultViewSet,
     basename="report-task-result")
 
-router.register(
-    "report-information", viewsets.reports.ReportInformationViewSet,
-    basename="report-information")
+#router.register(
+#    "report-information", viewsets.reports.ReportInformationViewSet,
+#    basename="report-information")
 
 if settings.RESPONSIBLE_DISCLOSURE_APP_ENABLE:
     router.register(

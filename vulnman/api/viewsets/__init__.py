@@ -59,3 +59,16 @@ class GenericRetrieveModelViewSet(mixins.RetrieveModelMixin, viewsets.GenericVie
 class ProjectRelatedObjectListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, ProjectRelatedObjectPermission]
     filter_backends = [SearchFilter]
+
+
+class ProjectRelatedDontDestroyObjectViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
+                                             mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated, ProjectRelatedObjectPermission]
+    filter_backends = [SearchFilter]
+
+    def perform_create(self, serializer):
+        if serializer.validated_data.get('project'):
+            if self.request.user.has_perm("change_project", serializer.validated_data["project"]):
+                return super().perform_create(serializer)
+        else:
+            return super().perform_create(serializer)

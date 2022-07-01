@@ -1,15 +1,18 @@
 {% load markdown %}
+{% load i18n %}
 {% load vulns %}
 
 <article id="vulnerability-listing" class="chapter">
-    <h1 class="chapter-title" id="vulnerability-listing-title">Technical Details</h1>
+    <h1 class="chapter-title" id="vulnerability-listing-title">{% trans 'Technical Details' %}</h1>
 </article>
 
 <section>
     <p>
+        {% blocktrans %}
         This section contains a list of all vulnerabilities found and how to reproduce them.
         Impact and criticality information is provided for each vulnerability.
         Recommendations for remediation are also included.
+        {% endblocktrans %}
     </p>
 </section>
 

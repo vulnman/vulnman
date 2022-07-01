@@ -15,32 +15,14 @@ def get_report_templates():
 class ReportSerializer(ProjectRelatedObjectSerializer):
 
     class Meta:
-        model = models.PentestReport
-        fields = ["uuid", "project", "report_type"]
+        model = models.Report
+        fields = ["uuid", "evaluation", "recommendation"]
         read_only_fields = ["uuid"]
-
-
-class PentestReportDraftCreateSerializer(ProjectRelatedObjectSerializer):
-    report_template = serializers.ChoiceField(
-        choices=get_report_templates(), required=False)
-
-    class Meta:
-        model = models.PentestReport
-        fields = ["project", "report_type", "report_template"]
-
-
-class PentestReportSerializer(ProjectRelatedObjectSerializer):
-    report_template = serializers.ChoiceField(
-        choices=get_report_templates())
-
-    class Meta:
-        model = models.PentestReport
-        fields = ["project", "report_type", "name", "report_template"]
 
 
 class PentestReportInformationSerializer(ProjectRelatedObjectSerializer):
     class Meta:
-        model = models.ReportInformation
+        model = models.Report
         fields = ["evaluation", "recommendation", "project", "uuid", "author"]
         read_only_fields = ["uuid", "project"]
 
