@@ -47,6 +47,9 @@ class Report(VulnmanProjectModel):
     def get_absolute_url(self):
         return reverse_lazy("projects:reporting:report-detail", kwargs={"pk": self.pk})
 
+    def get_absolute_delete_url(self):
+        return reverse_lazy("projects:reporting:report-delete", kwargs={"pk": self.pk})
+
     class Meta:
         ordering = ["-date_created"]
 
