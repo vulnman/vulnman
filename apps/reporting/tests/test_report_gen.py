@@ -12,6 +12,9 @@ class ReportGeneratorTestCase(TestCase, VulnmanTestMixin):
         settings.CELERY_TASK_ALWAYS_EAGER = True
 
     def test_create_report_task(self):
-        task = tasks.do_create_report.delay(self.project1.reportinformation.pk, "draft")
-        _result = task.get()
-        self.assertEqual(models.PentestReport.objects.count(), 1)
+        report = self._create_instance(models.Report, project=self.project1)
+        release = self._create_instance(models.ReportRelease, report=report, project=self.project1)
+        task = tasks.do_create_report.delay(release.pk)
+        result = task.get()
+        self.assertEqual(result[0], True)
+        self.assertEqual(models.ReportRelease.objects.filter(compiled_source__isnull=False).count(), 1)

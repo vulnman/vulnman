@@ -1,17 +1,18 @@
 {% load markdown %}
+{% load i18n %}
 
 <article id="contacts" class="chapter">
-    <h1 class="chapter-title" id="contacts-title">Contacts</h1>
+    <h1 class="chapter-title" id="contacts-title">{% translate "Contacts" %}</h1>
 </article>
 
 
 <article>
-    <h2>Customer</h2>
+    <h2>{% translate "Customer" %}</h2>
 
     <p><strong>{{ project.client.name }}</strong></p>
     <p>
-        {{ project.client.street}}</br>
-        {{ project.client.zip }} {{ project.client.city}}</br>
+        {{ project.client.street}}<br>
+        {{ project.client.zip }} {{ project.client.city}}<br>
         {{ project.client.country}}
     </p>
     <div class="row">
@@ -19,8 +20,8 @@
             <div class="column">
                 <div class="contact-card mb-3">
                     <p><strong>{{ contact.first_name}} {{contact.last_name}}</strong></p>
-                    <p><i class="fa fa-address-card"></i> {{ contact.get_position_display }} Contact</br>
-                        <i class="fa fa-envelope"></i>  {{ contact.email }} </br>
+                    <p><i class="fa fa-address-card"></i> {{ contact.get_position_display }} Contact<br>
+                        <i class="fa fa-envelope"></i>  {{ contact.email }} <br>
                         {% if contact.phone %}
                         <i class="fa fa-phone"></i> {{ contact.phone }}
                         {% else %}

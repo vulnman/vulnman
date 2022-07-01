@@ -15,8 +15,8 @@ Vulnman also wants to support bug hunters in reporting their vulnerabilities to 
 Feel free to test the current state and report bugs and ideas to improve vulnman.
 
 ## Features
-Features are listed in the [documentation](https://vulnman.github.io/doc).
+Features are listed in the [documentation](https://vulnman.github.io/docs).
 
 ## Documentation
 
-The documentation can be found under [https://vulnman.github.io/doc](https://vulnman.github.io/doc).
+The documentation can be found under [https://vulnman.github.io/docs](https://vulnman.github.io/docs).

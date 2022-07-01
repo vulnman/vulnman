@@ -1,56 +1,78 @@
 from django.db import models
 from django.urls import reverse_lazy
-from django.core import signing
-from django.utils import timezone
 from django.conf import settings
-from uuid import uuid4
 from vulnman.models import VulnmanProjectModel
 
 
-class PentestReport(VulnmanProjectModel):
-    REPORT_TYPE_DRAFT = "draft"
-    REPORT_TYPE_RELEASE = "release"
+def get_report_templates():
+    choices = []
+    for template in settings.REPORT_TEMPLATES.keys():
+        choices.append((template, template))
+    return choices
+
+
+class Report(VulnmanProjectModel):
+    REPORT_DEFAULT_TITLE = "Vulnerability Report"
+    REPORT_TYPE_PDF = 0
+    REPORT_TYPE_JSON = 1
 
     REPORT_TYPE_CHOICES = [
-        (REPORT_TYPE_DRAFT, "Draft"), (REPORT_TYPE_RELEASE, "Release")
+        (REPORT_TYPE_PDF, "PDF"),
+        (REPORT_TYPE_JSON, "JSON")
     ]
-    name = models.CharField(max_length=128)
-    report_type = models.CharField(max_length=16, choices=REPORT_TYPE_CHOICES)
-    raw_source = models.TextField(null=True, blank=True)
-    pdf_source = models.BinaryField(null=True, blank=True)
+    REPORT_TYPE_CONTENT_TYPES = {
+        REPORT_TYPE_PDF: "application/pdf",
+        REPORT_TYPE_JSON: "application/json"
+    }
 
-    def __str__(self):
-        return self.get_report_type_display()
-
-    @property
-    def version(self):
-        return "0.1"
-
-    def get_absolute_delete_url(self):
-        return reverse_lazy('projects:reporting:report-delete', kwargs={
-            'pk': self.pk})
-
-    class Meta:
-        ordering = ["-date_created"]
-
-
-class ReportInformation(VulnmanProjectModel):
-    REPORT_DEFAULT_TITLE = "Vulnerability Report"
-    project = models.OneToOneField("projects.Project", on_delete=models.CASCADE)
+    name = models.CharField(max_length=128, default="Report")
     creator = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name="created_reportinformation_set",
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name="created_report_set",
         null=True, blank=True)
     evaluation = models.TextField(null=True, blank=True)
     recommendation = models.TextField(null=True, blank=True)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name="reportinformation_set")
+        related_name="report_set")
     title = models.CharField(max_length=256, null=True, blank=True)
+    language = models.CharField(choices=settings.LANGUAGES, default="en", max_length=6)
+    template = models.CharField(choices=get_report_templates(), default="default", max_length=64)
+    report_type = models.PositiveIntegerField(choices=REPORT_TYPE_CHOICES, default=0)
 
     def get_report_title(self):
         if self.title:
             return self.title
         return self.REPORT_DEFAULT_TITLE
+
+    def get_absolute_url(self):
+        return reverse_lazy("projects:reporting:report-detail", kwargs={"pk": self.pk})
+
+    class Meta:
+        ordering = ["-date_created"]
+
+
+class ReportRelease(VulnmanProjectModel):
+    RELEASE_TYPE_DRAFT = "draft"
+    RELEASE_TYPE_RELEASE = "release"
+
+    RELEASE_TYPE_CHOICES = [
+        (RELEASE_TYPE_DRAFT, "Draft"),
+        (RELEASE_TYPE_RELEASE, "Release")
+    ]
+    name = models.CharField(max_length=128)
+    release_type = models.CharField(max_length=16, choices=RELEASE_TYPE_CHOICES)
+    raw_source = models.TextField(null=True, blank=True)
+    compiled_source = models.BinaryField(null=True, blank=True)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+
+    def get_absolute_url(self):
+        return reverse_lazy("projects:reporting:report-release-detail", kwargs={"pk": self.pk})
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy("projects:reporting:report-release-delete", kwargs={"pk": self.pk})
+
+    class Meta:
+        ordering = ["-date_created"]
 
 
 # class ReportVersion(VulnmanProjectModel):
@@ -59,35 +81,3 @@ class ReportInformation(VulnmanProjectModel):
 #    change = models.CharField(choices=[], max_length=512)
 #    user = models.ForeignKey(User, on_delete=models.CASCADE)
 #    date = models.DateField()
-
-
-class ReportShareToken(models.Model):
-    # TODO: not in use! legacy
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    report = models.OneToOneField(PentestReport, on_delete=models.CASCADE)
-    share_token = models.CharField(max_length=512, null=True, blank=True)
-    date_expires = models.DateTimeField()
-
-    def save(self, *args, **kwargs):
-        # save instance twice, because we need the ID which is set by the
-        # database!
-        super().save(*args, **kwargs)
-        if not self.share_token:
-            self._create_token()
-            self.save(update_fields=["share_token"])
-
-    def _create_token(self):
-        signer = signing.TimestampSigner()
-        self.share_token = signer.sign_object({"report": str(self.uuid)})
-
-    @classmethod
-    def is_expired(cls, token):
-        signer = signing.TimestampSigner()
-        try:
-            value = signer.unsign_object(token)
-        except signing.SignatureExpired:
-            return True
-        if value:
-            return not cls.objects.filter(
-                pk=value.get("report"), date_expires__gt=timezone.now()).exists()
-        return True

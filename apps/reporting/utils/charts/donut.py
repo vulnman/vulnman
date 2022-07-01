@@ -25,7 +25,7 @@ class SeverityDonutChart:
                 colors.append(Vulnerability.SEVERITY_COLORS[sev[1]])
         plt.rcParams['svg.fonttype'] = "none"
         mpl.rcParams['text.usetex'] = False
-        fig, ax = plt.subplots(figsize=(8, 8), dpi=300)
+        fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
         ax.axis('equal')
         width = 0.35
         outside, labels = ax.pie(
@@ -37,6 +37,7 @@ class SeverityDonutChart:
         plt.setp(outside, width=width, edgecolor='white')
         ax.text(
             0, 0, text, ha="center", size=20, fontweight="bold", va="center")
+        plt.tight_layout(pad=1.0)
         plt.savefig(s, format="png", bbox_inches="tight", transparent=True)
         plt.close()
         s = base64.b64encode(s.getvalue()).decode().replace("\n", "")
