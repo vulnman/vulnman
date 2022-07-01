@@ -13,14 +13,22 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'projects:reporting:report-list' %}">Reports</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'projects:reporting:report-release-list' form.instance.report.pk %}">Releases</a></li>
+                <li class="breadcrumb-item"><a
+                        href="{% url 'projects:reporting:report-release-list' form.instance.report.pk %}">Releases</a>
+                </li>
                 <li class="breadcrumb-item active">Update</li>
             </ol>
         </nav>
 
-        <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ form.instance.pk }}">
-            <i class="fa fa-trash"></i>
-        </a>
+        <div class="row">
+            <div class="col-sm-12 d-flex flex-column-reverse align-items-end">
+                <a class="btn btn-outline-danger" data-bs-toggle="modal"
+                   data-bs-target="#delete-modal-{{ form.instance.pk }}">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </div>
+        </div>
+
 
         <div class="card mt-3">
             <div class="card-body">

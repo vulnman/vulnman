@@ -17,13 +17,22 @@ Reports
 
         {% include 'reporting/components/sub_nav.html' %}
 
-        {% if report_mgmt_summary_form %}
-            <p class="mt-3"><strong>Language: </strong>{{ report.get_language_display }}</p>
+        <div class="row">
+            <div class="col-sm-12 col-md-9">
+                <p class="mt-3"><strong>Language: </strong>{{ report.get_language_display }}</p>
+            </div>
+            <div class="col-sm-12 col-md-3 d-flex flex-column-reverse align-items-end">
+                <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ report.pk }}">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </div>
             <p class="mt-3"><strong>Author: </strong>{{ report.author }}</p>
+        </div>
+
             <div class="mt-3">
                 {% crispy report_mgmt_summary_form %}
             </div>
-        {% endif %}
+    {% include 'modals/delete_object.html' with obj=report %}
     </div>
 {% endblock content %}
 

@@ -27,6 +27,9 @@ class ReportDetail(generic.ProjectDetailView):
     template_name = "reporting/report_detail.html"
     model = models.Report
 
+    def get_queryset(self):
+        return models.Report.objects.filter(project=self.get_project())
+
     def get_context_data(self, **kwargs):
         kwargs["report_mgmt_summary_form"] = forms.ReportManagementSummaryForm(
             initial={
@@ -109,3 +112,11 @@ class ReportReleaseDetail(generic.ProjectDetailView):
         response = HttpResponse(obj.compiled_source, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="report.pdf"'
         return response
+
+
+class ReportDelete(generic.ProjectDeleteView):
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:reporting:report-list")
+
+    def get_queryset(self):
+        return models.Report.objects.filter(project=self.get_project())
