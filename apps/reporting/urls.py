@@ -13,6 +13,8 @@ urlpatterns = [
 
     path('reports/<str:pk>/releases/', views.ReportReleaseList.as_view(), name="report-release-list"),
     path('reports/<str:pk>/releases/create/', views.ReportReleaseCreate.as_view(), name="report-release-create"),
+    path('reports/<str:pk>/releases/wip-create/', views.ReportReleaseWIPCreate.as_view(),
+         name="report-release-wip-create"),
 
     path('reportreleases/<str:pk>/', views.ReportReleaseDetail.as_view(), name="report-release-detail"),
     path('reportreleases/<str:pk>/update/', views.ReportReleaseUpdate.as_view(), name="report-release-update"),

@@ -77,6 +77,15 @@ class ReportReleaseForm(forms.ModelForm):
         )
 
 
+class ReportReleaseWIPForm(forms.ModelForm):
+    class Meta:
+        model = models.ReportRelease
+        fields = ["name"]
+        widgets = {
+            "name": forms.HiddenInput()
+        }
+
+
 class ReportReleaseUpdateForm(forms.ModelForm):
     class Meta:
         model = models.ReportRelease

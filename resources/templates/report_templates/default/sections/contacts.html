@@ -2,12 +2,12 @@
 {% load i18n %}
 
 <article id="contacts" class="chapter">
-    <h1 class="chapter-title" id="contacts-title">{% translate "Contacts" %}</h1>
+    <h1 class="chapter-title" id="contacts-title">{% trans "Contacts" %}</h1>
 </article>
 
 
 <article>
-    <h2>{% translate "Customer" %}</h2>
+    <h2>{% trans "Customer" %}</h2>
 
     <p><strong>{{ project.client.name }}</strong></p>
     <p>
@@ -20,7 +20,7 @@
             <div class="column">
                 <div class="contact-card mb-3">
                     <p><strong>{{ contact.first_name}} {{contact.last_name}}</strong></p>
-                    <p><i class="fa fa-address-card"></i> {{ contact.get_position_display }} Contact<br>
+                    <p><i class="fa fa-address-card"></i>{{ contact.get_position_display }} Contact<br>
                         <i class="fa fa-envelope"></i>  {{ contact.email }} <br>
                         {% if contact.phone %}
                         <i class="fa fa-phone"></i> {{ contact.phone }}
@@ -35,12 +35,12 @@
 </article>
 
 <article>
-    <h2>{{ REPORT_COMPANY_INFORMATION.name }}</h2>
+    <h2>{% trans 'Contractor' %}</h2>
 
     <p><strong>{{ REPORT_COMPANY_INFORMATION.name }}</strong></p>
     <p>
-        {{ REPORT_COMPANY_INFORMATION.street }}</br>
-        {{ REPORT_COMPANY_INFORMATION.zip }}</br>
+        {{ REPORT_COMPANY_INFORMATION.street }}<br>
+        {{ REPORT_COMPANY_INFORMATION.zip }}<br>
         {{ REPORT_COMPANY_INFORMATION.company }}
     </p>
 
@@ -49,10 +49,10 @@
             <div class="contact-card h-100">
                 <p><strong>{{ project.creator.username}}</strong></p>
                 <p>
-                    <i class="fa fa-bahai"></i> Project Creator</br>
-                    <i class="fa fa-envelope"></i> {{ project.creator.email }} </br>
+                    <i class="fa fa-bahai"></i> {% trans 'Project Creator' %} <br>
+                    <i class="fa fa-envelope"></i> {{ project.creator.email }} <br>
                     {% if project.creator.phone %}
-                        </br>
+                        <br>
                         <i class="fa fa-phone"></i> {{ project.creator.phone }}
                     {% else %}
                         <i class="fa fa-phone"></i> -
@@ -65,8 +65,8 @@
                 <div class="contact-card h-100 mb-3">
                     <p><strong>{{ contact.user.username}}</strong></p>
                     <p>
-                        <i class="fa fa-address-card"></i> {{ contact.get_role_display }}</br>
-                        <i class="fa fa-envelope"></i> {{ contact.user.email }} </br>
+                        <i class="fa fa-address-card"></i> {{ contact.get_role_display }}<br>
+                        <i class="fa fa-envelope"></i> {{ contact.user.email }} <br>
                         {% if contact.phone %}
                             </br>
                             <i class="fa fa-phone"></i> {{ contact.phone }}

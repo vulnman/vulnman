@@ -24,3 +24,4 @@ pyaml==21.10.1
 django-autocomplete-light==3.9.4
 django-celery-beat==2.3.0
 django-modeltranslation==0.18.2
+libsass==0.21.0

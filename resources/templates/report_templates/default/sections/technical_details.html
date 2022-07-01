@@ -41,7 +41,7 @@
 
     <section id="template-{{ template.pk}}-vulnerbilities">
     {% for vulnerability in template|get_vulns_for_project:project %}
-        {% include 'default/sections/single_vulnerability.html' %}
+        {% include 'report_templates/default/sections/single_vulnerability.html' %}
     {% endfor %}
     </section>
     {% if not forloop.last %}

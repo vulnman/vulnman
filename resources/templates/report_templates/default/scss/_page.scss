@@ -1,0 +1,12 @@
+@page no-chapter {
+    @top-left {
+        background: none;
+        content: none
+    }
+    @top-center {
+        content: none !important
+    }
+    @top-right {
+        content: none !important
+    }
+}
