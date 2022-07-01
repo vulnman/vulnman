@@ -185,9 +185,7 @@ REPORT_COMPANY_INFORMATION = {
     "contact": "contact@example.com"
 }
 
-REPORTING_TEMPLATE = "vulnman.report_templates.default.DefaultReportTemplate"
 CELERY_RESULT_BACKEND = 'django-db'
-
 
 # Report Templates
 REPORT_TEMPLATES = {

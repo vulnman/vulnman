@@ -1,9 +1,10 @@
 import os
+import sass
 from celery import shared_task
 from django.conf import settings
 from django.utils import translation
 from django.template.loader import render_to_string
-from weasyprint import HTML
+from weasyprint import HTML, CSS
 from weasyprint.text.fonts import FontConfiguration
 from apps.reporting import models
 from apps.findings.models import Template
@@ -46,6 +47,11 @@ def get_stylesheets(report_template):
         css_paths.append(
             os.path.join(settings.BASE_DIR, report_template_path + "/" + css)
         )
+    # append sass files
+    sass_path = os.path.join(report_template_path, "scss/main.scss")
+    if os.path.exists(sass_path):
+        compiled_scss = sass.compile(filename=sass_path, output_style="compressed")
+        css_paths.append(CSS(string=compiled_scss))
     return css_paths
 
 
