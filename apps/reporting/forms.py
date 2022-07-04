@@ -6,7 +6,7 @@ from crispy_forms.helper import FormHelper
 from crispy_bootstrap5 import bootstrap5
 from apps.reporting import models
 from apps.account.models import User
-from vulnman.forms import CodeMirrorWidget
+from vulnman.core.forms import CodeMirrorWidget
 
 
 def get_report_templates():

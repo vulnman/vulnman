@@ -1,4 +1,4 @@
-from django.test import TestCase, tag
+from django.test import TestCase
 from guardian.shortcuts import get_user_perms
 from vulnman.tests.mixins import VulnmanTestMixin
 from apps.responsible_disc.models import Vulnerability
@@ -10,7 +10,6 @@ class InviteVendorTestCase(TestCase, VulnmanTestMixin):
         self.init_mixin()
         self.vuln1 = self._create_instance(Vulnerability, user=self.pentester1)
 
-    @tag("not-default")
     def test_vendor_invite_permissions(self):
         url = self.get_url("responsible_disc:invite-vendor", pk=self.vuln1.pk)
         data = {"email": "testcontact@vendor.com"}
@@ -32,7 +31,6 @@ class InviteVendorTestCase(TestCase, VulnmanTestMixin):
         self.assertIn("view_vulnerability", get_user_perms(user, self.vuln1))
         self.assertIn("add_comment", get_user_perms(user, self.vuln1))
 
-    @tag("not-default")
     def test_share_vuln_existing_user(self):
         url = self.get_url("responsible_disc:invite-vendor", pk=self.vuln1.pk)
         data = {"email": self.pentester2.email}

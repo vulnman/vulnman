@@ -2,7 +2,7 @@ import uuid
 from django.http import Http404, HttpResponseRedirect
 from django.conf import settings
 from guardian.shortcuts import assign_perm
-from vulnman.mixins.permission import ObjectPermissionRequiredMixin
+from vulnman.core.mixins import ObjectPermissionRequiredMixin
 from apps.account.models import User
 from apps.account.token import account_activation_token
 from apps.responsible_disc import forms
@@ -11,6 +11,7 @@ from django.contrib.auth.views import PasswordResetView
 
 
 class InviteVendor(ObjectPermissionRequiredMixin, PasswordResetView):
+    # TODO: write tests
     template_name = "responsible_disc/vendor/invite_vendor.html"
     permission_required = ["responsible_disc.invite_vendor"]
     form_class = forms.InviteVendorForm

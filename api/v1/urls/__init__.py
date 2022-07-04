@@ -50,11 +50,10 @@ router.register(
 #    "report-information", viewsets.reports.ReportInformationViewSet,
 #    basename="report-information")
 
-if settings.RESPONSIBLE_DISCLOSURE_APP_ENABLE:
-    router.register(
-        "responsible-disclosure/proofs", viewsets.responsible_disc.ProofViewSet,
-        basename="responsible-disc-proof"
-    )
+router.register(
+    "responsible-disclosure/proofs", viewsets.responsible_disc.ProofViewSet,
+    basename="responsible-disc-proof"
+)
 
 
 urlpatterns = router.urls

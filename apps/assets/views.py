@@ -1,12 +1,13 @@
-from django.urls import reverse_lazy
 import django_filters.views
-from vulnman.views import generic
+from django.urls import reverse_lazy
+from vulnman.core.views import generics
 from apps.assets import models
 from apps.assets import forms
 from apps.assets import filters
 
 
-class WebApplicationList(generic.ProjectListView):
+class WebApplicationList(generics.ProjectListView):
+    # TODO: write tests
     template_name = "assets/webapp_list.html"
     context_object_name = "webapps"
 
@@ -19,7 +20,8 @@ class WebApplicationList(generic.ProjectListView):
         return context
 
 
-class WebApplicationCreate(generic.ProjectCreateView):
+class WebApplicationCreate(generics.ProjectCreateView):
+    # TODO: write tests
     http_method_names = ["post"]
     form_class = forms.WebApplicationForm
     success_url = reverse_lazy("projects:assets:webapp-list")
@@ -32,7 +34,8 @@ class WebApplicationCreate(generic.ProjectCreateView):
         return super().form_valid(form)
 
 
-class WebApplicationUpdate(generic.ProjectUpdateView):
+class WebApplicationUpdate(generics.ProjectUpdateView):
+    # TODO: write tests
     form_class = forms.WebApplicationUpdateForm
     success_url = reverse_lazy("projects:assets:webapp-list")
     template_name = "assets/webapp_create.html"
@@ -41,7 +44,8 @@ class WebApplicationUpdate(generic.ProjectUpdateView):
         return models.WebApplication.objects.filter(project=self.get_project())
 
 
-class WebRequestList(generic.ProjectListView):
+class WebRequestList(generics.ProjectListView):
+    # TODO: write tests
     template_name = "assets/webrequest_list.html"
     context_object_name = "webrequests"
 
@@ -55,7 +59,8 @@ class WebRequestList(generic.ProjectListView):
         return context
 
 
-class WebRequestCreate(generic.ProjectCreateView):
+class WebRequestCreate(generics.ProjectCreateView):
+    # TODO: write tests
     http_method_names = ["post"]
     form_class = forms.WebRequestCreateForm
     success_url = reverse_lazy("projects:assets:webrequest-list")
@@ -69,7 +74,8 @@ class WebRequestCreate(generic.ProjectCreateView):
         return kwargs
 
 
-class HostList(generic.ProjectListView):
+class HostList(generics.ProjectListView):
+    # TODO: write tests
     template_name = "assets/host_list.html"
     context_object_name = "hosts"
 
@@ -82,7 +88,8 @@ class HostList(generic.ProjectListView):
         return models.Host.objects.filter(project=self.get_project())
 
 
-class HostCreate(generic.ProjectCreateView):
+class HostCreate(generics.ProjectCreateView):
+    # TODO: write tests
     http_method_names = ["post"]
     form_class = forms.HostCreateForm
     success_url = reverse_lazy("projects:assets:host-list")
@@ -96,7 +103,8 @@ class HostCreate(generic.ProjectCreateView):
         return kwargs
 
 
-class ServiceList(django_filters.views.FilterMixin, generic.ProjectListView):
+class ServiceList(django_filters.views.FilterMixin, generics.ProjectListView):
+    # TODO: write tests
     template_name = "assets/service_list.html"
     context_object_name = "services"
     filterset_class = filters.ServiceFilter
@@ -115,7 +123,8 @@ class ServiceList(django_filters.views.FilterMixin, generic.ProjectListView):
         return context
 
 
-class ServiceCreate(generic.ProjectCreateView):
+class ServiceCreate(generics.ProjectCreateView):
+    # TODO: write tests
     http_method_names = ["post"]
     form_class = forms.ServiceCreateForm
     success_url = reverse_lazy("projects:assets:service-list")
@@ -129,7 +138,8 @@ class ServiceCreate(generic.ProjectCreateView):
         return kwargs
 
 
-class ServiceDetail(generic.ProjectDetailView):
+class ServiceDetail(generics.ProjectDetailView):
+    # TODO: write tests
     template_name = "assets/service_detail.html"
     context_object_name = "service"
 
@@ -143,7 +153,8 @@ class ServiceDetail(generic.ProjectDetailView):
         return context
 
 
-class ServiceDelete(generic.ProjectDeleteView):
+class ServiceDelete(generics.ProjectDeleteView):
+    # TODO: write tests
     http_method_names = ["post"]
     success_url = reverse_lazy("projects:assets:service-list")
 
@@ -151,7 +162,8 @@ class ServiceDelete(generic.ProjectDeleteView):
         return models.Service.objects.filter(project=self.get_project())
 
 
-class HostDetail(generic.ProjectDetailView):
+class HostDetail(generics.ProjectDetailView):
+    # TODO: write tests
     template_name = "assets/host_detail.html"
     context_object_name = "host"
 
@@ -165,7 +177,8 @@ class HostDetail(generic.ProjectDetailView):
         return models.Host.objects.filter(project=self.get_project())
 
 
-class HostDelete(generic.ProjectDeleteView):
+class HostDelete(generics.ProjectDeleteView):
+    # TODO: write tests
     http_method_names = ["post"]
     success_url = reverse_lazy("projects:assets:host-list")
 
@@ -173,7 +186,8 @@ class HostDelete(generic.ProjectDeleteView):
         return models.Host.objects.filter(project=self.get_project())
 
 
-class HostUpdate(generic.ProjectUpdateView):
+class HostUpdate(generics.ProjectUpdateView):
+    # TODO: write tests
     http_method_names = ["post"]
     form_class = forms.HostUpdateForm
 
@@ -186,7 +200,8 @@ class HostUpdate(generic.ProjectUpdateView):
         return kwargs
 
 
-class ServiceUpdate(generic.ProjectUpdateView):
+class ServiceUpdate(generics.ProjectUpdateView):
+    # TODO: write tests
     http_method_names = ["post"]
     form_class = forms.ServiceUpdateForm
 
@@ -199,7 +214,8 @@ class ServiceUpdate(generic.ProjectUpdateView):
         return kwargs
 
 
-class WebApplicationDetail(generic.ProjectDetailView):
+class WebApplicationDetail(generics.ProjectDetailView):
+    # TODO: write tests
     template_name = "assets/webapp_detail.html"
     context_object_name = "webapp"
 
@@ -214,7 +230,8 @@ class WebApplicationDetail(generic.ProjectDetailView):
             project=self.get_project())
 
 
-class WebApplicationDelete(generic.ProjectDeleteView):
+class WebApplicationDelete(generics.ProjectDeleteView):
+    # TODO: write tests
     http_method_names = ["post"]
     success_url = reverse_lazy("projects:assets:webapp-list")
 
@@ -223,7 +240,8 @@ class WebApplicationDelete(generic.ProjectDeleteView):
             project=self.get_project())
 
 
-class WebRequestDelete(generic.ProjectDeleteView):
+class WebRequestDelete(generics.ProjectDeleteView):
+    # TODO: write tests
     http_method_names = ["post"]
     success_url = reverse_lazy("projects:assets:webrequest-list")
 
@@ -232,7 +250,8 @@ class WebRequestDelete(generic.ProjectDeleteView):
             project=self.get_project())
 
 
-class WebRequestDetail(generic.ProjectDetailView):
+class WebRequestDetail(generics.ProjectDetailView):
+    # TODO: write tests
     template_name = "assets/webrequest_detail.html"
     context_object_name = "webrequest"
 
@@ -246,7 +265,8 @@ class WebRequestDetail(generic.ProjectDetailView):
         return models.WebRequest.objects.filter(project=self.get_project())
 
 
-class WebRequestUpdate(generic.ProjectUpdateView):
+class WebRequestUpdate(generics.ProjectUpdateView):
+    # TODO: write tests
     http_method_names = ["post"]
     form_class = forms.WebRequestUpdateForm
 

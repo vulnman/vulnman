@@ -1,10 +1,9 @@
 import django_filters.views
 from django.urls import reverse_lazy
-from django.db.models import Count
 from django.http import HttpResponse, Http404
 from guardian.shortcuts import get_objects_for_user, get_users_with_perms, get_user_perms, remove_perm
 from vulnman.core.views import generics
-from vulnman.mixins.permission import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
+from vulnman.core.mixins import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
 from apps.findings.models import Template
 from apps.account.models import User
 from apps.responsible_disc import models
@@ -80,6 +79,7 @@ class VulnerabilityDetail(ObjectPermissionRequiredMixin, generics.VulnmanAuthDet
 
 
 class VulnerabilityTimeline(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
+    # TODO: write tests
     template_name = "responsible_disc/vulnerability_timeline.html"
     context_object_name = "vuln"
     permission_required = ["responsible_disc.view_vulnerability"]
@@ -94,6 +94,7 @@ class VulnerabilityTimeline(ObjectPermissionRequiredMixin, generics.VulnmanAuthD
 
 
 class VulnerabilityLogCreate(generics.VulnmanAuthCreateView):
+    # TODO: write tests
     http_method_names = ["post"]
     form_class = forms.VulnerabilityLogForm
 
@@ -114,6 +115,7 @@ class VulnerabilityLogCreate(generics.VulnmanAuthCreateView):
 
 
 class TextProofDelete(generics.VulnmanAuthDeleteView):
+    # TODO: write tests
     model = models.TextProof
     http_method_names = ["post"]
 
@@ -125,6 +127,7 @@ class TextProofDelete(generics.VulnmanAuthDeleteView):
 
 
 class ImageProofDelete(generics.VulnmanAuthDeleteView):
+    # TODO: write tests
     model = models.ImageProof
     http_method_names = ["post"]
 
@@ -136,6 +139,7 @@ class ImageProofDelete(generics.VulnmanAuthDeleteView):
 
 
 class VulnerabilityExport(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
+    # TODO: write tests
     permission_required = ["responsible_disc.view_vulnerability"]
 
     def get_queryset(self):
@@ -149,6 +153,7 @@ class VulnerabilityExport(ObjectPermissionRequiredMixin, generics.VulnmanAuthDet
 
 
 class VulnerabilityNotifyVendor(generics.VulnmanAuthUpdateView):
+    # TODO: write tests
     form_class = forms.VulnerabilityNotificationForm
     http_method_names = ["post"]
 
@@ -164,6 +169,7 @@ class VulnerabilityNotifyVendor(generics.VulnmanAuthUpdateView):
 
 
 class VulnUpdate(ObjectPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
+    # TODO: write tests
     model = models.Vulnerability
     form_class = forms.VulnerabilityForm
     permission_required = ["responsible_disc.change_vulnerability"]
@@ -183,6 +189,7 @@ class VulnUpdate(ObjectPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
 
 
 class VulnDelete(generics.VulnmanAuthDeleteView):
+    # TODO: write tests
     http_method_names = ["post"]
     success_url = reverse_lazy('responsible_disc:vulnerability-list')
 
@@ -191,6 +198,7 @@ class VulnDelete(generics.VulnmanAuthDeleteView):
 
 
 class VulnerabilityAdvisoryExport(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
+    # TODO: write tests
     permission_required = ["responsible_disc.view_vulnerability"]
 
     def get_queryset(self):
@@ -204,18 +212,20 @@ class VulnerabilityAdvisoryExport(ObjectPermissionRequiredMixin, generics.Vulnma
 
 
 class TextProofUpdate(ObjectPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
+    # TODO: write tests
     template_name = "responsible_disc/proof_update.html"
     form_class = forms.TextProofForm
     permission_required = ["responsible_disc.change_vulnerability"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["vuln"] = self.get_object().vulnerability
+        context["vuln"] = self.get_permission_object()
         return context
 
     def get_permission_object(self):
         try:
-            obj = self.get_queryset().get().vulnerability
+            template = self.get_object()
+            obj = template.vulnerability
         except models.Vulnerability.DoesNotExist:
             return Http404("No such vulnerability found")
         return obj
@@ -228,6 +238,7 @@ class TextProofUpdate(ObjectPermissionRequiredMixin, generics.VulnmanAuthUpdateV
 
 
 class ImageProofUpdate(generics.VulnmanAuthUpdateView):
+    # TODO: write tests
     template_name = "responsible_disc/proof_update.html"
     form_class = forms.ImageProofForm
 
@@ -244,6 +255,7 @@ class ImageProofUpdate(generics.VulnmanAuthUpdateView):
 
 
 class TextProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
+    # TODO: write tests
     template_name = "responsible_disc/proof_create.html"
     form_class = forms.TextProofForm
     permission_required = ["responsible_disc.change_vulnerability"]
@@ -265,6 +277,7 @@ class TextProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateV
 
 
 class ImageProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
+    # TODO: write tests
     template_name = "responsible_disc/proof_create.html"
     form_class = forms.ImageProofForm
     permission_required = ["responsible_disc.change_vulnerability"]
@@ -287,6 +300,7 @@ class ImageProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreate
 
 
 class CommentList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
+    # TODO: write tests
     template_name = "responsible_disc/comment_list.html"
     permission_required = ["responsible_disc.view_vulnerability"]
     context_object_name = "comments"
@@ -310,6 +324,7 @@ class CommentList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
 
 
 class CommentCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
+    # TODO: write tests
     permission_required = ["responsible_disc.add_comment"]
     http_method_names = ["post"]
     form_class = forms.NewCommentForm
@@ -337,6 +352,7 @@ class CommentCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateVie
 
 
 class ManageAccessList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
+    # TODO: write tests
     template_name = "responsible_disc/vulnerability_manage_access.html"
     context_object_name = "users"
     permission_required = ["responsible_disc.view_vulnerability"]
@@ -358,6 +374,7 @@ class ManageAccessList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListVi
 
 
 class UnshareVulnerabilityFromUser(ObjectPermissionRequiredMixin, generics.VulnmanAuthFormView):
+    # TODO: write tests
     http_method_names = ["post"]
     permission_required = ["responsible_disc.invite_vendor"]
     form_class = forms.UnshareVulnerability

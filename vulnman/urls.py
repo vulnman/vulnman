@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from apps.account.views import Index
 
 
 urlpatterns = [
@@ -29,8 +30,6 @@ urlpatterns = [
     path('methodologies/', include('apps.methodologies.urls.global')),
 ]
 
-if settings.RESPONSIBLE_DISCLOSURE_APP_ENABLE:
-    urlpatterns += [path('responsible-disclosure/', include('apps.responsible_disc.urls'))]
-
-urlpatterns += [path('', include('apps.dashboard.urls'))]
+urlpatterns += [path('responsible-disclosure/', include('apps.responsible_disc.urls'))]
+urlpatterns += [path("", Index.as_view(), name="index")]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

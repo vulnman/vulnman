@@ -1,7 +1,6 @@
 from django import template
-from django.template.loader import engines
 from django.utils.safestring import mark_safe
-from vulnman.utils.markdown import bleach_md
+from vulnman.core.utils.markdown import bleach_md
 
 
 register = template.Library()

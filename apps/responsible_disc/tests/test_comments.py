@@ -1,4 +1,4 @@
-from django.test import TestCase, tag
+from django.test import TestCase
 from guardian.shortcuts import assign_perm
 from vulnman.tests.mixins import VulnmanTestMixin
 from apps.responsible_disc import models
@@ -9,7 +9,6 @@ class CommentViewTestCase(TestCase, VulnmanTestMixin):
         self.init_mixin()
         self.vuln1 = self._create_instance(models.Vulnerability, user=self.pentester1)
 
-    @tag('not-default')
     def test_comment_list(self):
         comment = self._create_instance(models.VulnerabilityComment, vulnerability=self.vuln1, creator=self.pentester1)
         url = self.get_url("responsible_disc:comment-list", pk=self.vuln1.pk)
@@ -23,7 +22,6 @@ class CommentViewTestCase(TestCase, VulnmanTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["comments"].count(), 1)
 
-    @tag('not-default')
     def test_comment_create(self):
         url = self.get_url("responsible_disc:comment-create", pk=self.vuln1.pk)
         data = {"text": "lorem ipsum"}
@@ -39,7 +37,6 @@ class CommentViewTestCase(TestCase, VulnmanTestMixin):
             text=data["text"],
             vulnerability=self.vuln1).count(), 1)
 
-    @tag('not-default')
     def test_comment_shared(self):
         url = self.get_url("responsible_disc:comment-create", pk=self.vuln1.pk)
         data = {"text": "lorem ipsum"}

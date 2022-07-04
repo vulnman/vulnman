@@ -1,7 +1,7 @@
 import os
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from vulnman.utils.secret import generate_secret_key
+from vulnman.core.utils.secret import generate_secret_key
 
 
 class Command(BaseCommand):

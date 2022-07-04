@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from vulnman.api.serializers import ProjectRelatedObjectSerializer
-from vulnman.utils.markdown import md_to_clean_html
+from vulnman.core.utils.markdown import md_to_clean_html
 from apps.methodologies import models
 from apps.assets.api.v1.serializers import WebApplicationSerializer, HostSerializer, WebRequestSerializer
 

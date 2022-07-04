@@ -1,9 +1,6 @@
 from django.db import models
 from django.urls import reverse_lazy
-from django.core import signing
-from django.utils import timezone
 from django.conf import settings
-from uuid import uuid4
 from vulnman.models import VulnmanProjectModel
 
 
@@ -81,10 +78,19 @@ class ReportRelease(VulnmanProjectModel):
     class Meta:
         ordering = ["-date_created"]
 
-
-# class ReportVersion(VulnmanProjectModel):
-#    report = models.ForeignKey(PentestReport, on_delete=models.CASCADE)
-#    version = models.FloatField()
-#    change = models.CharField(choices=[], max_length=512)
-#    user = models.ForeignKey(User, on_delete=models.CASCADE)
-#    date = models.DateField()
+"""
+class ReportVersion(VulnmanProjectModel):
+    CHANGE_CREATION = 0
+    CHANGE_ADD_VULNERABILITIES = 1
+    CHANGE_FINALIZE = 10
+    REPORT_CHANGE_CHOICES = [
+        (CHANGE_CREATION, "Create Report"),
+        (CHANGE_ADD_VULNERABILITIES, "Add Vulnerabilities"),
+        (CHANGE_FINALIZE, "Report Finalized")
+    ]
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    version = models.FloatField()
+    change = models.PositiveIntegerField(choices=REPORT_CHANGE_CHOICES)
+    user = models.ForeignKey('account.User', on_delete=models.CASCADE)
+    date = models.DateField()
+"""

@@ -5,3 +5,9 @@ from vulnman.core.views.generics.vulnman import (
     VulnmanAuthCreateWithInlinesView, VulnmanAuthUpdateWithInlinesView, VulnmanAuthTemplateView, VulnmanAuthFormView,
     VulnmanAuthRedirectView
 )
+
+from vulnman.core.views.generics.project import (
+    ProjectListView, ProjectUpdateView, ProjectCreateView, ProjectDetailView,
+    ProjectDeleteView, ProjectCreateWithInlinesView, ProjectTemplateView, ProjectRedirectView,
+    ProjectFormView
+)
