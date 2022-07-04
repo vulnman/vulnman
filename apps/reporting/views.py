@@ -1,12 +1,11 @@
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.db.models import Q
 from django.urls import reverse_lazy
-from vulnman.views import generic
+from vulnman.core.views import generics
 from apps.reporting import models, forms
 from apps.reporting import tasks
 
 
-class ReportList(generic.ProjectListView):
+class ReportList(generics.ProjectListView):
     template_name = "reporting/report_list.html"
     context_object_name = "reports"
 
@@ -14,7 +13,7 @@ class ReportList(generic.ProjectListView):
         return models.Report.objects.filter(project=self.get_project())
 
 
-class ReportCreate(generic.ProjectCreateView):
+class ReportCreate(generics.ProjectCreateView):
     template_name = "reporting/report_create.html"
     form_class = forms.ReportCreateForm
 
@@ -24,12 +23,9 @@ class ReportCreate(generic.ProjectCreateView):
         return kwargs
 
 
-class ReportDetail(generic.ProjectDetailView):
+class ReportDetail(generics.ProjectDetailView):
     template_name = "reporting/report_detail.html"
-    model = models.Report
-
-    def get_queryset(self):
-        return models.Report.objects.filter(project=self.get_project())
+    queryset = models.Report.objects.all()
 
     def get_context_data(self, **kwargs):
         kwargs["report_mgmt_summary_form"] = forms.ReportManagementSummaryForm(
@@ -41,7 +37,8 @@ class ReportDetail(generic.ProjectDetailView):
         return super().get_context_data(**kwargs)
 
 
-class ReportReleaseList(generic.ProjectListView):
+class ReportReleaseList(generics.ProjectListView):
+    # TODO: write tests
     template_name = "reporting/report_releases.html"
     context_object_name = "releases"
 
@@ -60,7 +57,8 @@ class ReportReleaseList(generic.ProjectListView):
                                                    report__project=self.get_project())
 
 
-class ReportReleaseDelete(generic.ProjectDeleteView):
+class ReportReleaseDelete(generics.ProjectDeleteView):
+    # TODO: write tests
     http_method_names = ["post"]
 
     def get_queryset(self):
@@ -70,7 +68,8 @@ class ReportReleaseDelete(generic.ProjectDeleteView):
         return reverse_lazy("projects:reporting:report-release-list", kwargs={"pk": self.get_object().report.pk})
 
 
-class ReportReleaseCreate(generic.ProjectCreateView):
+class ReportReleaseCreate(generics.ProjectCreateView):
+    # TODO: write tests
     template_name = "reporting/report_create.html"
     form_class = forms.ReportReleaseForm
 
@@ -97,7 +96,8 @@ class ReportReleaseCreate(generic.ProjectCreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ReportReleaseWIPCreate(generic.ProjectCreateView):
+class ReportReleaseWIPCreate(generics.ProjectCreateView):
+    # TODO: write tests
     template_name = "reporting/report_release_create.html"
     http_method_names = ["post"]
     form_class = forms.ReportReleaseWIPForm
@@ -128,7 +128,8 @@ class ReportReleaseWIPCreate(generic.ProjectCreateView):
         return super().form_valid(form)
 
 
-class ReportReleaseUpdate(generic.ProjectUpdateView):
+class ReportReleaseUpdate(generics.ProjectUpdateView):
+    # TODO: write tests
     template_name = "reporting/report_release_update.html"
     form_class = forms.ReportReleaseUpdateForm
 
@@ -139,7 +140,8 @@ class ReportReleaseUpdate(generic.ProjectUpdateView):
         return reverse_lazy("projects:reporting:report-release-list")
 
 
-class ReportReleaseDetail(generic.ProjectDetailView):
+class ReportReleaseDetail(generics.ProjectDetailView):
+    # TODO: write tests
     context_object_name = "report"
 
     def get_queryset(self):
@@ -152,7 +154,7 @@ class ReportReleaseDetail(generic.ProjectDetailView):
         return response
 
 
-class ReportDelete(generic.ProjectDeleteView):
+class ReportDelete(generics.ProjectDeleteView):
     http_method_names = ["post"]
     success_url = reverse_lazy("projects:reporting:report-list")
 

@@ -1,20 +1,18 @@
-from django.test import TestCase, tag
-from vulnman.tests.mixins import VulnmanTestMixin
+from django.test import TestCase
+from vulnman.core.test import VulnmanTestCaseMixin
 from apps.responsible_disc import models
 from apps.findings.models import Template
 
 
-class VulnerabilityListView(TestCase, VulnmanTestMixin):
+class VulnerabilityListView(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
 
-    @tag('not-default')
     def test_listview_forbidden(self):
         url = self.get_url("responsible_disc:vulnerability-list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
 
-    @tag('not-default')
     def test_listview(self):
         url = self.get_url("responsible_disc:vulnerability-list")
         vuln1 = self._create_instance(models.Vulnerability, user=self.pentester1)
@@ -25,7 +23,6 @@ class VulnerabilityListView(TestCase, VulnmanTestMixin):
         self.assertEqual(len(response.context["vulnerabilities"]), 1)
         self.assertEqual(response.context["vulnerabilities"][0], vuln1)
 
-    @tag('not-default')
     def test_createview(self):
         template = self._create_instance(Template)
         url = self.get_url("responsible_disc:vulnerability-create")
@@ -40,7 +37,20 @@ class VulnerabilityListView(TestCase, VulnmanTestMixin):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(models.Vulnerability.objects.count(), 1)
 
-    @tag('not-default')
+    def test_create_view_vendor(self):
+        template = self._create_instance(Template)
+        url = self.get_url("responsible_disc:vulnerability-create")
+        payload = {"template_id": template.vulnerability_id, "name": "TestVuln",
+                   "status": models.Vulnerability.STATUS_OPEN, "vendor": "TestVendor",
+                   "vendor_homepage": "https://example.com", "vendor_email": "admin@example.com",
+                   "affected_product": "Test Product", "affected_versions": "<1.0.0",
+                   "severity": ""
+                   }
+        self.client.force_login(self.vendor)
+        response = self.client.post(url, payload)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(models.Vulnerability.objects.count(), 0)
+
     def test_detail_view(self):
         vuln = self._create_instance(models.Vulnerability, user=self.pentester1)
         url = self.get_url("responsible_disc:vulnerability-detail", pk=vuln.pk)
@@ -48,14 +58,15 @@ class VulnerabilityListView(TestCase, VulnmanTestMixin):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    @tag('not-default')
     def test_detail_view_forbidden(self):
         vuln = self._create_instance(models.Vulnerability, user=self.pentester1)
         url = self.get_url("responsible_disc:vulnerability-detail", pk=vuln.pk)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
+        self.client.force_login(self.pentester2)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
 
-    @tag('not-default')
     def test_vuln_create_vendor(self):
         template = self._create_instance(Template)
         url = self.get_url("responsible_disc:vulnerability-create")
@@ -72,11 +83,10 @@ class VulnerabilityListView(TestCase, VulnmanTestMixin):
         self.assertEqual(models.Vulnerability.objects.count(), 0)
 
 
-class TextProofViewsTextCase(TestCase, VulnmanTestMixin):
+class TextProofViewsTextCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
 
-    @tag('not-default')
     def test_text_proof_create(self):
         vulnerability = self._create_instance(models.Vulnerability, user=self.pentester1)
         url = self.get_url("responsible_disc:text-proof-create", pk=vulnerability.pk)
@@ -93,7 +103,6 @@ class TextProofViewsTextCase(TestCase, VulnmanTestMixin):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
 
-    @tag('not-default')
     def test_text_proof_update(self):
         vulnerability = self._create_instance(models.Vulnerability, user=self.pentester1)
         self._create_instance(models.TextProof, vulnerability=vulnerability)

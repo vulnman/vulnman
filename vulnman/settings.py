@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 try:
     from vulnman.secret_key import SECRET_KEY
 except ImportError:
-    from vulnman.utils.secret import generate_secret_key
+    from vulnman.core.utils.secret import generate_secret_key
     generate_secret_key(os.path.join(BASE_DIR, 'vulnman/secret_key.py'))
     from vulnman.secret_key import SECRET_KEY
 
@@ -119,6 +119,7 @@ CSRF_COOKIE_SECURE = True
 
 # Set this to True to avoid transmitting the session cookie over HTTP accidentally.
 SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
 
 
 INSTALLED_APPS = [
@@ -146,7 +147,6 @@ INSTALLED_APPS = [
     'apps.account.apps.AccountConfig',
     'apps.reporting.apps.ReportingConfig',
     'apps.projects.apps.ProjectsConfig',
-    'apps.dashboard.apps.DashboardConfig',
     'apps.methodologies.apps.MethodologiesConfig',
     'apps.findings.apps.FindingsConfig',
     'apps.assets.apps.AssetsConfig',
@@ -213,7 +213,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
 ]
 AUTH_LDAP_SERVER_URI = None
-RESPONSIBLE_DISCLOSURE_APP_ENABLE = False
 RESPONSIBLE_DISCLOSURE_MAIL_FROM = "vulnman@example.com"
 # delete external users after 90 days (e.g. vendors)
 INACTIVE_EXTERNAL_USER_DELETE_DAYS = 90

@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_bootstrap5 import bootstrap5
 from apps.projects import models
-from vulnman.forms import DateInput
+from vulnman.core.forms import DateInput
 from extra_views import InlineFormSetFactory
 from crispy_forms.bootstrap import FormActions
 

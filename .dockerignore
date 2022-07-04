@@ -11,3 +11,5 @@ venv
 __pycache__
 static/sass
 .sass-cache
+resources/checklists
+resources/vuln_templates

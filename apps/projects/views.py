@@ -1,5 +1,4 @@
 from django.urls import reverse_lazy
-from urllib.parse import urlencode
 from django.template.loader import render_to_string
 from django.conf import settings
 import django_filters.views
@@ -10,12 +9,12 @@ from apps.projects import forms
 from apps.projects import filters
 from apps.account.models import User
 from core.tasks import send_mail_task
-from vulnman.views import generic
 from vulnman.core.views import generics
-from vulnman.mixins.permission import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
+from vulnman.core.mixins import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
 
 
 class ProjectList(django_filters.views.FilterMixin, generics.VulnmanAuthListView):
+    # TODO: write tests
     template_name = "projects/project_list.html"
     context_object_name = "projects"
     filterset_class = filters.ProjectFilter
@@ -55,6 +54,7 @@ class ProjectList(django_filters.views.FilterMixin, generics.VulnmanAuthListView
 
 
 class ProjectCreate(VulnmanPermissionRequiredMixin, generics.VulnmanCreateView):
+    # TODO: write tests
     form_class = forms.ProjectForm
     model = models.Project
     success_url = reverse_lazy("projects:project-list")
@@ -67,6 +67,7 @@ class ProjectCreate(VulnmanPermissionRequiredMixin, generics.VulnmanCreateView):
 
 
 class ProjectDetail(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDetailView):
+    # TODO: write tests
     template_name = "projects/project_detail.html"
     permission_required = ["projects.view_project"]
 
@@ -84,6 +85,7 @@ class ProjectDetail(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDetailVi
 
 
 class ProjectUpdate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
+    # TODO: write tests
     template_name = "projects/project_create.html"
     form_class = forms.ProjectForm
     model = models.Project
@@ -97,7 +99,8 @@ class ProjectUpdate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthUpdateVi
                                     models.Project.objects.filter(pk=self.kwargs.get('pk')))
 
 
-class ProjectUpdateClose(PermissionRequiredMixin, generic.ProjectRedirectView):
+class ProjectUpdateClose(PermissionRequiredMixin, generics.ProjectRedirectView):
+    # TODO: write tests
     http_method_names = ["post"]
     url = reverse_lazy("projects:project-list")
     return_403 = True
@@ -116,6 +119,7 @@ class ProjectUpdateClose(PermissionRequiredMixin, generic.ProjectRedirectView):
 
 
 class ClientList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
+    # TODO: write tests
     template_name = "projects/client_list.html"
     context_object_name = "clients"
     model = models.Client
@@ -125,6 +129,7 @@ class ClientList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
 
 
 class ClientDetail(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDetailView):
+    # TODO: write tests
     template_name = "projects/client_detail.html"
     context_object_name = "client"
     model = models.Client
@@ -140,7 +145,8 @@ class ClientCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateWit
     inlines = [forms.ClientContactInline]
 
 
-class ProjectContributorList(generic.ProjectListView):
+class ProjectContributorList(generics.ProjectListView):
+    # TODO: write tests
     template_name = "projects/contributor_list.html"
     model = models.ProjectContributor
     permission_required = ["projects.view_project"]
@@ -152,7 +158,8 @@ class ProjectContributorList(generic.ProjectListView):
         return context
 
 
-class ProjectContributorCreate(generic.ProjectCreateView):
+class ProjectContributorCreate(generics.ProjectCreateView):
+    # TODO: write tests
     http_method_names = ["post"]
     permission_required = ["projects.add_contributor"]
     form_class = forms.ContributorForm
@@ -176,7 +183,8 @@ class ProjectContributorCreate(generic.ProjectCreateView):
         return super().form_valid(form)
 
 
-class ProjectContributorDelete(generic.ProjectDeleteView):
+class ProjectContributorDelete(generics.ProjectDeleteView):
+    # TODO: write tests
     http_method_names = ["post"]
     permission_required = ["projects.add_contributor"]
     model = models.ProjectContributor
@@ -185,7 +193,8 @@ class ProjectContributorDelete(generic.ProjectDeleteView):
         return reverse_lazy("projects:contributor-list", kwargs={"pk": self.get_project().pk})
 
 
-class ProjectTokenList(generic.ProjectListView):
+class ProjectTokenList(generics.ProjectListView):
+    # TODO: write tests
     template_name = "projects/token_list.html"
     context_object_name = "tokens"
     permission_required = ["projects.view_project"]
@@ -199,7 +208,8 @@ class ProjectTokenList(generic.ProjectListView):
         return context
 
 
-class ProjectTokenCreate(generic.ProjectCreateView):
+class ProjectTokenCreate(generics.ProjectCreateView):
+    # TODO: write tests
     http_method_names = ["post"]
     form_class = forms.ProjectAPITokenForm
     success_url = reverse_lazy("projects:token-list")
@@ -214,7 +224,8 @@ class ProjectTokenCreate(generic.ProjectCreateView):
         return super().form_valid(form)
 
 
-class ProjectTokenDelete(generic.ProjectDeleteView):
+class ProjectTokenDelete(generics.ProjectDeleteView):
+    # TODO: write tests
     http_method_names = ["post"]
     success_url = reverse_lazy("projects:token-list")
 

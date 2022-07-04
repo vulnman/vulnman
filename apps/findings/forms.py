@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
-from vulnman.forms import CodeMirrorWidget
+from vulnman.core.forms import CodeMirrorWidget
 
 
 class TemplateForm(forms.ModelForm):

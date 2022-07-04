@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apps.findings import models
-from vulnman.utils.markdown import md_to_clean_html
+from vulnman.core.utils.markdown import md_to_clean_html
 
 
 class TemplateSerializer(serializers.ModelSerializer):

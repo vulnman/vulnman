@@ -1,14 +1,20 @@
-from django.utils import timezone
 from django.conf import settings
-from django.http.response import Http404, HttpResponseRedirect
+from django.views.generic import RedirectView
+from django.http.response import Http404
 from django.contrib.auth import views
-from django.contrib.auth.forms import SetPasswordForm
 from django.urls import reverse_lazy
 from apps.account import forms
 from apps.account import models
 from vulnman.core.views.mixins import ThemeMixin, VulnmanContextMixin
 from vulnman.core.views import generics
 from apps.account.token import account_activation_token
+
+
+class Index(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return reverse_lazy('projects:project-list')
+        return reverse_lazy('account:login')
 
 
 class Login(ThemeMixin, views.LoginView):
@@ -43,7 +49,7 @@ class ProfileUpdate(generics.VulnmanAuthUpdateView):
         try:
             obj = qs.get()
         except qs.model.DoesNotExist:
-            raise Http404("No %(verbose_name)s foudn matching the query" % {
+            raise Http404("No %(verbose_name)s found matching the query" % {
                 "verbose_name": qs.model._meta.verbose_name})
         return obj
 
@@ -74,6 +80,7 @@ class ChangePassword(VulnmanContextMixin, views.PasswordChangeView):
 
 
 class ActivateAccount(views.PasswordResetConfirmView, VulnmanContextMixin):
+    # TODO: write tests
     template_name = "account/activate_account.html"
     form_class = forms.PasswordSetForm
     token_generator = account_activation_token
