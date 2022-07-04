@@ -1,10 +1,12 @@
 #!/bin/bash
 
+if [[ ! -f "vulnman/conf/local_settings.py" ]]; then
+    cp docker/local_settings.template.py vulnman/conf/local_settings.py
+fi
 
 # Apply database migrations
 echo "Apply database migrations"
 python manage.py migrate
-
 
 # Collect static files
 echo "Collect static files"
@@ -16,7 +18,9 @@ python manage.py update_vulnerability_templates
 echo "Update checklists"
 python manage.py update_checklists
 
-python manage.py create_secret_key
+if [[ ! -f "vulnman/conf/secret_key.py" ]]; then
+  python manage.py create_secret_key
+fi
 
 # create superuser
 echo "Create superuser"

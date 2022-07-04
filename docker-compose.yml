@@ -4,7 +4,7 @@ services:
   vulnman-web:
     image: ghcr.io/vulnman/vulnman:latest
     volumes:
-      - './local_settings.py:/app/local_settings.py'
+      - '/tmp/volumes/vulnman/conf:/app/vulnman/conf'
       - '/tmp/volumes/vulnman/static:/app/static_files'
     environment:
       DJANGO_SUPERUSER_PASSWORD: dontusethispassword
@@ -12,13 +12,12 @@ services:
       DJANGO_SUPERUSER_EMAIL: admin@example.com
     depends_on:
       - db
-      - celery
 
   celery:
     image: ghcr.io/vulnman/vulnman:latest
     entrypoint: celery -A vulnman worker -l INFO
     volumes:
-      - './local_settings.py:/app/local_settings.py'
+      - '/tmp/volumes/vulnman/conf:/app/vulnman/conf'
       - '/tmp/volumes/vulnman/static:/app/static_files'
     depends_on:
       - redis
@@ -36,15 +35,17 @@ services:
     image: "redis:alpine"
 
   nginx:
-    image: lscr.io/linuxserver/nginx
+    image: ghcr.io/vulnman/docker-vulnman-nginx:master
     container_name: nginx
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/London
+      VULNMAN_DB_USER: vulnman_db_user
+      VULNMAN_DB_PASSWORD: dontusethispassword
+      VULNMAN_CSRF_TRUSTED_ORIGINS: https://localhost
     volumes:
       - '/tmp/volumes/nginx/config:/config'
-      - './docker/nginx.conf:/config/nginx/site-confs/default'
       - '/tmp/volumes/vulnman/static:/config/www/static'
     ports:
       - '80:80'

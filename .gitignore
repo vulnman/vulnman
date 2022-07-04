@@ -6,7 +6,7 @@ db.sqlite3
 *.xml
 docs/_build
 uploads
-vulnman/secret_key.py
+vulnman/conf/secret_key.py
 static_files
 local_settings.py
 site

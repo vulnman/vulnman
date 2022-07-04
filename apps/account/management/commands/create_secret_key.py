@@ -8,5 +8,5 @@ class Command(BaseCommand):
     help = 'Create Secret Key'
 
     def handle(self, *args, **options):
-        if not os.path.exists(os.path.join(settings.BASE_DIR, 'vulnman/secret_key.py')):
-            generate_secret_key(os.path.join(settings.BASE_DIR, 'vulnman/secret_key.py'))
+        if not os.path.exists(os.path.join(settings.BASE_DIR, 'vulnman/conf/secret_key.py')):
+            generate_secret_key(os.path.join(settings.BASE_DIR, 'vulnman/conf/secret_key.py'))
