@@ -5,11 +5,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 try:
-    from vulnman.secret_key import SECRET_KEY
+    from vulnman.conf.secret_key import SECRET_KEY
 except ImportError:
     from vulnman.core.utils.secret import generate_secret_key
-    generate_secret_key(os.path.join(BASE_DIR, 'vulnman/secret_key.py'))
-    from vulnman.secret_key import SECRET_KEY
+    generate_secret_key(os.path.join(BASE_DIR, 'vulnman/conf/secret_key.py'))
+    from vulnman.conf.secret_key import SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -230,7 +230,7 @@ LANGUAGES = (
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
 
 try:
-    from local_settings import *
+    from vulnman.conf.local_settings import *
 except ImportError:
     pass
 
