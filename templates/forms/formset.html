@@ -1,5 +1,4 @@
 {% load crispy_forms_tags %}
-{% load verbose_name %}
 {{ form.media }}
 
 {% if fileupload %}
@@ -17,7 +16,7 @@
     {% for inline in inlines %}
         <div class="card mt-3">
             <div class="card-body">
-                <h4 class="card-text mb-3">{{ inline.model|verbose_name_plural }}</h4>
+                <h4 class="card-text mb-3">Contacts</h4>
                 <hr/>
                 <div id="{{ inline.prefix }}-container">
                     {% crispy inline %}
