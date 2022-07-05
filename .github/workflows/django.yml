@@ -30,4 +30,5 @@ jobs:
     - name: Run Tests
       run: |
         pip install -r requirements-dev.txt
-        python manage.py test --exclude-tag=not-default
+        python manage.py create_secret_key
+        python manage.py test
