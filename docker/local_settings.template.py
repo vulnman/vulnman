@@ -10,7 +10,7 @@ import os
 ALLOWED_HOSTS = ["vulnman-web"]
 
 # Required Setting:
-CSRF_TRUSTED_ORIGINS = os.environ.get("VULNMAN_CSRF_TRUSTED_ORIGINS", ["https://localhost"])
+CSRF_TRUSTED_ORIGINS = os.environ.get("VULNMAN_CSRF_TRUSTED_ORIGINS", "https://localhost").split(",")
 
 
 # Custom CSS File

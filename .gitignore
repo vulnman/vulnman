@@ -4,15 +4,11 @@ __pycache__
 .vscode
 db.sqlite3
 *.xml
-docs/_build
 uploads
 vulnman/conf/secret_key.py
 static_files
 local_settings.py
-site
-custom
 resources/vuln_templates
 resources/checklists
 static/sass/node_modules
-.sass-cache
 .celerybeat-schedule
