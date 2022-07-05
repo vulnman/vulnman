@@ -10,6 +10,9 @@ services:
       DJANGO_SUPERUSER_PASSWORD: dontusethispassword
       DJANGO_SUPERUSER_USERNAME: vulnmanadmin
       DJANGO_SUPERUSER_EMAIL: admin@example.com
+      VULNMAN_DB_USER: vulnman_db_user
+      VULNMAN_DB_PASSWORD: dontusethispassword
+      VULNMAN_CSRF_TRUSTED_ORIGINS: https://localhost
     depends_on:
       - db
 
@@ -41,9 +44,6 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
-      VULNMAN_DB_USER: vulnman_db_user
-      VULNMAN_DB_PASSWORD: dontusethispassword
-      VULNMAN_CSRF_TRUSTED_ORIGINS: https://localhost
     volumes:
       - '/tmp/volumes/nginx/config:/config'
       - '/tmp/volumes/vulnman/static:/config/www/static'

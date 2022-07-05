@@ -32,9 +32,8 @@
                             {% csrf_token %}
                             <button class="btn btn-outline-secondary mr-3">Create</button>
                         </form>
-                        <a class="btn btn-outline-secondary" href="{{ wip_report.get_absolute_url }}" target="_blank">Download</a>
+                        <a class="btn btn-outline-secondary" href="{{ wip_report.get_absolute_url }}" target="_blank" id="wip-download-btn">Download</a>
                     </div>
-
                 </div>
                 {% if wip_report %}
                     <p><small>Created {{ wip_report.date_created|timesince }} ago</small></p>
@@ -108,4 +107,35 @@
 
         {% include 'navigation/pagination.html' %}
     </div>
+{% endblock %}
+
+
+{% block extra_scripts %}
+    <script>
+    /*
+        {% if request.session.active_report_task %}
+            {% for active in request.session.active_report_task %}
+                checkTaskStatus("{{ active.0 }}", "{{ active.1 }}", {{ active.2 }})
+            {% endfor %}
+        {% endif %}
+
+        function checkTaskStatus(task_id, element_id, is_wip) {
+            if (is_wip === 1){
+                $('#wip-download-btn').attr("disabled");
+            }
+            setInterval(function(){
+                $.ajax({
+                    type: "GET",
+                    url: "/api/v1/tasks/" + task_id + "/",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.status === "SUCCESS") {
+                            location.reload();
+                        }
+                    }
+                });
+            // Every 5 secondy
+            }, 5*1000);
+        }*/
+    </script>
 {% endblock %}

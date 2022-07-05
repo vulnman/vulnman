@@ -92,7 +92,9 @@ class ReportReleaseCreate(generics.ProjectCreateView):
         form.instance.creator = self.request.user
         instance = form.save()
         task = tasks.do_create_report.delay(instance.pk)
-        self.request.session["active_report_task"] = (task.task_id, str(instance.pk))
+        if not self.request.session.get("active_report_task"):
+            self.request.session["active_report_task"] = []
+        self.request.session["active_report_task"].append([task.task_id, str(instance.pk), 0])
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -124,7 +126,10 @@ class ReportReleaseWIPCreate(generics.ProjectCreateView):
         form.instance.release_type = models.ReportRelease.RELEASE_TYPE_DRAFT
         form.instance.work_in_progress = True
         instance = form.save()
-        _task = tasks.do_create_report.delay(instance.pk)
+        task = tasks.do_create_report.delay(instance.pk)
+        if not self.request.session.get("active_report_task"):
+            self.request.session["active_report_task"] = []
+        self.request.session["active_report_task"].append([task.task_id, str(instance.pk), 1])
         return super().form_valid(form)
 
 
@@ -152,6 +157,11 @@ class ReportReleaseDetail(generics.ProjectDetailView):
         response = HttpResponse(obj.compiled_source, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="report.pdf"'
         return response
+
+    def get_context_data(self, **kwargs):
+        if self.request.session.get("active_report_task"):
+            pass
+        return super().get_context_data(**kwargs)
 
 
 class ReportDelete(generics.ProjectDeleteView):
