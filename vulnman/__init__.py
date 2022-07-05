@@ -5,4 +5,4 @@ from .celery import app as celery_app
 __all__ = ('celery_app',)
 
 
-__version__ = "0.3.0-rc4"
+__version__ = "0.3.1-rc1"
