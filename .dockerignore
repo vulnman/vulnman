@@ -2,7 +2,8 @@
 .idea
 .vscode
 db.sqlite3
-local_settings.py
+vulnman/conf/secret_key.py
+vulnman/conf/local_settings.py
 static_files
 uploads
 venv

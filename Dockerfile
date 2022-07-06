@@ -8,7 +8,7 @@ RUN apt update && apt install -y fonts-font-awesome libldap2-dev libsasl2-dev gc
 
 RUN pip install -r requirements.txt && \
     pip install django-auth-ldap && \
-    pip install psycopg2-binary && python manage.py create_secret_key
+    pip install psycopg2-binary
 
 
 COPY docker/docker-entrypoint.sh /app
