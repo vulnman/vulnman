@@ -2,7 +2,7 @@ from rest_framework import serializers
 from apps.responsible_disc import models
 
 
-class TextProofSerializer(serializers.ModelSerializer):
+class TextProofOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TextProof
         fields = [
@@ -10,7 +10,7 @@ class TextProofSerializer(serializers.ModelSerializer):
         read_only_fields = ["pk"]
 
 
-class ImageProofSerializer(serializers.ModelSerializer):
+class ImageProofOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ImageProof
         fields = [

@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.conf import settings
 from vulnman.models import VulnmanModel
+from apps.responsible_disc import querysets
 
 
 class Vulnerability(models.Model):
@@ -29,6 +30,7 @@ class Vulnerability(models.Model):
         (SEVERITY_INFORMATIONAL, "Informational")
     ]
 
+    objects = querysets.VulnerabilityQuerySet.as_manager()
     template = models.ForeignKey('findings.Template', on_delete=models.CASCADE, related_name="resp_vulnerability_set")
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)

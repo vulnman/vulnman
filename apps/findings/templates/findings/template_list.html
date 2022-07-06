@@ -70,9 +70,10 @@
 {% block extra_scripts %}
     <script>
         $('#template-detail-modal').on('show.bs.modal', function (e) {
+            let url = "{% url 'api:ui:findings:template-detail' pk=12345 %}".replace(/12345/, e.relatedTarget.dataset['id'])
             $.ajax({
                 type: "GET",
-                url: "/api/v1/vulnerabilities/templates/" + e.relatedTarget.dataset['id'] + "/",
+                url: url,
                 dataType: "json",
                 success: function (data) {
                     $("#template-detail-modal-label").text(data.name);
@@ -82,9 +83,10 @@
         });
 
         $('#search-template').on('input', function () {
+            let url = "{% url 'api:ui:findings:template-list' %}?search=" + $('#search-template').val();
             $.ajax({
                 type: "GET",
-                url: "/api/v1/vulnerabilities/templates/?search=" + $('#search-template').val(),
+                url: url,
                 dataType: "json",
                 success: function (data) {
                     var results = data["results"];

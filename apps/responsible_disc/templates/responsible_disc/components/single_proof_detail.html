@@ -1,0 +1,28 @@
+{% load markdown %}
+
+<div class="proof list-group-item">
+    <div class="row">
+        <div class="col-sm-11">
+            <div class="clearfix">
+                <p>
+                    <strong>{{ proof.name }}</strong>
+                </p>
+                <p>{{ proof.description|md_to_html }}</p>
+
+                <div class="">
+                    {% if proof.image %}
+                        <figure class="figure border-0">
+                            <img src="{{ MEDIA_URL }}/{{ proof.image }}"
+                                 class="figure-img img-fluid rounded img-thumbnail"
+                                 alt="{{ proof.name }}">
+                            <figcaption
+                                    class="figure-caption">{{ proof.name }}</figcaption>
+                        </figure>
+                    {% else %}
+                        <p>{{ proof.text|md_to_html }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

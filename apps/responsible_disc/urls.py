@@ -20,6 +20,7 @@ urlpatterns = [
     path('vulnerabilities/<int:pk>/add-log-item/', views.VulnerabilityLogCreate.as_view(),
          name="vulnerability-log-create"),
     path('vulnerabilities/<int:pk>/timeline/', views.VulnerabilityTimeline.as_view(), name="vulnerability-timeline"),
+    path('vulnerabilities/<int:pk>/proofs/', views.VulnerabilityProofs.as_view(), name="vulnerability-proofs"),
     path('vulnerabilities/<int:pk>/proofs/text/create/', views.TextProofCreate.as_view(), name="text-proof-create"),
     path('vulnerabilities/<int:pk>/proofs/image/create/', views.ImageProofCreate.as_view(), name="image-proof-create"),
 

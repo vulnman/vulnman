@@ -72,10 +72,11 @@
 {% block extra_scripts %}
     <script>
         $('#checklist-detail-modal').on('show.bs.modal', function (e) {
-            console.log(e)
+            let url = "{% url 'api:ui:methodologies:task-detail' pk=12345 %}".replace(
+                /12345/, e.relatedTarget.dataset['id'])
             $.ajax({
                 type: "GET",
-                url: "/api/v1/tasks/" + e.relatedTarget.dataset['id'] + "/",
+                url: url,
                 dataType: "json",
                 success: function (data) {
                     $("#checklist-detail-modal-label").text(data.name);
@@ -85,15 +86,15 @@
         });
 
         $('#search-checklist').on('input', function () {
+            let url = "{% url 'api:ui:methodologies:task-list' %}?search=" + $('#search-checklist').val();
             $.ajax({
                 type: "GET",
-                url: "/api/v1/tasks/?search=" + $('#search-checklist').val(),
+                url: url,
                 dataType: "json",
                 success: function (data) {
-                    var results = data["results"];
+                    let results = data["results"];
                     $('#checklist-list').html("");
                     $.each(results, function (k, v) {
-                        console.log(v)
                         $('#checklist-list').append(
                             '<a class="list-group-item list-group-item-action" data-bs-toggle="modal" data-id="' + v.uuid + '" data-bs-target="#checklist-detail-modal">' +
                             '<div class="row"><div class="col-sm-12"><div class="clearfix"><div class="float-start">' + v.task_id + '</div></div></div></div>' +

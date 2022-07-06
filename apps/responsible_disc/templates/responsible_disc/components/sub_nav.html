@@ -10,6 +10,11 @@
         <a class="nav-link {% if request.resolver_match.view_name == "responsible_disc:comment-list" %} active{% endif %}" href="{% url 'responsible_disc:comment-list' vuln.pk %}">Comments</a>
     </li>
     <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.view_name == "responsible_disc:vulnerability-proofs" %} active{% endif %}" href="{% url 'responsible_disc:vulnerability-proofs' vuln.pk %}">
+            Proofs
+        </a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link {% if request.resolver_match.view_name == "responsible_disc:manage-access" %} active{% endif %}" href="{% url 'responsible_disc:manage-access' vuln.pk %}">Manage Access</a>
     </li>
 </ul>

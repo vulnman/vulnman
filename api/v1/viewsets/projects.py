@@ -7,6 +7,7 @@ from api.v1.serializers import project as serializers
 
 
 class ProjectViewSet(VulnmanModelViewSet):
+    # TODO: legacy
     serializer_class = serializers.ProjectSerializer
     search_fields = ["name"]
 
