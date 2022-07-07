@@ -9,8 +9,6 @@ from apps.account.models import User
 
 class VulnmanTestCaseMixin(object):
     def init_mixin(self):
-        self.user1 = self._create_user("dummyuser1", "changeme")
-        self.user2 = self._create_user("dummyuser2", "changeme")
         self.pentester1 = self._create_user("pentester", "changeme", is_pentester=True)
         self.pentester2 = self._create_user("pentester2", "changeme", is_pentester=True)
         self.read_only1 = self._create_user("readonly1", "changeme")
@@ -29,7 +27,10 @@ class VulnmanTestCaseMixin(object):
         return User.objects.create_user(username, password=password, is_staff=is_staff, email=email, **kwargs)
 
     def assign_perm(self, perm, user_or_group, obj=None):
-        assign_perm(perm, user_or_group=user_or_group, obj=obj)
+        if not obj:
+            assign_perm(perm, user_or_group=user_or_group)
+        else:
+            assign_perm(perm, user_or_group=user_or_group, obj=obj)
 
     def _create_project(self, client=None, creator=None):
         if not client:

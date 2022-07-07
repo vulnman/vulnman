@@ -1,10 +1,11 @@
 import secrets
 from uuid import uuid4
-from guardian.shortcuts import assign_perm, remove_perm, get_users_with_perms
+from guardian.shortcuts import assign_perm, remove_perm
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
 from django.urls import reverse_lazy
+from apps.projects import querysets
 
 
 class Project(models.Model):
@@ -27,7 +28,7 @@ class Project(models.Model):
         (PENTEST_STATUS_OPEN, "Open"),
         (PENTEST_STATUS_INPROGRESS, "In Progress")
     ]
-
+    objects = querysets.ProjectQuerySet.as_manager()
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -167,6 +168,7 @@ class ProjectContributor(models.Model):
         return obj
 
     def assign_role_permissions(self, role):
+        # TODO: use signals here
         perms = []
         if role == ProjectContributor.ROLE_PENTESTER:
             perms = ProjectContributor.ROLE_PENTESTER_PERMISSIONS
@@ -183,6 +185,7 @@ class ProjectContributor(models.Model):
 
     class Meta:
         unique_together = [("user", "project")]
+        ordering = ["-date_created"]
 
 
 class ProjectAPIToken(models.Model):
@@ -203,3 +206,6 @@ class ProjectAPIToken(models.Model):
 
     def get_absolute_delete_url(self):
         return reverse_lazy("projects:token-delete", kwargs={"pk": self.pk})
+
+    class Meta:
+        ordering = ["-date_valid"]

@@ -8,7 +8,6 @@ from apps.assets.models import WebApplication, WebRequest, Host, Service
 
 
 class TemplateList(generics.VulnmanAuthListView):
-    # TODO: write tests
     model = models.Template
     paginate_by = 20
     template_name = "findings/template_list.html"
@@ -16,14 +15,14 @@ class TemplateList(generics.VulnmanAuthListView):
 
 
 class VulnList(generics.ProjectListView):
-    # TODO: write tests
     template_name = "findings/vulnerability_list.html"
     context_object_name = "vulns"
-    model = models.Vulnerability
+
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(project=self.get_project())
 
 
 class VulnCreate(generics.ProjectCreateView):
-    # TODO: write tests
     model = models.Vulnerability
     form_class = forms.VulnerabilityForm
     template_name = "findings/vulnerability_create.html"
@@ -184,7 +183,6 @@ class VulnUpdate(generics.ProjectUpdateView):
 
 class VulnDelete(generics.ProjectDeleteView):
     # TODO: write tests
-    model = models.Vulnerability
     http_method_names = ["post"]
     allowed_project_roles = ["pentester"]
 
@@ -197,7 +195,6 @@ class VulnDelete(generics.ProjectDeleteView):
 
 class TextProofDelete(generics.ProjectDeleteView):
     # TODO: write tests
-    model = models.TextProof
     http_method_names = ["post"]
     permission_required = ["projects.change_project"]
 
@@ -210,7 +207,6 @@ class TextProofDelete(generics.ProjectDeleteView):
 
 class UserAccountList(generics.ProjectListView):
     # TODO: write tests
-    model = models.UserAccount
     context_object_name = "user_accounts"
     template_name = "findings/user_account_list.html"
 
@@ -221,6 +217,9 @@ class UserAccountList(generics.ProjectListView):
         for qs in self.get_queryset():
             context["account_update_forms"].append(forms.UserAccountUpdateForm(instance=qs))
         return context
+
+    def get_queryset(self):
+        return models.UserAccount.objects.filter(project=self.get_project())
 
 
 class UserAccountCreate(generics.ProjectCreateView):
@@ -234,14 +233,15 @@ class UserAccountCreate(generics.ProjectCreateView):
 class UserAccountUpdate(generics.ProjectUpdateView):
     # TODO: write tests
     http_method_names = ["post"]
-    model = models.UserAccount
     form_class = forms.UserAccountUpdateForm
     success_url = reverse_lazy("projects:findings:user-account-list")
+
+    def get_queryset(self):
+        return models.UserAccount.objects.filter(project=self.get_project())
 
 
 class UserAccountDelete(generics.ProjectDeleteView):
     # TODO: write tests
-    model = models.UserAccount
     http_method_names = ["post"]
     permission_required = ["projects.change_project"]
 
@@ -254,7 +254,6 @@ class UserAccountDelete(generics.ProjectDeleteView):
 
 class VulnerabilityCVSSUpdate(generics.ProjectUpdateView):
     # TODO: write tests
-    model = models.Vulnerability
     form_class = forms.VulnerabilityCVSSBaseForm
     template_name = "findings/vuln_cvss_update.html"
 
@@ -264,7 +263,6 @@ class VulnerabilityCVSSUpdate(generics.ProjectUpdateView):
 
 class ImageProofDelete(generics.ProjectDeleteView):
     # TODO: write tests
-    model = models.ImageProof
     http_method_names = ["post"]
 
     def get_success_url(self):
