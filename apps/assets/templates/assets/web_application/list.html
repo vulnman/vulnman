@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-{% load guardian_tags %}
 
 {% block title %}
     Web Applications
@@ -12,9 +11,8 @@
     <div class="container mt-3">
         <div class="clearfix">
             <div class="float-end">
-                {% get_obj_perms request.user for project as "project_perms" %}
-                {% if "change_project" in project_perms %}
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#webapp-create-modal">
+                {% if perms.projects.change_project %}
+                <a class="btn btn-primary" href="{% url 'projects:assets:webapp-create' %}">
                     <i class="fa fa-plus"></i>
                 </a>
                 {% endif %}

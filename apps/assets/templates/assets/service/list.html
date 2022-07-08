@@ -19,7 +19,7 @@
             {% get_obj_perms request.user for project as "project_perms" %}
             {% if "change_project" in project_perms %}
             <div class="float-end">
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#webapp-create-modal">
+                <a class="btn btn-primary" href="{% url 'projects:assets:service-create' %}">
                     <i class="fa fa-plus"></i>
                 </a>
             </div>
@@ -51,21 +51,7 @@
             </tbody>
         </table>
 
-    <!-- Create Modal -->
-    <div class="modal fade" id="webapp-create-modal" tabindex="-1" aria-labelledby="webapp-create-modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="webapp-create-modal-label">Create Service</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    {% crispy service_create_form %}
-                </div>
-            </div>
-        </div>
     </div>
-
     {% include "navigation/pagination.html" %}
     {% include 'assets/components/service_list_filter.html' %}
 

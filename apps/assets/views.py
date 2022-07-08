@@ -7,8 +7,7 @@ from apps.assets import filters
 
 
 class WebApplicationList(generics.ProjectListView):
-    # TODO: write tests
-    template_name = "assets/webapp_list.html"
+    template_name = "assets/web_application/list.html"
     context_object_name = "webapps"
 
     def get_queryset(self):
@@ -21,24 +20,13 @@ class WebApplicationList(generics.ProjectListView):
 
 
 class WebApplicationCreate(generics.ProjectCreateView):
-    # TODO: write tests
-    http_method_names = ["post"]
     form_class = forms.WebApplicationForm
-    success_url = reverse_lazy("projects:assets:webapp-list")
-
-    def get_queryset(self):
-        return models.WebApplication.objects.filter(project=self.get_project())
-
-    def form_valid(self, form):
-        form.instance.project = self.get_project()
-        return super().form_valid(form)
+    template_name = "assets/web_application/update.html"
 
 
 class WebApplicationUpdate(generics.ProjectUpdateView):
-    # TODO: write tests
-    form_class = forms.WebApplicationUpdateForm
-    success_url = reverse_lazy("projects:assets:webapp-list")
-    template_name = "assets/webapp_create.html"
+    form_class = forms.WebApplicationForm
+    template_name = "assets/web_application/update.html"
 
     def get_queryset(self):
         return models.WebApplication.objects.filter(project=self.get_project())
@@ -105,7 +93,7 @@ class HostCreate(generics.ProjectCreateView):
 
 class ServiceList(django_filters.views.FilterMixin, generics.ProjectListView):
     # TODO: write tests
-    template_name = "assets/service_list.html"
+    template_name = "assets/service/list.html"
     context_object_name = "services"
     filterset_class = filters.ServiceFilter
     model = models.Service
@@ -116,18 +104,10 @@ class ServiceList(django_filters.views.FilterMixin, generics.ProjectListView):
         filterset = self.filterset_class(self.request.GET, queryset=qs)
         return filterset.qs
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["service_create_form"] = forms.ServiceCreateForm(
-            self.get_project())
-        return context
-
 
 class ServiceCreate(generics.ProjectCreateView):
-    # TODO: write tests
-    http_method_names = ["post"]
-    form_class = forms.ServiceCreateForm
-    success_url = reverse_lazy("projects:assets:service-list")
+    form_class = forms.ServiceForm
+    template_name = "assets/service/create_or_update.html"
 
     def get_queryset(self):
         return models.Service.objects.filter(project=self.get_project())
@@ -139,22 +119,12 @@ class ServiceCreate(generics.ProjectCreateView):
 
 
 class ServiceDetail(generics.ProjectDetailView):
-    # TODO: write tests
-    template_name = "assets/service_detail.html"
+    template_name = "assets/service/detail.html"
     context_object_name = "service"
-
-    def get_queryset(self):
-        return models.Service.objects.filter(project=self.get_project())
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["service_update_form"] = forms.ServiceUpdateForm(
-            project=self.get_project(), instance=context["service"])
-        return context
+    model = models.Service
 
 
 class ServiceDelete(generics.ProjectDeleteView):
-    # TODO: write tests
     http_method_names = ["post"]
     success_url = reverse_lazy("projects:assets:service-list")
 
@@ -201,9 +171,8 @@ class HostUpdate(generics.ProjectUpdateView):
 
 
 class ServiceUpdate(generics.ProjectUpdateView):
-    # TODO: write tests
-    http_method_names = ["post"]
-    form_class = forms.ServiceUpdateForm
+    form_class = forms.ServiceForm
+    template_name = "assets/service/create_or_update.html"
 
     def get_queryset(self):
         return models.Service.objects.filter(project=self.get_project())
@@ -215,23 +184,12 @@ class ServiceUpdate(generics.ProjectUpdateView):
 
 
 class WebApplicationDetail(generics.ProjectDetailView):
-    # TODO: write tests
-    template_name = "assets/webapp_detail.html"
+    template_name = "assets/web_application/detail.html"
     context_object_name = "webapp"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["webapp_update_form"] = forms.WebApplicationUpdateForm(
-            instance=context["webapp"])
-        return context
-
-    def get_queryset(self):
-        return models.WebApplication.objects.filter(
-            project=self.get_project())
+    model = models.WebApplication
 
 
 class WebApplicationDelete(generics.ProjectDeleteView):
-    # TODO: write tests
     http_method_names = ["post"]
     success_url = reverse_lazy("projects:assets:webapp-list")
 

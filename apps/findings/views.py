@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.urls import reverse_lazy
 from vulnman.core.views import generics
 from apps.findings import models
@@ -53,37 +53,44 @@ class VulnCreate(generics.ProjectCreateView):
 
 
 class AddTextProof(generics.ProjectCreateView):
-    # TODO: write tests
-    http_method_names = ["post"]
-    model = models.TextProof
     form_class = forms.TextProofForm
+    template_name = "findings/text_proof_create_or_update.html"
+
+    def get_context_data(self, **kwargs):
+        try:
+            obj = self.get_project().vulnerability_set.get(pk=self.kwargs.get("pk"))
+        except models.Vulnerability.DoesNotExist:
+            raise Http404()
+        kwargs["vuln"] = obj
+        return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
-        vuln = self.get_project().vulnerability_set.filter(pk=self.kwargs.get('pk'))
-        if not vuln.exists():
-            form.add_error("name", "Vulnerability does not exist!")
-            return super().form_invalid(form)
-        form.instance.vulnerability = vuln.get()
+        vuln = self.get_context_data()["vuln"]
+        form.instance.vulnerability = vuln
         form.instance.project = self.get_project()
-        self.success_url = vuln.get().get_absolute_url()
+        self.success_url = vuln.get_absolute_url()
         return super().form_valid(form)
 
 
 class TextProofUpdate(generics.ProjectUpdateView):
-    # TODO: write tests
     template_name = "findings/proof_update.html"
-    model = models.TextProof
     form_class = forms.TextProofForm
 
+    def get_queryset(self):
+        return models.TextProof.objects.filter(vulnerability__project=self.get_project())
+
     def get_success_url(self):
-        return reverse_lazy("projects:findings:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})
+        return reverse_lazy("projects:findings:vulnerability-detail", kwargs={
+            "pk": self.get_object().vulnerability.pk})
 
 
 class ImageProofUpdate(generics.ProjectUpdateView):
     # TODO: write tests
     template_name = "findings/proof_update.html"
-    model = models.ImageProof
     form_class = forms.ImageProofForm
+
+    def get_queryset(self):
+        return models.ImageProof.objects.filter(vulnerability__project=self.get_project())
 
     def get_success_url(self):
         return reverse_lazy("projects:findings:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})
@@ -110,14 +117,12 @@ class AddImageProof(generics.ProjectCreateView):
 
 
 class VulnDetail(generics.ProjectDetailView):
-    # TODO: write tests
     template_name = "findings/vuln_detail.html"
     context_object_name = "vuln"
     model = models.Vulnerability
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["text_proof_form"] = forms.TextProofForm()
         context["image_proof_form"] = forms.ImageProofForm()
         context["change_cvss_form"] = forms.VulnerabilityCVSSBaseForm(initial={
             "cvss_av": context["vuln"].cvss_av, "cvss_ac": context["vuln"].cvss_ac,
@@ -129,7 +134,6 @@ class VulnDetail(generics.ProjectDetailView):
 
 
 class VulnerabilityExport(generics.ProjectDetailView):
-    # TODO: write tests
     model = models.Vulnerability
 
     def render_to_response(self, context, **response_kwargs):
@@ -140,10 +144,11 @@ class VulnerabilityExport(generics.ProjectDetailView):
 
 
 class VulnUpdate(generics.ProjectUpdateView):
-    # TODO: write tests
-    model = models.Vulnerability
     form_class = forms.VulnerabilityForm
     template_name = "findings/vulnerability_create.html"
+
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(project=self.get_project())
 
     def form_valid(self, form):
         if not models.Template.objects.filter(vulnerability_id=form.cleaned_data["template_id"]).exists():
@@ -182,7 +187,6 @@ class VulnUpdate(generics.ProjectUpdateView):
 
 
 class VulnDelete(generics.ProjectDeleteView):
-    # TODO: write tests
     http_method_names = ["post"]
     allowed_project_roles = ["pentester"]
 
@@ -253,7 +257,6 @@ class UserAccountDelete(generics.ProjectDeleteView):
 
 
 class VulnerabilityCVSSUpdate(generics.ProjectUpdateView):
-    # TODO: write tests
     form_class = forms.VulnerabilityCVSSBaseForm
     template_name = "findings/vuln_cvss_update.html"
 

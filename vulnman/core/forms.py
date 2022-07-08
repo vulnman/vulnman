@@ -20,8 +20,27 @@ class CodeMirrorWidget(forms.Textarea):
         output = [
             super().render(name, value, attrs, renderer),
             '<script>var id_%s = CodeMirror.fromTextArea(document.getElementById("id_%s"), '
-            '{mode: "markdown"});$("#dddid_%s").val("-");</script>' % (
+            '{mode: "markdown"});$("#id_%s").val("-");</script>' % (
                 name, name, name
             )
+        ]
+        return mark_safe("\n".join(output))
+
+
+class FileDropWidget(forms.FileInput):
+
+    @property
+    def media(self):
+        js = ["vendor/filepond/filepond.min.js", "vendor/filepond/filepond.jquery.js"]
+        css = ["vendor/filepond/filepond.css"]
+        return forms.Media(
+            css={'all': css}, js=js
+        )
+
+    def render(self, name, value, attrs=None, renderer=None):
+        script = "<script>$('#id_%s').filepond({storeAsFile: true});</script>" % name
+        output = [
+            super().render(name, value, attrs, renderer),
+            script
         ]
         return mark_safe("\n".join(output))

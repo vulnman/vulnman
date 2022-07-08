@@ -5,7 +5,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
-from vulnman.core.forms import CodeMirrorWidget
+from vulnman.core.forms import CodeMirrorWidget, FileDropWidget
 from vulnman.core.forms import DateInput
 from apps.responsible_disc import models
 from apps.account.models import User
@@ -43,7 +43,8 @@ class ImageProofForm(forms.ModelForm):
         model = models.ImageProof
         fields = ["name", "description", "image", "caption"]
         widgets = {
-            "description": CodeMirrorWidget()
+            "description": CodeMirrorWidget(),
+            "image": FileDropWidget()
         }
 
     def __init__(self, *args, **kwargs):

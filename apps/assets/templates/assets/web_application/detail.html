@@ -3,64 +3,54 @@
 {% load guardian_tags %}
 
 {% block title %}
-    {{ service }}
+    {{ webapp }}
 {% endblock %}
 
 {% block content %}
 
     <div class="container mt-3">
 
-        <h3 class="text-center">Service: {{ service }}</h3>
+        <h3 class="text-center">Web Application: {{ webapp }}</h3>
         <hr/>
         {% get_obj_perms request.user for project as "project_perms" %}
         {% if "change_project" in project_perms %}
         <div class="row mt-3">
             <div class="col-sm-12">
                 <div class="float-end">
-                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#form-modal-{{ service_update_form.instance.pk }}">
+                    <a class="btn btn-outline-warning" href="{% url 'projects:assets:webapp-update' webapp.pk %}">
                         <i class="fa fa-edit"></i>
                     </a>
-                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ service.pk }}">
+                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ webapp.pk }}">
                         <i class="fa fa-trash"></i>
                     </a>
                 </div>
             </div>
         </div>
         {% endif %}
-
         <div class="row mt-3">
-            <div class="col-sm-12 col-md-3">
+            <div class="col-sm-12 col-md-4">
                 <div class="card">
                     <div class="card-body">
                         <div class="card-text">
-                            <p><strong>Host:</strong><span class="float-end">{{ service.host }}</span></p>
+                            <p><strong>Base URL:</strong><span class="float-end">{{ webapp.base_url }}</span></p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-3">
+            <div class="col-sm-12 col-md-4">
                 <div class="card">
                     <div class="card-body">
                         <div class="card-text">
-                            <p><strong>Port:</strong><span class="float-end">{{service.get_protocol_display}}/{{ service.port }}</span></p>
+                            <p><strong>Web Requests:</strong><span class="float-end">{{ webapp.webrequest_set.count }}</span></p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-3">
+            <div class="col-sm-12 col-md-4">
                 <div class="card">
                     <div class="card-body">
                         <div class="card-text">
-                            <p><strong>Name:</strong><span class="float-end">{{ service.name }}</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-text">
-                            <p><strong>State:</strong><span class="float-end">{{ service.get_state_display }}</span></p>
+                            <p><strong>Vulnerabilities:</strong><span class="float-end">{{ webapp.vulnerability_set.count }}</span></p>
                         </div>
                     </div>
                 </div>
@@ -82,7 +72,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for vuln in service.vulnerability_set.all %}
+                        {% for vuln in webapp.vulnerability_set.all %}
                             <tr>
                                 <td>
                                     <a href="{% url 'projects:findings:vulnerability-detail' vuln.pk %}">
@@ -99,7 +89,6 @@
         </div>
     </div>
 
-    {% include 'modals/delete_object.html' with obj=service %}
-    {% include 'forms/form_modal.html' with title="Update Service" form=service_update_form %}
+    {% include 'modals/delete_object.html' with obj=webapp %}
 
 {% endblock content %}

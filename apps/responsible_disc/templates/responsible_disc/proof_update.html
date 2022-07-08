@@ -43,6 +43,8 @@
 {% endblock %}
 
 {% block extra_scripts %}
+    <script>$('#id_image').filepond({storeAsFile: true});</script>
+
     <script>
         $('#id_text').attr("required", false);
         $('#id_description').attr("required", false);

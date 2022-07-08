@@ -15,7 +15,6 @@ class WebApplicationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_action = "projects:assets:webapp-create"
         self.helper.layout = layout.Layout(
             layout.Row(
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
@@ -94,7 +93,7 @@ class HostUpdateForm(HostCreateForm):
             "projects:assets:host-update", kwargs={"pk": self.instance.pk})
 
 
-class ServiceCreateForm(forms.ModelForm):
+class ServiceForm(forms.ModelForm):
     class Meta:
         model = models.Service
         fields = ["host", "port", "name", "protocol", "state", "banner"]
@@ -102,7 +101,6 @@ class ServiceCreateForm(forms.ModelForm):
     def __init__(self, project, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_action = "projects:assets:service-create"
         self.fields["host"].queryset = project.host_set.all()
         self.helper.layout = layout.Layout(
             layout.Row(
@@ -128,19 +126,12 @@ class ServiceCreateForm(forms.ModelForm):
         )
 
 
-class ServiceUpdateForm(ServiceCreateForm):
+class ServiceUpdateForm(ServiceForm):
 
     def __init__(self, project, *args, **kwargs):
         super().__init__(project, *args, **kwargs)
         self.helper.form_action = reverse_lazy(
             "projects:assets:service-update", kwargs={"pk": self.instance.pk})
-
-
-class WebApplicationUpdateForm(WebApplicationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper.form_action = reverse_lazy(
-            "projects:assets:webapp-update", kwargs={"pk": self.instance.pk})
 
 
 class WebRequestUpdateForm(WebRequestCreateForm):

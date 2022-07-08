@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+    {% if request.resolver_match.url_name == "webapp-update" %}
+Update Web Application
+    {% else %}
+Create Web Application
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container mt-3">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'projects:assets:webapp-list' %}">Web Applications</a>
+                </li>
+                {% if request.resolver_match.url_name == "webapp-update" %}
+                <li class="breadcrumb-item">
+                    <a href="{% url 'projects:assets:webapp-detail' form.instance.pk %}">{{ form.instance }}</a>
+                </li>
+                <li class="breadcrumb-item active">Update</li>
+                {% else %}
+                <li class="breadcrumb-item active">
+                    Create
+                </li>
+                {% endif %}
+            </ol>
+        </nav>
+
+        <div class="row mb-3">
+            <div class="d-flex flex-md-column-reverse align-items-end">
+                {% if request.resolver_match.url_name == "webapp-update" %}
+                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ webapp.pk }}">
+                    <i class="fa fa-trash"></i>
+                </button>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                {% if request.resolver_match.url_name == "webapp-update" %}
+                <h4 class="card-title">Update Web Application</h4>
+                {% else %}
+                <h4 class="card-title">Create New Web Application</h4>
+                {% endif %}
+                <hr/>
+
+                {% crispy form %}
+            </div>
+        </div>
+    </div>
+
+    {% if request.resolver_match.url_name == "webapp-update" %}
+        {% include 'modals/delete_object.html' with obj=form.instance %}
+    {% endif %}
+
+{% endblock %}

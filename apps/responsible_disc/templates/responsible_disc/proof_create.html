@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block title %}Update Proof{% endblock %}
 
-
+{% block extra_head %}
+{% endblock %}
 {% block content %}
     <div class="container mt-3">
         <!-- Breadcrumbs -->
@@ -26,11 +28,13 @@
             </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block extra_scripts %}
+
+
 <script>
+    $('#id_image').filepond({storeAsFile: true});
     $('#id_text').attr("required", false);
     $('#id_description').attr("required", false);
 </script>

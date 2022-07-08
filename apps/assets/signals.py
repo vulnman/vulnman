@@ -1,13 +1,13 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from apps.assets import models
-#from core.models import AssetTask, Task
 from apps.methodologies.models import AssetTask, Task
 
 
 @receiver(post_save, sender=models.Service)
 @receiver(post_save, sender=models.WebApplication)
 def create_webapp_task(sender, instance=None, created=False, **kwargs):
+    # TODO: write tests
     # Create tasks as soon as a new asset is created
     if created:
         task_qs = Task.objects.filter(

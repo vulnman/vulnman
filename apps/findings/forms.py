@@ -4,34 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
-from vulnman.core.forms import CodeMirrorWidget
-
-
-class TemplateForm(forms.ModelForm):
-    class Meta:
-        model = models.Template
-        fields = ["name", "description", "recommendation"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_tag = False
-        self.helper.layout = layout.Layout(
-            layout.Row(
-                layout.Div(
-                    bootstrap5.FloatingField("name"), css_class="col-sm-12 col-md-6"
-                ),
-                layout.Div(
-                    bootstrap5.FloatingField("cve_id"), css_class="col-sm-12 col-md-12"
-                ),
-                layout.Div(
-                    bootstrap5.Field("description"), css_class="col-sm-12 col-md-12"
-                ),
-                layout.Div(
-                    bootstrap5.Field("recommendation"), css_class="col-sm-12 col-md-12"
-                ),
-            )
-        )
+from vulnman.core.forms import CodeMirrorWidget, FileDropWidget
 
 
 class TextProofForm(forms.ModelForm):
@@ -63,6 +36,9 @@ class ImageProofForm(forms.ModelForm):
     class Meta:
         model = models.ImageProof
         fields = ["name", "description", "image", "caption"]
+        widgets = {
+            'image': FileDropWidget()
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -133,7 +109,8 @@ class VulnerabilityForm(forms.ModelForm):
 
     class Meta:
         model = models.Vulnerability
-        fields = ["template_id", "name", "asset_type", "f_asset", "status", "cve_id", "severity", "auth_required", "user_account"]
+        fields = ["template_id", "name", "asset_type", "f_asset", "status", "cve_id", "severity",
+                  "auth_required", "user_account"]
 
     def get_asset_choices(self, project):
         choices = [("---", "---")]

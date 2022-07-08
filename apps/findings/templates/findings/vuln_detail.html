@@ -34,9 +34,9 @@
 
         <div class="clearfix mb-3">
             <div class="float-start">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-text-proof-modal">
+                <a class="btn btn-primary" href="{% url 'projects:findings:vulnerability-add-text-proof' vuln.pk %}">
                     Add Text Proof
-                </button>
+                </a>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-image-proof-modal">
                     Add Image Proof
                 </button>
@@ -221,25 +221,6 @@
                             </ul>
                         {% endif %}
                     </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Modal -->
-        <div class="modal fade bd-example-modal-lg" id="add-text-proof-modal" tabindex="-1" role="dialog" aria-labelledby="add-text-proof-modal-label" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <form method="post" action="{% url 'projects:findings:vulnerability-add-text-proof' vuln.pk %}" id="text-proof-form">
-                        {% csrf_token %}
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="add-text-proof-modal-label">Add Text Proof</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            {% include 'forms/simple.html' with without_form_tag=True form=text_proof_form %}
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
