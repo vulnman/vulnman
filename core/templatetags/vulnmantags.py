@@ -18,3 +18,12 @@ def unique_url_params(value, arg):
     what, to = arg.split('|')
     result[what] = to
     return urlencode(result)
+
+
+@register.inclusion_tag("core/components/blankslate.html", takes_context=True)
+def show_blankslate(context):
+    return {
+        'icon': context.get("blankslate_icon", "fa-exclamation"),
+        'text': context.get('blankslate_text', 'Create a new instance with the button above!'),
+        'title': context.get('blankslate_title', 'Nothing in here!')
+    }

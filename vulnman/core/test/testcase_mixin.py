@@ -44,6 +44,9 @@ class VulnmanTestCaseMixin(object):
     def _create_instance(self, obj_class, **kwargs):
         return G(obj_class, **kwargs)
 
+    def create_instance(self, obj_class, **kwargs):
+        return self._create_instance(obj_class, **kwargs)
+
     def _set_session_variable(self, key, value):
         session = self.client.session
         session[key] = value

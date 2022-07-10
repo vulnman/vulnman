@@ -17,11 +17,11 @@ class Host(BaseAsset):
         (ACCESSIBILITY_NOT_TESTED, "Not Tested")
     ]
 
-    ip = models.GenericIPAddressField()
-    operating_system = models.CharField(max_length=256, blank=True)
+    ip = models.GenericIPAddressField(verbose_name="IP")
+    operating_system = models.CharField(max_length=256, blank=True, verbose_name="Operating System")
     accessibility = models.IntegerField(
         choices=ACCESSIBILITY_CHOICES, default=ACCESSIBILITY_NOT_TESTED)
-    dns = models.CharField(max_length=256, null=True, blank=True)
+    dns = models.CharField(max_length=256, null=True, blank=True, verbose_name="DNS")
 
     class Meta:
         ordering = ['ip']

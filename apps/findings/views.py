@@ -1,3 +1,4 @@
+import django_filters.views
 from django.http import HttpResponse, Http404
 from django.urls import reverse_lazy
 from vulnman.core.views import generics
@@ -5,6 +6,7 @@ from apps.findings import models
 from apps.findings import forms
 from apps.reporting.tasks import export_single_vulnerability
 from apps.assets.models import WebApplication, WebRequest, Host, Service
+from apps.findings import filters
 
 
 class TemplateList(generics.VulnmanAuthListView):
@@ -14,12 +16,36 @@ class TemplateList(generics.VulnmanAuthListView):
     context_object_name = "templates"
 
 
-class VulnList(generics.ProjectListView):
-    template_name = "findings/vulnerability_list.html"
-    context_object_name = "vulns"
+class VulnList(django_filters.views.FilterMixin, generics.ProjectListView):
+    template_name = "findings/vulnerabilities/list.html"
+    context_object_name = "vulnerabilities"
+    filterset_class = filters.VulnerabilityFilter
 
     def get_queryset(self):
-        return models.Vulnerability.objects.filter(project=self.get_project())
+        qs = models.Vulnerability.objects.filter(project=self.get_project())
+        if not self.request.GET.get("status"):
+            qs = qs.filter(status=models.Vulnerability.STATUS_OPEN)
+        filterset = self.filterset_class(self.request.GET, queryset=qs)
+        return filterset.qs
+
+    def get_context_data(self, **kwargs):
+        if not self.request.session.get("vulns_filters"):
+            self.request.session["vulns_filters"] = dict(self.request.GET)
+        if not self.request.GET:
+            self.request.session["vulns_filters"] = {}
+        for key, value in self.request.GET.items():
+            self.request.session["vulns_filters"][key] = value
+        qs = models.Vulnerability.objects.filter(project=self.get_project())
+        qs_filters = self.request.GET.copy()
+        if qs_filters.get("status"):
+            del qs_filters["status"]
+        filterset = self.filterset_class(qs_filters, queryset=qs)
+        qs = filterset.qs
+        kwargs["open_vulns_count"] = qs.filter(
+            status=models.Vulnerability.STATUS_OPEN).count()
+        kwargs["closed_vulns_count"] = qs.filter(
+            status=models.Vulnerability.STATUS_FIXED).count()
+        return super().get_context_data(**kwargs)
 
 
 class VulnCreate(generics.ProjectCreateView):
@@ -52,7 +78,7 @@ class VulnCreate(generics.ProjectCreateView):
         return kwargs
 
 
-class AddTextProof(generics.ProjectCreateView):
+class TextProofCreate(generics.ProjectCreateView):
     form_class = forms.TextProofForm
     template_name = "findings/text_proof_create_or_update.html"
 
@@ -85,8 +111,7 @@ class TextProofUpdate(generics.ProjectUpdateView):
 
 
 class ImageProofUpdate(generics.ProjectUpdateView):
-    # TODO: write tests
-    template_name = "findings/proof_update.html"
+    template_name = "findings/image_proof_create_or_update.html"
     form_class = forms.ImageProofForm
 
     def get_queryset(self):
@@ -97,22 +122,23 @@ class ImageProofUpdate(generics.ProjectUpdateView):
 
 
 class AddImageProof(generics.ProjectCreateView):
-    # TODO: write tests
-    http_method_names = ["post"]
     model = models.ImageProof
     form_class = forms.ImageProofForm
+    template_name = "findings/image_proof_create_or_update.html"
 
-    def form_invalid(self, form):
-        return super().form_invalid(form)
+    def get_context_data(self, **kwargs):
+        try:
+            obj = self.get_project().vulnerability_set.get(pk=self.kwargs.get("pk"))
+        except models.Vulnerability.DoesNotExist:
+            raise Http404()
+        kwargs["vuln"] = obj
+        return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
-        vuln = self.get_project().vulnerability_set.filter(pk=self.kwargs.get('pk'))
-        if not vuln.exists():
-            form.add_error("name", "Vulnerability does not exist!")
-            return super().form_invalid(form)
-        form.instance.vulnerability = vuln.get()
+        vuln = self.get_context_data()["vuln"]
+        form.instance.vulnerability = vuln
         form.instance.project = self.get_project()
-        self.success_url = vuln.get().get_absolute_url()
+        self.success_url = vuln.get_absolute_url()
         return super().form_valid(form)
 
 
@@ -198,7 +224,6 @@ class VulnDelete(generics.ProjectDeleteView):
 
 
 class TextProofDelete(generics.ProjectDeleteView):
-    # TODO: write tests
     http_method_names = ["post"]
     permission_required = ["projects.change_project"]
 
@@ -206,7 +231,7 @@ class TextProofDelete(generics.ProjectDeleteView):
         return reverse_lazy('projects:findings:vulnerability-list')
 
     def get_queryset(self):
-        return models.TextProof.objects.filter(project=self.get_project())
+        return models.TextProof.objects.filter(vulnerability__project=self.get_project())
 
 
 class UserAccountList(generics.ProjectListView):
@@ -265,11 +290,10 @@ class VulnerabilityCVSSUpdate(generics.ProjectUpdateView):
 
 
 class ImageProofDelete(generics.ProjectDeleteView):
-    # TODO: write tests
     http_method_names = ["post"]
 
     def get_success_url(self):
         return reverse_lazy('projects:findings:vulnerability-list')
 
     def get_queryset(self):
-        return models.ImageProof.objects.filter(project=self.get_project())
+        return models.ImageProof.objects.filter(vulnerability__project=self.get_project())

@@ -13,13 +13,13 @@ class VulnerabilityListViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.login_with_project(self.pentester1, self.project1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context["vulns"]), 1)
+        self.assertEqual(len(response.context["vulnerabilities"]), 1)
 
     def test_pentester2(self):
         self.login_with_project(self.pentester2, self.project2)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context["vulns"]), 0)
+        self.assertEqual(len(response.context["vulnerabilities"]), 0)
 
     def test_readonly(self):
         pass

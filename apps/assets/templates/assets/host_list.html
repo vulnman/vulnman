@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load vulnmantags %}
 {% load guardian_tags %}
 
 
@@ -16,7 +17,7 @@
             <div class="float-end">
                 {% get_obj_perms request.user for project as "project_perms" %}
                 {% if "change_project" in project_perms %}
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">
+                <a class="btn btn-primary" href="{% url 'projects:assets:host-create' %}">
                     <i class="fa fa-plus"></i>
                 </a>
                 {% endif %}
@@ -44,43 +45,15 @@
                         {% endif %}
                         <td>{{ host.get_accessibility_display }}</td>
                     </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">
+                            {% show_blankslate %}
+                        </td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <!-- Create Modal -->
-    <div class="modal fade" id="create-modal" tabindex="-1" aria-labelledby="create-modal">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="create-modal-label">Create Host</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    {% crispy host_create_form %}
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock content %}
-
-{% block extra_scripts %}
-<script>
-    function removeAsset(asset_id){
-        $.ajax({
-            type: "DELETE",
-            url: "/api/v1/assets/hosts/" + asset_id + "/",
-            dataType: "json",
-            data: {},
-            success: function(data){
-                location.reload()
-                // console.log(data)
-            },
-            beforeSend: function(xhr){
-                xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
-            }
-        });
-    }
-</script>
-{% endblock %}

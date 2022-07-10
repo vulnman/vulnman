@@ -54,19 +54,18 @@ class WebRequestCreateForm(forms.ModelForm):
         )
 
 
-class HostCreateForm(forms.ModelForm):
+class HostForm(forms.ModelForm):
     class Meta:
         model = models.Host
         fields = ["ip", "operating_system", "accessibility", "dns"]
 
-    def __init__(self, project, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_action = "projects:assets:host-create"
         self.helper.layout = layout.Layout(
             layout.Row(
-                bootstrap5.FloatingField("ip", wrapper_class="col-sm-12 col-md-6"),
-                bootstrap5.FloatingField("operating_system", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("ip", wrapper_class="col-sm-12"),
+                bootstrap5.FloatingField("operating_system", wrapper_class="col-sm-12"),
                 css_class="g-2"
             ),
             layout.Row(
@@ -76,21 +75,9 @@ class HostCreateForm(forms.ModelForm):
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
-                    wrapper_class="col-sm-12 col-md-6"
-                )
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )
-
-
-class HostUpdateForm(HostCreateForm):
-    class Meta:
-        model = models.Host
-        fields = ["ip", "operating_system", "accessibility", "dns"]
-
-    def __init__(self, project, *args, **kwargs):
-        super().__init__(project, *args, **kwargs)
-        self.helper.form_action = reverse_lazy(
-            "projects:assets:host-update", kwargs={"pk": self.instance.pk})
 
 
 class ServiceForm(forms.ModelForm):

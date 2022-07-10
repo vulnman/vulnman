@@ -67,28 +67,17 @@ class HostList(generics.ProjectListView):
     template_name = "assets/host_list.html"
     context_object_name = "hosts"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["host_create_form"] = forms.HostCreateForm(self.get_project())
-        return context
-
     def get_queryset(self):
         return models.Host.objects.filter(project=self.get_project())
 
 
 class HostCreate(generics.ProjectCreateView):
     # TODO: write tests
-    http_method_names = ["post"]
-    form_class = forms.HostCreateForm
-    success_url = reverse_lazy("projects:assets:host-list")
+    form_class = forms.HostForm
+    template_name = "assets/host/create_or_update.html"
 
     def get_queryset(self):
         return models.Host.objects.filter(project=self.get_project())
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['project'] = self.get_project()
-        return kwargs
 
 
 class ServiceList(django_filters.views.FilterMixin, generics.ProjectListView):
@@ -137,12 +126,6 @@ class HostDetail(generics.ProjectDetailView):
     template_name = "assets/host_detail.html"
     context_object_name = "host"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["host_update_form"] = forms.HostUpdateForm(
-            project=self.get_project(), instance=context["host"])
-        return context
-
     def get_queryset(self):
         return models.Host.objects.filter(project=self.get_project())
 
@@ -158,8 +141,8 @@ class HostDelete(generics.ProjectDeleteView):
 
 class HostUpdate(generics.ProjectUpdateView):
     # TODO: write tests
-    http_method_names = ["post"]
-    form_class = forms.HostUpdateForm
+    form_class = forms.HostForm
+    template_name = "assets/host/create_or_update.html"
 
     def get_queryset(self):
         return models.Host.objects.filter(project=self.get_project())

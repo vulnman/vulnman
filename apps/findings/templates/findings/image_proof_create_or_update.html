@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+    {% if request.resolver_match.url_name == "image-proof-update" %}
+Update Image Proof
+    {% else %}
+Create Image Proof
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container mt-3">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ vuln.get_absolute_url }}">{{ vuln }}</a>
+                </li>
+                {% if request.resolver_match.url_name == "image-proof-update" %}
+                <li class="breadcrumb-item">
+                    <a href="{% url 'projects:assets:service-detail' form.instance.pk %}">{{ form.instance }}</a>
+                </li>
+                <li class="breadcrumb-item active">Update Proof</li>
+                {% else %}
+                <li class="breadcrumb-item active">
+                    Create Proof
+                </li>
+                {% endif %}
+            </ol>
+        </nav>
+
+        <div class="row mb-3">
+            <div class="d-flex flex-md-column-reverse align-items-end">
+                {% if request.resolver_match.url_name == "image-proof-update" %}
+                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ form.instance.pk }}">
+                    <i class="fa fa-trash"></i>
+                </button>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                {% if request.resolver_match.url_name == "image-proof-update" %}
+                <h4 class="card-title">Update Image Proof</h4>
+                {% else %}
+                <h4 class="card-title">Create New Image Proof</h4>
+                {% endif %}
+                <hr/>
+
+                {% crispy form %}
+            </div>
+        </div>
+    </div>
+
+    {% if request.resolver_match.url_name == "image-proof-update" %}
+        {% include 'modals/delete_object.html' with obj=form.instance %}
+    {% endif %}
+
+{% endblock %}
+
+{% block extra_scripts %}
+    <script>
+        $('#id_description').attr("required", false);
+        $('#id_image').filepond({storeAsFile: true});
+    </script>
+{% endblock %}

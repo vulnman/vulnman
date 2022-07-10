@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load guardian_tags %}
+{% load vulnmantags %}
+
+{% block title %}
+    Vulnerabilities
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active">Vulnerabilities</li>
+            </ol>
+        </nav>
+        <div class="row">
+            <!-- Search bar -->
+            {% include 'responsible_disc/components/vulnerability_searchbar.html' %}
+
+            {% if perms.projects.change_project %}
+            <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
+                <a class="btn btn-primary" href="{% url 'projects:findings:vulnerability-create' %}">
+                    <i class="fa fa-plus"></i> New Vulnerability
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header border-bottom">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 d-flex">
+                        <!-- Status buttons -->
+                        <a class="btn p-2" href="?{{ request.session.vulns_filters|unique_url_params:'status|0' }}">
+                            <i class="fa fa-circle-dot"></i> {% if not open_vulns_count %}0{% else %}{{ open_vulns_count }}{% endif %} Open
+                        </a>
+                        <a class="btn p-2" href="?{{ request.session.vulns_filters|unique_url_params:'status|1' }}">
+                            <i class="fa fa-check"></i> {% if not closed_vulns_count %}0{% else %}
+                            {{ closed_vulns_count }}{% endif %} Fixed
+                        </a>
+                    </div>
+                    <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
+                        <div class="dropdown">
+                            <a class="btn dropdown-toggle" href="#" role="button" id="dropdown-menu-sort"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Sort
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-menu-sort">
+                                <li><a class="dropdown-item" href="?{{ request.session.vulns_filters|unique_url_params:'sort|severity' }}">Severity</a></li>
+                                <li><a class="dropdown-item" href="?{{ request.session.vulns_filters|unique_url_params:'sort|recently_updated' }}">Recently Updated</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="list-group list-group-flush">
+                {% for vuln in vulnerabilities %}
+                    <a class="list-group-item list-group-item-action" href="{{ vuln.get_absolute_url }}">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                {% if vuln.status == 0 %}
+                                    <i class="fa fa-dot-circle text-success"></i>
+                                {% elif vuln.status == 1 %}
+                                    <i class="fa fa-check text-secondary"></i>
+                                {% elif vuln.status == 2 %}
+                                    <i class="fa fa-bug text-warning"></i>
+                                {% endif %}
+                                <strong class="p-2">[{{ vuln.template.name }}] {{ vuln.name }}</strong> {% include 'components/severity_badge.html' with obj=vuln %}
+                            </div>
+                            <div class="col-sm-12 col-md-2">
+                                <span>{{ vuln.asset }}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 d-flex">
+                                <small class="p-2 text-muted">opened on {{ vuln.date_created|date }}, updated
+                                    on {{ vuln.date_updated|date }}</small>
+                            </div>
+                        </div>
+                    </a>
+                {% empty %}
+                    <div class="row d-flex flex-column-reverse text-center p-5">
+                        <div class="align-items-center">
+                            <p><i class="fa fa-bug fa-fw fa-xl"></i></p>
+                            <h4>There aren't any Vulnerabilities!</h4>
+                            <p class="text-muted">Go ahead and create one using the button above.</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% include 'navigation/pagination.html' %}
+    </div>
+{% endblock %}

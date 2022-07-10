@@ -1,7 +1,6 @@
 from django.test import TestCase
 from vulnman.tests.mixins import VulnmanTestMixin
 from apps.assets import models
-from apps.projects.models import ProjectContributor
 
 
 class HostViewsTestCase(TestCase, VulnmanTestMixin):

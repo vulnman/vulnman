@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
-from api.v1.mixins.testcase import VulnmanAPITestCaseMixin
+from vulnman.core.test import VulnmanAPITestCaseMixin
 from apps.findings import models
 
 
