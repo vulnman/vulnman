@@ -4,15 +4,16 @@ services:
   vulnman-web:
     image: ghcr.io/vulnman/vulnman:latest
     volumes:
-      - '/tmp/volumes/vulnman/conf:/app/vulnman/conf'
-      - '/tmp/volumes/vulnman/static:/app/static_files'
+      - './volumes/vulnman/conf:/app/vulnman/conf'
+      - './volumes/vulnman/data/uploads:/app/uploads'
+      - './volumes/vulnman/static:/app/static_files'
     environment:
       DJANGO_SUPERUSER_PASSWORD: dontusethispassword
       DJANGO_SUPERUSER_USERNAME: vulnmanadmin
       DJANGO_SUPERUSER_EMAIL: admin@example.com
       VULNMAN_DB_USER: vulnman_db_user
       VULNMAN_DB_PASSWORD: dontusethispassword
-      VULNMAN_CSRF_TRUSTED_ORIGINS: https://localhost
+      VULNMAN_CSRF_TRUSTED_ORIGINS: https://localhost,https://127.0.0.1
     depends_on:
       - db
 
@@ -20,15 +21,15 @@ services:
     image: ghcr.io/vulnman/vulnman:latest
     entrypoint: celery -A vulnman worker -l INFO
     volumes:
-      - '/tmp/volumes/vulnman/conf:/app/vulnman/conf'
-      - '/tmp/volumes/vulnman/static:/app/static_files'
+      - './volumes/vulnman/conf:/app/vulnman/conf'
+      - './volumes/vulnman/static:/app/static_files'
     depends_on:
       - redis
 
   db:
     image: postgres:alpine
     volumes:
-      - '/tmp/volumes/vulnman/db:/var/lib/postgresql/data'
+      - './volumes/vulnman/db:/var/lib/postgresql/data'
     environment:
       POSTGRES_PASSWORD: dontusethispassword
       POSTGRES_USER: vulnman_db_user
@@ -39,14 +40,14 @@ services:
 
   nginx:
     image: ghcr.io/vulnman/docker-vulnman-nginx:master
-    container_name: nginx
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
     volumes:
-      - '/tmp/volumes/nginx/config:/config'
-      - '/tmp/volumes/vulnman/static:/config/www/static'
+      - './volumes/vulnman/nginx/config:/config'
+      - './volumes/vulnman/static:/config/www/static'
+      - './volumes/vulnman/data/uploads:/config/www/uploads'
     ports:
       - '80:80'
       - '443:443'
