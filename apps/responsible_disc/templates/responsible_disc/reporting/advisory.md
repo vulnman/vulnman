@@ -30,5 +30,9 @@
 {% for proof in vulnerability.proofs %}
 {{ proof.description|safe }}
 
+{% if proof.image %}
+![{{ proof.image_as_basename }}]({{ proof.image_as_basename }})
+{% else %}
 {{ proof.text|safe }}
+{% endif %}
 {% endfor %}

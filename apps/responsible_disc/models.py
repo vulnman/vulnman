@@ -1,4 +1,5 @@
 import base64
+import os
 from uuid import uuid4
 from django.db import models
 from django.urls import reverse_lazy
@@ -128,6 +129,9 @@ class ImageProof(Proof):
 
     def get_absolute_delete_url(self):
         return reverse_lazy("responsible_disc:image-proof-delete", kwargs={"pk": self.pk})
+
+    def image_as_basename(self):
+        return os.path.basename(self.image.name)
 
 
 class VulnerabilityLog(VulnmanModel):
