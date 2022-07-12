@@ -53,7 +53,8 @@ class ProfileUpdateViewTestCase(TestCase, VulnmanTestCaseMixin):
 
     def test_status_code(self):
         url = self.get_url("account:profile-update")
-        data = {"is_public": False, 'first_name': "Testuser", "last_name": "Testlastname"}
+        data = {"is_public": False, 'first_name': "Testuser", "last_name": "Testlastname",
+                "rd_advisory_template": "default"}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse(settings.LOGIN_URL) + "?next=" + url)
