@@ -1,5 +1,0 @@
-# ignore everything
-*
-# only add default advisory
-!default.md
-

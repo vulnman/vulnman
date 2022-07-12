@@ -4,6 +4,11 @@ if [[ ! -f "vulnman/conf/local_settings.py" ]]; then
     cp docker/local_settings.template.py vulnman/conf/local_settings.py
 fi
 
+echo "Creating resources directories..."
+if [[ ! -d "resources/templates" ]]; then
+  mkdir -p resources/templates
+fi
+
 # Apply database migrations
 echo "Apply database migrations"
 python manage.py migrate
