@@ -1,25 +1,17 @@
 from rest_framework.decorators import action
+from rest_framework import viewsets
 from rest_framework.response import Response
-from guardian.shortcuts import get_objects_for_user
-from vulnman.api.viewsets import VulnmanModelViewSet
 from apps.projects import models
-from api.v1.serializers import project as serializers
+from apps.projects.api.ui import serializers
 
 
-class ProjectViewSet(VulnmanModelViewSet):
-    # TODO: legacy
+class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
+    # TODO: write tests
     serializer_class = serializers.ProjectSerializer
     search_fields = ["name"]
 
     def get_queryset(self):
-        # only get projects that we are allowed to see
-        return get_objects_for_user(
-                self.request.user, "projects.view_project",
-                use_groups=False, with_superuser=False,
-                accept_global_perms=False, klass=models.Project)
-
-    def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
+        return models.Project.objects.for_user(self.request.user)
 
     @action(detail=True, methods=['get'])
     def vulns_by_severity(self, request, pk=None):

@@ -1,0 +1,305 @@
+{% extends 'base.html' %}
+{% load markdown %}
+{% load static %}
+
+{% block title %}
+{{ project.name }}
+{% endblock %}
+
+
+{% block extra_head %}
+<link href="{% static 'css/codehilite.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-center">{{vuln.template.vulnerability_id }} / {{ vuln.name }}</h3>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="container d-flex justify-content-between">
+                <div class="float-start">
+                    <small class="text-muted">Created: {{ vuln.date_created|date }}</small>
+                </div>
+                <small class="justify-content-center" style="color: {{ vuln.get_severity_color }}">
+                    <strong>Severity: </strong>{{ vuln.get_severity_display }}
+                </small>
+                <div class="float-end">
+                    <small class="text-muted">Created by: {{ vuln.creator }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+
+    <div class="container mt-3">
+
+        <div class="clearfix mb-3">
+            <div class="float-start">
+                <a class="btn btn-primary" href="{% url 'projects:findings:vulnerability-add-text-proof' vuln.pk %}">
+                    Add Text Proof
+                </a>
+                <a class="btn btn-primary" href="{% url 'projects:findings:vulnerability-add-image-proof' vuln.pk %}">
+                    Add Image Proof
+                </a>
+            </div>
+            <div class="float-end">
+                <a class="btn btn-outline-info" target="_blank" href="{% url 'projects:findings:vulnerability-export' vuln.pk %}">
+                    <i class="fa fa-file-arrow-down"></i>
+                </a>
+
+                <a class="btn btn-outline-warning" href="{% url 'projects:findings:vulnerability-update' vuln.pk %}">
+                    <i class="fa fa-edit"></i>
+                </a>
+                <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ vuln.pk }}">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix card-text">
+                            <p class="float-start"><strong>Asset:</strong></p>
+                            <div class="float-end">
+                                <p><a href="{{ vuln.asset.get_absolute_url}}"> {{ vuln.asset }} ({{vuln.asset.asset_type}})</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix card-text">
+                            <p class="float-start"><strong>Requires Authentication:</strong></p>
+                            <div class="float-end">
+                                {% if vuln.user_account %}
+                                    <p>{{vuln.user_account}}</p>
+                                {% else %}
+                                    <i class="fa fa-times-circle-o"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix card-text">
+                            <p class="float-start"><strong>Status:</strong></p>
+                            <p class="float-end">{{ vuln.get_status_display }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix card-text">
+                            <p class="float-start"><strong>CVE-ID:</strong></p>
+                            <div class="float-end">
+                                {% if vuln.template.cve_id %}
+                                    <p>{{ vuln.template.cve_id }}
+                                {% else %}
+                                    <p>-</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix card-text">
+                            <p class="float-start"><strong>Template:</strong></p>
+                            <div class="float-end">
+                                <a href="" data-bs-toggle="modal" data-bs-target="#template-details-modal">
+                                    {{ vuln.template.vulnerability_id }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body"  data-bs-toggle="modal" data-bs-target="#cvss-update-modal">
+                        <div class="clearfix card-text">
+                            {% if vuln.cvss_get_base_score %}
+                                <p>{{ vuln.cvss_get_vector_string }} ({{vuln.cvss_get_base_score}})</p>
+                            {% else %}
+                                <p class="float-start"><strong>CVSS:</strong></p>
+                                <p class="float-end">-</p>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mb-3">
+            <div class="card p-3">
+                <!-- Proofs -->
+                <div id="proofs">
+                    <div class="container-fluid mt-3">
+                        <div class="list-group list-group-flush" id="sortable" data-sortable-id="0" aria-dropeffect="move">
+                            {% for proof in vuln.proofs %}
+                                <div class="proof list-group-item" >
+                                    <div class="row">
+                                        <div class="col-sm-11">
+                                            <div class="clearfix">
+                                                <div class="float-end">
+                                                    {% if proof.image %}
+                                                        <a href="{% url 'projects:findings:image-proof-update' proof.pk %}" class="btn btn-outline-secondary">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="{% url 'projects:findings:text-proof-update' proof.pk %}" class="btn btn-outline-secondary">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ proof.pk }}">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                                <p><strong>{{ proof.name }}</strong></p>
+                                                <p>{{ proof.description|md_to_html }}</p>
+                                                {% if proof.image %}
+                                                    <figure class="figure">
+                                                        <img src="{{ MEDIA_URL }}/{{ proof.image }}" class="figure-img img-fluid rounded img-thumbnail" alt="{{ proof.name }}">
+                                                        <figcaption class="figure-caption">{{ proof.name }}</figcaption>
+                                                    </figure>
+                                                {% else %}
+                                                    <p>{{ proof.text|md_to_html }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 my-auto">
+                                            <i class="fa fa-arrows-up-down draggable-icon fa-2xl float-end" data-proof-pk="{{ proof.pk }}"
+                                                data-id="{{ forloop.counter }}"
+                                                data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                                            </i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% include 'modals/delete_object.html' with obj=proof %}
+
+                            {% empty %}
+                                <div class="">
+                                    <p>No proofs yet!</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade bd-example-modal-lg" id="template-details-modal" tabindex="-1" role="dialog" aria-labelledby="template-details-modal-label"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="p-3">
+                        <p><strong>Description:</strong></p>
+                        <p>{{ vuln.template.description | md_to_html }}</p>
+                        <p><strong>Recommendation: </strong></p>
+                        <p>{{ vuln.template.recommendation | md_to_html }}</p>
+
+                        {% if vuln.template.reference_set.all %}
+                            <p><strong>References: </strong></p>
+                            <ul>
+                                {% for reference in vuln.template.reference_set.all %}
+                                    <li>{{ reference }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade bd-example-modal-lg" id="cvss-update-modal" tabindex="-1" role="dialog" aria-labelledby="cvss-update-modal-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'projects:findings:vulnerability-cvss-update' vuln.pk %}" id="cvss-update-form">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cvss-update-modal-label">Change CVSS</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% include 'forms/simple.html' with without_form_tag=True form=change_cvss_form %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade bd-example-modal-lg" id="add-image-proof-modal" tabindex="-1" role="dialog" aria-labelledby="add-image-proof-modal-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'projects:findings:vulnerability-add-image-proof' vuln.pk %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="add-image-proof-modal-label">Add Image Proof</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% include 'forms/simple.html' with without_form_tag=True form=image_proof_form %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% csrf_token %}
+
+        {% include 'modals/delete_object.html' with obj=vuln %}
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
+<script>
+    $(function() {
+        $.ajaxSetup({
+            headers: {
+              "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()
+            }
+        });
+
+        $("#sortable").sortable({
+            handle: '.draggable-icon',
+            update: function ($item, container, _super, event) {
+                var proof_ids = [];
+                $('#sortable .draggable-icon').each(function (i) {
+                    console.log($(this).attr("data-proof-pk"));
+                    $.ajax({
+                        type: "PATCH",
+                        url: "/api/v1/vulnerabilities/proofs/" + $(this).attr("data-proof-pk") + "/",
+                        data: {
+                            order: i,
+                            pk: $(this).attr("data-proof-pk")
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            console.log(data);
+                        }
+                      });
+                });
+            }
+        });
+        $("#sortable").disableSelection();
+    });
+
+    $('#text-proof-form #id_text').attr("required", false);
+
+</script>
+{% endblock %}

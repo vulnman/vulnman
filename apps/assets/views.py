@@ -64,7 +64,7 @@ class WebRequestCreate(generics.ProjectCreateView):
 
 class HostList(generics.ProjectListView):
     # TODO: write tests
-    template_name = "assets/host_list.html"
+    template_name = "assets/host/list.html"
     context_object_name = "hosts"
 
     def get_queryset(self):
@@ -123,7 +123,7 @@ class ServiceDelete(generics.ProjectDeleteView):
 
 class HostDetail(generics.ProjectDetailView):
     # TODO: write tests
-    template_name = "assets/host_detail.html"
+    template_name = "assets/host/detail.html"
     context_object_name = "host"
 
     def get_queryset(self):
@@ -146,11 +146,6 @@ class HostUpdate(generics.ProjectUpdateView):
 
     def get_queryset(self):
         return models.Host.objects.filter(project=self.get_project())
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['project'] = self.get_project()
-        return kwargs
 
 
 class ServiceUpdate(generics.ProjectUpdateView):

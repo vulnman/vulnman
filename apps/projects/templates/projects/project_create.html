@@ -20,7 +20,8 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
                 {% if request.resolver_match.url_name == "project-update" %}
-                    <li class="breadcrumb-item active">{{ project.name }}</li>
+                    <li class="breadcrumb-item"><a href="{{ project.get_absolute_url }}">{{ project.name }}</a></li>
+                    <li class="breadcrumb-item active">Update</li>
                 {% else %}
                 <li class="breadcrumb-item active">New</li>
                 {% endif %}

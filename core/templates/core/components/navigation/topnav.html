@@ -1,3 +1,4 @@
+<!-- Top Navigation -->
 <nav class="navbar navbar-expand-lg navbar-expand-md border-bottom">
     <div class="container-fluid">
         {% if request.user.is_authenticated and project %}
@@ -17,7 +18,8 @@
                         <a class="nav-link" href="{% url 'projects:project-list' %}">Projects</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'responsible_disc:vulnerability-list' %}">Responsible Disclosure</a>
+                        <a class="nav-link" href="{% url 'responsible_disc:vulnerability-list' %}">Responsible
+                            Disclosure</a>
                     </li>
                     {% if perms.projects.view_client %}
                         <li class="nav-item">

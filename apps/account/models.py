@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager, Group
 from django.urls import reverse_lazy
 from django.db.models.signals import post_save, post_migrate
@@ -43,6 +44,9 @@ class PentesterProfile(models.Model):
 
     hide_name_in_report = models.BooleanField(
         default=False, help_text="Use username in report instead of real name")
+
+    rd_advisory_template = models.CharField(choices=settings.RD_ADVISORY_TEMPLATES, default="default",
+                                            max_length=64, verbose_name="Advisory Template (RD)")
 
     def get_completed_projects(self):
         return self.user.project_set.filter(status=Project.PENTEST_STATUS_CLOSED).count()

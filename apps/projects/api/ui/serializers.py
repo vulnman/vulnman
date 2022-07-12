@@ -1,26 +1,15 @@
 from django.db.models import Count
 from rest_framework import serializers
-from vulnman.api.serializers import AssignObjectPermissionsModelSerializer
 from apps.projects import models
 from apps.findings.models import Vulnerability, SEVERITY_CHOICES, VulnerabilityCategory
 
 
-class ProjectSerializer(AssignObjectPermissionsModelSerializer):
-    # TODO: use session and seperate endpoint to fetch these
-
+class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Project
         fields = ["uuid", "name", "start_date", "end_date"]
         read_only_fields = ["uuid"]
-
-    def get_permissions_map(self, created):
-        current_user = self.context["request"].user
-        return {
-            "view_project": [current_user],
-            "change_project": [current_user],
-            "delete_project": [current_user]
-        }
 
 
 class StatsVulnsBySeveritySerializer(serializers.ModelSerializer):

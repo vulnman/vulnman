@@ -205,34 +205,14 @@ class NewCommentForm(forms.ModelForm):
         )
 
 
-"""
-class InviteVendorForm(forms.ModelForm):
-    class Meta:
-        model = InviteCode
-        fields = ["email"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.layout = layout.Layout(
-            layout.Row(
-                bootstrap5.FloatingField("email", wrapper_class="col-sm-12")
-            ),
-            layout.Row(
-                FormActions(layout.Submit("submit", "Comment", css_class="btn btn-primary w-100"),
-                            wrapper_class="col-sm-12 col-md-6")
-            )
-        )
-"""
-
-
 class InviteVendorForm(PasswordResetForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = layout.Layout(
             layout.Row(
-                bootstrap5.FloatingField("email", wrapper_class="col-sm-12")
+                bootstrap5.FloatingField("email", wrapper_class="col-sm-12"),
+                css_class="g-2"
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),

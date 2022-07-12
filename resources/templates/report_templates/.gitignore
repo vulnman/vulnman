@@ -1,0 +1,4 @@
+# ignore everything
+*
+# only add default template
+!default

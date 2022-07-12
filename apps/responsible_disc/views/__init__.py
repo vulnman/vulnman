@@ -220,7 +220,7 @@ class VulnerabilityAdvisoryExport(ObjectPermissionRequiredMixin, generics.Vulnma
         return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
     def render_to_response(self, context, **response_kwargs):
-        result, is_zip = tasks.export_advisory(self.get_object())
+        result, is_zip = tasks.export_advisory(self.get_object(), self.request.user.profile.rd_advisory_template)
         if is_zip:
             response = HttpResponse(result, content_type="application/zip")
             response['Content-Disposition'] = 'attachment; filename="advisory.zip"'

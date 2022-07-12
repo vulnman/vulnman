@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load vulnmantags %}
+{% load guardian_tags %}
+
+
+{% block title %}
+    Web Applications
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container mt-3">
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">Hosts</li>
+                    </ol>
+                </nav>
+            </div>
+            {% if perms.projects.change_project %}
+                <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                    <div class="d-inline">
+                        <a class="btn btn-primary" href="{% url 'projects:assets:host-create' %}">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+
+
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>IP</th>
+                <th>DNS</th>
+                <th>OS</th>
+                <th>Accessibility</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for host in hosts %}
+                <tr>
+                    <td><a href="{% url 'projects:assets:host-detail' host.pk %}">{{ host.ip }}</a></td>
+                    <td>{{ host.dns }}</td>
+                    {% if host.operating_system %}
+                        <td>{{ host.operating_system }}</td>
+                    {% else %}
+                        <td>unknown</td>
+                    {% endif %}
+                    <td>{{ host.get_accessibility_display }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">
+                        {% show_blankslate %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock content %}

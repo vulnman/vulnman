@@ -9,24 +9,29 @@
 {% block content %}
 
     <div class="container mt-3">
-
-        <h3 class="text-center">Service: {{ service }}</h3>
-        <hr/>
-        {% get_obj_perms request.user for project as "project_perms" %}
-        {% if "change_project" in project_perms %}
-        <div class="row mt-3">
-            <div class="col-sm-12">
-                <div class="float-end">
-                    <a class="btn btn-outline-warning" href="{% url 'projects:assets:service-update' service.pk %}">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ service.pk }}">
-                        <i class="fa fa-trash"></i>
-                    </a>
-                </div>
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'projects:assets:service-list' %}">Service</a></li>
+                        <li class="breadcrumb-item active">{{ service }}</li>
+                    </ol>
+                </nav>
             </div>
+            {% if perms.projects.change_project %}
+                <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                    <div class="d-inline">
+                        <a class="btn btn-outline-warning" href="{% url 'projects:assets:service-update' service.pk %}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ service.pk }}">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-        {% endif %}
+
 
         <div class="row mt-3">
             <div class="col-sm-12 col-md-3">

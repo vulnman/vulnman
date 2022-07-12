@@ -9,19 +9,20 @@
 </head>
 <body>
 
+
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
         {% if project %}
-            {% include 'navigation/sidebar/sidebar.html' %}
+            {% include 'core/components/navigation/sidebar.html' %}
         {% else %}
         <div id="sidebar-wrapper" style="width: 0px;">
         </div>
         {% endif %}
         <div id="page-content-wrapper">
-           <!-- Top navigation -->
             {% if not hide_navbar %}
-            {% include 'navigation/topnav/navbar.html' %}
+                {% include 'core/components/navigation/topnav.html' %}
             {% endif %}
+
             <!-- Page Content -->
             <div class="container-fluid">
                 <div class="mt-4">

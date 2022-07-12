@@ -6,16 +6,14 @@
 {% endblock %}
 
 {% block content %}
-    <h3 class="text-center">Web Applications</h3>
-    <hr/>
     <div class="container mt-3">
-        <div class="clearfix">
-            <div class="float-end">
-                {% if perms.projects.change_project %}
-                <a class="btn btn-primary" href="{% url 'projects:assets:webapp-create' %}">
-                    <i class="fa fa-plus"></i>
-                </a>
-                {% endif %}
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">Web Applications</li>
+                    </ol>
+                </nav>
             </div>
         </div>
 
