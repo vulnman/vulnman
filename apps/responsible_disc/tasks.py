@@ -25,14 +25,14 @@ def export_single_vulnerability(vulnerability):
 
 
 @shared_task
-def export_advisory(vulnerability, template_name):
+def export_advisory(vulnerability):
     # returns a text or zip file
     # and a boolean that is set to true if it is a zip file
     context = {
         "vulnerability": vulnerability,
         "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
     }
-    template = "advisory_templates/%s.md" % template_name
+    template = "advisory_templates/%s.md" % vulnerability.advisory_template
     if vulnerability.imageproof_set.all():
         s = BytesIO()
         with zipfile.ZipFile(s, "w", zipfile.ZIP_DEFLATED, False) as zip_file:

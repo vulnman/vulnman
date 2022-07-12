@@ -30,7 +30,7 @@ class VulnerabilityListView(TestCase, VulnmanTestCaseMixin):
                    "status": models.Vulnerability.STATUS_OPEN, "vendor": "TestVendor",
                    "vendor_homepage": "https://example.com", "vendor_email": "admin@example.com",
                    "affected_product": "Test Product", "affected_versions": "<1.0.0",
-                   "severity": ""
+                   "severity": "", "advisory_template": "default"
                    }
         self.client.force_login(self.pentester1)
         response = self.client.post(url, payload)

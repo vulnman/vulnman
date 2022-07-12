@@ -46,7 +46,7 @@ class UpdatePentesterProfileForm(forms.ModelForm):
         model = models.PentesterProfile
         fields = [
             "is_public", "public_real_name", "public_email_address", "first_name", "last_name",
-            "bio", "rd_advisory_template"
+            "bio",
         ]
         widgets = {
             "bio": CodeMirrorWidget()
@@ -81,11 +81,6 @@ class UpdatePentesterProfileForm(forms.ModelForm):
                 layout.Div(
                     bootstrap5.Field("public_email_address"),
                     css_class="col-sm-12 col-md-4")
-            ),
-            layout.Row(
-                layout.Div(
-                    bootstrap5.FloatingField("rd_advisory_template")
-                )
             ),
             layout.Row(
                 FormActions(

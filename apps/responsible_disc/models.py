@@ -49,6 +49,7 @@ class Vulnerability(models.Model):
     cve_request_id = models.CharField(max_length=32, null=True, blank=True, verbose_name="CVE Request ID")
     is_published = models.BooleanField(default=False)
     is_fixed = models.BooleanField(default=False)
+    advisory_template = models.CharField(choices=settings.RD_ADVISORY_TEMPLATES, max_length=32, default="default")
 
     def __str__(self):
         return self.name
