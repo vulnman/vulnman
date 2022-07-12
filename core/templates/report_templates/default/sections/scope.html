@@ -1,0 +1,25 @@
+{% load i18n %}
+<article id="scope" class="chapter">
+    <h1 class="chapter-title" id="scope-title">{% trans 'Scope' %}</h1>
+</article>
+
+<article>
+    {% blocktrans %}
+    The scope contains the following assets:
+    {% endblocktrans %}
+    <br/>
+    <table>
+        {% for asset in project.get_assets %}
+            <tr>
+                <th>[{{ asset.ASSET_TYPE_CHOICE.1 }}] {{ asset.name }}</th>
+            </tr>
+            <tr>
+                {% if asset.description %}
+                    <td>{{ asset.description}}</td>
+                {% else %}
+                    <td><small><i>{% trans 'No description provided' %}.</i></small></td>
+                {% endif %}
+            <tr>
+        {% endfor %}
+    </table>
+</article>

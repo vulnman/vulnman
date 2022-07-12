@@ -1,0 +1,17 @@
+{% load markdown %}
+{% load i18n %}
+
+<article id="mgmt-summary" class="chapter">
+    <h1 class="chapter-title" id="mgmt-summary-title">{% trans 'Management Summary' %}</h1>
+</article>
+
+<article>
+    <section id="mgmt-summary-evaluation-section" class="page-content">
+        <h2 id="mgmt-summary-evaluation-title">{% trans 'Evaluation' %}</h2>
+        {{ release.report.evaluation|md_to_html }}
+    </section>
+    <section id="mgmt-summary-recommendation-section" class="page-content">
+        <h2 id="mgmt-summary-recommendation-title">{% trans 'Recommendation' %}</h2>
+        {{ release.report.recommendation|md_to_html }}
+    </section>
+</article>
