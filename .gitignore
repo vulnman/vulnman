@@ -8,7 +8,7 @@ uploads
 vulnman/conf/secret_key.py
 static_files
 local_settings.py
-resources/vuln_templates
+resources/vulnerability_templates
 resources/checklists
 static/sass/node_modules
 .celerybeat-schedule

@@ -33,22 +33,18 @@ def export_advisory(vulnerability, template_name):
         "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
     }
     template = "advisory_templates/%s.md" % template_name
-    s = BytesIO()
-    zip_file = zipfile.ZipFile(s, "w")
     if vulnerability.imageproof_set.all():
-        raw_source = render_to_string(template, context)
-        zip_file.writestr("advisory.md", raw_source)
-        # export results as zip with proof images
-        for image_proof in vulnerability.imageproof_set.all():
-            zip_file.write(image_proof.image.path, os.path.basename(image_proof.image.name))
-        s.seek(0)
-        results = s.read()
-        zip_file.close()
+        s = BytesIO()
+        with zipfile.ZipFile(s, "w", zipfile.ZIP_DEFLATED, False) as zip_file:
+            raw_source = render_to_string(template, context)
+            zip_file.writestr("advisory.md", raw_source)
+            # export results as zip with proof images
+            for image_proof in vulnerability.imageproof_set.all():
+                zip_file.write(image_proof.image.path, os.path.basename(image_proof.image.name))
+        results = s.getvalue()
         return results, True
     else:
         raw_source = render_to_string(template, context)
-        s.seek(0)
-        zip_file.close()
         return raw_source, False
 
 

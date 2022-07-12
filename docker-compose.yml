@@ -7,6 +7,7 @@ services:
       - './volumes/vulnman/conf:/app/vulnman/conf'
       - './volumes/vulnman/data/uploads:/app/uploads'
       - './volumes/vulnman/static:/app/static_files'
+      - './volumes/vulnman/data/resources:/app/resources'
     environment:
       DJANGO_SUPERUSER_PASSWORD: dontusethispassword
       DJANGO_SUPERUSER_USERNAME: vulnmanadmin
@@ -23,6 +24,7 @@ services:
     volumes:
       - './volumes/vulnman/conf:/app/vulnman/conf'
       - './volumes/vulnman/static:/app/static_files'
+      - './volumes/vulnman/data/resources:/app/resources'
     depends_on:
       - redis
 

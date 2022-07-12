@@ -11,11 +11,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         template_dir = os.path.join(
             settings.BASE_DIR, "resources/checklists")
-        if os.path.isdir(template_dir):
-            repo = Repo(template_dir)
+        community_checklists_dir = os.path.join(template_dir, "community-checklists")
+        if os.path.isdir(community_checklists_dir):
+            repo = Repo(community_checklists_dir)
             origin = repo.remotes.origin
             origin.pull()
         else:
-            Repo.clone_from(settings.CHECKLIST_REPO, template_dir)
+            Repo.clone_from(settings.CHECKLIST_REPO, community_checklists_dir)
 
         call_command("import_checklists")
