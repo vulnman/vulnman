@@ -50,6 +50,16 @@ class Report(VulnmanProjectModel):
     def get_absolute_delete_url(self):
         return reverse_lazy("projects:reporting:report-delete", kwargs={"pk": self.pk})
 
+    def get_next_minor_version(self):
+        if not self.reportversion_set.count():
+            return "0.1"
+        return self.reportversion_set.first().version + 0.1
+
+    def get_current_version(self):
+        if not self.reportversion_set.count():
+            return "0.1"
+        return self.reportversion_set.first().version
+
     class Meta:
         ordering = ["-date_created"]
 
@@ -78,19 +88,23 @@ class ReportRelease(VulnmanProjectModel):
     class Meta:
         ordering = ["-date_created"]
 
-"""
+
 class ReportVersion(VulnmanProjectModel):
-    CHANGE_CREATION = 0
-    CHANGE_ADD_VULNERABILITIES = 1
-    CHANGE_FINALIZE = 10
     REPORT_CHANGE_CHOICES = [
-        (CHANGE_CREATION, "Create Report"),
-        (CHANGE_ADD_VULNERABILITIES, "Add Vulnerabilities"),
-        (CHANGE_FINALIZE, "Report Finalized")
+        (0, "Report created"),
+        (5, "Added vulnerabilities"),
+        (10, "Fixed typo"),
+        (20, "Report finalized")
     ]
+
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
     version = models.FloatField()
     change = models.PositiveIntegerField(choices=REPORT_CHANGE_CHOICES)
-    user = models.ForeignKey('account.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('account.User', on_delete=models.SET_NULL, null=True, related_name="user_set")
     date = models.DateField()
-"""
+
+    class Meta:
+        ordering = ["version"]
+        unique_together = [
+            ("report", "version")
+        ]

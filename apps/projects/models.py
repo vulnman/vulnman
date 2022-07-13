@@ -112,13 +112,6 @@ class Client(models.Model):
 
 
 class ClientContact(models.Model):
-    POSITION_ORGANISATIONAL = "org"
-    POSITION_TECHNICAL = "tech"
-
-    POSITION_CHOICES = [
-        (POSITION_ORGANISATIONAL, "Organisational"),
-        (POSITION_TECHNICAL, "Technical")
-    ]
 
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -130,7 +123,7 @@ class ClientContact(models.Model):
     phone = models.CharField(max_length=24, blank=True, null=True)
     pgp_key = models.TextField(blank=True, null=True, verbose_name="PGP-Key")
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    position = models.CharField(max_length=64, choices=POSITION_CHOICES)
+    position = models.CharField(max_length=64)
 
     def __str__(self):
         return "%s %s" % (self.first_name, self.last_name)

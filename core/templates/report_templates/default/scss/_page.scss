@@ -10,3 +10,11 @@
         content: none !important
     }
 }
+
+@page {
+    @bottom-right {
+        font-size: 10px;
+        content: counter(page) ' / ' counter(pages);
+        margin-top: -5px;
+    }
+}

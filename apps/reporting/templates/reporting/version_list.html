@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load guardian_tags %}
+{% load vulnmantags %}
+
+{% block title %}
+    Report Versions
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'projects:reporting:report-list' %}">Reports</a></li>
+                <li class="breadcrumb-item active">{{ report.name }}</li>
+            </ol>
+        </nav>
+
+        {% include 'reporting/components/sub_nav.html' %}
+
+        <div class="row mt-3">
+            <div class="d-flex flex-column-reverse col-sm-12 align-items-end">
+                <a href="{% url 'projects:reporting:version-create' report.pk %}" class="btn btn-outline-primary"><i class="fa fa-plus"></i></a>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="list-group list-group-flush">
+                {% for version in versions %}
+                    <div class="list-group-item list-group-item-action">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6 d-flex">
+                                <span class="p-2">
+                                                                    <strong>{{ version.get_change_display }}</strong>
+
+                                </span>
+                            </div>
+                            <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
+                                <span class="p-2">
+                                    <strong>{{ version.version }}</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 d-flex">
+                                <small class="pl-0 p-2 text-muted">{{ version.date|date }}</small>
+                            </div>
+
+                        </div>
+                    </div>
+                {% empty %}
+                    {% include 'reporting/components/version_list_blankslate.html' %}
+                {% endfor %}
+            </div>
+        </div>
+
+        {% include 'navigation/pagination.html' %}
+    </div>
+{% endblock %}

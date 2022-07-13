@@ -14,14 +14,8 @@
             }
 
             @bottom-center {
-                content: "{{ REPORT_COMPANY_INFORMATION.name }}";
+                content: "{{ release.report.project.name }}";
                 font-size: 10px;
-                margin-top: -5px;
-            }
-
-            @bottom-right {
-                font-size: 10px;
-                content: counter(page) ' / ' counter(pages);
                 margin-top: -5px;
             }
 
@@ -36,8 +30,10 @@
 
     {% include 'report_templates/default/sections/cover.html' %}
 
-    {# change history #}
+    {% include 'report_templates/default/sections/version_history.html' %}
+
     {% include 'report_templates/default/sections/toc.html' %}
+
 
     {% include 'report_templates/default/sections/contacts.html' %}
 

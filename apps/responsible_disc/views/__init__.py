@@ -78,7 +78,6 @@ class VulnerabilityDetail(ObjectPermissionRequiredMixin, generics.VulnmanAuthDet
 
 
 class VulnerabilityProofs(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
-    # TODO: write tests
     template_name = "responsible_disc/vulnerability_proofs.html"
     context_object_name = "vuln"
     permission_required = ["responsible_disc.view_vulnerability"]
@@ -94,7 +93,6 @@ class VulnerabilityProofs(ObjectPermissionRequiredMixin, generics.VulnmanAuthDet
 
 
 class VulnerabilityTimeline(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
-    # TODO: write tests
     template_name = "responsible_disc/vulnerability_timeline.html"
     context_object_name = "vuln"
     permission_required = ["responsible_disc.view_vulnerability"]
@@ -317,7 +315,6 @@ class ImageProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreate
 
 
 class CommentList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
-    # TODO: write tests
     template_name = "responsible_disc/comment_list.html"
     permission_required = ["responsible_disc.view_vulnerability"]
     context_object_name = "comments"
@@ -369,7 +366,6 @@ class CommentCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateVie
 
 
 class ManageAccessList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
-    # TODO: write tests
     template_name = "responsible_disc/vulnerability_manage_access.html"
     context_object_name = "users"
     permission_required = ["responsible_disc.view_vulnerability"]

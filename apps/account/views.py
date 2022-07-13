@@ -13,6 +13,8 @@ from apps.account.token import account_activation_token
 class Index(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         if self.request.user.is_authenticated:
+            if self.request.user.is_vendor:
+                return reverse_lazy('responsible_disc:vulnerability-list')
             return reverse_lazy('projects:project-list')
         return reverse_lazy('account:login')
 

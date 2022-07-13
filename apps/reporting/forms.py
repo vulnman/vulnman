@@ -6,7 +6,7 @@ from crispy_forms.helper import FormHelper
 from crispy_bootstrap5 import bootstrap5
 from apps.reporting import models
 from apps.account.models import User
-from vulnman.core.forms import CodeMirrorWidget
+from vulnman.core.forms import CodeMirrorWidget, DateInput
 
 
 def get_report_templates():
@@ -124,5 +124,48 @@ class ReportManagementSummaryForm(forms.ModelForm):
                 bootstrap5.Field("evaluation", wrapper_class="col-sm-12"),
                 bootstrap5.Field("recommendation", wrapper_class="col-sm-12"),
                 css_class="g-2"
+            )
+        )
+
+
+class VersionForm(forms.ModelForm):
+    class Meta:
+        model = models.ReportVersion
+        fields = ["change", "version", "date", "user"]
+        widgets = {
+            "date": DateInput()
+        }
+
+    def __init__(self, project, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        user_pks = list(project.projectcontributor_set.filter(
+            user__is_pentester=True).values_list("user__pk", flat=True))
+        user_pks.append(project.creator.pk)
+        self.fields["user"].queryset = User.objects.filter(pk__in=user_pks)
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("change", wrapper_class="col-sm-12")
+                ),
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("version", wrapper_class="col-sm-12")
+                )
+            ),
+            layout.Row(
+              layout.Div(
+                  bootstrap5.FloatingField("user", wrapper_class="col-sm-12")
+              )
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("date", wrapper_class="col-sm-12")
+                )
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )

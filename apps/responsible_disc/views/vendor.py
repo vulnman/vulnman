@@ -11,7 +11,6 @@ from django.contrib.auth.views import PasswordResetView
 
 
 class InviteVendor(ObjectPermissionRequiredMixin, PasswordResetView):
-    # TODO: write tests
     template_name = "responsible_disc/vendor/invite_vendor.html"
     permission_required = ["responsible_disc.invite_vendor"]
     form_class = forms.InviteVendorForm

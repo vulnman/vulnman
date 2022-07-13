@@ -30,6 +30,10 @@ class InviteVendorTestCase(TestCase, VulnmanTestMixin):
         self.assertEqual(len(get_user_perms(user, self.vuln1)), 2)
         self.assertIn("view_vulnerability", get_user_perms(user, self.vuln1))
         self.assertIn("add_comment", get_user_perms(user, self.vuln1))
+        # pentester2: forbidden
+        self.client.force_login(self.pentester2)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 403)
 
     def test_share_vuln_existing_user(self):
         url = self.get_url("responsible_disc:invite-vendor", pk=self.vuln1.pk)

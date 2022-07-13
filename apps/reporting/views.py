@@ -170,3 +170,48 @@ class ReportDelete(generics.ProjectDeleteView):
 
     def get_queryset(self):
         return models.Report.objects.filter(project=self.get_project())
+
+
+class VersionList(generics.ProjectListView):
+    # TODO: write tests
+    template_name = "reporting/version_list.html"
+    context_object_name = "versions"
+
+    def get_queryset(self):
+        return models.ReportVersion.objects.filter(project=self.get_project(), report__pk=self.kwargs.get("pk"))
+
+    def get_context_data(self, **kwargs):
+        kwargs["report"] = models.Report.objects.get(pk=self.kwargs.get("pk"), project=self.get_project())
+        return super().get_context_data(**kwargs)
+
+
+class VersionCreate(generics.ProjectCreateView):
+    # TODO: write tests
+    template_name = "reporting/version_create.html"
+    form_class = forms.VersionForm
+
+    def get_queryset(self):
+        return models.ReportVersion.objects.filter(project=self.get_project(), report__pk=self.kwargs.get("pk"))
+
+    def get_context_data(self, **kwargs):
+        kwargs["report"] = models.Report.objects.get(pk=self.kwargs.get("pk"), project=self.get_project())
+        return super().get_context_data(**kwargs)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        report = models.Report.objects.get(pk=self.kwargs.get("pk"), project=self.get_project())
+        initial["version"] = report.get_next_minor_version()
+        return initial
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        form.instance.report = context.get("report")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("projects:reporting:version-list", kwargs={"pk": self.kwargs.get("pk")})
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["project"] = self.get_project()
+        return kwargs
