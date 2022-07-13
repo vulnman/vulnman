@@ -1,6 +1,4 @@
 from django.test import TestCase
-from django.conf import settings
-from django.urls import reverse
 from vulnman.tests.mixins import VulnmanTestMixin
 from apps.reporting import models
 

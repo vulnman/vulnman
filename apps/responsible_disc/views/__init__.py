@@ -108,20 +108,19 @@ class VulnerabilityTimeline(ObjectPermissionRequiredMixin, generics.VulnmanAuthD
         return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
 
-class VulnerabilityLogCreate(generics.VulnmanAuthCreateView):
+class VulnerabilityLogCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
     # TODO: write tests
     http_method_names = ["post"]
     form_class = forms.VulnerabilityLogForm
+    model = models.VulnerabilityLog
+    permission_required = ["responsible_disc.change_vulnerability"]
 
-    def get_queryset(self):
-        return models.VulnerabilityLog.objects.filter(user=self.request.user)
+    def get_permission_object(self):
+        return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
     def form_valid(self, form):
-        vulnerability = models.Vulnerability.objects.filter(pk=self.kwargs.get('pk'), user=self.request.user)
-        if not vulnerability.exists():
-            form.add_error("action", "Vulnerability does not exist!")
-            return super().form_invalid(form)
-        form.instance.vulnerability = vulnerability.get()
+        form.instance.vulnerability = self.get_permission_object()
+        # TODO: use signals instead
         if form.cleaned_data["action"] == models.VulnerabilityLog.ACTION_PUBLISHED:
             form.instance.vulnerability.status = models.Vulnerability.STATUS_CLOSED
             form.instance.vulnerability.save()
@@ -213,7 +212,6 @@ class VulnDelete(generics.VulnmanAuthDeleteView):
 
 
 class VulnerabilityAdvisoryExport(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
-    # TODO: write tests
     permission_required = ["responsible_disc.view_vulnerability"]
 
     def get_queryset(self):

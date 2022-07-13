@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils import timezone
 from vulnman.core.test import VulnmanTestCaseMixin
 from apps.responsible_disc import models
 from apps.findings.models import Template
@@ -120,3 +121,20 @@ class TextProofViewsTextCase(TestCase, VulnmanTestCaseMixin):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(models.TextProof.objects.filter(name="test2").count(), 1)
+
+"""
+class VulnerabilityLogCreateView(TestCase, VulnmanTestCaseMixin):
+    def setUp(self) -> None:
+        self.init_mixin()
+        self.vulnerability = self.create_instance(models.Vulnerability, user=self.pentester1)
+        self.url = self.get_url("responsible_disc:vulnerability-log-create", pk=self.vulnerability.pk)
+        self.data = {"custom_date": timezone.now().date(), "action": models.VulnerabilityLog.ACTION_INTERNAL_LOG,
+                     "message": "test"}
+
+    def test_valid(self):
+        self.client.force_login(self.pentester1)
+        print(self.pentester1.has_perm("responsible_disc.change_vulnerability", self.vulnerability))
+        response = self.client.post(self.url, self.data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(models.VulnerabilityLog.objects.filter(vulnerability=self.vulnerability).count(), 2)
+"""
