@@ -78,6 +78,7 @@ class ReportRelease(VulnmanProjectModel):
     compiled_source = models.BinaryField(null=True, blank=True)
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
     work_in_progress = models.BooleanField(default=False)
+    task_id = models.CharField(max_length=512, null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse_lazy("projects:reporting:report-release-detail", kwargs={"pk": self.pk})

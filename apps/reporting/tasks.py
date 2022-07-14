@@ -72,5 +72,6 @@ def do_create_report(report_release_pk):
 
     report_release.raw_source = raw_source
     report_release.compiled_source = compiled_source
+    report_release.task_id = None
     report_release.save()
     return True, "Report Release created!"
