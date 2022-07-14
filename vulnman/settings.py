@@ -132,8 +132,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
-    # TODO: deprecate extra_views
-    'extra_views',
     'rest_framework',
     'rest_framework.authtoken',
     'crispy_forms',

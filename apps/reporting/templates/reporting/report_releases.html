@@ -30,9 +30,17 @@
                         <form method="POST" action="{% url 'projects:reporting:report-release-wip-create' report.pk %}">
                             <input type="hidden" name="name" value="wip">
                             {% csrf_token %}
-                            <button class="btn btn-outline-secondary mr-3">Create</button>
+                            <button class="btn btn-outline-secondary mr-3" id="wip-create-btn">
+                                <span id="wip-task-status-indicator" class="d-none">
+                                    <span class="spinner-border spinner-border-sm" role="status">
+                                    </span>
+                                </span>
+                                Create
+                            </button>
                         </form>
-                        <a class="btn btn-outline-secondary" href="{{ wip_report.get_absolute_url }}" target="_blank" id="wip-download-btn">Download</a>
+                        <a class="btn btn-outline-secondary" href="{{ wip_report.get_absolute_url }}" target="_blank" id="wip-download-btn">
+                            Download
+                        </a>
                     </div>
                 </div>
                 {% if wip_report %}
@@ -87,7 +95,13 @@
                             <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
                                 <span class="pt-2">
                                     <a class="btn btn-outline-secondary" href="{{ report.get_absolute_url }}"
-                                       target="_blank">Download</a>
+                                       target="_blank">
+                                    {% if report.task_id %}
+                                        <span id="{{ report.task_id }}-task-status-indicator" class="d-none">
+                                            <span class="spinner-border spinner-border-sm" role="status"></span>
+                                        </span>
+                                    {% endif %} Download
+                                    </a>
                                 </span>
                             </div>
                         </div>
@@ -112,30 +126,52 @@
 
 {% block extra_scripts %}
     <script>
-    /*
-        {% if request.session.active_report_task %}
-            {% for active in request.session.active_report_task %}
-                checkTaskStatus("{{ active.0 }}", "{{ active.1 }}", {{ active.2 }})
-            {% endfor %}
+        {% if wip_report.task_id %}
+            wip_task_status_check();
         {% endif %}
-
-        function checkTaskStatus(task_id, element_id, is_wip) {
-            if (is_wip === 1){
-                $('#wip-download-btn').attr("disabled");
-            }
-            setInterval(function(){
-                $.ajax({
-                    type: "GET",
-                    url: "/api/v1/tasks/" + task_id + "/",
-                    dataType: "json",
-                    success: function (data) {
-                        if (data.status === "SUCCESS") {
-                            location.reload();
-                        }
+    function wip_task_status_check(){
+        $('#wip-download-btn').removeAttr("href");
+        $('#wip-task-status-indicator').removeClass("d-none");
+        $('#wip-create-btn').attr("disabled");
+        let url = "{% url 'api:ui:reporting:task-result-detail' task_id=12345 %}".replace(/12345/, "{{ wip_report.task_id }}");
+        setInterval(function(){
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                success: function (data) {
+                    if (data.status === "SUCCESS") {
+                        location.reload();
                     }
-                });
-            // Every 5 secondy
-            }, 5*1000);
-        }*/
+                }
+            });
+        // Every 5 seconds
+        }, 5*1000);
+    }
+
+    function task_status_check(task_id){
+        let task_status_indicator = "#" + task_id + "-task-status-indicator";
+        $(task_status_indicator).removeClass("d-none");
+        let url = "{% url 'api:ui:reporting:task-result-detail' task_id=12345 %}".replace(/12345/, task_id);
+        setInterval(function(){
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                success: function (data) {
+                    if (data.status === "SUCCESS") {
+                        location.reload();
+                    }
+                }
+            });
+        // Every 5 secondy
+        }, 5*1000);
+    }
+
+        {% for release in releases %}
+            {% if release.task_id %}
+            task_status_check("{{ release.task_id }}")
+            {% endif %}
+        {% endfor %}
     </script>
 {% endblock %}

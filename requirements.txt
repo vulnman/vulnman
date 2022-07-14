@@ -1,7 +1,6 @@
 django==4.0.6
 django-widget-tweaks==1.4.12
 cvss==2.4
-django-extra-views==0.14.0
 djangorestframework==3.13.1
 Pillow==9.1.1
 markdown==3.3.7

@@ -1,0 +1,9 @@
+<!-- Sub nav -->
+<ul class="nav nav-tabs border-bottom border-secondary" id="secondary-nav">
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.view_name == "clients:client-detail" %} active{% endif %}" href="{% url 'clients:client-detail' client.pk %}">Details</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.view_name == "clients:client-contacts" %} active{% endif %}" href="{% url 'clients:client-contacts' client.pk %}">Contacts</a>
+    </li>
+</ul>

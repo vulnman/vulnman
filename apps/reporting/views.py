@@ -92,9 +92,8 @@ class ReportReleaseCreate(generics.ProjectCreateView):
         form.instance.creator = self.request.user
         instance = form.save()
         task = tasks.do_create_report.delay(instance.pk)
-        if not self.request.session.get("active_report_task"):
-            self.request.session["active_report_task"] = []
-        self.request.session["active_report_task"].append([task.task_id, str(instance.pk), 0])
+        instance.task_id = task.task_id
+        instance.save()
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -127,9 +126,8 @@ class ReportReleaseWIPCreate(generics.ProjectCreateView):
         form.instance.work_in_progress = True
         instance = form.save()
         task = tasks.do_create_report.delay(instance.pk)
-        if not self.request.session.get("active_report_task"):
-            self.request.session["active_report_task"] = []
-        self.request.session["active_report_task"].append([task.task_id, str(instance.pk), 1])
+        instance.task_id = task.task_id
+        instance.save()
         return super().form_valid(form)
 
 

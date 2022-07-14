@@ -110,6 +110,9 @@ class Client(models.Model):
     def get_absolute_url(self):
         return reverse_lazy("clients:client-detail", kwargs={"pk": self.pk})
 
+    def get_absolute_delete_url(self):
+        return reverse_lazy("clients:client-delete", kwargs={"pk": self.pk})
+
 
 class ClientContact(models.Model):
 
@@ -131,6 +134,9 @@ class ClientContact(models.Model):
     class Meta:
         verbose_name = "Client Contact"
         verbose_name_plural = "Client Contacts"
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy("clients:contact-delete", kwargs={"pk": self.pk})
 
 
 class ProjectContributor(models.Model):
