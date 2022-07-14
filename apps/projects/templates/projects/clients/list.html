@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load guardian_tags %}
+{% load vulnmantags %}
+
+{% block title %}
+    Clients
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active">Clients</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <!-- Search bar -->
+            <div class="col-sm-12 col-md-6">
+                <form class="d-flex justify-content-between">
+                    <input type="text" class="form-control" name="q" placeholder="Search ..."
+                           {% if request.GET.q %}value="{{ request.GET.q }}"{% endif %}>
+                    <button class="btn btn-outline-secondary"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+            {% if perms.projects.add_project %}
+                <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
+                    <a class="btn btn-primary" href="{% url 'clients:client-create' %}">
+                        <i class="fa fa-plus"></i> New Client
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+
+        <div class="card mt-3">
+            <div class="card-header border-bottom">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 d-flex"></div>
+
+                    <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
+                        <div class="dropdown">
+                            <a class="btn dropdown-toggle" href="#" role="button" id="dropdown-menu-sort"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Sort
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-menu-sort">
+                                <li><a class="dropdown-item" href="?{{ request.session.project_filters|unique_url_params:'sort|recently_updated' }}">Recently Updated</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="list-group list-group-flush">
+                {% for client in clients %}
+                   <a class="list-group-item list-group-item-action" href="{{ client.get_absolute_url }}">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <strong class="p-2">{{ client.name }}</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 d-flex">
+                                <small class="p-2 text-muted">created on {{ client.date_created|date }}, updated
+                                    on {{ client.date_updated|date }}</small>
+                            </div>
+                        </div>
+                    </a>
+                {% empty %}
+                    <div class="row d-flex flex-column-reverse text-center p-5">
+                        <div class="align-items-center">
+                            <p><i class="fa fa-project-diagram fa-fw fa-xl"></i></p>
+                            <h4>There aren't any Clients!</h4>
+                            <p class="text-muted">Go ahead and create one using the button above.</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% include 'navigation/pagination.html' %}
+    </div>
+
+{% endblock %}

@@ -1,8 +1,8 @@
 from django.urls import reverse_lazy
+from django.http import Http404
 from django.template.loader import render_to_string
 from django.conf import settings
 import django_filters.views
-from guardian.shortcuts import get_objects_for_user
 from guardian.mixins import PermissionRequiredMixin
 from apps.projects import models
 from apps.projects import forms
@@ -110,7 +110,7 @@ class ProjectUpdateClose(PermissionRequiredMixin, generics.ProjectRedirectView):
 
 
 class ClientList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
-    template_name = "projects/client_list.html"
+    template_name = "projects/clients/list.html"
     context_object_name = "clients"
     model = models.Client
     permission_required = ["projects.view_client"]
@@ -125,14 +125,82 @@ class ClientDetail(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDetailVie
     permission_required = ["projects.view_client"]
 
 
-class ClientCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateWithInlinesView):
-    # TODO: deprecate *inlinesview
+class ClientCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateView):
     # TODO: write tests
-    template_name = "projects/client_create.html"
+    template_name = "projects/clients/create_or_update.html"
     model = models.Client
     permission_required = ["projects.add_client"]
     form_class = forms.ClientForm
-    inlines = [forms.ClientContactInline]
+
+
+class ClientUpdate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
+    # TODO: write tests
+    template_name = "projects/clients/create_or_update.html"
+    model = models.Client
+    permission_required = ["projects.change_client"]
+    form_class = forms.ClientForm
+
+
+class ClientDelete(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDeleteView):
+    # TODO: write tests
+    model = models.Client
+    permission_required = ["projects.delete_client"]
+    http_method_names = ["post"]
+    success_url = reverse_lazy("clients:client-list")
+
+
+class ClientContacts(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDetailView):
+    # TODO: write tests
+    model = models.Client
+    permission_required = ["projects.view_client"]
+    template_name = "projects/clients/contacts_list.html"
+
+
+class ContactCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateView):
+    # TODO: write tests
+    model = models.ClientContact
+    permission_required = ["projects.change_client"]
+    form_class = forms.ContactForm
+    template_name = "projects/clients/contact_create_or_update.html"
+
+    def get_success_url(self):
+        return reverse_lazy("clients:client-contacts", kwargs={"pk": self.kwargs.get("pk")})
+
+    def get_client(self):
+        try:
+            obj = models.Client.objects.get(pk=self.kwargs.get("pk"))
+        except models.Client.DoesNotExist:
+            return Http404()
+        return obj
+
+    def get_context_data(self, **kwargs):
+        kwargs["client"] = self.get_client()
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        form.instance.client = self.get_client()
+        return super().form_valid(form)
+
+
+class ContactUpdate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
+    # TODO: write tests
+    model = models.ClientContact
+    permission_required = ["projects.change_client"]
+    form_class = forms.ContactForm
+    template_name = "projects/clients/contact_create_or_update.html"
+
+    def get_success_url(self):
+        return reverse_lazy("clients:client-contacts", kwargs={"pk": self.kwargs.get("pk")})
+
+
+class ContactDelete(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDeleteView):
+    # TODO: write tests
+    model = models.ClientContact
+    permission_required = ["projects.change_client"]
+    http_method_names = ["post"]
+
+    def get_success_url(self):
+        return reverse_lazy("clients:client-contacts", kwargs={"pk": self.get_object().client.pk})
 
 
 class ProjectContributorList(generics.ProjectListView):

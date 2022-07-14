@@ -2,7 +2,7 @@ from django.core.exceptions import ImproperlyConfigured
 from vulnman.core.mixins import ObjectPermissionRequiredMixin, ProjectMixin
 from vulnman.core.views.generics.vulnman import (
     VulnmanAuthDetailView, VulnmanAuthListView, VulnmanAuthCreateView, VulnmanAuthUpdateView, VulnmanAuthDeleteView,
-    VulnmanAuthCreateWithInlinesView, VulnmanAuthTemplateView, VulnmanAuthFormView,
+    VulnmanAuthTemplateView, VulnmanAuthFormView,
     VulnmanAuthRedirectView
 )
 
@@ -84,23 +84,6 @@ class ProjectUpdateView(ObjectPermissionRequiredMixin, ProjectMixin, VulnmanAuth
 
     def get_permission_object(self):
         return self.get_project()
-
-
-class ProjectCreateWithInlinesView(ProjectMixin, VulnmanAuthCreateWithInlinesView):
-    # TODO: do permission checks
-    def form_valid(self, form):
-        form.instance.project = self.get_project()
-        form.instance.creator = self.request.user
-        return super().form_valid(form)
-
-    def forms_valid(self, form, inlines):
-        response = self.form_valid(form)
-        for formset in inlines:
-            instances = formset.save(commit=False)
-            for instance in instances:
-                instance.project = self.get_project()
-                instance.save()
-        return response
 
 
 class ProjectTemplateView(ObjectPermissionRequiredMixin, ProjectMixin, VulnmanAuthTemplateView):

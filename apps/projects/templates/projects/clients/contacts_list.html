@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ client.name }}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container mt-3">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'clients:client-list' %}">Clients</a></li>
+                <li class="breadcrumb-item active">{{ client.name }}</li>
+            </ol>
+        </nav>
+
+        {% include 'projects/components/client_sub_nav.html' %}
+
+        <div class="row mt-5">
+            <div class="col-sm-12 d-flex flex-column-reverse align-items-end">
+                <a class="btn btn-outline-primary" href="{% url 'clients:contact-create' client.pk %}"><i class="fa fa-plus"></i></a>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12 d-flex">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>E-Mail</th>
+                            <th>Phone</th>
+                            <th>Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for contact in client.clientcontact_set.all %}
+                            <tr>
+                                <td><a href="{% url 'clients:contact-update' contact.pk %}">{{ contact.first_name }} {{ contact.last_name }}</a></td>
+                                <td>{{ contact.email }}</td>
+                                <td>{{ contact.phone }}</td>
+                                <td>{{ contact.position }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

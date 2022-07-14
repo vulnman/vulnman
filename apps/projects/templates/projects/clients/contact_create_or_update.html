@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+    {% if request.resolver_match.url_name == "client-update" %}
+Update Client
+    {% else %}
+Create Client
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container mt-3">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'clients:client-list' %}">Clients</a>
+                </li>
+                {% if request.resolver_match.url_name == "contact-update" %}
+                <li class="breadcrumb-item">
+                    <a href="{% url 'clients:client-detail' form.instance.client.pk %}">{{ form.instance.client.name }}</a>
+                </li>
+                <li class="breadcrumb-item active">Update Contact</li>
+                {% else %}
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'clients:client-detail' client.pk %}">{{ client.name }}</a>
+                    </li>
+                <li class="breadcrumb-item active">
+                    Create Contact
+                </li>
+                {% endif %}
+            </ol>
+        </nav>
+
+        <div class="row mb-3">
+            <div class="d-flex flex-md-column-reverse align-items-end">
+                {% if request.resolver_match.url_name == "contact-update" %}
+                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ form.instance.pk }}">
+                    <i class="fa fa-trash"></i>
+                </button>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                {% if request.resolver_match.url_name == "contact-update" %}
+                <h4 class="card-title">Update Contact</h4>
+                {% else %}
+                <h4 class="card-title">Create New Contact</h4>
+                {% endif %}
+                <hr/>
+
+                {% crispy form %}
+            </div>
+        </div>
+    </div>
+
+    {% if request.resolver_match.url_name == "contact-update" %}
+        {% include 'modals/delete_object.html' with obj=form.instance %}
+    {% endif %}
+
+{% endblock %}
