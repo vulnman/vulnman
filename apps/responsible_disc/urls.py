@@ -8,9 +8,6 @@ app_name = "responsible_disc"
 urlpatterns = [
     path("", views.VulnerabilityList.as_view(), name="vulnerability-list"),
     path("create/", views.VulnerabilityCreate.as_view(), name="vulnerability-create"),
-    path("<str:pk>/", views.VulnerabilityDetail.as_view(), name="vulnerability-detail"),
-    path("<str:pk>/update/", views.VulnUpdate.as_view(), name="vulnerability-update"),
-    path("<str:pk>/delete/", views.VulnDelete.as_view(), name="vulnerability-delete"),
 
     path('vulnerabilities/<str:pk>/export-pdf/', views.VulnerabilityExport.as_view(), name="vulnerability-export-pdf"),
     path('vulnerabilities/<str:pk>/export-advisory/', views.VulnerabilityAdvisoryExport.as_view(),
@@ -38,5 +35,9 @@ urlpatterns = [
     path('proofs/text/<str:pk>/delete/', views.TextProofDelete.as_view(), name="text-proof-delete"),
     path('proofs/text/<str:pk>/update/', views.TextProofUpdate.as_view(), name="text-proof-update"),
     path('proofs/image/<str:pk>/delete/', views.ImageProofDelete.as_view(), name="image-proof-delete"),
-    path('proofs/image/<str:pk>/update/', views.ImageProofUpdate.as_view(), name="image-proof-update")
+    path('proofs/image/<str:pk>/update/', views.ImageProofUpdate.as_view(), name="image-proof-update"),
+
+    path("<str:pk>/", views.VulnerabilityDetail.as_view(), name="vulnerability-detail"),
+    path("<str:pk>/update/", views.VulnUpdate.as_view(), name="vulnerability-update"),
+    path("<str:pk>/delete/", views.VulnDelete.as_view(), name="vulnerability-delete")
 ]

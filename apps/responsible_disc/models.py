@@ -100,7 +100,7 @@ def get_proof_path(instance, filename):
 
 
 class Proof(models.Model):
-    uuid = models.UUIDField(default=uuid4(), primary_key=True)
+    uuid = models.UUIDField(default=uuid4, primary_key=True)
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True, null=True)
     order = models.PositiveIntegerField(null=True)

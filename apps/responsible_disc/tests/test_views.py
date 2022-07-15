@@ -106,8 +106,8 @@ class TextProofViewsTextCase(TestCase, VulnmanTestCaseMixin):
 
     def test_text_proof_update(self):
         vulnerability = self._create_instance(models.Vulnerability, user=self.pentester1)
-        self._create_instance(models.TextProof, vulnerability=vulnerability)
-        url = self.get_url("responsible_disc:text-proof-update", pk=vulnerability.pk)
+        proof = self._create_instance(models.TextProof, vulnerability=vulnerability)
+        url = self.get_url("responsible_disc:text-proof-update", pk=proof.pk)
         data = {"name": "test2", "description": "lorem2", "text": "ipsum"}
         # unauth
         response = self.client.post(url, data)
