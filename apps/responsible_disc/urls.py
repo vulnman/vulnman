@@ -35,8 +35,8 @@ urlpatterns = [
     path('vulnerabilities/<int:pk>/comments/create/', views.CommentCreate.as_view(), name="comment-create"),
 
     # proofs
-    path('proofs/text/<int:pk>/delete/', views.TextProofDelete.as_view(), name="text-proof-delete"),
-    path('proofs/text/<int:pk>/update/', views.TextProofUpdate.as_view(), name="text-proof-update"),
-    path('proofs/image/<int:pk>/delete/', views.ImageProofDelete.as_view(), name="image-proof-delete"),
-    path('proofs/image/<int:pk>/update/', views.ImageProofUpdate.as_view(), name="image-proof-update")
+    path('proofs/text/<str:pk>/delete/', views.TextProofDelete.as_view(), name="text-proof-delete"),
+    path('proofs/text/<str:pk>/update/', views.TextProofUpdate.as_view(), name="text-proof-update"),
+    path('proofs/image/<str:pk>/delete/', views.ImageProofDelete.as_view(), name="image-proof-delete"),
+    path('proofs/image/<str:pk>/update/', views.ImageProofUpdate.as_view(), name="image-proof-update")
 ]
