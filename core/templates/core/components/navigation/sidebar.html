@@ -8,25 +8,25 @@
             <small>PROJECT</small>
         </div>
 
-        <a href="{% url 'projects:project-detail' project.pk %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'projects:project-detail' project.pk %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:project-detail" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-dashboard menu-icon"></i>
                 <span class="menu-collapsed">Dashboard</span>
             </div>
         </a>
-        <a href="{% url 'projects:project-detail' project.pk %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'projects:findings:vulnerability-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:findings:vulnerability-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-bug menu-icon"></i>
                 <span class="menu-collapsed">Vulnerabilities</span>
             </div>
         </a>
-        <a href="{% url 'projects:methodologies:project-task-list' %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'projects:methodologies:project-task-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:methodologies:project-task-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-tasks menu-icon"></i>
                 <span class="menu-collapsed">Tasks</span>
             </div>
         </a>
-        <a href="{% url 'projects:findings:user-account-list' %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'projects:findings:user-account-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:findings:user-account-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-universal-access menu-icon"></i>
                 <span class="menu-collapsed">User Accounts</span>
@@ -35,25 +35,25 @@
         <div class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
             <small>Scope / Assets</small>
         </div>
-        <a href="{% url 'projects:assets:host-list' %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'projects:assets:host-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:assets:host-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-server menu-icon"></i>
                 <span class="menu-collapsed">Hosts</span>
             </div>
         </a>
-        <a href="{% url 'projects:assets:service-list' %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'projects:assets:service-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:assets:service-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-podcast menu-icon"></i>
                 <span class="menu-collapsed">Services</span>
             </div>
         </a>
-        <a href="{% url 'projects:assets:host-list' %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'projects:assets:webapp-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:assets:webapp-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-table-columns menu-icon"></i>
                 <span class="menu-collapsed">Web Application</span>
             </div>
         </a>
-        <a href="{% url 'projects:assets:webrequest-list' %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'projects:assets:webrequest-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:assets:webrequest-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-sitemap menu-icon"></i>
                 <span class="menu-collapsed">Web Requests</span>
@@ -62,13 +62,13 @@
         <div class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
             <small>Management</small>
         </div>
-        <a href="{% url 'projects:contributor-list' project.pk %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'projects:contributor-list' project.pk %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:contributor-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-users menu-icon"></i>
                 <span class="menu-collapsed">Contributors</span>
             </div>
         </a>
-        <a href="{% url 'projects:token-list' %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'projects:token-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:token-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-user-secret menu-icon"></i>
                 <span class="menu-collapsed">API-Tokens</span>
@@ -77,7 +77,7 @@
         <div class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
             <small>Reporting</small>
         </div>
-        <a href="{% url 'projects:reporting:report-list' %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'projects:reporting:report-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:reporting:report-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-file-shield menu-icon"></i>
                 <span class="menu-collapsed">Reports</span>

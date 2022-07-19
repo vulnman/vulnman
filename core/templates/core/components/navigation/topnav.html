@@ -1,26 +1,24 @@
 {% load static %}
 <!-- Top Navigation -->
-<nav class="navbar navbar-expand-lg navbar-expand-md navbar-expand-sm border-bottom">
+<nav class="navbar navbar-expand-sm border-bottom">
+    <div class="container-fluid">
+
         <a class="navbar-brand d-flex align-content-between" href="{% url 'index' %}">
-            <img src="{% static 'images/logo-icon.svg' %}" alt="icon-logo" class="navbar-brand-logo" height="80" width="80">
+            <img src="{% static 'images/logo-icon.svg' %}" class="navbar-brand-logo" height="80" width="80">
             <span class="navbar-brand-title">VULNMAN</span>
         </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+            <span class="fa fa-bars text-muted"></span>
+        </button>
 
-    <div class="container-fluid">
         {% if request.user.is_authenticated and project %}
             <button class="btn btn-outline-secondary" id="sidebarToggle">
                 <i class="fa fa-navicon"></i>
             </button>
         {% endif %}
 
-
-        <!--
-        <button class="btn-outline-secondary btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="fa fa-navicon"></span>
-        </button>-->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+            <ul class="navbar-nav ms-auto mt-lg-0 mt-3">
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'projects:project-list' %}">Projects</a>

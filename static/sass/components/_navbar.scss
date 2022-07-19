@@ -2,7 +2,17 @@
   height: 90px;
   padding: 1.5rem;
   padding-left: 0;
+    z-index: 9999;
 
+
+  .navbar-nav {
+    z-index: 9999;
+    background-color: $body-bg;
+
+    li {
+      padding: 10px;
+    }
+  }
 
   .navbar-brand-title {
     padding-top: 1rem;
@@ -61,3 +71,4 @@
     }
   }
 }
+
