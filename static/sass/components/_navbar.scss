@@ -1,10 +1,16 @@
 .navbar {
   height: 90px;
   padding: 1.5rem;
+  padding-left: 0;
 
-  .navbar-brand img {
-    height: 1.5rem;
+
+  .navbar-brand-title {
+    padding-top: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+    color: $navbar-dark-color;
   }
+
 
   .user-menu img {
     width: 39px;

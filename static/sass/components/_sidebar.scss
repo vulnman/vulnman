@@ -3,14 +3,14 @@
 }
 
 #sidebar-wrapper {
-  min-height: 100vh;
+  min-height: calc(100vh - 90px);
   transition: margin .5s ease-out;
   background-color: $sidebar-bg;
   width: 300px;
 
   .sidebar-heading {
-    padding: 2rem 2rem 1rem;
-    font-size: 2rem;
+    padding: 2rem 1rem 1rem;
+    font-size: 1.2rem;
     font-weight: bold;
   }
 
@@ -83,8 +83,14 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
   margin-left: 0;
 }
 
+.sidebar-separator-title {
+	background-color: $card-bg;
+	height: 55px;
+	padding: 1rem;
+}
 
-@media (min-width: 768px) {
+
+@media (max-width: 768px) {
   #sidebar-wrapper {
     margin-left: 0;
   }

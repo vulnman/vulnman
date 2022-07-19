@@ -8,9 +8,11 @@
     {% endblock extra_head %}
 </head>
 <body>
-    {% if not hide_navbar %}
-        {% include 'core/components/navigation/topnav.html' %}
-    {% endif %}
+    <div class="wrapper d-flex align-items-stretch">
+        {% if not hide_navbar %}
+            {% include 'core/components/navigation/topnav.html' %}
+        {% endif %}
+    </div>
 
 
 
