@@ -10550,9 +10550,21 @@ textarea.form-control-lg {
 .navbar {
   height: 90px;
   padding: 1.5rem;
+  padding-left: 0;
+  z-index: 9999;
 }
-.navbar .navbar-brand img {
-  height: 1.5rem;
+.navbar .navbar-nav {
+  z-index: 9999;
+  background-color: #151521;
+}
+.navbar .navbar-nav li {
+  padding: 10px;
+}
+.navbar .navbar-brand-title {
+  padding-top: 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.55);
 }
 .navbar .user-menu img {
   width: 39px;
@@ -10597,15 +10609,15 @@ textarea.form-control-lg {
 }
 
 #sidebar-wrapper {
-  min-height: 100vh;
+  min-height: calc(100vh - 90px);
   transition: margin 0.5s ease-out;
   background-color: #1e1e2d;
   width: 300px;
   /* Sidebar Menu */
 }
 #sidebar-wrapper .sidebar-heading {
-  padding: 2rem 2rem 1rem;
-  font-size: 2rem;
+  padding: 2rem 1rem 1rem;
+  font-size: 1.2rem;
   font-weight: bold;
 }
 #sidebar-wrapper #sidebar-menu {
@@ -10661,6 +10673,24 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
   margin-left: 0;
 }
 
+.sidebar-separator-title {
+  background-color: #1e1e2d;
+  height: 55px;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  }
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+  body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
+    margin-left: -300px;
+  }
+}
 @media (min-width: 768px) {
   #sidebar-wrapper {
     margin-left: 0;

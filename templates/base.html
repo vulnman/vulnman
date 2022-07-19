@@ -8,6 +8,10 @@
     {% endblock extra_head %}
 </head>
 <body>
+    {% if not hide_navbar %}
+        {% include 'core/components/navigation/topnav.html' %}
+    {% endif %}
+
 
 
     <div class="d-flex" id="wrapper">
@@ -15,13 +19,11 @@
         {% if project %}
             {% include 'core/components/navigation/sidebar.html' %}
         {% else %}
-        <div id="sidebar-wrapper" style="width: 0px;">
-        </div>
+            <div id="sidebar-wrapper" style="width: 0;" class="offcanvas"></div>
         {% endif %}
+
+        <!-- Content -->
         <div id="page-content-wrapper">
-            {% if not hide_navbar %}
-                {% include 'core/components/navigation/topnav.html' %}
-            {% endif %}
 
             <!-- Page Content -->
             <div class="container-fluid">
