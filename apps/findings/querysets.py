@@ -13,6 +13,10 @@ class VulnerabilityQuerySet(QuerySet):
     def for_project(self, project):
         return self.filter(project=project)
 
+    def with_asset(self, asset):
+        ct = ContentType.objects.get_for_model(asset._meta.model)
+        return self.filter(content_type=ct, object_id=asset.pk)
+
 
 class VulnerabilityManager(Manager):
     def get_asset_content_type(self, asset_pk):
