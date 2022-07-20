@@ -1,9 +1,10 @@
 from rest_framework import serializers
-from django_celery_results.models import TaskResult
+from django_q.models import Task
 
 
-class TaskResultSerializer(serializers.ModelSerializer):
+class TaskSerializer(serializers.ModelSerializer):
+
     class Meta:
-        model = TaskResult
-        fields = ["status", "task_id", "result"]
-        read_only_fields = ["status", "task_id", "result"]
+        model = Task
+        fields = ["success", "started"]
+        read_only_fields = ["success", "started"]

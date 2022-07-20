@@ -4,7 +4,7 @@ from vulnman.models import VulnmanProjectModel
 
 class BaseAsset(VulnmanProjectModel):
     description = models.TextField(blank=True)
-    in_pentest_report = models.BooleanField(default=True, blank=True)
+    hide_from_report = models.BooleanField(default=False)
 
     class Meta:
         abstract = True

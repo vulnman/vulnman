@@ -18,15 +18,15 @@ services:
     depends_on:
       - db
 
-  celery:
+  worker:
     image: ghcr.io/vulnman/vulnman:latest
-    entrypoint: celery -A vulnman worker -l INFO
+    entrypoint: python manage.py qcluster
     volumes:
       - './volumes/vulnman/conf:/app/vulnman/conf'
-      - './volumes/vulnman/static:/app/static_files'
       - './volumes/vulnman/data/resources:/app/resources'
     depends_on:
       - redis
+      - vulnman-web
 
   db:
     image: postgres:alpine

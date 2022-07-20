@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.urls import reverse_lazy
+from django_q.tasks import async_task
 from vulnman.core.views import generics
 from apps.reporting import models, forms
 from apps.reporting import tasks
@@ -91,8 +92,8 @@ class ReportReleaseCreate(generics.ProjectCreateView):
         form.instance.report = self.get_report()
         form.instance.creator = self.request.user
         instance = form.save()
-        task = tasks.do_create_report.delay(instance.pk)
-        instance.task_id = task.task_id
+        task_id = async_task(tasks.do_create_report, instance.pk)
+        instance.task_id = task_id
         instance.save()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -125,8 +126,8 @@ class ReportReleaseWIPCreate(generics.ProjectCreateView):
         form.instance.release_type = models.ReportRelease.RELEASE_TYPE_DRAFT
         form.instance.work_in_progress = True
         instance = form.save()
-        task = tasks.do_create_report.delay(instance.pk)
-        instance.task_id = task.task_id
+        task_id = async_task(tasks.do_create_report, instance.pk)
+        instance.task_id = task_id
         instance.save()
         return super().form_valid(form)
 

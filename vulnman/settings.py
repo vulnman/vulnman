@@ -131,16 +131,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'widget_tweaks',
     'rest_framework',
     'rest_framework.authtoken',
     'crispy_forms',
     "crispy_bootstrap5",
     "guardian",
-    'django_celery_results',
     "corsheaders",
     'django_filters',
-    'django_celery_beat',
+    'django_q',
     # apps
     'apps.account.apps.AccountConfig',
     'apps.reporting.apps.ReportingConfig',
@@ -181,8 +179,6 @@ REPORT_COMPANY_INFORMATION = {
     "homepage": "https://vulnman.github.io",
     "contact": "contact@example.com"
 }
-
-CELERY_RESULT_BACKEND = 'django-db'
 
 # Report Templates
 REPORT_TEMPLATES = {
@@ -230,6 +226,16 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
 RD_ADVISORY_TEMPLATES = [
     ("default", "Default"),
 ]
+
+Q_CLUSTER = {
+    'name': 'DjangORM',
+    'workers': 2,
+    'timeout': 90,
+    'retry': 120,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
+}
 
 try:
     from vulnman.conf.local_settings import *
