@@ -1,7 +1,6 @@
 import zipfile
 import os
 from io import BytesIO
-from celery import shared_task
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
@@ -9,7 +8,6 @@ from apps.reporting.utils import report_gen
 from apps.responsible_disc import models
 
 
-@shared_task
 def export_single_vulnerability(vulnerability):
     context = {
         "vulnerability": vulnerability,
@@ -24,7 +22,6 @@ def export_single_vulnerability(vulnerability):
     return compiled_source
 
 
-@shared_task
 def export_advisory(vulnerability):
     # returns a text or zip file
     # and a boolean that is set to true if it is a zip file
@@ -48,7 +45,6 @@ def export_advisory(vulnerability):
         return raw_source, False
 
 
-@shared_task
 def notify_vendor(vulnerability_pk):
     vulnerability = models.Vulnerability.objects.get(pk=vulnerability_pk)
     pdf_source = export_single_vulnerability(vulnerability)

@@ -133,14 +133,14 @@
         $('#wip-download-btn').removeAttr("href");
         $('#wip-task-status-indicator').removeClass("d-none");
         $('#wip-create-btn').attr("disabled");
-        let url = "{% url 'api:ui:reporting:task-result-detail' task_id=12345 %}".replace(/12345/, "{{ wip_report.task_id }}");
+        let url = "/api/ui/reporting/task-results/{{ wip_report.task_id }}/";
         setInterval(function(){
             $.ajax({
                 type: "GET",
                 url: url,
                 dataType: "json",
                 success: function (data) {
-                    if (data.status === "SUCCESS") {
+                    if (data.success === true) {
                         location.reload();
                     }
                 }
@@ -152,14 +152,14 @@
     function task_status_check(task_id){
         let task_status_indicator = "#" + task_id + "-task-status-indicator";
         $(task_status_indicator).removeClass("d-none");
-        let url = "{% url 'api:ui:reporting:task-result-detail' task_id=12345 %}".replace(/12345/, task_id);
+        let url = "/api/ui/reporting/task-results/" + task_id + "/";
         setInterval(function(){
             $.ajax({
                 type: "GET",
                 url: url,
                 dataType: "json",
                 success: function (data) {
-                    if (data.status === "SUCCESS") {
+                    if (data.success === true) {
                         location.reload();
                     }
                 }

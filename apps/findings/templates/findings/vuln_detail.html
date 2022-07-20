@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load markdown %}
+{% load crispy_forms_tags %}
 {% load static %}
 
 {% block title %}
@@ -236,29 +237,14 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            {% include 'forms/simple.html' with without_form_tag=True form=change_cvss_form %}
+                            {% crispy change_cvss_form %}
                         </div>
                     </form>
                 </div>
             </div>
         </div>
 
-        <div class="modal fade bd-example-modal-lg" id="add-image-proof-modal" tabindex="-1" role="dialog" aria-labelledby="add-image-proof-modal-label" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <form method="post" action="{% url 'projects:findings:vulnerability-add-image-proof' vuln.pk %}" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="add-image-proof-modal-label">Add Image Proof</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            {% include 'forms/simple.html' with without_form_tag=True form=image_proof_form %}
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+
         {% csrf_token %}
 
         {% include 'modals/delete_object.html' with obj=vuln %}

@@ -1,4 +1,3 @@
-from celery import shared_task
 from django.conf import settings
 from django.utils import translation
 from django.template.loader import render_to_string
@@ -27,7 +26,6 @@ def get_sorted_vuln_templates(project):
     return templates
 
 
-@shared_task
 def export_single_vulnerability(vulnerability):
     context = {
         "vulnerability": vulnerability,
@@ -42,7 +40,6 @@ def export_single_vulnerability(vulnerability):
     return compiled_source
 
 
-@shared_task
 def do_create_report(report_release_pk):
     """Celery task for create PDF pentest reports
     """

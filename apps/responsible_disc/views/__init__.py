@@ -1,6 +1,7 @@
 import django_filters.views
 from django.urls import reverse_lazy
 from django.http import HttpResponse, Http404
+from django_q.tasks import async_task
 from guardian.shortcuts import get_users_with_perms, get_user_perms, remove_perm
 from vulnman.core.views import generics
 from vulnman.core.mixins import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
@@ -176,7 +177,7 @@ class VulnerabilityNotifyVendor(generics.VulnmanAuthUpdateView):
         if not form.instance.vendor_email:
             form.add_error("empty", "No vendor email set")
             return super().form_invalid(form)
-        tasks.notify_vendor.delay(str(form.instance.pk))
+        async_task(tasks.notify_vendor, form.instance.pk)
         return super().form_valid(form)
 
 

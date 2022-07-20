@@ -3,6 +3,7 @@ from django.http import Http404
 from django.template.loader import render_to_string
 from django.conf import settings
 import django_filters.views
+from django_q.tasks import async_task
 from guardian.mixins import PermissionRequiredMixin
 from apps.projects import models
 from apps.projects import forms
@@ -231,12 +232,10 @@ class ProjectContributorCreate(generics.ProjectCreateView):
             return super().form_invalid(form)
         form.instance.user = user.get()
         if settings.EMAIL_BACKEND:
-            send_mail_task.delay(
-                "vulnman - New Project %s" % self.get_project().name,
-                render_to_string("emails/new_project_contributor.html", context={
-                    "obj": form.instance, "request": self.request, "project": self.get_project()}),
-                form.instance.user.email
-            )
+            async_task(send_mail_task, "vulnman - New Project %s" % self.get_project().name,
+                       render_to_string("emails/new_project_contributor.html", context={
+                           "obj": form.instance, "request": self.request, "project": self.get_project()}),
+                       form.instance.user.email)
         return super().form_valid(form)
 
 

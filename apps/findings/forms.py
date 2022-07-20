@@ -71,6 +71,7 @@ class VulnerabilityCVSSBaseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.form_tag = False
         self.helper.layout = layout.Layout(
             layout.Row(
                 bootstrap5.FloatingField("cvss_av", wrapper_class="col-sm-12 col-md-6"),
@@ -91,6 +92,10 @@ class VulnerabilityCVSSBaseForm(forms.ModelForm):
                 bootstrap5.FloatingField("cvss_i", wrapper_class="col-sm-12 col-md-6"),
                 bootstrap5.FloatingField("cvss_a", wrapper_class="col-sm-12 col-md-6"),
                 css_class="g-2"
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )
 

@@ -1,6 +1,6 @@
 from django.conf import settings
 from rest_framework import serializers
-from django_celery_results.models import TaskResult
+#from django_celery_results.models import TaskResult
 from vulnman.api.serializers import ProjectRelatedObjectSerializer
 from apps.reporting import models
 
@@ -29,6 +29,6 @@ class PentestReportInformationSerializer(ProjectRelatedObjectSerializer):
 
 class ReportTaskSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TaskResult
+        #model = TaskResult
         fields = ["status", "task_id", "result"]
         read_only_fields = ["status", "task_id", "result"]
