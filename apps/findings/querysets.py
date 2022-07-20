@@ -3,6 +3,17 @@ from django.contrib.contenttypes.models import ContentType
 from apps.assets import models as asset_models
 
 
+class TemplateQuerySet(QuerySet):
+    def unique_and_ordered_for_project(self, project):
+        template_pks = project.vulnerability_set.all().values_list("template__pk", flat=True)
+        from collections import OrderedDict
+        ordered = list(OrderedDict.fromkeys(template_pks))
+        templates = []
+        for template_pk in ordered:
+            templates.append(self.get(pk=template_pk))
+        return templates
+
+
 class VulnerabilityQuerySet(QuerySet):
     def open(self):
         return self.filter(status=self.model.STATUS_OPEN)
@@ -16,6 +27,9 @@ class VulnerabilityQuerySet(QuerySet):
     def with_asset(self, asset):
         ct = ContentType.objects.get_for_model(asset._meta.model)
         return self.filter(content_type=ct, object_id=asset.pk)
+
+    def for_report(self, report_release):
+        pass
 
 
 class VulnerabilityManager(Manager):

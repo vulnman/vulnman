@@ -271,6 +271,7 @@ class ImageProof(Proof):
 
 
 class Template(BaseVulnerability):
+    objects = querysets.TemplateQuerySet.as_manager()
     vulnerability_id = models.CharField(max_length=256, unique=True)
     category = models.ForeignKey(
         VulnerabilityCategory, on_delete=models.PROTECT, null=True)
@@ -284,8 +285,9 @@ class Template(BaseVulnerability):
     def get_absolute_url(self):
         return reverse_lazy('findings:template-detail', kwargs={'pk': self.pk})
 
-    def get_risk_level(self):
-        return self.get_severity_display()
+    def get_highest_severity_for_project(self, project):
+        most_critical_vulnerability = project.vulnerability_set.filter(template=self).first()
+        return most_critical_vulnerability
 
 
 class Reference(VulnmanModel):

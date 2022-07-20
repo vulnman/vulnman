@@ -6,26 +6,6 @@ from apps.findings.models import Template
 from apps.reporting.utils import charts, report_gen
 
 
-def get_sorted_vuln_templates(project):
-    """Get vulnerability templates sorted by severity
-
-    Args:
-        project (_type_): _description_
-    """
-    template_pks = Template.objects.filter(
-        vulnerability__project=project).order_by(
-            "-severity").values_list("pk", flat=True)
-    unique_pks = []
-    for template_pk in template_pks:
-        if template_pk not in unique_pks:
-            unique_pks.append(template_pk)
-    templates = []
-    for primary_key in unique_pks:
-        templates.append(
-            Template.objects.get(pk=primary_key))
-    return templates
-
-
 def export_single_vulnerability(vulnerability):
     context = {
         "vulnerability": vulnerability,
@@ -53,7 +33,8 @@ def do_create_report(report_release_pk):
 
     # load vulnerability templates
     project = report_release.project
-    vulnerability_templates = get_sorted_vuln_templates(project=project)
+    vulnerability_templates = Template.objects.unique_and_ordered_for_project(project)
+
     context = {
         "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
         "templates": vulnerability_templates, "release": report_release,
