@@ -182,6 +182,10 @@ class VulnerabilityLogForm(forms.ModelForm):
                 layout.Div(
                     bootstrap5.FloatingField("message"), css_class="col-sm-12",
                 ),
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )
 
