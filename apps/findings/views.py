@@ -57,17 +57,9 @@ class VulnCreate(generics.ProjectCreateView):
             return super().form_invalid(form)
         form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
         form.instance.severity = form.instance.template.severity
-        if form.cleaned_data["asset_type"] == WebApplication.ASSET_TYPE:
-            form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-        elif form.cleaned_data["asset_type"] == WebRequest.ASSET_TYPE:
-            form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-        elif form.cleaned_data["asset_type"] == Host.ASSET_TYPE:
-            form.instance.asset_host = Host.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-        elif form.cleaned_data["asset_type"] == Service.ASSET_TYPE:
-            form.instance.asset_service = Service.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-        else:
-            form.add_error("asset_type", "invalid asset type")
-            return super().form_invalid(form)
+        form.instance.object_id = form.cleaned_data["f_asset"]
+        form.instance.content_type = models.Vulnerability.objects.get_asset_content_type(
+            form.cleaned_data["f_asset"])
         return super().form_valid(form)
 
     def get_form_kwargs(self):
@@ -181,21 +173,8 @@ class VulnUpdate(generics.ProjectUpdateView):
         form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
         if not form.cleaned_data.get('severity'):
             form.instance.severity = form.instance.template.severity
-        if form.cleaned_data["asset_type"] == WebApplication.ASSET_TYPE:
-            form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-            form.instance.asset_host = None
-            form.instance.asset_webrequest = None
-        elif form.cleaned_data["asset_type"] == WebRequest.ASSET_TYPE:
-            form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-            form.instance.asset_webapp = None
-            form.instance.asset_host = None
-        elif form.cleaned_data["asset_type"] == Host.ASSET_TYPE:
-            form.instance.asset_host = Host.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-            form.instance.asset_webrequest = None
-            form.instance.asset_webapp = None
-        else:
-            form.add_error("asset_type", "invalid asset type")
-            return super().form_invalid(form)
+        form.instance.content_type = models.Vulnerability.objects.get_asset_content_type(form.cleaned_data["f_asset"])
+        form.instance.object_id = form.cleaned_data["f_asset"]
         return super().form_valid(form)
 
     def get_initial(self):

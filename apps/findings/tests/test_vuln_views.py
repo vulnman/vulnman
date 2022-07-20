@@ -1,5 +1,6 @@
 from django.test import TestCase
 from vulnman.core.test import VulnmanTestCaseMixin
+from apps.assets import models as asset_models
 from apps.findings import models
 
 
@@ -30,11 +31,11 @@ class VulnerabilityCreateViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.init_mixin()
         self.url = self.get_url("projects:findings:vulnerability-create")
         self.template = self._create_instance(models.Template)
-        self.asset1 = self._create_instance(models.WebApplication, project=self.project1)
-        self.asset2 = self._create_instance(models.WebApplication, project=self.project2)
+        self.asset1 = self._create_instance(asset_models.WebApplication, project=self.project1)
+        self.asset2 = self._create_instance(asset_models.WebApplication, project=self.project2)
         self.data = {"name": "Testvuln", "template_id": self.template.vulnerability_id,
                      "f_asset": self.asset1.pk, "status": models.Vulnerability.STATUS_OPEN, "auth_required": True,
-                     "user_account": "", "asset_type": models.WebApplication.ASSET_TYPE}
+                     "user_account": "", "asset_type": asset_models.WebApplication.ASSET_TYPE}
 
     def test_pentester1(self):
         self.login_with_project(self.pentester1, self.project1)
@@ -117,13 +118,16 @@ class VulnerabilityExportViewTestCase(TestCase, VulnmanTestCaseMixin):
 class VulnerabilityUpdateViewTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
-        self.asset1 = self._create_instance(models.WebApplication, project=self.project1)
-        self.asset2 = self._create_instance(models.WebApplication, project=self.project2)
-        self.vulnerability = self._create_instance(models.Vulnerability, project=self.project1, asset_webapp=self.asset1)
+        self.asset1 = self.create_instance(asset_models.WebApplication, project=self.project1)
+        self.asset2 = self.create_instance(asset_models.WebApplication, project=self.project2)
+        ct = models.Vulnerability.objects.get_asset_content_type(self.asset1.pk)
+        # we need to precise here otherwise DDF fails
+        self.vulnerability = self.create_instance(models.Vulnerability, project=self.project1, asset=self.asset1,
+                                                  content_type=ct, object_id=self.asset1.pk)
         self.url = self.get_url("projects:findings:vulnerability-update", pk=self.vulnerability.pk)
         self.data = {"name": "Testvuln1234", "template_id": self.vulnerability.template.vulnerability_id,
-                     "f_asset": self.asset1.pk, "status": models.Vulnerability.STATUS_OPEN, "auth_required": True,
-                     "user_account": "", "asset_type": models.WebApplication.ASSET_TYPE}
+                     "f_asset": str(self.asset1.pk), "status": models.Vulnerability.STATUS_OPEN, "auth_required": True,
+                     "user_account": "", "asset_type": asset_models.WebApplication.ASSET_TYPE}
 
     def test_valid(self):
         self.login_with_project(self.pentester1, self.project1)
@@ -142,7 +146,7 @@ class VulnerabilityUpdateViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.login_with_project(self.pentester1, self.project1)
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(models.Vulnerability.objects.filter(asset_webapp=self.asset2).count(), 0)
+        self.assertEqual(models.Vulnerability.objects.filter(asset=self.asset2).count(), 0)
 
     def test_readonly(self):
         self.login_with_project(self.read_only1, self.project1)
@@ -176,7 +180,7 @@ class VulnerabilityDeleteViewTestCase(TestCase, VulnmanTestCaseMixin):
 class VulnerabilityCVSSUpdateTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
-        self.asset1 = self._create_instance(models.WebApplication, project=self.project1)
+        self.asset1 = self._create_instance(asset_models.WebApplication, project=self.project1)
         self.vulnerability = self._create_instance(models.Vulnerability, project=self.project1, asset_webapp=self.asset1)
         self.url = self.get_url("projects:findings:vulnerability-cvss-update", pk=self.vulnerability.pk)
         self.data = {"cvss_av": "N"}

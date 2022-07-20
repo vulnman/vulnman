@@ -5,8 +5,9 @@ from uuid import uuid4
 from django.db import models
 from django.urls import reverse_lazy
 from django.dispatch import receiver
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from vulnman.models import VulnmanModel, VulnmanProjectModel
-from apps.assets.models import ASSET_TYPES_CHOICES, WebApplication
 from apps.findings import querysets
 
 
@@ -177,19 +178,24 @@ class Vulnerability(BaseCVSS, VulnmanProjectModel):
         (STATUS_TO_REVIEW, "To Review"),
         (STATUS_FIXED, "Fixed")
     ]
-    objects = querysets.VulnerabilityQuerySet.as_manager()
+    ASSET_TYPES_CHOICES = [
+        ("webapplication", "Web Application"),
+        ("webrequest", "Web Request"),
+        ("host", "Host"),
+        ("service", "Service")
+    ]
+
+    objects = querysets.VulnerabilityManager.from_queryset(querysets.VulnerabilityQuerySet)()
     template = models.ForeignKey('findings.Template', on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     cve_id = models.CharField(max_length=28, null=True, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_OPEN)
     severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES, blank=True, null=True)
     # generic assets
-    asset_type = models.CharField(max_length=64, choices=ASSET_TYPES_CHOICES, default=WebApplication.ASSET_TYPE)
-    asset_webapp = models.ForeignKey('assets.WebApplication', on_delete=models.CASCADE, null=True, blank=True)
-    asset_webrequest = models.ForeignKey('assets.WebRequest', on_delete=models.CASCADE, null=True, blank=True)
-    asset_host = models.ForeignKey('assets.Host', on_delete=models.CASCADE, null=True, blank=True)
-    asset_service = models.ForeignKey('assets.Service', on_delete=models.CASCADE, null=True, blank=True)
-
+    asset_type = models.CharField(max_length=64, choices=ASSET_TYPES_CHOICES, default="webapplication")
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.UUIDField()
+    asset = GenericForeignKey("content_type", "object_id")
     auth_required = models.BooleanField(default=False)  # not yet used
     user_account = models.ForeignKey('findings.UserAccount', on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -217,17 +223,6 @@ class Vulnerability(BaseCVSS, VulnmanProjectModel):
         proofs = list(self.textproof_set.all()) + list(self.imageproof_set.all())
         proofs.sort(key=lambda proof: proof.order or 0)
         return proofs
-
-    @property
-    def asset(self):
-        if self.asset_webapp:
-            return self.asset_webapp
-        elif self.asset_webrequest:
-            return self.asset_webrequest
-        elif self.asset_host:
-            return self.asset_host
-        elif self.asset_service:
-            return self.asset_service
 
     class Meta:
         ordering = ['-severity']
