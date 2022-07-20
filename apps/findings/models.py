@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.dispatch import receiver
 from vulnman.models import VulnmanModel, VulnmanProjectModel
 from apps.assets.models import ASSET_TYPES_CHOICES, WebApplication
+from apps.findings import querysets
 
 
 SEVERITY_CHOICES = [
@@ -176,7 +177,7 @@ class Vulnerability(BaseCVSS, VulnmanProjectModel):
         (STATUS_TO_REVIEW, "To Review"),
         (STATUS_FIXED, "Fixed")
     ]
-
+    objects = querysets.VulnerabilityQuerySet.as_manager()
     template = models.ForeignKey('findings.Template', on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     cve_id = models.CharField(max_length=28, null=True, blank=True)

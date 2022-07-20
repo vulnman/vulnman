@@ -22,9 +22,9 @@ class VulnList(django_filters.views.FilterMixin, generics.ProjectListView):
     filterset_class = filters.VulnerabilityFilter
 
     def get_queryset(self):
-        qs = models.Vulnerability.objects.filter(project=self.get_project())
+        qs = models.Vulnerability.objects.for_project(self.get_project())
         if not self.request.GET.get("status"):
-            qs = qs.filter(status=models.Vulnerability.STATUS_OPEN)
+            qs = qs.open()
         filterset = self.filterset_class(self.request.GET, queryset=qs)
         return filterset.qs
 
@@ -35,16 +35,14 @@ class VulnList(django_filters.views.FilterMixin, generics.ProjectListView):
             self.request.session["vulns_filters"] = {}
         for key, value in self.request.GET.items():
             self.request.session["vulns_filters"][key] = value
-        qs = models.Vulnerability.objects.filter(project=self.get_project())
+        qs = models.Vulnerability.objects.for_project(self.get_project())
         qs_filters = self.request.GET.copy()
         if qs_filters.get("status"):
             del qs_filters["status"]
         filterset = self.filterset_class(qs_filters, queryset=qs)
         qs = filterset.qs
-        kwargs["open_vulns_count"] = qs.filter(
-            status=models.Vulnerability.STATUS_OPEN).count()
-        kwargs["closed_vulns_count"] = qs.filter(
-            status=models.Vulnerability.STATUS_FIXED).count()
+        kwargs["open_vulns_count"] = qs.open().count()
+        kwargs["closed_vulns_count"] = qs.fixed().count()
         return super().get_context_data(**kwargs)
 
 
