@@ -5,7 +5,6 @@ from vulnman.core.views import generics
 from apps.findings import models
 from apps.findings import forms
 from apps.reporting.tasks import export_single_vulnerability
-from apps.assets.models import WebApplication, WebRequest, Host, Service
 from apps.findings import filters
 
 

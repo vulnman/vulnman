@@ -3,7 +3,7 @@ cvss==2.4
 djangorestframework==3.13.1
 Pillow==9.1.1
 markdown==3.3.7
-bleach==5.0.0
+bleach==5.0.1
 gunicorn==20.1.0
 weasyprint==55.0
 django-crispy-forms==1.14.0
