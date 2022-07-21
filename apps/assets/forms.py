@@ -10,7 +10,7 @@ from crispy_forms import layout
 class WebApplicationForm(forms.ModelForm):
     class Meta:
         model = models.WebApplication
-        fields = ["name", "base_url", "description"]
+        fields = ["name", "base_url", "description", "hide_from_report"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -20,6 +20,7 @@ class WebApplicationForm(forms.ModelForm):
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField("base_url", wrapper_class="col-sm-12"),
                 bootstrap5.Field("description", wrapper_class="col-sm-12"),
+                bootstrap5.Field("hide_from_report", wrapper_class="col-sm-12"),
                 css_class="g-2"
             ),
             layout.Row(
@@ -32,7 +33,7 @@ class WebApplicationForm(forms.ModelForm):
 class WebRequestCreateForm(forms.ModelForm):
     class Meta:
         model = models.WebRequest
-        fields = ["web_app", "url", "parameter", "description"]
+        fields = ["web_app", "url", "parameter", "description", "hide_from_report"]
 
     def __init__(self, project, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -45,6 +46,7 @@ class WebRequestCreateForm(forms.ModelForm):
                 bootstrap5.FloatingField("url", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField("parameter", wrapper_class="col-sm-12"),
                 bootstrap5.Field("description", wrapper_class="col-sm-12"),
+                bootstrap5.Field("hide_from_report", wrapper_class="col-sm-12"),
                 css_class="g-2"
             ),
             layout.Row(
@@ -57,7 +59,7 @@ class WebRequestCreateForm(forms.ModelForm):
 class HostForm(forms.ModelForm):
     class Meta:
         model = models.Host
-        fields = ["ip", "operating_system", "accessibility", "dns"]
+        fields = ["ip", "operating_system", "accessibility", "dns", "hide_from_report"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -73,6 +75,7 @@ class HostForm(forms.ModelForm):
                 bootstrap5.FloatingField("dns", wrapper_class="col-sm-12 col-md-6"),
                 css_class="g-2"
             ),
+            bootstrap5.Field("hide_from_report", wrapper_class="col-sm-12"),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
                             wrapper_class="col-sm-12 col-md-6")
@@ -83,7 +86,7 @@ class HostForm(forms.ModelForm):
 class ServiceForm(forms.ModelForm):
     class Meta:
         model = models.Service
-        fields = ["host", "port", "name", "protocol", "state", "banner"]
+        fields = ["host", "port", "name", "protocol", "state", "banner", "hide_from_report"]
 
     def __init__(self, project, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -105,6 +108,7 @@ class ServiceForm(forms.ModelForm):
                 bootstrap5.FloatingField("banner", wrapper_class="col-sm-12 col-md-6"),
                 css_class="g-2"
             ),
+            bootstrap5.Field("hide_from_report", wrapper_class="col-sm-12"),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
                     wrapper_class="col-sm-12 col-md-6"

@@ -25,7 +25,6 @@ services:
       - './volumes/vulnman/conf:/app/vulnman/conf'
       - './volumes/vulnman/data/resources:/app/resources'
     depends_on:
-      - redis
       - vulnman-web
 
   db:
@@ -37,8 +36,6 @@ services:
       POSTGRES_USER: vulnman_db_user
       POSTGRES_DB: vulnman
 
-  redis:
-    image: "redis:alpine"
 
   nginx:
     image: ghcr.io/vulnman/docker-vulnman-nginx:master

@@ -1,4 +1,5 @@
 from django import template
+from apps.findings.models import Template
 from urllib.parse import urlencode
 
 register = template.Library()
@@ -18,6 +19,11 @@ def unique_url_params(value, arg):
     what, to = arg.split('|')
     result[what] = to
     return urlencode(result)
+
+
+@register.filter
+def get_highest_severity_for_project(vulnerability_template, project):
+    return vulnerability_template.get_highest_severity_for_project(project).get_severity_display()
 
 
 @register.inclusion_tag("core/components/blankslate.html", takes_context=True)

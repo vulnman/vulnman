@@ -1,11 +1,11 @@
 from django.test import TestCase
 from django_q.tasks import async_task, result
-from vulnman.tests.mixins import VulnmanTestMixin
+from vulnman.core.test import VulnmanTestCaseMixin
 from apps.reporting import models
 from apps.reporting import tasks
 
 
-class ReportGeneratorTestCase(TestCase, VulnmanTestMixin):
+class ReportGeneratorTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self):
         self.init_mixin()
 

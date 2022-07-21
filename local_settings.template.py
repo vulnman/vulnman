@@ -69,13 +69,6 @@
 # Default: True
 # SESSION_COOKIE_SECURE = True
 
-
-######################
-# Celery Worker
-######################
-# Required for Docker!
-# CELERY_BROKER_URL = "redis://redis:6379"
-
 ##############
 # LDAP
 # You need to install `django-auth-ldap` to use LDAP authentication

@@ -165,7 +165,6 @@ class VulnCategoryPolarChart2:
         return "<img id='categories-chart' src=data:image/png;base64,{data}>".format(data=s)
 
 
-
 class VulnCategoryPolarChart:
 
     def create_image(self, project):

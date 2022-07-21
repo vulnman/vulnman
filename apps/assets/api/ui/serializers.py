@@ -5,7 +5,7 @@ from apps.assets import models
 class WebApplicationSerializer(ProjectRelatedObjectSerializer):
     class Meta:
         model = models.WebApplication
-        fields = ["uuid", "name", "base_url", "description", "in_pentest_report", "project"]
+        fields = ["uuid", "name", "base_url", "description", "project"]
         read_only_fields = ["uuid"]
 
     def to_representation(self, instance):
@@ -18,7 +18,7 @@ class WebApplicationSerializer(ProjectRelatedObjectSerializer):
 class WebRequestSerializer(ProjectRelatedObjectSerializer):
     class Meta:
         model = models.WebRequest
-        fields = ["name", "description", "in_pentest_report", "web_app", "url", "parameter"]
+        fields = ["name", "description", "web_app", "url", "parameter"]
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

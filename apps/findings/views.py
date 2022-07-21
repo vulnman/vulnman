@@ -5,7 +5,6 @@ from vulnman.core.views import generics
 from apps.findings import models
 from apps.findings import forms
 from apps.reporting.tasks import export_single_vulnerability
-from apps.assets.models import WebApplication, WebRequest, Host, Service
 from apps.findings import filters
 
 
@@ -22,9 +21,9 @@ class VulnList(django_filters.views.FilterMixin, generics.ProjectListView):
     filterset_class = filters.VulnerabilityFilter
 
     def get_queryset(self):
-        qs = models.Vulnerability.objects.filter(project=self.get_project())
+        qs = models.Vulnerability.objects.for_project(self.get_project())
         if not self.request.GET.get("status"):
-            qs = qs.filter(status=models.Vulnerability.STATUS_OPEN)
+            qs = qs.open()
         filterset = self.filterset_class(self.request.GET, queryset=qs)
         return filterset.qs
 
@@ -35,16 +34,14 @@ class VulnList(django_filters.views.FilterMixin, generics.ProjectListView):
             self.request.session["vulns_filters"] = {}
         for key, value in self.request.GET.items():
             self.request.session["vulns_filters"][key] = value
-        qs = models.Vulnerability.objects.filter(project=self.get_project())
+        qs = models.Vulnerability.objects.for_project(self.get_project())
         qs_filters = self.request.GET.copy()
         if qs_filters.get("status"):
             del qs_filters["status"]
         filterset = self.filterset_class(qs_filters, queryset=qs)
         qs = filterset.qs
-        kwargs["open_vulns_count"] = qs.filter(
-            status=models.Vulnerability.STATUS_OPEN).count()
-        kwargs["closed_vulns_count"] = qs.filter(
-            status=models.Vulnerability.STATUS_FIXED).count()
+        kwargs["open_vulns_count"] = qs.open().count()
+        kwargs["closed_vulns_count"] = qs.fixed().count()
         return super().get_context_data(**kwargs)
 
 
@@ -59,17 +56,9 @@ class VulnCreate(generics.ProjectCreateView):
             return super().form_invalid(form)
         form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
         form.instance.severity = form.instance.template.severity
-        if form.cleaned_data["asset_type"] == WebApplication.ASSET_TYPE:
-            form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-        elif form.cleaned_data["asset_type"] == WebRequest.ASSET_TYPE:
-            form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-        elif form.cleaned_data["asset_type"] == Host.ASSET_TYPE:
-            form.instance.asset_host = Host.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-        elif form.cleaned_data["asset_type"] == Service.ASSET_TYPE:
-            form.instance.asset_service = Service.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-        else:
-            form.add_error("asset_type", "invalid asset type")
-            return super().form_invalid(form)
+        form.instance.object_id = form.cleaned_data["f_asset"]
+        form.instance.content_type = models.Vulnerability.objects.get_asset_content_type(
+            form.cleaned_data["f_asset"])
         return super().form_valid(form)
 
     def get_form_kwargs(self):
@@ -183,21 +172,8 @@ class VulnUpdate(generics.ProjectUpdateView):
         form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
         if not form.cleaned_data.get('severity'):
             form.instance.severity = form.instance.template.severity
-        if form.cleaned_data["asset_type"] == WebApplication.ASSET_TYPE:
-            form.instance.asset_webapp = WebApplication.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-            form.instance.asset_host = None
-            form.instance.asset_webrequest = None
-        elif form.cleaned_data["asset_type"] == WebRequest.ASSET_TYPE:
-            form.instance.asset_webrequest = WebRequest.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-            form.instance.asset_webapp = None
-            form.instance.asset_host = None
-        elif form.cleaned_data["asset_type"] == Host.ASSET_TYPE:
-            form.instance.asset_host = Host.objects.get(project=self.get_project(), pk=form.cleaned_data["f_asset"])
-            form.instance.asset_webrequest = None
-            form.instance.asset_webapp = None
-        else:
-            form.add_error("asset_type", "invalid asset type")
-            return super().form_invalid(form)
+        form.instance.content_type = models.Vulnerability.objects.get_asset_content_type(form.cleaned_data["f_asset"])
+        form.instance.object_id = form.cleaned_data["f_asset"]
         return super().form_valid(form)
 
     def get_initial(self):
