@@ -1,0 +1,23 @@
+<!-- Modal -->
+<div class="modal fade" id="disable-2fa-modal" tabindex="-1" aria-labelledby="disable-2fa-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form method="post" action="{% url 'account:disable-2fa' %}">
+            {% csrf_token %}
+            <input type="hidden" name="understand" value="on">
+              <div class="modal-header">
+                <h5 class="modal-title" id="disable-2fa-label">Disable Two-Factor Authentication?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+You are about to disable two-factor authentication. This
+    weakens your account security, are you sure?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Delete</button>
+              </div>
+        </form>
+    </div>
+  </div>
+</div>

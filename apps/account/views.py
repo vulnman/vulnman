@@ -59,7 +59,7 @@ class Setup2FAView(tfa_views.SetupView):
 
 
 class Disable2FAView(tfa_views.DisableView):
-    pass
+    http_method_names = ["post"]
 
 
 class QRCodeGeneratorView(tfa_views.QRGeneratorView):

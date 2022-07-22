@@ -81,9 +81,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_URL = "account:login"
-#LOGIN_URL = 'two_factor:login'
 LOGIN_REDIRECT_URL = "projects:project-list"
-#LOGIN_REDIRECT_URL = 'two_factor:profile'
 LOGOUT_REDIRECT_URL = "account:login"
 AUTH_USER_MODEL = 'account.User'
 
