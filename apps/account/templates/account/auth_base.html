@@ -1,0 +1,29 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <link rel="stylesheet" href="{% static 'css/vulnman/pages/auth.css' %}">
+    <title>Authenticate | Vulnman</title>
+    {% block extra_head %}
+    {% endblock extra_head %}
+</head>
+<body>
+<div id="auth">
+    <div class="row h-100">
+        <div class="col-lg-7 d-lg-block">
+            <div id="auth-left">
+                <div id="auth-logo"></div>
+            </div>
+        </div>
+
+        <div class="col-lg-5 col-12 h-100 d-flex justify-content-center align-items-center">
+            <div id="auth-right" class="w-100">
+                {% block content %}
+                {% endblock content %}
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

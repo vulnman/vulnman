@@ -22,6 +22,11 @@
                 {% if request.user == user %}
                     <a class="btn btn-outline-primary" href="{% url 'account:profile-update' %}">Edit Profile</a>
                     <a class="btn btn-outline-info mt-2" href="{% url 'account:change-password' %}">Change Password</a>
+                    {% if request.user.has_2fa_enabled %}
+                        <a class="btn btn-outline-secondary mt-2" href="{% url 'account:disable-2fa' %}">Disable 2FA</a>
+                    {% else %}
+                        <a class="btn btn-outline-secondary mt-2" href="{% url 'account:setup-2fa' %}">Setup 2FA</a>
+                    {% endif %}
                 {% endif %}
             </div>
 

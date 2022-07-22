@@ -1,8 +1,11 @@
 from django.conf import settings
 from django.views.generic import RedirectView
+from django.shortcuts import redirect
 from django.http.response import Http404
 from django.contrib.auth import views
 from django.urls import reverse_lazy
+from two_factor import views as tfa_views
+from two_factor.utils import default_device
 from apps.account import forms
 from apps.account import models
 from vulnman.core.views.mixins import ThemeMixin, VulnmanContextMixin
@@ -19,14 +22,8 @@ class Index(RedirectView):
         return reverse_lazy('account:login')
 
 
-class Login(ThemeMixin, views.LoginView):
+class Login(ThemeMixin, tfa_views.LoginView):
     template_name = "account/login.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['TEMPLATE_HIDE_BREADCRUMBS'] = True
-        context['hide_navbar'] = True
-        return context
 
 
 class Logout(views.LogoutView):
@@ -40,6 +37,33 @@ class Profile(generics.VulnmanDetailView):
 
     def get_queryset(self):
         return models.User.objects.filter(is_pentester=True, is_active=True)
+
+
+class Setup2FAView(tfa_views.SetupView):
+    # TODO: write tests
+    # TODO: write if 2fa is really required in login, if 2fa enabled
+    qrcode_url = "account:setup-2fa-qr"
+    template_name = "account/components/profile/tfa_setup.html"
+    success_url = reverse_lazy("index")
+
+    def get_success_url(self):
+        return reverse_lazy("account:user-profile", kwargs={"slug": self.request.user.username})
+
+    def get(self, request, *args, **kwargs):
+        """
+        Start the setup wizard. Redirect if already enabled.
+        """
+        if default_device(self.request.user):
+            return redirect(self.get_success_url())
+        return super().get(request, *args, **kwargs)
+
+
+class Disable2FAView(tfa_views.DisableView):
+    pass
+
+
+class QRCodeGeneratorView(tfa_views.QRGeneratorView):
+    pass
 
 
 class ProfileUpdate(generics.VulnmanAuthUpdateView):

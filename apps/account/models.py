@@ -1,9 +1,9 @@
 from django.db import models
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager, Group
 from django.urls import reverse_lazy
 from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
+from two_factor.utils import default_device
 from apps.projects.models import Project
 from apps.account import signals
 
@@ -33,6 +33,11 @@ class User(AbstractUser):
             return self.pentester_profile
         elif self.is_vendor:
             return self.vendor_profile
+
+    def has_2fa_enabled(self):
+        if default_device(self):
+            return True
+        return False
 
 
 class PentesterProfile(models.Model):

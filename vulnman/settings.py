@@ -24,6 +24,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -80,7 +81,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_URL = "account:login"
+#LOGIN_URL = 'two_factor:login'
 LOGIN_REDIRECT_URL = "projects:project-list"
+#LOGIN_REDIRECT_URL = 'two_factor:profile'
 LOGOUT_REDIRECT_URL = "account:login"
 AUTH_USER_MODEL = 'account.User'
 
@@ -139,6 +142,11 @@ INSTALLED_APPS = [
     "corsheaders",
     'django_filters',
     'django_q',
+    # 2fa stuff
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
     # apps
     'apps.account.apps.AccountConfig',
     'apps.reporting.apps.ReportingConfig',
