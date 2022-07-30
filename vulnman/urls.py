@@ -18,9 +18,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from apps.account.views import Index
-
+from two_factor.urls import urlpatterns as tf_urls
 
 urlpatterns = [
+    #path('', include(tf_urls)),
     path('admin/', admin.site.urls),
     path('account/', include('apps.account.urls')),
     path('api/', include('api.urls')),
