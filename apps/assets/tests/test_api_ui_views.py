@@ -1,9 +1,9 @@
 from django.test import TestCase
-from vulnman.tests.mixins import VulnmanTestMixin
+from vulnman.core.test import VulnmanTestCaseMixin
 from apps.assets import models
 
 
-class HostViewsTestCase(TestCase, VulnmanTestMixin):
+class HostViewsTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
         self.host1 = self._create_instance(models.Host, project=self.project1)

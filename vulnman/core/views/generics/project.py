@@ -86,11 +86,6 @@ class ProjectUpdateView(ObjectPermissionRequiredMixin, ProjectMixin, VulnmanAuth
         return self.get_project()
 
 
-class ProjectTemplateView(ObjectPermissionRequiredMixin, ProjectMixin, VulnmanAuthTemplateView):
-    # TODO: legacy?
-    pass
-
-
 class ProjectFormView(ObjectPermissionRequiredMixin, ProjectMixin, VulnmanAuthFormView):
     def form_valid(self, form):
         return super().form_valid(form)

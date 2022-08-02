@@ -1,9 +1,9 @@
 from django.test import TestCase
-from vulnman.tests.mixins import VulnmanTestMixin
+from vulnman.core.test import VulnmanTestCaseMixin
 from apps.reporting import models
 
 
-class ReportViewTestcase(TestCase, VulnmanTestMixin):
+class ReportViewTestcase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
 
@@ -53,7 +53,7 @@ class ReportViewTestcase(TestCase, VulnmanTestMixin):
         # read only
         self.login_with_project(self.read_only1, self.project1)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 403)
         # allowed
         self.login_with_project(self.pentester1, self.project1)
         response = self.client.get(url)
@@ -61,7 +61,7 @@ class ReportViewTestcase(TestCase, VulnmanTestMixin):
         self.assertEqual(response.context["report"].pk, report.pk)
 
 
-class ReportDeleteViewTestCase(TestCase, VulnmanTestMixin):
+class ReportDeleteViewTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
         self.report = self._create_instance(models.Report, project=self.project1)

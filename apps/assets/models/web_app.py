@@ -16,6 +16,7 @@ class WebApplication(BaseAsset):
     class Meta:
         verbose_name = "Web Application"
         verbose_name_plural = "Web Applications"
+        ordering = ["-date_created"]
 
     def get_absolute_delete_url(self):
         return reverse_lazy(

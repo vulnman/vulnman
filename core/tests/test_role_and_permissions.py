@@ -1,10 +1,10 @@
 from django.test import TestCase
-from vulnman.tests.mixins import VulnmanTestMixin
+from vulnman.core.test import VulnmanTestCaseMixin
 from apps.assets import models
 from apps.projects.models import ProjectContributor, ProjectAPIToken
 
 
-class ProjectUserRolesTestCase(TestCase, VulnmanTestMixin):
+class ProjectUserRolesTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self):
         self.init_mixin()
 

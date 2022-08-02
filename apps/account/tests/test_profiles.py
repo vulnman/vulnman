@@ -1,11 +1,10 @@
 from django.test import TestCase
 from django.conf import settings
 from django.urls import reverse
-from vulnman.tests.mixins import VulnmanTestMixin
-from apps.account import models
+from vulnman.core.test import VulnmanTestCaseMixin
 
 
-class UpdateProfileViewsTestCase(TestCase, VulnmanTestMixin):
+class UpdateProfileViewsTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
 

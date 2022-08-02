@@ -36,6 +36,7 @@ class Service(BaseAsset):
         unique_together = [
             ('project', 'host', 'port', 'protocol')
         ]
+        ordering = ["-date_created"]
 
     def __str__(self):
         return "%s/%s %s (%s)" % (

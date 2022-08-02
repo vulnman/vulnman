@@ -8,7 +8,7 @@ app_name = "reporting"
 urlpatterns = [
     path('reports/', views.ReportList.as_view(), name="report-list"),
     path('reports/create/', views.ReportCreate.as_view(), name="report-create"),
-    path('reports/<str:pk>/', views.ReportDetail.as_view(), name="report-detail"),
+    path('reports/<str:pk>/', views.ReportManagementSummary.as_view(), name="report-detail"),
     path('reports/<str:pk>/delete/', views.ReportDelete.as_view(), name="report-delete"),
 
     path('reports/<str:pk>/releases/', views.ReportReleaseList.as_view(), name="report-release-list"),

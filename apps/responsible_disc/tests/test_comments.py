@@ -1,10 +1,10 @@
 from django.test import TestCase
 from guardian.shortcuts import assign_perm
-from vulnman.tests.mixins import VulnmanTestMixin
+from vulnman.core.test import VulnmanTestCaseMixin
 from apps.responsible_disc import models
 
 
-class CommentViewTestCase(TestCase, VulnmanTestMixin):
+class CommentViewTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
         self.vuln1 = self._create_instance(models.Vulnerability, user=self.pentester1)

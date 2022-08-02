@@ -1,6 +1,6 @@
 from django.utils import timezone
 from rest_framework.test import APITestCase
-from api.v1.mixins.testcase import VulnmanAPITestCaseMixin
+from vulnman.core.test import VulnmanAPITestCaseMixin
 from apps.projects import models
 
 
@@ -11,7 +11,7 @@ class ProjectAPITokenTestCase(APITestCase, VulnmanAPITestCaseMixin):
     def test_token_expired(self):
         date_valid = timezone.now() + timezone.timedelta(days=3)
         token = self.create_instance(models.ProjectAPIToken, project=self.project1, date_valid=date_valid)
-        url = self.get_url("api:v1:agents:host-list")
+        url = self.get_url("api:v1:assets:host-list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 401)
         response = self.client.get(url, HTTP_AUTHORIZATION="Token %s" % token.key)

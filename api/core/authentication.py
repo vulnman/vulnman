@@ -1,10 +1,10 @@
 from django.utils import timezone
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication as BasicTokenAuthentication
 from rest_framework import exceptions
 from apps.projects.models import ProjectAPIToken
 
 
-class AgentTokenAuthentication(TokenAuthentication):
+class TokenAuthentication(BasicTokenAuthentication):
     model = ProjectAPIToken
 
     def authenticate_credentials(self, key):

@@ -1,11 +1,11 @@
 from django.test import TestCase
 from guardian.shortcuts import get_user_perms
-from vulnman.tests.mixins import VulnmanTestMixin
+from vulnman.core.test import VulnmanTestCaseMixin
 from apps.responsible_disc.models import Vulnerability
 from apps.account import models
 
 
-class InviteVendorTestCase(TestCase, VulnmanTestMixin):
+class InviteVendorTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
         self.vuln1 = self._create_instance(Vulnerability, user=self.pentester1)

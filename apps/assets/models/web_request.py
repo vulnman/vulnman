@@ -24,6 +24,7 @@ class WebRequest(BaseAsset):
         unique_together = [
             ("web_app", "url", "parameter")
         ]
+        ordering = ["-date_created"]
 
     def get_absolute_delete_url(self):
         return reverse_lazy(

@@ -21,7 +21,7 @@ def update_checklists_and_templates():
 
 def delete_inactive_users():
     delta = timezone.now() - timezone.timedelta(days=settings.INACTIVE_EXTERNAL_USER_DELETE_DAYS)
-    # TODO: do we want this?
-    # User.objects.filter(is_active=True, is_vendor=True, last_login__lt=delta).delete()
+    # TODO: do we want to delete inactive users?
+    # This is currently not used and documented anywhere but think about it.
     User.objects.filter(is_active=False, is_vendor=True, date_joined__lt=delta).delete()
 

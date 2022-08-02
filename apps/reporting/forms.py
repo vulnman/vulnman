@@ -124,6 +124,10 @@ class ReportManagementSummaryForm(forms.ModelForm):
                 bootstrap5.Field("evaluation", wrapper_class="col-sm-12"),
                 bootstrap5.Field("recommendation", wrapper_class="col-sm-12"),
                 css_class="g-2"
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )
 

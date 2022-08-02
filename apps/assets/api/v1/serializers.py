@@ -1,9 +1,8 @@
 from rest_framework import serializers
-from vulnman.api.serializers import ProjectRelatedObjectSerializer
 from apps.assets import models
 
 
-class AgentHostSerializer(serializers.ModelSerializer):
+class HostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Host
         fields = [
@@ -13,11 +12,11 @@ class AgentHostSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data["asset_type"] = models.Host.ASSET_TYPE_CHOICE[1]
         data["name"] = str(instance)
         return data
 
     def create(self, validated_data):
+        # prevent duplicate entries here and just return existing ones
         qs = models.Host.objects.filter(
             project=validated_data["project"], ip=validated_data["ip"])
         if qs.exists():
@@ -25,18 +24,13 @@ class AgentHostSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class AgentServiceSerializer(serializers.ModelSerializer):
+class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Service
         fields = [
             "uuid", "name", "port", "host", "protocol", "state",
             "banner", "project"]
         read_only_fields = ["uuid", "project"]
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data["asset_type"] = models.Service.ASSET_TYPE_CHOICE[1]
-        return data
 
     def create(self, validated_data):
         qs = models.Service.objects.filter(
@@ -53,5 +47,3 @@ class AgentServiceSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
         self.fields["host"].queryset = self.context.get(
             'project').host_set.all()
-        if self.instance is not None:
-            self.fields["host"].read_only = True

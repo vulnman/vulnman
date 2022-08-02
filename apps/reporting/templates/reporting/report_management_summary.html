@@ -30,46 +30,8 @@ Reports
         </div>
 
             <div class="mt-3">
-                {% crispy report_mgmt_summary_form %}
+                {% crispy form %}
             </div>
     {% include 'modals/delete_object.html' with obj=report %}
     </div>
 {% endblock content %}
-
-
-{% block extra_scripts %}
-<script>
-
-id_evaluation.on("blur", function(){
-    $.ajax({
-        type: "PATCH",
-        url: "/api/v1/reports/{{report.pk}}/",
-        dataType: "json",
-        data: {"evaluation": id_evaluation.getValue()},
-        success: function(data){
-            //location.reload()
-            // console.log(data)
-        },
-        beforeSend: function(xhr){
-            xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
-        }
-    });
-});
-
-id_recommendation.on("blur", function(){
-    $.ajax({
-        type: "PATCH",
-        url: "/api/v1/report-information/{{report.pk}}/",
-        dataType: "json",
-        data: {"recommendation": id_recommendation.getValue()},
-        success: function(data){
-            //location.reload()
-            // console.log(data)
-        },
-        beforeSend: function(xhr){
-            xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
-        }
-    });
-});
-</script>
-{% endblock extra_scripts %}

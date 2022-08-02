@@ -206,7 +206,8 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer'
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
 
 CORS_ALLOWED_ORIGINS = [

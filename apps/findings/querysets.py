@@ -41,3 +41,12 @@ class VulnerabilityManager(Manager):
             if qs.exists():
                 return ContentType.objects.get_for_model(model_class)
         raise Exception("Invalid Asset Type")
+
+    def get_asset_model_cls(self, asset_pk):
+        model_classes = [asset_models.Host, asset_models.WebApplication,
+                         asset_models.WebRequest, asset_models.Service]
+        for model_class in model_classes:
+            qs = model_class.objects.filter(pk=asset_pk)
+            if qs.exists():
+                return model_class
+        raise Exception("Invalid Asset Type")

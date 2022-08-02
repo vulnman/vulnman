@@ -8,3 +8,4 @@ class TaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = ["success", "started"]
         read_only_fields = ["success", "started"]
+        ref_name = "ReportTaskSerializer"

@@ -8,6 +8,7 @@ router = DefaultRouter()
 
 router.register("templates", views.TemplateViewSet,
                 basename="template")
+router.register("proofs", views.ProofViewSet, basename="proof")
 
 
 urlpatterns = router.urls

@@ -1,18 +1,15 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter
-from api.v1 import authentication
+from api.core import mixins
+from api.core import authentication
 
 
-class AgentModelViewSet(viewsets.ModelViewSet):
+class AgentModelViewSet(mixins.AgentCreateModelMixin, mixins.AgentRetrieveModelMixin, mixins.AgentUpdateModelMixin,
+                        mixins.AgentDestroyModelMixin, mixins.AgentListModelMixin, viewsets.GenericViewSet):
     filter_backends = [SearchFilter]
     permission_classes = [IsAuthenticated]
-    authentication_classes = [authentication.AgentTokenAuthentication]
-
-    def perform_create(self, serializer):
-        serializer.save(
-            creator=self.request.user,
-            project=self.request.auth.project)
+    authentication_classes = [authentication.TokenAuthentication]
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

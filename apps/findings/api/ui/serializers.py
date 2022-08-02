@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from vulnman.api.serializers import ProjectRelatedObjectSerializer
 from vulnman.core.utils.markdown import md_to_clean_html
 from apps.findings import models
 
@@ -15,3 +16,20 @@ class TemplateSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data["description"] = md_to_clean_html(data["description"])
         return data
+
+
+class TextProofSerializer(ProjectRelatedObjectSerializer):
+    class Meta:
+        model = models.TextProof
+        fields = [
+            "order", "pk", "name", "description", "text",
+            "project", "vulnerability"]
+        read_only_fields = ["pk"]
+
+
+class ImageProofSerializer(ProjectRelatedObjectSerializer):
+    class Meta:
+        model = models.ImageProof
+        fields = [
+            "pk", "order", "name", "description", "image",
+            "caption"]

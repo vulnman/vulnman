@@ -5,7 +5,7 @@ from apps.reporting.api.ui import serializers
 
 
 class TaskResultViewSet(RetrieveModelMixin, GenericViewSet):
-#    # TODO: Write Tests
+    # TODO: Write Tests
     serializer_class = serializers.TaskSerializer
 
     def get_queryset(self):
