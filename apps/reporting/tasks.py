@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db.models import Count
 from django.utils import translation
 from django.template.loader import render_to_string
 from apps.reporting import models
@@ -38,6 +39,10 @@ def do_create_report(report_release_pk):
     context = {
         "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
         "templates": vulnerability_templates, "release": report_release,
+        "ordered_vulnerability_list_by_severity": Template.objects.filter(
+            vulnerability__project=project).values("vulnerability__severity", "name").annotate(
+            count=Count("vulnerability__pk")).order_by(
+            "-vulnerability__severity"),
         "project": project, "SEVERITY_CHART_SRC": charts.SeverityDonutChart().create_image(project),
         "CATEGORY_POLAR_CHART": charts.VulnCategoryPolarChart().create_image(project)
     }

@@ -27,6 +27,13 @@ def get_severity_by_name(name):
     return None
 
 
+def get_severity_by_int(value):
+    for sev in SEVERITY_CHOICES:
+        if sev[0] == value:
+            return sev[1]
+    return None
+
+
 class VulnerabilityCategory(VulnmanModel):
     name = models.CharField(max_length=128, unique=True)
     display_name = models.CharField(max_length=128, null=True)
