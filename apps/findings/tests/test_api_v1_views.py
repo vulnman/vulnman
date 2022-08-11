@@ -10,13 +10,14 @@ class VulnerabilityViewSetTestCase(APITestCase, VulnmanAPITestCaseMixin):
         self.template = self.create_instance(models.Template)
         self.host1 = self.create_instance(Host, project=self.project1)
         self.host2 = self.create_instance(Host, project=self.project2)
-        self.data = {"name": "test", "template_id": self.template.pk,
+        self.data = {"name": "test", "template_id": self.template.vulnerability_id,
                      "severity": 0, "asset": self.host1.pk}
 
     def test_create_view(self):
         url = self.get_url("api:v1:findings:vulnerability-list")
         response = self.post(url, self.data, self.token1)
         self.assertEqual(response.status_code, 201)
+        self.assertEqual(models.Vulnerability.objects.first().template, self.template)
 
     def test_create_view_forbidden(self):
         url = self.get_url("api:v1:findings:vulnerability-list")

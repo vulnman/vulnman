@@ -9,5 +9,6 @@ router = DefaultRouter()
 
 router.register("vulnerabilities", views.VulnerabilityViewSet, basename="vulnerability")
 router.register("text-proofs", views.TextProofViewSet, basename="text-proof")
+router.register("templates", views.TemplateViewSet, basename="template")
 
 urlpatterns = router.urls

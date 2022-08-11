@@ -15,3 +15,13 @@ class TextProofViewSet(viewsets.AgentModelViewSet):
 
     def get_queryset(self):
         return models.TextProof.objects.filter(vulnerability__project=self.request.auth.project)
+
+
+class TemplateViewSet(viewsets.AgentReadOnlyModelViewSet):
+    # TODO: write tests
+    search_fields = ["vulnerability_id"]
+    serializer_class = serializers.TemplateReadOnlySerializer
+
+    def get_queryset(self):
+        # no project dependencies required
+        return models.Template.objects.all()

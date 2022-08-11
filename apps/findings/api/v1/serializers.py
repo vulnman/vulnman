@@ -5,6 +5,7 @@ from apps.findings import models
 class VulnerabilitySerializer(serializers.ModelSerializer):
     template_id = serializers.CharField()
     asset = serializers.UUIDField()
+    severity = serializers.ChoiceField(choices=models.SEVERITY_CHOICES, required=False)
 
     def validate_asset(self, value):
         Asset = models.Vulnerability.objects.get_asset_model_cls(value)
@@ -13,11 +14,17 @@ class VulnerabilitySerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Invalid asset")
         return value
 
+    def validate_template_id(self, value):
+        qs = models.Template.objects.filter(vulnerability_id=value)
+        if not qs.exists():
+            raise serializers.ValidationError("Invalid template")
+        return value
+
     def check_exists(self, validated_data):
         template = models.Template.objects.filter(
             vulnerability_id=validated_data["template_id"])
         if not template.exists():
-            return
+            raise serializers.ValidationError("Invalid template")
         template = template.get()
         qs = models.Vulnerability.objects.filter(
             name=validated_data["name"],
@@ -35,6 +42,10 @@ class VulnerabilitySerializer(serializers.ModelSerializer):
             return qs
         validated_data["object_id"] = validated_data["asset"]
         validated_data["content_type"] = models.Vulnerability.objects.get_asset_content_type(validated_data["asset"])
+        template = models.Template.objects.get(vulnerability_id=validated_data["template_id"])
+        validated_data["template"] = template
+        validated_data["severity"] = template.severity
+        validated_data.pop("template_id")
         validated_data.pop("asset")
         return super().create(validated_data)
 
@@ -42,8 +53,8 @@ class VulnerabilitySerializer(serializers.ModelSerializer):
         model = models.Vulnerability
         fields = [
             "name", "cve_id", "severity", "template_id", "asset",
-            "status", "project", "uuid"]
-        read_only_fields = ["uuid", "project"]
+            "status", "uuid"]
+        read_only_fields = ["uuid"]
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -73,3 +84,10 @@ class TextProofSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
         project = self.context["project"]
         self.fields["vulnerability"].queryset = project.vulnerability_set.all()
+
+
+class TemplateReadOnlySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Template
+        fields = ["vulnerability_id"]
+        read_only_fields = ["vulnerability_id"]
