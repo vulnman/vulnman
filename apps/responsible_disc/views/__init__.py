@@ -133,7 +133,7 @@ class TextProofDelete(generics.VulnmanAuthDeleteView):
     http_method_names = ["post"]
 
     def get_success_url(self):
-        return reverse_lazy('responsible_disc:vulnerability-detail', kwargs={"pk": self.get_object().vulnerability.pk})
+        return reverse_lazy('responsible_disc:vulnerability-proofs', kwargs={"pk": self.get_object().vulnerability.pk})
 
     def get_queryset(self):
         return models.TextProof.objects.filter(vulnerability__user=self.request.user)
@@ -145,7 +145,7 @@ class ImageProofDelete(generics.VulnmanAuthDeleteView):
     http_method_names = ["post"]
 
     def get_success_url(self):
-        return reverse_lazy('responsible_disc:vulnerability-detail', kwargs={"pk": self.get_object().vulnerability.pk})
+        return reverse_lazy('responsible_disc:vulnerability-proofs', kwargs={"pk": self.get_object().vulnerability.pk})
 
     def get_queryset(self):
         return models.ImageProof.objects.filter(vulnerability__user=self.request.user)
@@ -250,7 +250,7 @@ class TextProofUpdate(ObjectPermissionRequiredMixin, generics.VulnmanAuthUpdateV
         return models.TextProof.objects.filter(pk=self.kwargs.get("pk"))
 
     def get_success_url(self):
-        return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})
+        return reverse_lazy('responsible_disc:vulnerability-proofs', kwargs={"pk": self.get_object().vulnerability.pk})
 
 
 class ImageProofUpdate(generics.VulnmanAuthUpdateView):
@@ -267,7 +267,7 @@ class ImageProofUpdate(generics.VulnmanAuthUpdateView):
         return models.ImageProof.objects.filter(vulnerability__user=self.request.user)
 
     def get_success_url(self):
-        return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})
+        return reverse_lazy('responsible_disc:vulnerability-proofs', kwargs={"pk": self.get_object().vulnerability.pk})
 
 
 class TextProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
@@ -280,7 +280,7 @@ class TextProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateV
         return models.Vulnerability.objects.filter(pk=self.kwargs.get('pk'))
 
     def get_success_url(self):
-        return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.get_object().pk})
+        return reverse_lazy('responsible_disc:vulnerability-proofs', kwargs={"pk": self.get_object().pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -307,7 +307,7 @@ class ImageProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreate
         return context
 
     def get_success_url(self):
-        return reverse_lazy("responsible_disc:vulnerability-detail", kwargs={"pk": self.get_object().pk})
+        return reverse_lazy('responsible_disc:vulnerability-proofs', kwargs={"pk": self.get_object().pk})
 
     def form_valid(self, form):
         form.instance.vulnerability = self.get_object()

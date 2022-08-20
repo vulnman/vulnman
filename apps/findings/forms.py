@@ -138,7 +138,6 @@ class VulnerabilityForm(forms.ModelForm):
         self.fields["f_asset"].choices = self.get_asset_choices(project)
         self.fields["user_account"].queryset = project.useraccount_set.all()
         self.helper = FormHelper()
-        self.helper.form_tag = False
         self.helper.layout = layout.Layout(
             layout.Row(
                 layout.Div(
@@ -171,6 +170,10 @@ class VulnerabilityForm(forms.ModelForm):
                     bootstrap5.FloatingField("cve_id"), css_class="col-sm-12 col-md-6",
                 ),
                 layout.Div(bootstrap5.FloatingField("status"), css_class="col-sm-12 col-md-6"),
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )
 

@@ -1,0 +1,9 @@
+{% load crispy_forms_tags %}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-text mb-3">{{ title }}</h4>
+        <hr/>
+        {% crispy form %}
+    </div>
+</div>
