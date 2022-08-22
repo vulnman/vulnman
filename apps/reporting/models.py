@@ -12,7 +12,7 @@ def get_report_templates():
 
 
 class Report(VulnmanProjectModel):
-    REPORT_DEFAULT_TITLE = "Vulnerability Report"
+    REPORT_DEFAULT_TITLE = "Pentest Report"
     REPORT_TYPE_PDF = 0
     REPORT_TYPE_JSON = 1
 
@@ -37,7 +37,7 @@ class Report(VulnmanProjectModel):
     title = models.CharField(max_length=256, null=True, blank=True)
     language = models.CharField(choices=settings.LANGUAGES, default="en", max_length=6)
     template = models.CharField(choices=get_report_templates(), default="default", max_length=64)
-    report_type = models.PositiveIntegerField(choices=REPORT_TYPE_CHOICES, default=0)
+    report_type = models.PositiveIntegerField(choices=REPORT_TYPE_CHOICES, default=REPORT_TYPE_PDF)
 
     def get_report_title(self):
         if self.title:

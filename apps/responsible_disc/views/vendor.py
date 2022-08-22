@@ -1,4 +1,3 @@
-import uuid
 from django.http import Http404, HttpResponseRedirect
 from django.conf import settings
 from guardian.shortcuts import assign_perm
@@ -47,7 +46,7 @@ class InviteVendor(ObjectPermissionRequiredMixin, PasswordResetView):
             return HttpResponseRedirect(self.get_success_url())
         if not qs.exists():
             user = User.objects.create(
-                username="vendor-%s" % uuid.uuid4(), email=form.cleaned_data["email"], is_vendor=True, is_active=False)
+                username=form.cleaned_data["email"], email=form.cleaned_data["email"], is_vendor=True, is_active=False)
             self.extra_email_context["new_user"] = user
         else:
             user = User.objects.get(email=form.cleaned_data["email"])

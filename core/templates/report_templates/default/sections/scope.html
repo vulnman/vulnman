@@ -9,7 +9,7 @@
     {% endblocktrans %}
     <br/>
     <table>
-        {% for asset in project.get_assets %}
+        {% for asset in project.get_scope %}
             <tr>
                 <th>[{{ asset.ASSET_TYPE_CHOICE.1 }}] {{ asset.name }}</th>
             </tr>

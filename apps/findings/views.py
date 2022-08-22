@@ -71,6 +71,9 @@ class TextProofCreate(generics.ProjectCreateView):
     form_class = forms.TextProofForm
     template_name = "findings/text_proof_create_or_update.html"
 
+    def get_success_url(self):
+        return reverse_lazy('projects:findings:vulnerability-proofs', kwargs={"pk": self.kwargs.get("pk")})
+
     def get_context_data(self, **kwargs):
         try:
             obj = self.get_project().vulnerability_set.get(pk=self.kwargs.get("pk"))
@@ -83,7 +86,6 @@ class TextProofCreate(generics.ProjectCreateView):
         vuln = self.get_context_data()["vuln"]
         form.instance.vulnerability = vuln
         form.instance.project = self.get_project()
-        self.success_url = vuln.get_absolute_url()
         return super().form_valid(form)
 
 
@@ -95,8 +97,7 @@ class TextProofUpdate(generics.ProjectUpdateView):
         return models.TextProof.objects.filter(vulnerability__project=self.get_project())
 
     def get_success_url(self):
-        return reverse_lazy("projects:findings:vulnerability-detail", kwargs={
-            "pk": self.get_object().vulnerability.pk})
+        return self.get_object().vulnerability.get_absolute_url()
 
 
 class ImageProofUpdate(generics.ProjectUpdateView):
@@ -107,13 +108,16 @@ class ImageProofUpdate(generics.ProjectUpdateView):
         return models.ImageProof.objects.filter(vulnerability__project=self.get_project())
 
     def get_success_url(self):
-        return reverse_lazy("projects:findings:vulnerability-detail", kwargs={"pk": self.get_object().vulnerability.pk})
+        return self.get_object().vulnerability.get_absolute_url()
 
 
 class AddImageProof(generics.ProjectCreateView):
     model = models.ImageProof
     form_class = forms.ImageProofForm
     template_name = "findings/image_proof_create_or_update.html"
+
+    def get_success_url(self):
+        return reverse_lazy('projects:findings:vulnerability-proofs', kwargs={"pk": self.kwargs.get("pk")})
 
     def get_context_data(self, **kwargs):
         try:
@@ -127,7 +131,6 @@ class AddImageProof(generics.ProjectCreateView):
         vuln = self.get_context_data()["vuln"]
         form.instance.vulnerability = vuln
         form.instance.project = self.get_project()
-        self.success_url = vuln.get_absolute_url()
         return super().form_valid(form)
 
 
@@ -146,6 +149,13 @@ class VulnDetail(generics.ProjectDetailView):
             "cvss_pr": context["vuln"].cvss_pr, "cvss_ui": context["vuln"].cvss_ui
         })
         return context
+
+
+class VulnerabilityProofs(generics.ProjectDetailView):
+    # TODO: write tests
+    template_name = "findings/vulnerability_proofs.html"
+    context_object_name = "vuln"
+    model = models.Vulnerability
 
 
 class VulnerabilityExport(generics.ProjectDetailView):
@@ -204,7 +214,7 @@ class TextProofDelete(generics.ProjectDeleteView):
     permission_required = ["projects.change_project"]
 
     def get_success_url(self):
-        return reverse_lazy('projects:findings:vulnerability-list')
+        return self.get_object().vulnerability.get_absolute_url()
 
     def get_queryset(self):
         return models.TextProof.objects.filter(vulnerability__project=self.get_project())
@@ -269,7 +279,7 @@ class ImageProofDelete(generics.ProjectDeleteView):
     http_method_names = ["post"]
 
     def get_success_url(self):
-        return reverse_lazy('projects:findings:vulnerability-list')
+        return self.get_object().vulnerability.get_absolute_url()
 
     def get_queryset(self):
         return models.ImageProof.objects.filter(vulnerability__project=self.get_project())

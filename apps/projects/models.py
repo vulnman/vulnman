@@ -60,6 +60,10 @@ class Project(models.Model):
                  list(self.service_set.all())
         return assets
 
+    def get_scope(self):
+        # used in default report template
+        return list(self.webapplication_set.all()) + list(self.host_set.all())
+
     def get_draft_report(self):
         if self.pentestreport_set.filter(report_type="draft", name="").exists():
             return self.pentestreport_set.get(report_type="draft", name="")

@@ -56,7 +56,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-text">
-                            <p><strong>Vulnerabilities:</strong><span class="float-end">{{ webapp.vulnerability_set.count }}</span></p>
+                            <p><strong>Vulnerabilities:</strong><span class="float-end">{{ webapp.vulnerabilities_for_asset.count }}</span></p>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for vuln in webapp.vulnerability_set.all %}
+                        {% for vuln in webapp.vulnerabilities_for_asset.all %}
                             <tr>
                                 <td>
                                     <a href="{% url 'projects:findings:vulnerability-detail' vuln.pk %}">

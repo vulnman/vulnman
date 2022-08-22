@@ -93,7 +93,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for vuln in host.vulnerability_set.all %}
+                        {% for vuln in host.vulnerabilities_for_asset.all %}
                             <tr>
                                 <td>
                                     <a href="{% url 'projects:findings:vulnerability-detail' vuln.pk %}">

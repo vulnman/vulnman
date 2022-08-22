@@ -72,7 +72,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for vuln in webrequest.vulnerability_set.all %}
+                        {% for vuln in webrequest.vulnerabilities_for_asset.all %}
                             <tr>
                                 <td>
                                     <a href="{% url 'projects:findings:vulnerability-detail' vuln.pk %}">
