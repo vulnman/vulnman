@@ -32,7 +32,13 @@
         </div>
 
 
-
+        {% if not hosts %}
+            <div class="card mt-3">
+                <div class="card-body">
+                    {% show_blankslate %}
+                </div>
+            </div>
+        {% else %}
         <table class="table table-striped table-hover">
             <thead>
             <tr>
@@ -54,15 +60,10 @@
                     {% endif %}
                     <td>{{ host.get_accessibility_display }}</td>
                 </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="4">
-                        {% show_blankslate %}
-                    </td>
-                </tr>
             {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </div>
 
 {% endblock content %}

@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load guardian_tags %}
+{% load vulnmantags %}
 
 {% block title %}
     Web Applications
 {% endblock %}
 
 {% block content %}
-    <h3 class="text-center">Web Requests</h3>
-    <hr/>
     <div class="container mt-3">
         <div class="clearfix">
             {% get_obj_perms request.user for project as "project_perms" %}
@@ -21,7 +20,13 @@
             {% endif %}
         </div>
 
-
+        {% if not webrequests %}
+            <div class="card mt-3">
+                <div class="card-body">
+                    {% show_blankslate %}
+                </div>
+            </div>
+        {% else %}
         <table class="table table-hover table-striped mt-3">
             <thead>
                 <tr>
@@ -40,6 +45,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </div>
 
     <!-- Create Modal -->

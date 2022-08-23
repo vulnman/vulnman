@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load guardian_tags %}
+{% load vulnmantags %}
 
 {% block title %}
     Services
@@ -35,6 +36,13 @@
             {% endif %}
         </div>
 
+        {% if not services %}
+        <div class="card mt-3">
+            <div class="card-body">
+                {% show_blankslate %}
+            </div>
+        </div>
+        {% else %}
         <table class="table table-hover table-striped table-bordered mt-3">
             <thead>
             <tr>
@@ -59,7 +67,7 @@
             {% endfor %}
             </tbody>
         </table>
-
+        {% endif %}
     </div>
     {% include "core/components/navigation/pagination.html" %}
     {% include 'assets/components/service_list_filter.html' %}

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load vulnmantags %}
 
 {% block title %}
     Web Applications
@@ -25,7 +26,13 @@
                 </div>
             {% endif %}
         </div>
-
+        {% if not webapps %}
+            <div class="card mt-3">
+                <div class="card-body">
+                    {% show_blankslate %}
+                </div>
+            </div>
+        {% else %}
         <table class="table table-hover table-striped mt-3">
             <thead>
                 <tr>
@@ -42,21 +49,7 @@
                 {% endfor %}
             </tbody>
         </table>
-    </div>
-
-    <!-- Create Modal -->
-    <div class="modal fade" id="webapp-create-modal" tabindex="-1" aria-labelledby="webapp-create-modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="webapp-create-modal-label">Create Web Application</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    {% crispy webapp_create_form %}
-                </div>
-            </div>
-        </div>
+        {% endif %}
     </div>
 
     {% include "core/components/navigation/pagination.html" %}

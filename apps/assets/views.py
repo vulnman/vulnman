@@ -13,11 +13,6 @@ class WebApplicationList(generics.ProjectListView):
     def get_queryset(self):
         return models.WebApplication.objects.filter(project=self.get_project())
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["webapp_create_form"] = forms.WebApplicationForm()
-        return context
-
 
 class WebApplicationCreate(generics.ProjectCreateView):
     form_class = forms.WebApplicationForm

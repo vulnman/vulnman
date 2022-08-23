@@ -1,3 +1,6 @@
+{% load guardian_tags %}
+
+{% get_obj_perms request.user for vuln as "vuln_perms" %}
 <!-- Sub nav -->
 <ul class="nav nav-tabs border-bottom border-secondary" id="secondary-nav">
     <li class="nav-item">
@@ -9,11 +12,13 @@
     <li class="nav-item">
         <a class="nav-link {% if request.resolver_match.view_name == "responsible_disc:comment-list" %} active{% endif %}" href="{% url 'responsible_disc:comment-list' vuln.pk %}">Comments</a>
     </li>
+    {% if "change_vulnerability" in vuln_perms %}
     <li class="nav-item">
         <a class="nav-link {% if request.resolver_match.view_name == "responsible_disc:vulnerability-proofs" %} active{% endif %}" href="{% url 'responsible_disc:vulnerability-proofs' vuln.pk %}">
             Proofs
         </a>
     </li>
+    {% endif %}
     <li class="nav-item">
         <a class="nav-link {% if request.resolver_match.view_name == "responsible_disc:manage-access" %} active{% endif %}" href="{% url 'responsible_disc:manage-access' vuln.pk %}">Manage Access</a>
     </li>
