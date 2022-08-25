@@ -73,5 +73,15 @@ class ProfileUpdateViewTestCase(TestCase, VulnmanTestCaseMixin):
             pk=self.vendor.pk, first_name=data["first_name"]).count(), 0)
 
     def test_only_active_users(self):
-        # TODO: implement me
-        pass
+        self.pentester1.is_active = False
+        self.pentester1.save()
+        url = self.get_url("account:profile-update")
+        data = {"is_public": False, 'first_name': "Testuser", "last_name": "Testlastname"}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse(settings.LOGIN_URL) + "?next=" + url)
+        self.client.force_login(self.pentester1)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(models.User.objects.filter(
+            pentester_profile__is_public=False, pk=self.pentester1.pk, last_name=data["last_name"]).count(), 0)

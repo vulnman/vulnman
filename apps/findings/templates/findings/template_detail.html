@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load markdown %}
+
+{% block title %}
+    {{ template }}
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a
+                        href="{% url 'findings:template-list' %}">Vulnerability Templates</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ template.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-8 d-flex">
+                <div class="justify-content-start">
+                    <h3>{{ template.vulnerability_id }}</h3>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4 d-flex align-items-end justify-content-end">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix card-text">
+                            <p class="float-start"><strong>Category:</strong></p>
+                            <div class="float-end">
+                                <p>{{ template.category }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix card-text">
+                            <p class="float-start"><strong>CWE:</strong></p>
+                            <div class="float-end">
+                               <p>{{ template.cwe_ids.all.0}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix card-text">
+                            <p class="float-start"><strong>Default Severity:</strong></p>
+                            <p class="float-end">{{ template.get_severity_display }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <h4>Description</h4>
+            {{ template.description|md_to_html }}
+
+            <h4>Recommendation</h4>
+            {{ template.recommendation|md_to_html }}
+
+            <h4>References</h4>
+            <ul>
+                {% for reference in template.reference_set.all %}
+                    <li>{{ reference }}</li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
+
+    </div>
+{% endblock %}

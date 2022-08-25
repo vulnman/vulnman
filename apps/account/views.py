@@ -106,7 +106,6 @@ class ChangePassword(VulnmanContextMixin, views.PasswordChangeView):
 
 
 class ActivateAccount(views.PasswordResetConfirmView, VulnmanContextMixin):
-    # TODO: write tests
     template_name = "account/activate_account.html"
     form_class = forms.PasswordSetForm
     token_generator = account_activation_token

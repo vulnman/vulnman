@@ -7,15 +7,14 @@
 {% block content %}
     <h3 class="text-center">Vulnerability Templates</h3>
     <hr/>
-    <div class="container mt-3">
+    <div class="container mt-3 mb-3">
         <div class="mt-3 form-floating">
             <input class="form-control" id="search-template">
             <label for="search-template">Search</label>
         </div>
         <div class="list-group mt-3" id="template-list">
             {% for template in templates %}
-                <a class="list-group-item list-group-item-action" href="" data-bs-toggle="modal"
-                   data-id="{{ template.pk }}" data-bs-target="#template-detail-modal">
+                <a class="list-group-item list-group-item-action" href="{{ template.get_absolute_url }}">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="clearfix">
@@ -52,35 +51,11 @@
             {% endfor %}
         </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="template-detail-modal" tabindex="-1" aria-labelledby="template-detail-modal">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="template-detail-modal-label"></h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>
     </div>
 {% endblock %}
 
 {% block extra_scripts %}
     <script>
-        $('#template-detail-modal').on('show.bs.modal', function (e) {
-            let url = "{% url 'api:ui:findings:template-detail' pk=12345 %}".replace(/12345/, e.relatedTarget.dataset['id'])
-            $.ajax({
-                type: "GET",
-                url: url,
-                dataType: "json",
-                success: function (data) {
-                    $("#template-detail-modal-label").text(data.name);
-                    $("#template-detail-modal .modal-body").html("<h5>Description</h5>" + data.description + "<br/><h5>Recommendation</h5>" + data.recommendation)
-                }
-            });
-        });
 
         $('#search-template').on('input', function () {
             let url = "{% url 'api:ui:findings:template-list' %}?search=" + $('#search-template').val();
@@ -92,9 +67,8 @@
                     var results = data["results"];
                     $('#template-list').html("");
                     $.each(results, function (k, v) {
-                        console.log(v)
                         $('#template-list').append(
-                            '<a class="list-group-item list-group-item-action" data-bs-toggle="modal" data-id="' + v.uuid + '" data-bs-target="#template-detail-modal">' +
+                            '<a class="list-group-item list-group-item-action" href="' + v.url + '">' +
                             '<div class="row"><div class="col-sm-12"><div class="clearfix"><div class="float-start">' + v.vulnerability_id + '</div></div></div></div>' +
                             '<div class="row"><div class="col-sm-12"><div class="clearfix"><div class="float-start">' +
                             '<small class="text-muted"><i>Last updated: 0 minutes ago</i></small></div></div></div></div>' +

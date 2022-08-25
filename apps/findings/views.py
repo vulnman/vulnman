@@ -15,6 +15,12 @@ class TemplateList(generics.VulnmanAuthListView):
     context_object_name = "templates"
 
 
+class TemplateDetail(generics.VulnmanAuthDetailView):
+    model = models.Template
+    template_name = "findings/template_detail.html"
+    context_object_name = "template"
+
+
 class VulnList(django_filters.views.FilterMixin, generics.ProjectListView):
     template_name = "findings/vulnerabilities/list.html"
     context_object_name = "vulnerabilities"
