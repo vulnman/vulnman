@@ -10,6 +10,8 @@ class Host(BaseAsset):
     ip = models.GenericIPAddressField(verbose_name="IP")
     operating_system = models.CharField(max_length=256, blank=True, verbose_name="Operating System")
     dns = models.CharField(max_length=256, null=True, blank=True, verbose_name="DNS")
+    environment = models.PositiveIntegerField(choices=BaseAsset.ENVIRONMENT_CHOICES,
+                                              default=BaseAsset.ENVIRONMENT_UNKNOWN)
 
     class Meta:
         ordering = ['ip']

@@ -10,7 +10,7 @@ from crispy_forms import layout
 class WebApplicationForm(forms.ModelForm):
     class Meta:
         model = models.WebApplication
-        fields = ["name", "base_url", "description", "hide_from_report"]
+        fields = ["name", "base_url", "description", "hide_from_report", "environment"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -19,6 +19,7 @@ class WebApplicationForm(forms.ModelForm):
             layout.Row(
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField("base_url", wrapper_class="col-sm-12"),
+                bootstrap5.FloatingField("environment", wrapper_class="col-sm-12"),
                 bootstrap5.Field("description", wrapper_class="col-sm-12"),
                 bootstrap5.Field("hide_from_report", wrapper_class="col-sm-12"),
                 css_class="g-2"
@@ -33,7 +34,7 @@ class WebApplicationForm(forms.ModelForm):
 class HostForm(forms.ModelForm):
     class Meta:
         model = models.Host
-        fields = ["ip", "operating_system", "accessibility", "dns", "hide_from_report", "description"]
+        fields = ["ip", "operating_system", "accessibility", "dns", "hide_from_report", "description", "environment"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -49,6 +50,7 @@ class HostForm(forms.ModelForm):
                 bootstrap5.FloatingField("dns", wrapper_class="col-sm-12 col-md-6"),
                 css_class="g-2"
             ),
+            bootstrap5.FloatingField("environment", wrapper_class="col-sm-12"),
             bootstrap5.Field("description", wrapper_class="col-sm-12"),
             bootstrap5.Field("hide_from_report", wrapper_class="col-sm-12"),
             layout.Row(

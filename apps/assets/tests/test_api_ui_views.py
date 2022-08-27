@@ -23,7 +23,8 @@ class HostViewsTestCase(TestCase, VulnmanTestCaseMixin):
 
     def test_createview_pentester_role(self):
         url = self.get_url("projects:assets:host-create")
-        payload = {"ip": "10.1.4.4", "accessibility": models.Host.ACCESSIBILITY_NOT_ACCESSIBLE}
+        payload = {"ip": "10.1.4.4", "accessibility": models.Host.ACCESSIBILITY_NOT_ACCESSIBLE,
+                   "environment": models.Host.ENVIRONMENT_STAGING}
         self.login_with_project(self.pentester1, self.project1)
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, 302)
