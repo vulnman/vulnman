@@ -2,6 +2,7 @@ import io
 import base64
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from django.db.models import Q
 from apps.findings.models import Vulnerability, SEVERITY_CHOICES
 
 
@@ -9,7 +10,7 @@ class SeverityDonutChart:
 
     def create_image(self, project):
         text = str(project.vulnerability_set.exclude(
-            status=Vulnerability.STATUS_FIXED).count()) + "\nVulnerabilities"
+            Q(status=Vulnerability.STATUS_FIXED)).count()) + "\nVulnerabilities"
         s = io.BytesIO()
         data = []
         colors = []

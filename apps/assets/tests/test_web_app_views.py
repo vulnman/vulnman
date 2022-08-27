@@ -65,7 +65,8 @@ class WebApplicationCreateViewTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
         self.url = self.get_url("projects:assets:webapp-create")
-        self.data = {"base_url": "https://example.com", "name": "My Test Webapp", "description": "hello"}
+        self.data = {"base_url": "https://example.com", "name": "My Test Webapp", "description": "hello",
+                     "environment": models.WebApplication.ENVIRONMENT_STAGING}
 
     def test_valid(self):
         self.login_with_project(self.pentester1, self.project1)
@@ -89,7 +90,8 @@ class WebApplicationUpdateViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.init_mixin()
         self.webapp = self._create_instance(models.WebApplication, project=self.project1)
         self.url = self.get_url("projects:assets:webapp-update", pk=self.webapp.pk)
-        self.data = {"base_url": "https://example.com", "name": "My Test Webapp2"}
+        self.data = {"base_url": "https://example.com", "name": "My Test Webapp2",
+                     "environment": models.WebApplication.ENVIRONMENT_DEVELOPMENT}
 
     def test_valid(self):
         self.login_with_project(self.pentester1, self.project1)

@@ -9,6 +9,8 @@ class WebApplication(BaseAsset):
 
     name = models.CharField(max_length=256)
     base_url = models.URLField()
+    environment = models.PositiveIntegerField(choices=BaseAsset.ENVIRONMENT_CHOICES,
+                                              default=BaseAsset.ENVIRONMENT_UNKNOWN)
 
     def __str__(self):
         return self.name

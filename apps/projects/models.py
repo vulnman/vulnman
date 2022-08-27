@@ -28,7 +28,7 @@ class Project(models.Model):
         (PENTEST_STATUS_OPEN, "Open"),
         (PENTEST_STATUS_INPROGRESS, "In Progress")
     ]
-    objects = querysets.ProjectQuerySet.as_manager()
+    objects = querysets.ProjectManager.from_queryset(querysets.ProjectQuerySet)()
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -56,13 +56,14 @@ class Project(models.Model):
         remove_perm("projects.add_contributor", self.creator, self)
 
     def get_assets(self):
-        assets = list(self.webapplication_set.all()) + list(self.webrequest_set.all()) + list(self.host_set.all()) + \
+        assets = list(self.webapplication_set.all()) + list(self.host_set.all()) + \
                  list(self.service_set.all())
         return assets
 
     def get_scope(self):
         # used in default report template
-        return list(self.webapplication_set.all()) + list(self.host_set.all())
+        scope_assets = list(self.webapplication_set.all()) + list(self.host_set.all())
+        return scope_assets
 
     def get_draft_report(self):
         if self.pentestreport_set.filter(report_type="draft", name="").exists():

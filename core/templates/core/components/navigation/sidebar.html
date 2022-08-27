@@ -50,13 +50,7 @@
         <a href="{% url 'projects:assets:webapp-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:assets:webapp-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-table-columns menu-icon"></i>
-                <span class="menu-collapsed">Web Application</span>
-            </div>
-        </a>
-        <a href="{% url 'projects:assets:webrequest-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:assets:webrequest-list" %} active{% endif %}">
-            <div class="d-flex w-100 justify-content-start align-items-center">
-                <i class="fa fa-sitemap menu-icon"></i>
-                <span class="menu-collapsed">Web Requests</span>
+                <span class="menu-collapsed">Web Applications</span>
             </div>
         </a>
         <div class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">

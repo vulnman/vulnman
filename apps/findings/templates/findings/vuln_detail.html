@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
 {% load markdown %}
 {% load crispy_forms_tags %}
+{% load guardian_tags %}
 {% load static %}
 
 {% block title %}
     {{ project.name }}
 {% endblock %}
 
-
 {% block extra_head %}
     <link href="{% static 'css/codehilite.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
+    {% get_obj_perms request.user for project as "project_perms" %}
     <div class="container mt-3">
     <!-- Breadcrumbs -->
     <nav aria-label="breadcrumb">
@@ -40,7 +41,7 @@
                href="{% url 'projects:findings:vulnerability-export' vuln.pk %}">
                 <i class="fa fa-file-arrow-down"></i>
             </a>
-            {% if perms.projects.change_vulnerability %}
+            {% if "change_project" in project_perms %}
                 <a class="btn btn-outline-warning" href="{% url 'projects:findings:vulnerability-update' vuln.pk %}">
                     <i class="fa fa-edit"></i>
                 </a>

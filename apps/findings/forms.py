@@ -12,7 +12,8 @@ class TextProofForm(forms.ModelForm):
         model = models.TextProof
         fields = ["name", "description", "text"]
         widgets = {
-            "text": CodeMirrorWidget()
+            "text": CodeMirrorWidget(),
+            "description": CodeMirrorWidget()
         }
 
     def __init__(self, *args, **kwargs):
@@ -37,7 +38,8 @@ class ImageProofForm(forms.ModelForm):
         model = models.ImageProof
         fields = ["name", "description", "image", "caption"]
         widgets = {
-            'image': FileDropWidget()
+            'image': FileDropWidget(),
+            'description': CodeMirrorWidget()
         }
 
     def __init__(self, *args, **kwargs):
@@ -118,19 +120,9 @@ class VulnerabilityForm(forms.ModelForm):
                   "auth_required", "user_account"]
 
     def get_asset_choices(self, project):
-        choices = [("---", "---")]
-        for i in project.webapplication_set.all():
-            d_name = "%s (%s)" % (i.name, "Web Application")
-            choices.append((str(i.pk), d_name))
-        for i in project.webrequest_set.all():
-            d_name = "%s (%s)" % (i.name, "Web Request")
-            choices.append((str(i.pk), d_name))
-        for i in project.host_set.all():
-            d_name = "%s (%s)" % (str(i), "Host")
-            choices.append((str(i.pk), d_name))
-        for i in project.service_set.all():
-            d_name = "%s (%s)" % (str(i), "Host")
-            choices.append((str(i.pk), d_name))
+        choices = []
+        for asset in project.get_assets():
+            choices.append((asset.pk, asset.name))
         return choices
 
     def __init__(self, project, *args, **kwargs):

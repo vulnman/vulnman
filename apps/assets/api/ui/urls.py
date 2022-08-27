@@ -8,7 +8,6 @@ router = DefaultRouter()
 
 router.register("hosts", views.HostViewSet, basename="host")
 router.register("services", views.ServiceViewSet, basename="service")
-router.register("web-requests", views.WebRequestViewSet, basename="web-request")
 router.register("web-applications", views.WebApplicationViewSet, basename="web-application")
 
 
