@@ -51,8 +51,6 @@ class AssetTask(VulnmanProjectModel):
     asset_webapp = models.ForeignKey(
         'assets.WebApplication', on_delete=models.CASCADE, null=True,
         blank=True)
-    asset_webrequest = models.ForeignKey(
-        'assets.WebRequest', on_delete=models.CASCADE, null=True, blank=True)
     asset_host = models.ForeignKey(
         "assets.Host", null=True, blank=True, on_delete=models.CASCADE
     )
@@ -61,7 +59,6 @@ class AssetTask(VulnmanProjectModel):
 
     class Meta:
         unique_together = [
-            ("task", "project", "asset_webrequest"),
             ("task", "project", "asset_webapp"),
             ("task", "project", "asset_service"),
             ("task", "project", "asset_host")
@@ -71,8 +68,6 @@ class AssetTask(VulnmanProjectModel):
     def asset(self):
         if self.asset_webapp:
             return self.asset_webapp
-        elif self.asset_webrequest:
-            return self.asset_webrequest
         elif self.asset_service:
             return self.asset_service
         elif self.asset_host:

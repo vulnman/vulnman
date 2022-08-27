@@ -7,6 +7,17 @@ class BaseAsset(VulnmanProjectModel):
     description = models.TextField(blank=True)
     hide_from_report = models.BooleanField(default=False)
 
+    ACCESSIBILITY_NOT_TESTED = 0
+    ACCESSIBILITY_ACCESSIBLE = 1
+    ACCESSIBILITY_NOT_ACCESSIBLE = 2
+
+    ACCESSIBILITY_CHOICES = [
+        (ACCESSIBILITY_ACCESSIBLE, "Accessible"),
+        (ACCESSIBILITY_NOT_ACCESSIBLE, "Not Accessible"),
+        (ACCESSIBILITY_NOT_TESTED, "Not Tested")
+    ]
+    accessibility = models.IntegerField(choices=ACCESSIBILITY_CHOICES, default=ACCESSIBILITY_NOT_TESTED)
+
     class Meta:
         abstract = True
 

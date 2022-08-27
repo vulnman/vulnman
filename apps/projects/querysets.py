@@ -7,3 +7,7 @@ class ProjectQuerySet(models.QuerySet):
         qs = get_objects_for_user(user, perms, self.model, use_groups=False,
                                   accept_global_perms=False, with_superuser=False)
         return qs
+
+
+class ProjectManager(models.Manager):
+    pass

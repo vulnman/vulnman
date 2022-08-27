@@ -27,36 +27,6 @@ class WebApplicationUpdate(generics.ProjectUpdateView):
         return models.WebApplication.objects.filter(project=self.get_project())
 
 
-class WebRequestList(generics.ProjectListView):
-    # TODO: write tests
-    template_name = "assets/webrequest_list.html"
-    context_object_name = "webrequests"
-
-    def get_queryset(self):
-        return models.WebRequest.objects.filter(project=self.get_project())
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["webrequest_create_form"] = forms.WebRequestCreateForm(
-            self.get_project())
-        return context
-
-
-class WebRequestCreate(generics.ProjectCreateView):
-    # TODO: write tests
-    http_method_names = ["post"]
-    form_class = forms.WebRequestCreateForm
-    success_url = reverse_lazy("projects:assets:webrequest-list")
-
-    def get_queryset(self):
-        return models.WebRequest.objects.filter(project=self.get_project())
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['project'] = self.get_project()
-        return kwargs
-
-
 class HostList(generics.ProjectListView):
     # TODO: write tests
     template_name = "assets/host/list.html"
@@ -169,43 +139,3 @@ class WebApplicationDelete(generics.ProjectDeleteView):
     def get_queryset(self):
         return models.WebApplication.objects.filter(
             project=self.get_project())
-
-
-class WebRequestDelete(generics.ProjectDeleteView):
-    # TODO: write tests
-    http_method_names = ["post"]
-    success_url = reverse_lazy("projects:assets:webrequest-list")
-
-    def get_queryset(self):
-        return models.WebRequest.objects.filter(
-            project=self.get_project())
-
-
-class WebRequestDetail(generics.ProjectDetailView):
-    # TODO: write tests
-    template_name = "assets/webrequest_detail.html"
-    context_object_name = "webrequest"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["webrequest_update_form"] = forms.WebRequestUpdateForm(
-            project=self.get_project(), instance=context["webrequest"])
-        return context
-
-    def get_queryset(self):
-        return models.WebRequest.objects.filter(project=self.get_project())
-
-
-class WebRequestUpdate(generics.ProjectUpdateView):
-    # TODO: write tests
-    http_method_names = ["post"]
-    form_class = forms.WebRequestUpdateForm
-
-    def get_queryset(self):
-        return models.WebRequest.objects.filter(
-            project=self.get_project())
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['project'] = self.get_project()
-        return kwargs

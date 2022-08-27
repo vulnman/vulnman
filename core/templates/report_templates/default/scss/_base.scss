@@ -271,11 +271,14 @@ pre {
   border-radius: 5px;
   border: 1px solid #c6c9cb;
   padding: 8px 15px;
+  word-break: break-all;
 }
 
 code {
   word-wrap: normal;
   max-width: 100%;
+  word-break: break-all;
+
 }
 
 .page-break {

@@ -34,8 +34,7 @@ class VulnerabilityQuerySet(QuerySet):
 
 class VulnerabilityManager(Manager):
     def get_asset_content_type(self, asset_pk):
-        model_classes = [asset_models.Host, asset_models.WebApplication,
-                         asset_models.WebRequest, asset_models.Service]
+        model_classes = [asset_models.Host, asset_models.WebApplication, asset_models.Service]
         for model_class in model_classes:
             qs = model_class.objects.filter(pk=asset_pk)
             if qs.exists():
@@ -43,8 +42,7 @@ class VulnerabilityManager(Manager):
         raise Exception("Invalid Asset Type")
 
     def get_asset_model_cls(self, asset_pk):
-        model_classes = [asset_models.Host, asset_models.WebApplication,
-                         asset_models.WebRequest, asset_models.Service]
+        model_classes = [asset_models.Host, asset_models.WebApplication, asset_models.Service]
         for model_class in model_classes:
             qs = model_class.objects.filter(pk=asset_pk)
             if qs.exists():

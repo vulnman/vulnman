@@ -30,36 +30,10 @@ class WebApplicationForm(forms.ModelForm):
         )
 
 
-class WebRequestCreateForm(forms.ModelForm):
-    class Meta:
-        model = models.WebRequest
-        fields = ["web_app", "url", "parameter", "description", "hide_from_report"]
-
-    def __init__(self, project, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["web_app"].queryset = project.webapplication_set.all()
-        self.helper = FormHelper()
-        self.helper.form_action = "projects:assets:webrequest-create"
-        self.helper.layout = layout.Layout(
-            layout.Row(
-                bootstrap5.FloatingField("web_app", wrapper_class="col-sm-12"),
-                bootstrap5.FloatingField("url", wrapper_class="col-sm-12"),
-                bootstrap5.FloatingField("parameter", wrapper_class="col-sm-12"),
-                bootstrap5.Field("description", wrapper_class="col-sm-12"),
-                bootstrap5.Field("hide_from_report", wrapper_class="col-sm-12"),
-                css_class="g-2"
-            ),
-            layout.Row(
-                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
-                            wrapper_class="col-sm-12 col-md-6")
-            )
-        )
-
-
 class HostForm(forms.ModelForm):
     class Meta:
         model = models.Host
-        fields = ["ip", "operating_system", "accessibility", "dns", "hide_from_report"]
+        fields = ["ip", "operating_system", "accessibility", "dns", "hide_from_report", "description"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -75,6 +49,7 @@ class HostForm(forms.ModelForm):
                 bootstrap5.FloatingField("dns", wrapper_class="col-sm-12 col-md-6"),
                 css_class="g-2"
             ),
+            bootstrap5.Field("description", wrapper_class="col-sm-12"),
             bootstrap5.Field("hide_from_report", wrapper_class="col-sm-12"),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
@@ -111,8 +86,7 @@ class ServiceForm(forms.ModelForm):
             bootstrap5.Field("hide_from_report", wrapper_class="col-sm-12"),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
-                    wrapper_class="col-sm-12 col-md-6"
-                )
+                            wrapper_class="col-sm-12 col-md-6")
             )
         )
 
@@ -123,11 +97,3 @@ class ServiceUpdateForm(ServiceForm):
         super().__init__(project, *args, **kwargs)
         self.helper.form_action = reverse_lazy(
             "projects:assets:service-update", kwargs={"pk": self.instance.pk})
-
-
-class WebRequestUpdateForm(WebRequestCreateForm):
-
-    def __init__(self, project, *args, **kwargs):
-        super().__init__(project, *args, **kwargs)
-        self.helper.form_action = reverse_lazy(
-            "projects:assets:webrequest-update", kwargs={"pk": self.instance.pk})

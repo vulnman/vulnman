@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load guardian_tags %}
+{% load vulnmantags %}
 
 {% block title %}
     User Accounts
@@ -21,7 +22,7 @@
                 {% endif %}
             </div>
         </div>
-
+        {% if user_accounts %}
         <table class="table table-hover table-striped mt-3">
             <thead>
             <tr>
@@ -73,7 +74,13 @@
             {% endfor %}
             </tbody>
         </table>
-
+        {% else %}
+                <div class="card mt-3">
+                <div class="card-body">
+                    {% show_blankslate %}
+                </div>
+            </div>
+        {% endif %}
         <div class="modal fade" id="account-create-modal" tabindex="-1" aria-labelledby="account-create-modal">
             <div class="modal-dialog">
                 <div class="modal-content">

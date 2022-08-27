@@ -8,6 +8,8 @@
 {% endblock %}
 
 {% block content %}
+    {% get_obj_perms request.user for project as "project_perms" %}
+
     <div class="container mt-3">
         <div class="row d-flex">
             <div class="d-flex flex-column col-sm-12 col-md-7">
@@ -17,56 +19,52 @@
                     </ol>
                 </nav>
             </div>
-        </div>
-
-
-        <div class="clearfix">
-            <div class="float-start">
-                <button data-bs-toggle="modal" data-bs-target="#service-filter-modal" class="btn btn-outline-secondary">
-                    <i class="fa fa-filter"></i>
-                </button>
-            </div>
-            {% get_obj_perms request.user for project as "project_perms" %}
-            {% if "change_project" in project_perms %}
-                <div class="float-end">
-                    <a class="btn btn-primary" href="{% url 'projects:assets:service-create' %}">
-                        <i class="fa fa-plus"></i>
-                    </a>
+            <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                <div class="d-inline">
+                    <button data-bs-toggle="modal" data-bs-target="#service-filter-modal"
+                            class="btn btn-outline-secondary">
+                        <i class="fa fa-filter"></i>
+                    </button>
+                    {% if "change_project" in project_perms %}
+                        <a class="btn btn-primary" href="{% url 'projects:assets:service-create' %}">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    {% endif %}
                 </div>
-            {% endif %}
+            </div>
         </div>
 
         {% if not services %}
-        <div class="card mt-3">
-            <div class="card-body">
-                {% show_blankslate %}
+            <div class="card mt-3">
+                <div class="card-body">
+                    {% show_blankslate %}
+                </div>
             </div>
-        </div>
         {% else %}
-        <table class="table table-hover table-striped table-bordered mt-3">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Protocol</th>
-                <th>State</th>
-                <th>Banner</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for service in services %}
+            <table class="table table-hover table-striped mt-3">
+                <thead>
                 <tr>
-                    <td><a href="{% url 'projects:assets:service-detail' service.pk %}">{{ service }}</a></td>
-                    <td>{{ service.get_protocol_display }}</td>
-                    <td>{{ service.get_state_display }}</td>
-                    {% if not service.banner %}
-                        <td>-</td>
-                    {% else %}
-                        <td>{{ service.banner }}</td>
-                    {% endif %}
+                    <th>Name</th>
+                    <th>Protocol</th>
+                    <th>State</th>
+                    <th>Banner</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for service in services %}
+                    <tr>
+                        <td><a href="{% url 'projects:assets:service-detail' service.pk %}">{{ service }}</a></td>
+                        <td>{{ service.get_protocol_display }}</td>
+                        <td>{{ service.get_state_display }}</td>
+                        {% if not service.banner %}
+                            <td>-</td>
+                        {% else %}
+                            <td>{{ service.banner }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
     </div>
     {% include "core/components/navigation/pagination.html" %}

@@ -1,5 +1,5 @@
 .codehilite .hll { background-color: #222222 }
-.codehilite  { background: #000000; color: #cccccc; padding: 20px; border-radius: 10px; }
+.codehilite  { background: #000000; color: #cccccc; padding: 20px; border-radius: 10px;}
 .codehilite .c { color: #000080 } /* Comment */
 /*.codehilite .err { color: #cccccc; border: 1px solid #FF0000 } /* Error */
 .codehilite .esc { color: #cccccc } /* Escape */
@@ -78,3 +78,4 @@
 .codehilite .il { color: #cd00cd } /* Literal.Number.Integer.Long */
 
 .codehilite .linenos {padding-right: 20px;}
+/*.codehilite pre{   word-wrap: break-word; word-break: break-all; display: block; white-space: pre-wrap;}*/

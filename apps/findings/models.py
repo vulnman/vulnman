@@ -187,7 +187,6 @@ class Vulnerability(BaseCVSS, VulnmanProjectModel):
     ]
     ASSET_TYPES_CHOICES = [
         ("webapplication", "Web Application"),
-        ("webrequest", "Web Request"),
         ("host", "Host"),
         ("service", "Service")
     ]
