@@ -32,6 +32,12 @@
                 <span class="menu-collapsed">User Accounts</span>
             </div>
         </a>
+        <a href="{% url 'projects:file-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:files-list" %} active{% endif %}">
+            <div class="d-flex w-100 just-content-start align-items-center">
+                <i class="fa fa-file-alt"></i>
+                <span class="menu-collapsed">Files</span>
+            </div>
+        </a>
         <div class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
             <small>Scope / Assets</small>
         </div>

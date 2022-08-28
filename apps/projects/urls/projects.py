@@ -12,9 +12,6 @@ urlpatterns = [
     # reporting urls
     path('reporting/', include('apps.reporting.urls')),
 
-    # networking
-    # path('networking/', include('apps.networking.urls')),
-
     # command
     path('methodologies/', include('apps.methodologies.urls.projects')),
 
@@ -26,6 +23,12 @@ urlpatterns = [
     path('tokens/', views.ProjectTokenList.as_view(), name="token-list"),
     path('tokens/create/', views.ProjectTokenCreate.as_view(), name="token-create"),
     path('tokens/<str:pk>/delete/', views.ProjectTokenDelete.as_view(), name="token-delete"),
+
+    path('files/', views.ProjectFileList.as_view(), name="file-list"),
+    path('files/create/', views.ProjectFileCreate.as_view(), name="file-create"),
+    path('files/<int:pk>/', views.ProjectFileDetail.as_view(), name="file-detail"),
+    path('files/<int:pk>/update/', views.ProjectFileUpdate.as_view(), name="file-update"),
+    path('files/<int:pk>/delete/', views.ProjectFileDelete.as_view(), name="file-delete"),
 
     # single project
     path('<str:pk>/', views.ProjectDetail.as_view(), name="project-detail"),

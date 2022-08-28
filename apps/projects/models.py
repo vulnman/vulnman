@@ -1,3 +1,4 @@
+import os.path
 import secrets
 from uuid import uuid4
 from guardian.shortcuts import assign_perm, remove_perm
@@ -213,3 +214,34 @@ class ProjectAPIToken(models.Model):
 
     class Meta:
         ordering = ["-date_valid"]
+
+
+def project_file_upload_path(instance, filename):
+    ext = filename.split(".")[-1]
+    filename = "%s.%s" % (uuid4(), ext)
+    return "uploads/projects/%s/files/%s" % (instance.pk, filename)
+
+
+class ProjectFile(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey('account.User', on_delete=models.SET_NULL, null=True)
+    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
+    name = models.CharField(max_length=64)
+    file = models.FileField(upload_to=project_file_upload_path)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def filename(self):
+        return os.path.basename(self.file.name)
+
+    def get_absolute_url(self):
+        return reverse_lazy("projects:file-detail", kwargs={"pk": self.pk})
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy("projects:file-delete", kwargs={"pk": self.pk})
+
+    class Meta:
+        ordering = ["-date_created"]
