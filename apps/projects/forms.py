@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_bootstrap5 import bootstrap5
 from apps.projects import models
-from vulnman.core.forms import DateInput
+from vulnman.core.forms import DateInput, FileDropWidget
 from crispy_forms.bootstrap import FormActions
 
 
@@ -149,6 +149,31 @@ class ProjectAPITokenForm(forms.ModelForm):
             ),
             layout.Row(
                 layout.Div(bootstrap5.FloatingField("date_valid"), css_class="col-sm-12")
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
+            )
+        )
+
+
+class ProjectFileForm(forms.ModelForm):
+    class Meta:
+        model = models.ProjectFile
+        fields = ["name", "file"]
+        widgets = {
+            'file': FileDropWidget()
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("name"), css_class="col-sm-12"), css_class="g-2"
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.Field("file", wrapper_class="col-sm-12"))
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),

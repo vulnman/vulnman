@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load vulnmantags %}
+{% load guardian_tags %}
+
+{% block title %}Project Files{% endblock %}
+
+{% block content %}
+    {% get_obj_perms request.user for project as "project_perms" %}
+
+    <div class="container mt-3">
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">Files</li>
+                    </ol>
+                </nav>
+            </div>
+            {% if "change_project" in project_perms %}
+                <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                    <div class="d-inline">
+                        <a class="btn btn-primary" href="{% url 'projects:file-create' %}">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+
+        {% if not object_list %}
+            <div class="card mt-3">
+                <div class="card-body">
+                    {% show_blankslate %}
+                </div>
+            </div>
+        {% else %}
+            <div class="list-group mt-3">
+                {% for obj in object_list %}
+                    <div href="{{ obj.get_absolute_url }}" class="list-group-item">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <span>{{ obj }}</span>
+                                <div class="float-end">
+                                    <a class="btn btn-sm btn-outline-warning" href="{% url 'projects:file-update' obj.pk %}"><i class="fa fa-edit"></i></a>
+                                    <a class="btn btn-sm btn-outline-secondary" href="{{ obj.get_absolute_url }}">
+                                        <i class="fa fa-download"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock content %}

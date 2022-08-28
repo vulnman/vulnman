@@ -38,7 +38,7 @@ class FileDropWidget(forms.FileInput):
         )
 
     def render(self, name, value, attrs=None, renderer=None):
-        script = "<script>$('#id_%s').filepond({storeAsFile: true});</script>" % name
+        script = "<script>$('#id_%s').filepond({storeAsFile:true,credits:false});</script>" % name
         output = [
             super().render(name, value, attrs, renderer),
             script

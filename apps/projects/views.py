@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.template.loader import render_to_string
 from django.conf import settings
 import django_filters.views
@@ -286,3 +286,47 @@ class ProjectTokenDelete(generics.ProjectDeleteView):
     def get_queryset(self):
         return models.ProjectAPIToken.objects.filter(
             project=self.get_project(), user=self.request.user)
+
+
+class ProjectFileList(generics.ProjectListView):
+    template_name = "projects/files/list.html"
+
+    def get_queryset(self):
+        return models.ProjectFile.objects.filter(project=self.get_project())
+
+
+class ProjectFileCreate(generics.ProjectCreateView):
+    template_name = "projects/files/create_update.html"
+    form_class = forms.ProjectFileForm
+    success_url = reverse_lazy("projects:file-list")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class ProjectFileDetail(generics.ProjectDetailView):
+    model = models.ProjectFile
+
+    def render_to_response(self, context, **response_kwargs):
+        obj = self.get_object()
+        response = HttpResponse(self.get_object().file)
+        response['Content-Disposition'] = 'attachment; filename="{filename}"'.format(filename=obj.filename)
+        return response
+
+
+class ProjectFileUpdate(generics.ProjectUpdateView):
+    # TODO: write tests
+    template_name = "projects/files/create_update.html"
+    form_class = forms.ProjectFileForm
+
+    def get_queryset(self):
+        return models.ProjectFile.objects.filter(project=self.get_project())
+
+
+class ProjectFileDelete(generics.ProjectDeleteView):
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:file-list")
+
+    def get_queryset(self):
+        return models.ProjectFile.objects.filter(project=self.get_project())
