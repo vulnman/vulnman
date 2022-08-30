@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load guardian_tags %}
 {% load vulnmantags %}
 
 {% block title %}
@@ -7,6 +8,8 @@
 {% endblock %}
 
 {% block content %}
+    {% get_obj_perms request.user for project as "project_perms" %}
+
     <div class="container mt-3">
         <div class="row d-flex">
             <div class="d-flex flex-column col-sm-12 col-md-7">
@@ -16,7 +19,7 @@
                     </ol>
                 </nav>
             </div>
-            {% if perms.projects.change_project %}
+            {% if "change_project" in project_perms %}
                 <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
                     <div class="d-inline">
                         <a class="btn btn-primary" href="{% url 'projects:assets:webapp-create' %}">
@@ -33,22 +36,22 @@
                 </div>
             </div>
         {% else %}
-        <table class="table table-hover table-striped mt-3">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Base URL</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for webapp in webapps %}
+            <table class="table table-hover table-striped mt-3">
+                <thead>
                     <tr>
-                        <td><a href="{% url 'projects:assets:webapp-detail' webapp.pk %}">{{ webapp.name }}</a></td>
-                        <td>{{ webapp.base_url }}</td>
+                        <th>Name</th>
+                        <th>Base URL</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for webapp in webapps %}
+                        <tr>
+                            <td><a href="{% url 'projects:assets:webapp-detail' webapp.pk %}">{{ webapp.name }}</a></td>
+                            <td>{{ webapp.base_url }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
     </div>
 

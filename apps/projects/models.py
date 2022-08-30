@@ -41,6 +41,7 @@ class Project(models.Model):
     name = models.CharField(max_length=128)
     pentest_method = models.PositiveIntegerField(choices=PENTEST_METHOD_CHOICES, default=PENTEST_METHOD_GREYBOX)
     cvss_required = models.BooleanField(default=False, verbose_name="CVSS required")
+    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -121,7 +122,6 @@ class Client(models.Model):
 
 
 class ClientContact(models.Model):
-
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)

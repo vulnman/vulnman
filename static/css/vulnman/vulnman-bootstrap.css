@@ -10547,6 +10547,10 @@ textarea.form-control-lg {
 .choices__list--dropdown .choices__item--selectable.is-highlighted {
     background-color: $choices-highlight-bg;
 }*/
+.filepond--credits {
+  display: none !important;
+}
+
 .navbar {
   height: 90px;
   padding: 1.5rem;

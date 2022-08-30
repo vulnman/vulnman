@@ -234,6 +234,9 @@ class Vulnerability(BaseCVSS, VulnmanProjectModel):
         ordering = ['-severity']
         verbose_name_plural = "Vulnerabilities"
         verbose_name = "Vulnerability"
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
 
 
 class Proof(VulnmanProjectModel):

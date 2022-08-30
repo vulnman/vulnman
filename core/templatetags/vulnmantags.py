@@ -33,3 +33,11 @@ def show_blankslate(context):
         'text': context.get('blankslate_text', 'Create a new instance with the button above!'),
         'title': context.get('blankslate_title', 'Nothing in here!')
     }
+
+
+@register.inclusion_tag("core/components/navigation/breadcrumbs.html", takes_context=True)
+def render_breadcrumbs(context):
+    # render breadcrumbs from context
+    return {
+        'breadcrumbs': context.get("breadcrumbs")
+    }
