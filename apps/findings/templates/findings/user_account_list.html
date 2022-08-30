@@ -9,18 +9,26 @@
 
 
 {% block content %}
-    <h3 class="text-center">User Accounts</h3>
-    <hr/>
+    {% get_obj_perms request.user for project as "project_perms" %}
+
     <div class="container mt-3">
-        <div class="clearfix">
-            <div class="float-end">
-                {% get_obj_perms request.user for project as "project_perms" %}
-                {% if "change_project" in project_perms %}
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">User Accounts</li>
+                    </ol>
+                </nav>
+            </div>
+            {% if "change_project" in project_perms %}
+                <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                    <div class="d-inline">
                 <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#account-create-modal">
                     <i class="fa fa-plus"></i>
                 </a>
-                {% endif %}
-            </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
         {% if user_accounts %}
         <table class="table table-hover table-striped mt-3">

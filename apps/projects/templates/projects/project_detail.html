@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load markdown %}
 {% load project_contribs %}
 {% load guardian_tags %}
 
@@ -148,7 +149,7 @@
             </div>
         </div>
 
-        <div class="row mt-3 mb-5">
+        <div class="row mt-3">
             <div class="col-sm-12 col-md-4">
                 <div class="card h-100">
                     <div class="card-body">
@@ -175,24 +176,17 @@
             </div>
         </div>
 
-
-        <!-- Timeline -->
-        {% if project.get_latest_command_history %}
-            <div class="row mt-3">
-                <div class="col-sm-12">
-                    <hr/>
-                    <ul class="timeline">
-                        {% for command in project.get_latest_command_history %}
-                            {% if forloop.counter0|divisibleby:2 %}
-                                {% include 'components/timeline/item.html' with invert=True title=command.command icon=command.get_timeline_icon date_created=command.date_updated user=command.creator %}
-                            {% else %}
-                                {% include 'components/timeline/item.html' with title=command.command icon=command.get_timeline_icon date_created=command.date_updated user=command.creator %}
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
+        <div class="row mt-3 mb-5">
+            <div class="col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <p class="card-text">Description</p>
+                        {{ project.description|md_to_html }}
+                    </div>
                 </div>
             </div>
-        {% endif %}
+        </div>
+
     </div>
 
     <!-- Modal -->

@@ -86,8 +86,7 @@ class AssetTask(VulnmanProjectModel):
             return self.STATUS_NOT_APPLICABLE_ICON
 
     def get_absolute_url(self):
-        return reverse_lazy(
-            "projects:methodologies:project-task-detail", kwargs={"pk": self.pk})
+        return reverse_lazy("projects:methodologies:project-task-detail", kwargs={"pk": self.pk})
 
     @property
     def name(self):

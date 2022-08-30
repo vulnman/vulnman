@@ -10548,7 +10548,7 @@ textarea.form-control-lg {
     background-color: $choices-highlight-bg;
 }*/
 .filepond--credits {
-  display: none;
+  display: none !important;
 }
 
 .navbar {
