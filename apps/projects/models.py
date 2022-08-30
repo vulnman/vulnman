@@ -121,7 +121,6 @@ class Client(models.Model):
 
 
 class ClientContact(models.Model):
-
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
