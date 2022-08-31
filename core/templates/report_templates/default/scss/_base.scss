@@ -2,33 +2,17 @@
   size: a4 portrait;
   margin: 3cm 1cm 2cm 1cm;
 
-  @top-left {
-    background: #2c3e50;
-    content: counter(page);
-    color: #c6c9cb;
-    height: 1cm;
-    text-align: center;
-    width: 1cm;
-    margin-bottom: 1cm;
-  }
-
-  @top-center {
-    background: #2c3e50;
-    content: '';
-    display: block;
-    height: .05cm;
-    opacity: .5;
-    width: 100%;
-    margin-bottom: 1cm;
-  }
-
   @top-right {
-    font-size: 9pt;
-    height: 1cm;
-    vertical-align: middle;
-    width: 100%;
-    margin-bottom: 1cm;
+      content: " ";
+      background: url(file://images/logo-with-text.svg);
+      background-size: 100%;
+      background-repeat: no-repeat;
+      height: 12mm;
+      width: 53mm;
+      margin-bottom: 8mm;
+      margin-right: -6mm;
   }
+
 }
 
 @page :blank {

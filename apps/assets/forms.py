@@ -10,7 +10,7 @@ from crispy_forms import layout
 class WebApplicationForm(forms.ModelForm):
     class Meta:
         model = models.WebApplication
-        fields = ["name", "base_url", "description", "hide_from_report", "environment"]
+        fields = ["name", "base_url", "description", "hide_from_report", "environment", "accessibility"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -20,6 +20,7 @@ class WebApplicationForm(forms.ModelForm):
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField("base_url", wrapper_class="col-sm-12"),
                 bootstrap5.FloatingField("environment", wrapper_class="col-sm-12"),
+                bootstrap5.FloatingField("accessibility", wrapper_class="col-sm-12"),
                 bootstrap5.Field("description", wrapper_class="col-sm-12"),
                 bootstrap5.Field("hide_from_report", wrapper_class="col-sm-12"),
                 css_class="g-2"
