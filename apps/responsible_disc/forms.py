@@ -1,5 +1,6 @@
 import uuid
 from django import forms
+from django.conf import settings
 from django.urls import reverse_lazy
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
@@ -259,3 +260,27 @@ class UnshareVulnerability(forms.Form):
 
     class Meta:
         fields = ["email"]
+
+
+def get_template_choices():
+    choices = []
+    for item in settings.REPORT_TEMPLATES.keys():
+        choices.append((item, item))
+    return choices
+
+
+class VulnerabilityExportForm(forms.Form):
+    template = forms.ChoiceField(choices=get_template_choices())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                bootstrap5.FloatingField("template", wrapper_class="col-sm-12"), css_class="g-2"
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
+            )
+        )

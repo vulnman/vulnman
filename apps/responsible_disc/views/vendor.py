@@ -46,7 +46,8 @@ class InviteVendor(ObjectPermissionRequiredMixin, PasswordResetView):
             return HttpResponseRedirect(self.get_success_url())
         if not qs.exists():
             user = User.objects.create(
-                username=form.cleaned_data["email"], email=form.cleaned_data["email"], is_vendor=True, is_active=False)
+                username=form.cleaned_data["email"], email=form.cleaned_data["email"],
+                user_role=User.USER_ROLE_VENDOR, is_active=False)
             self.extra_email_context["new_user"] = user
         else:
             user = User.objects.get(email=form.cleaned_data["email"])

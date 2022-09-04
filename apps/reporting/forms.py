@@ -19,7 +19,7 @@ def get_report_templates():
 class ReportCreateForm(forms.ModelForm):
     class Meta:
         model = models.Report
-        fields = ["author", "title", "language", "name", "template"]
+        fields = ["author", "title", "language", "name", "template", "report_variant"]
 
     def __init__(self, project, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -41,6 +41,9 @@ class ReportCreateForm(forms.ModelForm):
                 ),
                 layout.Div(
                     bootstrap5.FloatingField("language", wrapper_class="col-sm-12")
+                ),
+                layout.Div(
+                    bootstrap5.FloatingField("report_variant", wrapper_class="col-sm-12")
                 ),
                 layout.Div(
                     bootstrap5.FloatingField("template", wrapper_class="col-sm-12")
@@ -144,7 +147,7 @@ class VersionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         user_pks = list(project.projectcontributor_set.filter(
-            user__is_pentester=True).values_list("user__pk", flat=True))
+            user__user_role=User.USER_ROLE_PENTESTER).values_list("user__pk", flat=True))
         user_pks.append(project.creator.pk)
         self.fields["user"].queryset = User.objects.filter(pk__in=user_pks)
         self.helper.layout = layout.Layout(

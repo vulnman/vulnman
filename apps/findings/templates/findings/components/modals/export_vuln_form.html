@@ -1,0 +1,17 @@
+{% load crispy_forms_tags %}
+<div class="modal fade bd-example-modal-lg" id="export-vuln-modal" tabindex="-1" role="dialog"
+     aria-labelledby="export-vuln-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <form method="GET" action="{% url 'projects:findings:vulnerability-export' vuln.pk %}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cvss-update-modal-label">Choose Export Template</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% crispy export_vuln_form %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

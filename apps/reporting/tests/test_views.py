@@ -24,7 +24,8 @@ class ReportViewTestcase(TestCase, VulnmanTestCaseMixin):
 
     def test_report_create(self):
         url = self.get_url("projects:reporting:report-create")
-        payload = {"author": self.pentester1.pk, "title": "", "language": "de", "name": "Test", "template": "default"}
+        payload = {"author": self.pentester1.pk, "title": "", "language": "de", "name": "Test", "template": "default",
+                   "report_variant": models.Report.REPORT_VARIANT_PENTEST_REPORT}
         # add any user as other forbidden
         self.login_with_project(self.pentester2, self.project2)
         response = self.client.post(url, payload)

@@ -1,8 +1,8 @@
 from django.test import TestCase
-from django.utils import timezone
 from vulnman.core.test import VulnmanTestCaseMixin
 from apps.responsible_disc import models
 from apps.findings.models import Template
+from apps.account.models import User
 
 
 class VulnerabilityListView(TestCase, VulnmanTestCaseMixin):
@@ -77,7 +77,7 @@ class VulnerabilityListView(TestCase, VulnmanTestCaseMixin):
                    "affected_product": "Test Product", "affected_versions": "<1.0.0",
                    "severity": ""
                    }
-        vendor = self._create_user("vendor", "changeme", is_vendor=True)
+        vendor = self._create_user("vendor", "changeme", user_role=User.USER_ROLE_VENDOR)
         self.client.force_login(vendor)
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, 403)

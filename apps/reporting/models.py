@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.conf import settings
 from vulnman.models import VulnmanProjectModel
+from django.utils.module_loading import import_string
 
 
 def get_report_templates():
@@ -13,19 +14,30 @@ def get_report_templates():
 
 class Report(VulnmanProjectModel):
     REPORT_DEFAULT_TITLE = "Pentest Report"
-    REPORT_TYPE_PDF = 0
-    REPORT_TYPE_JSON = 1
+    REPORT_VARIANT_PENTEST_REPORT = 0
+    REPORT_VARIANT_PENTEST_CSV = 1
 
-    REPORT_TYPE_CHOICES = [
-        (REPORT_TYPE_PDF, "PDF"),
-        (REPORT_TYPE_JSON, "JSON")
+    REPORT_VARIANT_CHOICES = [
+        (REPORT_VARIANT_PENTEST_REPORT, "Pentest Report"),
+        (REPORT_VARIANT_PENTEST_CSV, "Pentest CSV")
     ]
-    REPORT_TYPE_CONTENT_TYPES = {
-        REPORT_TYPE_PDF: "application/pdf",
-        REPORT_TYPE_JSON: "application/json"
+
+    REPORT_VARIANT_CONTENT_TYPES = {
+        REPORT_VARIANT_PENTEST_REPORT: "application/pdf",
+        REPORT_VARIANT_PENTEST_CSV: "text/csv"
     }
 
-    name = models.CharField(max_length=128, default="Report")
+    REPORT_VARIANT_IMPORTS = {
+        REPORT_VARIANT_PENTEST_REPORT: "pentest_report.Report",
+        REPORT_VARIANT_PENTEST_CSV: "csv.Report",
+    }
+
+    REPORT_VARIANT_EXTENSIONS = {
+        REPORT_VARIANT_PENTEST_REPORT: "pdf",
+        REPORT_VARIANT_PENTEST_CSV: "csv"
+    }
+
+    name = models.CharField(max_length=128, default="Pentest Report")
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name="created_report_set",
         null=True, blank=True)
@@ -37,7 +49,7 @@ class Report(VulnmanProjectModel):
     title = models.CharField(max_length=256, null=True, blank=True)
     language = models.CharField(choices=settings.LANGUAGES, default="en", max_length=6)
     template = models.CharField(choices=get_report_templates(), default="default", max_length=64)
-    report_type = models.PositiveIntegerField(choices=REPORT_TYPE_CHOICES, default=REPORT_TYPE_PDF)
+    report_variant = models.PositiveIntegerField(choices=REPORT_VARIANT_CHOICES, default=REPORT_VARIANT_PENTEST_REPORT)
 
     def get_report_title(self):
         if self.title:
@@ -59,6 +71,12 @@ class Report(VulnmanProjectModel):
         if not self.reportversion_set.count():
             return "0.1"
         return self.reportversion_set.first().version
+
+    def get_report_content_type(self):
+        return self.REPORT_VARIANT_CONTENT_TYPES.get(self.report_variant, "application/octet-stream")
+
+    def get_report_file_extension(self):
+        return self.REPORT_VARIANT_EXTENSIONS.get(self.report_variant, "txt")
 
     class Meta:
         ordering = ["-date_created"]
@@ -85,6 +103,12 @@ class ReportRelease(VulnmanProjectModel):
 
     def get_absolute_delete_url(self):
         return reverse_lazy("projects:reporting:report-release-delete", kwargs={"pk": self.pk})
+
+    def get_report_variant(self):
+        imp_string = "%s.%s" % (settings.REPORT_TEMPLATES.get(self.report.template, "default"),
+                                self.report.REPORT_VARIANT_IMPORTS.get(self.report.report_variant))
+        ReportClass = import_string(imp_string)
+        return ReportClass(self)
 
     class Meta:
         ordering = ["-date_created"]

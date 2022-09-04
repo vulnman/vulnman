@@ -14,6 +14,11 @@ class TemplateQuerySet(QuerySet):
         return templates
 
 
+class VulnerabilityCategories(QuerySet):
+    def for_project(self, project):
+        return self.filter(template__vulnerability__project=project)
+
+
 class VulnerabilityQuerySet(QuerySet):
     def open(self):
         return self.filter(status=self.model.STATUS_OPEN)

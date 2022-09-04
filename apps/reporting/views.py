@@ -147,8 +147,8 @@ class ReportReleaseDetail(generics.ProjectDetailView):
 
     def render_to_response(self, context, **response_kwargs):
         obj = self.get_object()
-        response = HttpResponse(obj.compiled_source, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        response = HttpResponse(obj.compiled_source, content_type=obj.report.get_report_content_type())
+        response['Content-Disposition'] = 'attachment; filename="report.%s"' % obj.report.get_report_file_extension()
         return response
 
     def get_context_data(self, **kwargs):

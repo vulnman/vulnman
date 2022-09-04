@@ -37,8 +37,7 @@
             </div>
         </div>
         <div class="col-sm-12 col-md-4 d-flex align-items-end justify-content-end">
-            <a class="btn btn-outline-info" data-bs-toggle="tooltip" title="Export to PDF" target="_blank"
-               href="{% url 'projects:findings:vulnerability-export' vuln.pk %}">
+            <a class="btn btn-outline-info" data-bs-target="#export-vuln-modal" data-bs-toggle="modal">
                 <i class="fa fa-file-arrow-down"></i>
             </a>
             {% if "change_project" in project_perms %}
@@ -138,6 +137,7 @@
             </div>
         </div>
 
+        {% include 'findings/components/modals/export_vuln_form.html' %}
 
         {% csrf_token %}
 

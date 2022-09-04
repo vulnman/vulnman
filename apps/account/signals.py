@@ -15,6 +15,11 @@ GROUP_PERMISSION_MAP = {
             ]
         }
     },
+    "Customers": {
+        "permissions": {
+            "projects.Project": ["view_project"]
+        }
+    },
     "Vendors": {
         "permissions": {
             "responsible_disc.Vulnerability": [

@@ -1,4 +1,5 @@
 import django_filters.views
+from django.conf import settings
 from django.http import HttpResponse, Http404
 from django.urls import reverse_lazy
 from vulnman.core.views import generics
@@ -61,7 +62,8 @@ class VulnCreate(generics.ProjectCreateView):
             form.add_error("template_id", "Template does not exist!")
             return super().form_invalid(form)
         form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
-        form.instance.severity = form.instance.template.severity
+        if form.cleaned_data.get("severity") is None:
+            form.instance.severity = form.instance.template.severity
         form.instance.object_id = form.cleaned_data["f_asset"]
         form.instance.content_type = models.Vulnerability.objects.get_asset_content_type(
             form.cleaned_data["f_asset"])
@@ -147,7 +149,7 @@ class VulnDetail(generics.ProjectDetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["image_proof_form"] = forms.ImageProofForm()
+        context["export_vuln_form"] = forms.VulnerabilityExportForm(initial={"template": "default"})
         context["change_cvss_form"] = forms.VulnerabilityCVSSBaseForm(initial={
             "cvss_av": context["vuln"].cvss_av, "cvss_ac": context["vuln"].cvss_ac,
             "cvss_s": context["vuln"].cvss_s, "cvss_c": context["vuln"].cvss_c,
@@ -168,7 +170,10 @@ class VulnerabilityExport(generics.ProjectDetailView):
     model = models.Vulnerability
 
     def render_to_response(self, context, **response_kwargs):
-        result = export_single_vulnerability(self.get_object())
+        template = self.request.GET.get("template", "default")
+        if not settings.REPORT_TEMPLATES.get(template, None):
+            template = "default"
+        result = export_single_vulnerability(self.get_object(), template)
         response = HttpResponse(result, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="report.pdf"'
         return response
@@ -186,7 +191,7 @@ class VulnUpdate(generics.ProjectUpdateView):
             form.add_error("template_id", "Template does not exist!")
             return super().form_invalid(form)
         form.instance.template = models.Template.objects.get(vulnerability_id=form.cleaned_data["template_id"])
-        if not form.cleaned_data.get('severity'):
+        if form.cleaned_data.get("severity") is None:
             form.instance.severity = form.instance.template.severity
         form.instance.content_type = models.Vulnerability.objects.get_asset_content_type(form.cleaned_data["f_asset"])
         form.instance.object_id = form.cleaned_data["f_asset"]

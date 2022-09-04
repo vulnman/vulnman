@@ -2,6 +2,7 @@ from django.test import TestCase
 from guardian.shortcuts import get_user_perms
 from vulnman.core.test import VulnmanTestCaseMixin
 from apps.responsible_disc.models import Vulnerability
+from apps.account.models import User
 from apps.account import models
 
 
@@ -17,7 +18,7 @@ class InviteVendorTestCase(TestCase, VulnmanTestCaseMixin):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 403)
         # vendor: forbidden
-        vendor = self._create_user("vendor", "changeme", is_vendor=True)
+        vendor = self._create_user("vendor", "changeme", user_role=User.USER_ROLE_VENDOR)
         self.client.force_login(vendor)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 403)
@@ -25,7 +26,8 @@ class InviteVendorTestCase(TestCase, VulnmanTestCaseMixin):
         self.client.force_login(self.pentester1)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(models.User.objects.filter(email=data["email"], is_active=False, is_vendor=True).count(), 1)
+        self.assertEqual(models.User.objects.filter(email=data["email"], is_active=False,
+                                                    user_role=User.USER_ROLE_VENDOR).count(), 1)
         user = models.User.objects.get(email=data["email"])
         self.assertEqual(len(get_user_perms(user, self.vuln1)), 2)
         self.assertIn("view_vulnerability", get_user_perms(user, self.vuln1))

@@ -226,7 +226,7 @@ class ProjectContributorCreate(generics.ProjectCreateView):
         return reverse_lazy("projects:contributor-list", kwargs={"pk": self.get_project().pk})
 
     def form_valid(self, form):
-        user = User.objects.filter(username=form.cleaned_data.get('username'))
+        user = User.objects.filter(username=form.cleaned_data.get('username'), user_role=User.USER_ROLE_PENTESTER)
         if not user.exists():
             form.add_error("username", "Username not found!")
             return super().form_invalid(form)

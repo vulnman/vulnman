@@ -1,0 +1,36 @@
+{% load i18n %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ release.report.get_report_title}}</title>
+
+    <style>
+        @page {
+            @bottom-left {
+                font-size: 10px;
+                content: "{% trans 'Confidential' %}";
+                margin-top: -5px;
+            }
+
+            @bottom-center {
+                content: "{{ project.name }}";
+                font-size: 10px;
+                margin-top: -5px;
+            }
+        }
+    </style>
+</head>
+
+<body {% if release.release_type == "draft" %}class="draft"{% endif %}>
+
+    {% include './pages/cover.html' %}
+    {% include './pages/version_history.html' %}
+    {% include './pages/toc.html' %}
+    {% include './pages/contacts.html' %}
+    {% include './pages/intro.html' %}
+    {% include './pages/scope.html' %}
+    {% include './pages/overview.html' %}
+    {% include './pages/management_summary.html' %}
+    {% include './pages/technical_details.html' %}
+</body>
+</html>

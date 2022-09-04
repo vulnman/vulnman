@@ -51,10 +51,10 @@ TEMPLATES = [
         },
     },
     {
-        'NAME': 'report_templates',
+        'NAME': 'custom_templates',
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'resources/templates'
+            BASE_DIR / 'custom/templates'
         ],
         'APP_DIRS': False
     },
@@ -148,6 +148,7 @@ INSTALLED_APPS = [
     # apps
     'apps.account.apps.AccountConfig',
     'apps.reporting.apps.ReportingConfig',
+    'apps.reporting.default_template.apps.DefaultTemplateConfig',
     'apps.projects.apps.ProjectsConfig',
     'apps.methodologies.apps.MethodologiesConfig',
     'apps.findings.apps.FindingsConfig',
@@ -188,10 +189,9 @@ REPORT_COMPANY_INFORMATION = {
 
 # Report Templates
 REPORT_TEMPLATES = {
-    "default": {
-        "CSS": ["css/fontawesome.min.css", "css/codehilite.css"]
-    }
+    "default": 'apps.reporting.default_template.variants'
 }
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -244,6 +244,8 @@ Q_CLUSTER = {
     'orm': 'default'
 }
 
+ADDITIONAL_PACKAGES = []
+
 try:
     from vulnman.conf.local_settings import *
 except ImportError:
@@ -253,3 +255,6 @@ except ImportError:
 # Enable LDAP authentication backend, if LDAP_SERVER_URI is configured
 if AUTH_LDAP_SERVER_URI:
     AUTHENTICATION_BACKENDS.append("django_auth_ldap.backend.LDAPBackend")
+
+if ADDITIONAL_PACKAGES and isinstance(ADDITIONAL_PACKAGES, list):
+    INSTALLED_APPS += ADDITIONAL_PACKAGES

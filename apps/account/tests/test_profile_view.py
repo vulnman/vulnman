@@ -16,7 +16,7 @@ class ProfileViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.assertEqual(response.status_code, 200)
 
     def test_status_code_vendor(self):
-        vendor = self._create_user("testvendor", "changeme", is_vendor=True)
+        vendor = self._create_user("testvendor", "changeme", user_role=models.User.USER_ROLE_VENDOR)
         url = self.get_url("account:user-profile", slug=vendor.username)
         self.client.force_login(vendor)
         response = self.client.get(url)
@@ -41,7 +41,7 @@ class ProfileViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.assertContains(response, "This profile is not public!")
 
     def test_private_profile_vendor(self):
-        vendor = self._create_user("testvendor", "changeme", is_vendor=True)
+        vendor = self._create_user("testvendor", "changeme", user_role=models.User.USER_ROLE_VENDOR)
         url = self.get_url("account:user-profile", slug=vendor.username)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)

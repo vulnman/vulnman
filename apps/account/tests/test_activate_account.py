@@ -10,7 +10,7 @@ class ActivateAccountViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.init_mixin()
 
     def test_valid_token(self):
-        user1 = self._create_user("testvendor", "changeme", is_vendor=True, is_active=False)
+        user1 = self._create_user("testvendor", "changeme", user_role=User.USER_ROLE_VENDOR, is_active=False)
         token = account_activation_token.make_token(user1)
         uidb64 = urlsafe_base64_encode(str(user1.pk).encode())
         url = self.get_url("account:activate-account", token=token, uidb64=uidb64)

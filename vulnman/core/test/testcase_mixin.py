@@ -9,15 +9,15 @@ from apps.account.models import User
 
 class VulnmanTestCaseMixin(object):
     def init_mixin(self):
-        self.pentester1 = self._create_user("pentester", "changeme", is_pentester=True)
-        self.pentester2 = self._create_user("pentester2", "changeme", is_pentester=True)
+        self.pentester1 = self._create_user("pentester", "changeme", user_role=User.USER_ROLE_PENTESTER)
+        self.pentester2 = self._create_user("pentester2", "changeme", user_role=User.USER_ROLE_PENTESTER)
         self.read_only1 = self._create_user("readonly1", "changeme")
         self.manager = self._create_user("manager", "changeme")
         self.manager.groups.add(Group.objects.get(name="Management"))
         self.project1 = self._create_project(creator=self.pentester1)
         self.project2 = self._create_project(creator=self.pentester2)
         self.add_contributor(self.read_only1, self.project1, role=ProjectContributor.ROLE_READ_ONLY)
-        self.vendor = self._create_user("testvendor1", "changeme", is_vendor=True)
+        self.vendor = self._create_user("testvendor1", "changeme", user_role=User.USER_ROLE_VENDOR)
 
     def add_contributor(self, user, project, role=ProjectContributor.ROLE_PENTESTER):
         return ProjectContributor.objects.create(user=user, project=project, role=role)

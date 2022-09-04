@@ -15,11 +15,21 @@ class UserAccountManager(UserManager):
 
 
 class User(AbstractUser):
+    # if you change this, change migration 0014_user_user_role.py, which did not recognize
+    # these attributes in the first run
+    USER_ROLE_PENTESTER = 0
+    USER_ROLE_VENDOR = 1
+    USER_ROLE_CUSTOMER = 2
+
+    USER_ROLE_CHOICES = [
+        (USER_ROLE_PENTESTER, "Pentester"),
+        (USER_ROLE_CUSTOMER, "Customer"),
+        (USER_ROLE_VENDOR, "Vendor")
+    ]
+
     email = models.EmailField(unique=True)
     objects = UserAccountManager()
-    is_pentester = models.BooleanField(default=False)
-    is_customer = models.BooleanField(default=False)
-    is_vendor = models.BooleanField(default=False)
+    user_role = models.PositiveIntegerField(choices=USER_ROLE_CHOICES, null=True)
 
     class Meta:
         db_table = 'auth_user'
@@ -29,9 +39,9 @@ class User(AbstractUser):
 
     @property
     def profile(self):
-        if self.is_pentester:
+        if self.user_role == User.USER_ROLE_PENTESTER:
             return self.pentester_profile
-        elif self.is_vendor:
+        elif self.user_role == User.USER_ROLE_VENDOR:
             return self.vendor_profile
 
     def has_2fa_enabled(self):
@@ -63,24 +73,26 @@ class VendorProfile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
-    if created and instance.is_pentester:
+    if created and instance.user_role == User.USER_ROLE_PENTESTER:
         PentesterProfile.objects.create(user=instance)
         group = Group.objects.get(name="Pentesters")
         instance.groups.add(group)
         instance.save()
-    if created and instance.is_vendor:
+    if created and instance.user_role == User.USER_ROLE_VENDOR:
         VendorProfile.objects.create(user=instance)
         group = Group.objects.get(name="Vendors")
+        instance.groups.add(group)
+        instance.save()
+    if created and instance.user_role == User.USER_ROLE_CUSTOMER:
+        group = Group.objects.get(name="Customers")
         instance.groups.add(group)
         instance.save()
 
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    if instance.is_pentester:
-        instance.pentester_profile.save()
-    elif instance.is_vendor:
-        instance.vendor_profile.save()
+    if instance.profile:
+        instance.profile.save()
 
 
 post_migrate.connect(signals.populate_groups_and_permission, sender=None)

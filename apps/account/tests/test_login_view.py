@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.conf import settings
 from vulnman.core.test import VulnmanTestCaseMixin
+from apps.account.models import User
 
 
 class LoginViewBaseTestCase(TestCase, VulnmanTestCaseMixin):
@@ -17,7 +18,7 @@ class LoginViewBaseTestCase(TestCase, VulnmanTestCaseMixin):
         self.assertRedirects(response, reverse(settings.LOGIN_REDIRECT_URL))
 
     def test_login_vendor(self):
-        vendor = self._create_user("testvendor", "password", is_vendor=True)
+        vendor = self._create_user("testvendor", "password", user_role=User.USER_ROLE_VENDOR)
         data = {"auth-username": vendor.username, "auth-password": "password", "login-current_step": "auth"}
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 302)

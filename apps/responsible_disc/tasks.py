@@ -4,22 +4,8 @@ from io import BytesIO
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
-from apps.reporting.utils import report_gen
 from apps.responsible_disc import models
-
-
-def export_single_vulnerability(vulnerability):
-    context = {
-        "vulnerability": vulnerability,
-        "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
-    }
-    # TODO: do not hardcode this one
-    report_template = "default"
-    template = "responsible_disc/reporting/exported_vulnerability.html"
-    raw_source = render_to_string(template, context)
-    report_generator = report_gen.ReportGenerator(report_template)
-    compiled_source = report_generator.generate(raw_source)
-    return compiled_source
+from apps.reporting.tasks import export_single_vulnerability
 
 
 def export_advisory(vulnerability):
@@ -47,7 +33,8 @@ def export_advisory(vulnerability):
 
 def notify_vendor(vulnerability_pk):
     vulnerability = models.Vulnerability.objects.get(pk=vulnerability_pk)
-    pdf_source = export_single_vulnerability(vulnerability)
+    # TODO: do not hardcode this one
+    pdf_source = export_single_vulnerability(vulnerability, "default")
     if not vulnerability.vendor_email:
         models.VulnerabilityLog.objects.create(
             message="No vendor email address set! Mail was not sent", vulnerability=vulnerability,

@@ -1,28 +1,18 @@
 from django.conf import settings
-from django.db.models import Count
 from django.utils import translation
-from django.template.loader import render_to_string
+from django.utils.module_loading import import_string
 from apps.reporting import models
-from apps.findings.models import Template
-from apps.reporting.utils import charts, report_gen
 
 
-def export_single_vulnerability(vulnerability):
-    context = {
-        "vulnerability": vulnerability,
-        "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
-    }
-    # TODO: do not hardcode this one
-    report_template = "default"
-    template = "report_templates/default/exported_vulnerability.html"
-    raw_source = render_to_string(template, context)
-    report_generator = report_gen.ReportGenerator(report_template)
-    compiled_source = report_generator.generate(raw_source)
+def export_single_vulnerability(vulnerability, template_name):
+    Report = import_string(settings.REPORT_TEMPLATES.get(template_name, "default") + ".vulnerability_report.Report")
+    obj = Report(None, template_name=template_name, vulnerability=vulnerability)
+    _raw_source, compiled_source = obj.generate_report()
     return compiled_source
 
 
 def do_create_report(report_release_pk):
-    """Celery task for create PDF pentest reports
+    """Task for creating PDF pentest reports
     """
     try:
         report_release = models.ReportRelease.objects.get(pk=report_release_pk)
@@ -32,29 +22,6 @@ def do_create_report(report_release_pk):
     # activate django language support in celery task
     translation.activate(report_release.report.language)
 
-    # load vulnerability templates
-    project = report_release.project
-    vulnerability_templates = Template.objects.unique_and_ordered_for_project(project)
-
-    context = {
-        "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
-        "templates": vulnerability_templates, "release": report_release,
-        "ordered_vulnerability_list_by_severity": Template.objects.filter(
-            vulnerability__project=project).values("vulnerability__severity", "name").annotate(
-            count=Count("vulnerability__pk")).order_by(
-            "-vulnerability__severity"),
-        "project": project, "SEVERITY_CHART_SRC": charts.SeverityDonutChart().create_image(project),
-        "CATEGORY_POLAR_CHART": charts.VulnCategoryPolarChart().create_image(project)
-    }
-
-    jinja_template = "report_templates/" + report_release.report.template + "/report.html"
-    raw_source = render_to_string(jinja_template, context)
-
-    report_generator = report_gen.ReportGenerator(report_release.report.template)
-    compiled_source = report_generator.generate(raw_source)
-
-    report_release.raw_source = raw_source
-    report_release.compiled_source = compiled_source
-    report_release.task_id = None
-    report_release.save()
-    return True, "Report Release created!"
+    report_variant = report_release.get_report_variant()
+    result = report_variant.generate()
+    return result

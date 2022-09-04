@@ -10,13 +10,14 @@ from apps.account import forms
 from apps.account import models
 from vulnman.core.views.mixins import ThemeMixin, VulnmanContextMixin
 from vulnman.core.views import generics
+from apps.account.models import User
 from apps.account.token import account_activation_token
 
 
 class Index(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            if self.request.user.is_vendor:
+            if self.request.user.user_role == User.USER_ROLE_VENDOR:
                 return reverse_lazy('responsible_disc:vulnerability-list')
             return reverse_lazy('projects:project-list')
         return reverse_lazy('account:login')
@@ -36,7 +37,7 @@ class Profile(generics.VulnmanDetailView):
     slug_field = "username"
 
     def get_queryset(self):
-        return models.User.objects.filter(is_pentester=True, is_active=True)
+        return models.User.objects.filter(user_role=User.USER_ROLE_PENTESTER, is_active=True)
 
 
 class Setup2FAView(tfa_views.SetupView):
@@ -80,7 +81,7 @@ class ProfileUpdate(generics.VulnmanAuthUpdateView):
         return obj
 
     def get_queryset(self):
-        return models.PentesterProfile.objects.filter(user__is_pentester=True, user=self.request.user,
+        return models.PentesterProfile.objects.filter(user__user_role=User.USER_ROLE_PENTESTER, user=self.request.user,
                                                       user__is_active=True)
 
     def form_valid(self, form):

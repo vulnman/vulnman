@@ -163,6 +163,11 @@ def project_pocs_path(instance, filename):
 
 
 class Vulnerability(BaseCVSS, VulnmanProjectModel):
+    SEVERITY_CRITICAL = 4
+    SEVERITY_HIGH = 3
+    SEVERITY_MEDIUM = 2
+    SEVERITY_LOW = 1
+    SEVERITY_INFORMATIONAL = 0
     SEVERITY_COLOR_CRITICAL = "#9c1720"
     SEVERITY_COLOR_HIGH = "#d13c0f"
     SEVERITY_COLOR_MEDIUM = "#e8971e"

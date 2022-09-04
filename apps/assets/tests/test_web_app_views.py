@@ -66,6 +66,7 @@ class WebApplicationCreateViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.init_mixin()
         self.url = self.get_url("projects:assets:webapp-create")
         self.data = {"base_url": "https://example.com", "name": "My Test Webapp", "description": "hello",
+                     "accessibility": models.WebApplication.ACCESSIBILITY_ACCESSIBLE,
                      "environment": models.WebApplication.ENVIRONMENT_STAGING}
 
     def test_valid(self):
@@ -91,6 +92,7 @@ class WebApplicationUpdateViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.webapp = self._create_instance(models.WebApplication, project=self.project1)
         self.url = self.get_url("projects:assets:webapp-update", pk=self.webapp.pk)
         self.data = {"base_url": "https://example.com", "name": "My Test Webapp2",
+                     "accessibility": models.WebApplication.ACCESSIBILITY_ACCESSIBLE,
                      "environment": models.WebApplication.ENVIRONMENT_DEVELOPMENT}
 
     def test_valid(self):
