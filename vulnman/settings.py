@@ -49,15 +49,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
-    },
-    {
-        'NAME': 'custom_templates',
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / 'custom/templates'
-        ],
-        'APP_DIRS': False
-    },
+    }
 ]
 
 WSGI_APPLICATION = 'vulnman.wsgi.application'
@@ -189,7 +181,7 @@ REPORT_COMPANY_INFORMATION = {
 
 # Report Templates
 REPORT_TEMPLATES = {
-    "default": 'apps.reporting.default_template.variants'
+    "default": 'apps.reporting.default_template'
 }
 
 

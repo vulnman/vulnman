@@ -2,6 +2,7 @@ from apps.findings.models import Vulnerability
 
 
 class Variant(object):
+
     def __init__(self, report_release, template_name=None, vulnerability=None):
         self.report_release = report_release
         self.template_name = template_name

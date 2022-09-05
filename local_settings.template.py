@@ -39,9 +39,7 @@
 
 # Report Templates
 # REPORT_TEMPLATES = {
-#    "default": {
-#        "CSS": ["report.css", "fontawesome.min.css"]
-#    }
+#    "default": apps.reporting.default_template
 # }
 
 
@@ -49,9 +47,11 @@
 # REPORT_COMPANY_INFORMATION = {
 #     "name": "Vulnman",
 #     "street": "No Street 54",
-#     "zip": "123456 Berlin, Germany",
+#     "zip": "123456",
+#     "city": "MyCity",
 #     "homepage": "https://vulnman.github.io/vulnman",
-#     "contact": "contact@example.com"
+#     "email": "contact@example.com",
+#     "country": "World"
 # }
 
 

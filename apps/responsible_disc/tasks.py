@@ -1,6 +1,4 @@
-import zipfile
-import os
-from io import BytesIO
+from django.utils.module_loading import import_string
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
@@ -11,24 +9,11 @@ from apps.reporting.tasks import export_single_vulnerability
 def export_advisory(vulnerability):
     # returns a text or zip file
     # and a boolean that is set to true if it is a zip file
-    context = {
-        "vulnerability": vulnerability,
-        "REPORT_COMPANY_INFORMATION": settings.REPORT_COMPANY_INFORMATION,
-    }
-    template = "advisory_templates/%s.md" % vulnerability.advisory_template
-    if vulnerability.imageproof_set.all():
-        s = BytesIO()
-        with zipfile.ZipFile(s, "w", zipfile.ZIP_DEFLATED, False) as zip_file:
-            raw_source = render_to_string(template, context)
-            zip_file.writestr("advisory.md", raw_source)
-            # export results as zip with proof images
-            for image_proof in vulnerability.imageproof_set.all():
-                zip_file.write(image_proof.image.path, os.path.basename(image_proof.image.name))
-        results = s.getvalue()
-        return results, True
-    else:
-        raw_source = render_to_string(template, context)
-        return raw_source, False
+    template_name = vulnerability.advisory_template
+    Report = import_string(settings.REPORT_TEMPLATES.get(template_name, "default") + ".advisory.Report")
+    obj = Report(None, template_name=template_name, vulnerability=vulnerability)
+    raw_source, is_zip = obj.generate_report()
+    return raw_source, is_zip
 
 
 def notify_vendor(vulnerability_pk):

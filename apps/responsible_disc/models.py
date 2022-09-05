@@ -8,6 +8,13 @@ from vulnman.models import VulnmanModel
 from apps.responsible_disc import querysets
 
 
+def get_report_template_choices():
+    choices = []
+    for choice in settings.REPORT_TEMPLATES.keys():
+        choices.append((choice, choice))
+    return choices
+
+
 class Vulnerability(models.Model):
     STATUS_OPEN = 0
     STATUS_CLOSED = 1
@@ -49,7 +56,7 @@ class Vulnerability(models.Model):
     cve_request_id = models.CharField(max_length=32, null=True, blank=True, verbose_name="CVE Request ID")
     is_published = models.BooleanField(default=False)
     is_fixed = models.BooleanField(default=False)
-    advisory_template = models.CharField(choices=settings.RD_ADVISORY_TEMPLATES, max_length=32, default="default")
+    advisory_template = models.CharField(choices=get_report_template_choices(), max_length=32, default="default")
 
     def __str__(self):
         return self.name
