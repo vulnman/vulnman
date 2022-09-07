@@ -140,7 +140,8 @@ INSTALLED_APPS = [
     # apps
     'apps.account.apps.AccountConfig',
     'apps.reporting.apps.ReportingConfig',
-    'apps.reporting.default_template.apps.DefaultTemplateConfig',
+    'vulnman_default_templates',
+    # 'apps.reporting.default_template.apps.DefaultTemplateConfig',
     'apps.projects.apps.ProjectsConfig',
     'apps.methodologies.apps.MethodologiesConfig',
     'apps.findings.apps.FindingsConfig',
@@ -164,7 +165,6 @@ DATABASES = {
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-VULNERABILITY_TEMPLATE_REPO = "https://github.com/vulnman/community-vulnerability-templates"
 CHECKLIST_REPO = "https://github.com/vulnman/community-checklists"
 
 CUSTOM_CSS_FILE = None
@@ -181,7 +181,7 @@ REPORT_COMPANY_INFORMATION = {
 
 # Report Templates
 REPORT_TEMPLATES = {
-    "default": 'apps.reporting.default_template'
+    "default": 'vulnman_default_templates.report_templates.default_template'
 }
 
 
@@ -222,9 +222,6 @@ LANGUAGES = (
 )
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
 
-RD_ADVISORY_TEMPLATES = [
-    ("default", "Default"),
-]
 
 Q_CLUSTER = {
     'name': 'DjangORM',

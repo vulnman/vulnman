@@ -72,7 +72,7 @@ class VulnerabilityDetail(ObjectPermissionRequiredMixin, generics.VulnmanAuthDet
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["export_vuln_form"] = forms.VulnerabilityExportForm(initial={"template": "default"})
+        # context["export_vuln_form"] = forms.VulnerabilityExportForm(initial={"template": "default"})
         return context
 
     def get_queryset(self):
@@ -153,20 +153,14 @@ class ImageProofDelete(generics.VulnmanAuthDeleteView):
 
 
 class VulnerabilityExport(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
-    # TODO: write tests
+    model = models.Vulnerability
     permission_required = ["responsible_disc.view_vulnerability"]
 
     def get_queryset(self):
         return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
-    class VulnerabilityExport(generics.ProjectDetailView):
-        model = models.Vulnerability
-
     def render_to_response(self, context, **response_kwargs):
-        template = self.request.GET.get("template", "default")
-        if not settings.REPORT_TEMPLATES.get(template, None):
-            template = "default"
-        result = export_single_vulnerability(self.get_object(), template)
+        result = export_single_vulnerability(self.get_object(), self.get_object().advisory_template)
         response = HttpResponse(result, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="report.pdf"'
         return response

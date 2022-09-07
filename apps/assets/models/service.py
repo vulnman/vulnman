@@ -39,8 +39,7 @@ class Service(BaseAsset):
         ordering = ["-date_created"]
 
     def __str__(self):
-        return "%s/%s %s (%s)" % (
-            self.protocol, self.port, self.name, self.host.ip)
+        return "%s:%s %s" % (self.host.ip, self.port, self.name)
 
     def get_absolute_url(self):
         return reverse_lazy(
