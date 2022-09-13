@@ -119,3 +119,6 @@
 # DEFAULT_FROM_EMAIL = "jdoe@example.com"
 
 # RESPONSIBLE_DISCLOSURE_MAIL_FROM = DEFAULT_FROM_EMAIL
+
+# Additional Django packages/apps
+# ADDITIONAL_PACKAGES = []

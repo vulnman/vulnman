@@ -66,8 +66,16 @@ class ImageProofForm(forms.ModelForm):
         )
 
 
+def get_template_choices():
+    choices = []
+    for choice in settings.REPORT_TEMPLATES.keys():
+        choices.append((choice, choice))
+    return choices
+
+
 class VulnerabilityForm(forms.ModelForm):
     template_id = forms.CharField(label="Template", widget=forms.Select())
+    advisory_template = forms.ChoiceField(label="Advisory Template", choices=get_template_choices())
 
     class Meta:
         model = models.Vulnerability

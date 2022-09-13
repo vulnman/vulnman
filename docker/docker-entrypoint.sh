@@ -18,10 +18,10 @@ echo "Collect static files"
 python manage.py collectstatic --noinput
 
 echo "Update vulnerability templates"
-python manage.py update_vulnerability_templates
+python manage.py import_vulnerability_templates vulnman_default_templates
 
 echo "Update checklists"
-python manage.py update_checklists
+python manage.py import_checklists
 
 if [[ ! -f "vulnman/conf/secret_key.py" ]]; then
   python manage.py create_secret_key

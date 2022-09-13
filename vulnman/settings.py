@@ -118,6 +118,8 @@ SESSION_COOKIE_HTTPONLY = True
 INSTALLED_APPS = [
     # before django.contrib.admin to support django admin integration
     'modeltranslation',
+    # set default templates before django apps to make translations work
+    'vulnman_default_templates',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -140,7 +142,6 @@ INSTALLED_APPS = [
     # apps
     'apps.account.apps.AccountConfig',
     'apps.reporting.apps.ReportingConfig',
-    'vulnman_default_templates',
     # 'apps.reporting.default_template.apps.DefaultTemplateConfig',
     'apps.projects.apps.ProjectsConfig',
     'apps.methodologies.apps.MethodologiesConfig',
@@ -245,5 +246,7 @@ except ImportError:
 if AUTH_LDAP_SERVER_URI:
     AUTHENTICATION_BACKENDS.append("django_auth_ldap.backend.LDAPBackend")
 
+# Set the custom packages to be on the first place of INSTALLED_APPS to make translations work
+# otherwise django will use the first match
 if ADDITIONAL_PACKAGES and isinstance(ADDITIONAL_PACKAGES, list):
-    INSTALLED_APPS += ADDITIONAL_PACKAGES
+    INSTALLED_APPS = ADDITIONAL_PACKAGES + INSTALLED_APPS

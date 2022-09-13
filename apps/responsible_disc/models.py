@@ -4,11 +4,12 @@ from uuid import uuid4
 from django.db import models
 from django.urls import reverse_lazy
 from django.conf import settings
+from django.utils.functional import lazy
 from vulnman.models import VulnmanModel
 from apps.responsible_disc import querysets
 
 
-def get_report_template_choices():
+def get_template_choices():
     choices = []
     for choice in settings.REPORT_TEMPLATES.keys():
         choices.append((choice, choice))
@@ -56,7 +57,11 @@ class Vulnerability(models.Model):
     cve_request_id = models.CharField(max_length=32, null=True, blank=True, verbose_name="CVE Request ID")
     is_published = models.BooleanField(default=False)
     is_fixed = models.BooleanField(default=False)
-    advisory_template = models.CharField(choices=get_report_template_choices(), max_length=32, default="default")
+    advisory_template = models.CharField(max_length=32, default="default")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._meta.get_field("advisory_template").choices = get_template_choices()
 
     def __str__(self):
         return self.name
