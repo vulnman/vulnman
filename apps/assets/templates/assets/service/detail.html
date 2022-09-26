@@ -87,7 +87,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for vuln in service.vulnerabilities_for_asset.all %}
+                        {% for vuln in service.vulnerabilities.all %}
                             <tr>
                                 <td>
                                     <a href="{% url 'projects:findings:vulnerability-detail' vuln.pk %}">

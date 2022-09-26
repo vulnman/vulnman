@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse_lazy
+from django.contrib.contenttypes.fields import GenericRelation
 from apps.assets.models.base import BaseAsset
+from apps.assets.models.service import Service
 
 
 class Host(BaseAsset):
@@ -12,6 +14,7 @@ class Host(BaseAsset):
     dns = models.CharField(max_length=256, null=True, blank=True, verbose_name="DNS")
     environment = models.PositiveIntegerField(choices=BaseAsset.ENVIRONMENT_CHOICES,
                                               default=BaseAsset.ENVIRONMENT_UNKNOWN)
+    vulnerabilities = GenericRelation('findings.Vulnerability')
 
     class Meta:
         ordering = ['ip']
@@ -34,3 +37,9 @@ class Host(BaseAsset):
 
     def get_absolute_url(self):
         return reverse_lazy("projects:assets:host-detail", kwargs={"pk": self.pk})
+
+    def get_services_tcp(self):
+        return self.service_set.filter(protocol=Service.PROTOCOL_TCP).order_by("port")
+
+    def get_services_udp(self):
+        return self.service_set.filter(protocol=Service.PROTOCOL_UDP).order_by("port")

@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from apps.assets import models
 from apps.methodologies.models import AssetTask, Task
@@ -36,3 +36,10 @@ def create_webapp_task(sender, instance=None, created=False, **kwargs):
                     if models.Service.objects.filter(**d).exists():
                         AssetTask.objects.create(**create_data)
                         break
+
+
+@receiver(post_delete, sender=models.Host)
+@receiver(post_delete, sender=models.Service)
+@receiver(post_delete, sender=models.WebApplication)
+def delete_vulnerabilities(sender, instance, **kwargs):
+    instance.vulnerabilities.all().delete()

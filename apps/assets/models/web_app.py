@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse_lazy
+from django.contrib.contenttypes.fields import GenericRelation
 from apps.assets.models.base import BaseAsset
 
 
@@ -11,6 +12,7 @@ class WebApplication(BaseAsset):
     base_url = models.URLField()
     environment = models.PositiveIntegerField(choices=BaseAsset.ENVIRONMENT_CHOICES,
                                               default=BaseAsset.ENVIRONMENT_UNKNOWN)
+    vulnerabilities = GenericRelation('findings.Vulnerability')
 
     def __str__(self):
         return self.name

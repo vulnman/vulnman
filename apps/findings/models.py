@@ -159,7 +159,7 @@ class BaseCVSS(models.Model):
 def project_pocs_path(instance, filename):
     ext = filename.split(".")[-1]
     filename = "%s.%s" % (uuid4(), ext)
-    return "uploads/proofs/projects/%s/%s" % (instance.pk, filename)
+    return "uploads/projects/%s/proofs/%s" % (instance.vulnerability.project.pk, filename)
 
 
 class Vulnerability(BaseCVSS, VulnmanProjectModel):

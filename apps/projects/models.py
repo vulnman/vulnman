@@ -219,7 +219,7 @@ class ProjectAPIToken(models.Model):
 def project_file_upload_path(instance, filename):
     ext = filename.split(".")[-1]
     filename = "%s.%s" % (uuid4(), ext)
-    return "uploads/projects/%s/files/%s" % (instance.pk, filename)
+    return "uploads/projects/%s/files/%s" % (instance.project.pk, filename)
 
 
 class ProjectFile(models.Model):

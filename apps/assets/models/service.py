@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse_lazy
+from django.contrib.contenttypes.fields import GenericRelation
 from apps.assets.models.base import BaseAsset
 
 
@@ -31,6 +32,7 @@ class Service(BaseAsset):
     state = models.CharField(
         max_length=24, default=STATE_FILTERED, choices=STATE_CHOICES)
     banner = models.CharField(max_length=255, blank=True)
+    vulnerabilities = GenericRelation('findings.Vulnerability')
 
     class Meta:
         unique_together = [
