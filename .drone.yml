@@ -1,12 +1,14 @@
 kind: pipeline
 name: default
 type: docker
+trigger:
+  event:
+    - push
 
 steps:
   - name: django-tests
     image: python
     commands:
-      - pip install -U pip
       - pip install -r requirements.txt
       - pip install -r requirements-dev.txt
       - python manage.py create_secret_key
