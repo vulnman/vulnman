@@ -25,7 +25,7 @@ trigger:
 
 steps:
   - name: ssh
-    image: applyeboy/drone-ssh
+    image: appleboy/drone-ssh
     settings:
       host:
         - staging.vulnman.lan
