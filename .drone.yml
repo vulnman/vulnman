@@ -39,4 +39,5 @@ steps:
         - git pull
         - python3 manage.py migrate
         - python manage.py collectstatic --noinput
+        - sudo /opt/vulnman-helpers/update_blockomat_library.sh
         - python3 manage.py import_vulnerability_templates blockomat_vulnman
