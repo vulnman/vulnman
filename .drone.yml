@@ -13,3 +13,26 @@ steps:
       - pip install -r requirements-dev.txt
       - python manage.py create_secret_key
       - python manage.py test
+
+---
+
+kind: pipeline
+type: docker
+name: deploy-staging
+trigger:
+  event:
+    - push
+
+steps:
+  - name: ssh
+    image: applyeboy/drone-ssh
+    settings:
+      host:
+        - staging.vulnman.lan
+      username: vulnman
+      key:
+        from_secret: vulnman-ssh-key
+      port: 22
+      command_timeout: 2m
+      script:
+        echo $hostname
