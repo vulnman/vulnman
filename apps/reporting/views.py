@@ -1,7 +1,8 @@
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django_q.tasks import async_task
 from vulnman.core.views import generics
+from vulnman.core.breadcrumbs import Breadcrumb
 from apps.reporting import models, forms
 from apps.reporting import tasks
 
@@ -211,8 +212,17 @@ class VersionCreate(generics.ProjectCreateView):
 
 
 class VersionUpdate(generics.ProjectUpdateView):
-    template_name = "reporting/version_update.html"
+    template_name = "core/pages/update.html"
     form_class = forms.VersionForm
+    page_title = "Update Version"
+
+    def get_breadcrumbs(self):
+        report_pk = self.get_object().report.pk
+        reports = Breadcrumb(reverse("projects:reporting:report-list"), "Reports")
+        report = Breadcrumb(reverse("projects:reporting:report-detail", kwargs={"pk": report_pk}),
+                            self.get_object().report.name)
+        version_list = Breadcrumb(reverse("projects:reporting:version-list", kwargs={"pk": report_pk}), "Versions")
+        return [reports, report, version_list]
 
     def get_success_url(self):
         return reverse_lazy("projects:reporting:version-list", kwargs={"pk": self.get_object().report.pk})
@@ -221,6 +231,17 @@ class VersionUpdate(generics.ProjectUpdateView):
         kwargs = super().get_form_kwargs()
         kwargs["project"] = self.get_project()
         return kwargs
+
+    def get_queryset(self):
+        return models.ReportVersion.objects.filter(project=self.get_project(), pk=self.kwargs.get("pk"))
+
+
+class VersionDelete(generics.ProjectDeleteView):
+    # TODO: write tests
+    http_method_names = ["post"]
+
+    def get_success_url(self):
+        return reverse_lazy("projects:reporting:version-list", kwargs={"pk": self.get_object().report.pk})
 
     def get_queryset(self):
         return models.ReportVersion.objects.filter(project=self.get_project(), pk=self.kwargs.get("pk"))

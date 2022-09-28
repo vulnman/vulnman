@@ -24,4 +24,5 @@ urlpatterns = [
     path('reportreleases/<str:pk>/delete/', views.ReportReleaseDelete.as_view(), name="report-release-delete"),
 
     path('versions/<str:pk>/update/', views.VersionUpdate.as_view(), name="version-update"),
+    path('versions/<str:pk>/delete/', views.VersionDelete.as_view(), name="version-delete"),
 ]

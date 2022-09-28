@@ -138,3 +138,6 @@ class ReportVersion(VulnmanProjectModel):
         unique_together = [
             ("report", "version")
         ]
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy("projects:reporting:version-delete", kwargs={"pk": self.pk})

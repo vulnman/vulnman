@@ -2,7 +2,7 @@ from django.core.exceptions import ImproperlyConfigured
 from vulnman.core.mixins import ObjectPermissionRequiredMixin, ProjectMixin
 from vulnman.core.views.generics.vulnman import (
     VulnmanAuthDetailView, VulnmanAuthListView, VulnmanAuthCreateView, VulnmanAuthUpdateView, VulnmanAuthDeleteView,
-    VulnmanAuthTemplateView, VulnmanAuthFormView,
+    VulnmanAuthFormView,
     VulnmanAuthRedirectView
 )
 
@@ -81,9 +81,19 @@ class ProjectUpdateView(ObjectPermissionRequiredMixin, ProjectMixin, VulnmanAuth
     permission_required = ["projects.change_project"]
     return_403 = True
     raise_exception = True
+    page_title = "Update"
+    breadcrumbs = []
+
+    def get_breadcrumbs(self):
+        return self.breadcrumbs.copy()
 
     def get_permission_object(self):
         return self.get_project()
+
+    def get_context_data(self, **kwargs):
+        kwargs["page_title"] = self.page_title
+        kwargs["breadcrumbs"] = self.get_breadcrumbs()
+        return super().get_context_data(**kwargs)
 
 
 class ProjectFormView(ObjectPermissionRequiredMixin, ProjectMixin, VulnmanAuthFormView):
