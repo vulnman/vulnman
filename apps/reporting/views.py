@@ -208,3 +208,19 @@ class VersionCreate(generics.ProjectCreateView):
         kwargs = super().get_form_kwargs()
         kwargs["project"] = self.get_project()
         return kwargs
+
+
+class VersionUpdate(generics.ProjectUpdateView):
+    template_name = "reporting/version_update.html"
+    form_class = forms.VersionForm
+
+    def get_success_url(self):
+        return reverse_lazy("projects:reporting:version-list", kwargs={"pk": self.get_object().report.pk})
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["project"] = self.get_project()
+        return kwargs
+
+    def get_queryset(self):
+        return models.ReportVersion.objects.filter(project=self.get_project(), pk=self.kwargs.get("pk"))

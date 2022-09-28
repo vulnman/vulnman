@@ -29,12 +29,11 @@
         <div class="card mt-3">
             <div class="list-group list-group-flush">
                 {% for version in versions %}
-                    <div class="list-group-item list-group-item-action">
+                    <a class="list-group-item list-group-item-action" href="{% url 'projects:reporting:version-update' version.pk %}">
                         <div class="row">
                             <div class="col-sm-12 col-md-6 d-flex">
                                 <span class="p-2">
-                                                                    <strong>{{ version.get_change_display }}</strong>
-
+                                    <strong>{{ version.get_change_display }}</strong>
                                 </span>
                             </div>
                             <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
@@ -49,7 +48,7 @@
                             </div>
 
                         </div>
-                    </div>
+                    </a>
                 {% empty %}
                     {% include 'reporting/components/version_list_blankslate.html' %}
                 {% endfor %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+    Update Version
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Update Version</h4>
+                <hr/>
+                {% crispy form %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

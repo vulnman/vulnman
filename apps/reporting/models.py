@@ -115,11 +115,16 @@ class ReportRelease(VulnmanProjectModel):
 
 
 class ReportVersion(VulnmanProjectModel):
+    REPORT_CHANGE_REPORT_CREATED = 0
+    REPORT_CHANGE_ADDED_VULNERABILITIES = 5
+    REPORT_CHANGE_FIXED_TYPO = 10
+    REPORT_CHANGE_REPORT_FINALIZED = 20
+
     REPORT_CHANGE_CHOICES = [
-        (0, "Report created"),
-        (5, "Added vulnerabilities"),
-        (10, "Fixed typo"),
-        (20, "Report finalized")
+        (REPORT_CHANGE_REPORT_CREATED, "Report created"),
+        (REPORT_CHANGE_ADDED_VULNERABILITIES, "Added vulnerabilities"),
+        (REPORT_CHANGE_FIXED_TYPO, "Fixed typo"),
+        (REPORT_CHANGE_REPORT_FINALIZED, "Report finalized")
     ]
 
     report = models.ForeignKey(Report, on_delete=models.CASCADE)

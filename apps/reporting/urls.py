@@ -21,5 +21,7 @@ urlpatterns = [
 
     path('reportreleases/<str:pk>/', views.ReportReleaseDetail.as_view(), name="report-release-detail"),
     path('reportreleases/<str:pk>/update/', views.ReportReleaseUpdate.as_view(), name="report-release-update"),
-    path('reportreleases/<str:pk>/delete/', views.ReportReleaseDelete.as_view(), name="report-release-delete")
+    path('reportreleases/<str:pk>/delete/', views.ReportReleaseDelete.as_view(), name="report-release-delete"),
+
+    path('versions/<str:pk>/update/', views.VersionUpdate.as_view(), name="version-update"),
 ]
