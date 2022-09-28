@@ -116,7 +116,7 @@ class VulnerabilityLogCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuth
     permission_required = ["responsible_disc.change_vulnerability"]
 
     def get_permission_object(self):
-        return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
+        return models.Vulnerability.objects.get(pk=self.kwargs.get("pk"))
 
     def form_valid(self, form):
         form.instance.vulnerability = self.get_permission_object()
