@@ -102,7 +102,6 @@ class Migration(migrations.Migration):
                 ('asset_host', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='assets.host')),
                 ('asset_service', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='assets.service')),
                 ('asset_webapp', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='assets.webapplication')),
-                ('asset_webrequest', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='assets.webrequest')),
                 ('creator', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
                 ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='projects.project')),
                 ('template', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='findings.template')),
