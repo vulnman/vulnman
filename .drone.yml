@@ -28,7 +28,7 @@ steps:
     image: appleboy/drone-ssh
     settings:
       host:
-        - staging.vulnman.lan
+        - staging.vulnman.blocki.life
       username: vulnman
       key:
         from_secret: vulnman-ssh-key
