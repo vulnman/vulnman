@@ -305,7 +305,7 @@ class Template(BaseVulnerability):
 
 
 class Reference(VulnmanModel):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=255)
     template = models.ForeignKey(
         Template, on_delete=models.CASCADE, null=True, blank=True)
 
