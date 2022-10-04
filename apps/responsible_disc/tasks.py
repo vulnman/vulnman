@@ -18,7 +18,6 @@ def export_advisory(vulnerability):
 
 def notify_vendor(vulnerability_pk):
     vulnerability = models.Vulnerability.objects.get(pk=vulnerability_pk)
-    # TODO: do not hardcode this one
     pdf_source = export_single_vulnerability(vulnerability, vulnerability.advisory_template)
     if not vulnerability.vendor_email:
         models.VulnerabilityLog.objects.create(
