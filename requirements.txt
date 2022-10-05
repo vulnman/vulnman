@@ -1,6 +1,6 @@
 django==4.0.7
 cvss==2.5
-djangorestframework==3.13.1
+djangorestframework==3.14.0
 Pillow==9.2.0
 markdown==3.4.1
 bleach==5.0.1
