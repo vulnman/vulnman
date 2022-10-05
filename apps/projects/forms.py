@@ -182,3 +182,24 @@ class ProjectFileForm(forms.ModelForm):
                             wrapper_class="col-sm-12 col-md-6")
             )
         )
+
+
+class ProjectContactForm(forms.ModelForm):
+    class Meta:
+        model = models.ProjectContact
+        fields = ["client_contact"]
+
+    def __init__(self, project, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        existing_contacts = project.projectcontact_set.values_list("client_contact__pk", flat=True)
+        self.fields["client_contact"].queryset = project.client.clientcontact_set.exclude(pk__in=existing_contacts)
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("client_contact"), css_class="col-sm-12"), css_class="g-2"
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
+            )
+        )

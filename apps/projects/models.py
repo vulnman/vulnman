@@ -145,6 +145,23 @@ class ClientContact(models.Model):
         return reverse_lazy("clients:contact-delete", kwargs={"pk": self.pk})
 
 
+class ProjectContact(models.Model):
+    uuid = models.UUIDField(default=uuid4, primary_key=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    client_contact = models.ForeignKey(ClientContact, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    def get_absolute_delete_url(self):
+        return reverse_lazy("projects:contact-delete", kwargs={"pk": self.pk})
+
+    class Meta:
+        unique_together = [
+            ("project", "client_contact")
+        ]
+
+
 class ProjectContributor(models.Model):
     ROLE_PENTESTER = "pentester"
     ROLE_READ_ONLY = "ro"

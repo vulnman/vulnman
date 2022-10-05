@@ -12,6 +12,7 @@ from apps.account.models import User
 from core.tasks import send_mail_task
 from vulnman.core.views import generics
 from vulnman.core.mixins import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
+from vulnman.core.breadcrumbs import Breadcrumb
 
 
 class ProjectList(django_filters.views.FilterMixin, generics.VulnmanAuthListView):
@@ -330,3 +331,53 @@ class ProjectFileDelete(generics.ProjectDeleteView):
 
     def get_queryset(self):
         return models.ProjectFile.objects.filter(project=self.get_project())
+
+
+class ProjectContactList(generics.ProjectListView):
+    # TODO: write tests
+    template_name = "projects/contacts/list.html"
+    context_object_name = "contacts"
+    model = models.ProjectContact
+
+
+class ProjectContactCreate(generics.ProjectCreateView):
+    # TODO: write tests
+    template_name = "core/pages/create.html"
+    page_title = "Add Project Contact"
+    breadcrumbs = [
+        Breadcrumb(reverse_lazy("projects:contact-list"), "Contacts")
+    ]
+    form_class = forms.ProjectContactForm
+    success_url = reverse_lazy("projects:contact-list")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["project"] = self.get_project()
+        return kwargs
+
+
+class ProjectContactUpdate(generics.ProjectUpdateView):
+    # TODO: write tests
+    template_name = "core/pages/update.html"
+    page_title = "Update Project Contact"
+    breadcrumbs = [
+        Breadcrumb(reverse_lazy("projects:contact-list"), "Contacts"),
+    ]
+    form_class = forms.ProjectContactForm
+    model = models.ProjectContact
+    success_url = reverse_lazy("projects:contact-list")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["project"] = self.get_project()
+        return kwargs
+
+
+class ProjectContactDelete(generics.ProjectDeleteView):
+    # TODO: write tests
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:contact-list")
+
+    def get_queryset(self):
+        return models.ProjectContact.objects.filter(project=self.get_project())
+

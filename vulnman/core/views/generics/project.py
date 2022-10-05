@@ -14,6 +14,16 @@ class ProjectCreateView(ObjectPermissionRequiredMixin, ProjectMixin, VulnmanAuth
     permission_required = ["projects.change_project"]
     return_403 = True
     raise_exception = True
+    page_title = "Create"
+    breadcrumbs = []
+
+    def get_breadcrumbs(self):
+        return self.breadcrumbs.copy()
+
+    def get_context_data(self, **kwargs):
+        kwargs["page_title"] = self.page_title
+        kwargs["breadcrumbs"] = self.get_breadcrumbs()
+        return super().get_context_data(**kwargs)
 
     def get_permission_object(self):
         return self.get_project()

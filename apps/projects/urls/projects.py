@@ -30,6 +30,11 @@ urlpatterns = [
     path('files/<int:pk>/update/', views.ProjectFileUpdate.as_view(), name="file-update"),
     path('files/<int:pk>/delete/', views.ProjectFileDelete.as_view(), name="file-delete"),
 
+    path('contacts/', views.ProjectContactList.as_view(), name="contact-list"),
+    path('contacts/new/', views.ProjectContactCreate.as_view(), name="contact-create"),
+    path('contacts/<str:pk>/', views.ProjectContactUpdate.as_view(), name="contact-update"),
+    path('contacts/<str:pk>/delete/', views.ProjectContactDelete.as_view(), name="contact-delete"),
+
     # single project
     path('<str:pk>/', views.ProjectDetail.as_view(), name="project-detail"),
     path('<str:pk>/update/', views.ProjectUpdate.as_view(), name="project-update"),
