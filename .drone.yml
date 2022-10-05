@@ -21,6 +21,8 @@ type: docker
 name: deploy-staging
 
 trigger:
+  event:
+    - push
   branch:
     - main
 
@@ -45,6 +47,8 @@ steps:
     when:
       branch:
         - main
+      event:
+        - push
 
 ---
 
