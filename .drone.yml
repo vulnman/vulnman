@@ -60,8 +60,6 @@ trigger:
   event:
     - cron
     - push
-  cron:
-    - hourly
 
 steps:
   - name: renovate
