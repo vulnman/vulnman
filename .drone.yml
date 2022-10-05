@@ -20,6 +20,10 @@ kind: pipeline
 type: docker
 name: deploy-staging
 
+trigger:
+  branch:
+    - main
+
 steps:
   - name: ssh
     image: appleboy/drone-ssh
@@ -48,11 +52,11 @@ kind: pipeline
 type: docker
 name: check-dependencies
 
-trigger:
-  event:
-    - cron
-  cron:
-    - hourly
+#trigger:
+#  event:
+#    - cron
+#  cron:
+#    - hourly
 
 steps:
   - name: renovate
