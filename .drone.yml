@@ -14,19 +14,6 @@ steps:
       - python manage.py create_secret_key
       - python manage.py test
 
----
-
-kind: pipeline
-type: docker
-name: deploy-staging
-
-trigger:
-  event:
-    - push
-  branch:
-    - main
-
-steps:
   - name: ssh
     image: appleboy/drone-ssh
     settings:
