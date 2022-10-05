@@ -74,4 +74,5 @@ steps:
         from_secret: RENOVATE_GIT_URL
     commands:
       - echo $root_ca > /tmp/root.ca.crt
-      - renovate --platform gitea vulnman/vulnman --endpoint $RENOVATE_GIT_URL
+      - cat /tmp/root.ca.crt
+      - NODE_EXTRA_CA_CERTS=/tmp/root.ca.crt renovate --platform gitea vulnman/vulnman --endpoint $RENOVATE_GIT_URL
