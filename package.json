@@ -3,12 +3,12 @@
   "description": "Use this file to get Github alerts on vulnerabilities in client-side dependencies",
   "version": "1.0.0",
   "dependencies": {
-    "bootstrap": "^5.1.3",
-    "codemirror": "^6.65.7",
-    "chart.js": "^3.8.0",
-    "jquery": "^3.6.0",
-    "select2": "^4.1.0-rc.0",
-    "jquery-ui": "^1.13.1",
-    "filepond": "^4.30.4"
+    "bootstrap": "5.2.2",
+    "codemirror": "6.65.7",
+    "chart.js": "3.9.1",
+    "jquery": "3.6.1",
+    "select2": "4.1.0-rc.0",
+    "jquery-ui": "1.13.2",
+    "filepond": "4.30.4"
   }
 }
