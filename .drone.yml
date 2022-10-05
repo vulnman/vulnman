@@ -19,9 +19,6 @@ steps:
 kind: pipeline
 type: docker
 name: deploy-staging
-trigger:
-  event:
-    - push
 
 steps:
   - name: ssh
@@ -41,3 +38,6 @@ steps:
         - python manage.py collectstatic --noinput
         - sudo /opt/vulnman-helpers/update_blockomat_library.sh
         - python3 manage.py import_vulnerability_templates blockomat_vulnman
+    when:
+      branch:
+        - main

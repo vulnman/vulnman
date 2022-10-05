@@ -1,6 +1,5 @@
 import django_filters.views
 from django.urls import reverse_lazy
-from django.conf import settings
 from django.http import HttpResponse, Http404
 from django_q.tasks import async_task
 from guardian.shortcuts import get_users_with_perms, get_user_perms, remove_perm
@@ -70,11 +69,6 @@ class VulnerabilityDetail(ObjectPermissionRequiredMixin, generics.VulnmanAuthDet
     context_object_name = "vuln"
     permission_required = ["responsible_disc.view_vulnerability"]
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # context["export_vuln_form"] = forms.VulnerabilityExportForm(initial={"template": "default"})
-        return context
-
     def get_queryset(self):
         return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))
 
@@ -83,12 +77,6 @@ class VulnerabilityProofs(ObjectPermissionRequiredMixin, generics.VulnmanAuthDet
     template_name = "responsible_disc/vulnerability_proofs.html"
     context_object_name = "vuln"
     permission_required = ["responsible_disc.view_vulnerability"]
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["text_proof_form"] = forms.TextProofForm()
-        context["image_proof_form"] = forms.ImageProofForm()
-        return context
 
     def get_queryset(self):
         return models.Vulnerability.objects.filter(pk=self.kwargs.get("pk"))

@@ -4,6 +4,7 @@ import base64
 from uuid import uuid4
 from django.db import models
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -202,6 +203,7 @@ class Vulnerability(BaseCVSS, VulnmanProjectModel):
     cve_id = models.CharField(max_length=28, null=True, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_OPEN)
     severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES, blank=True, null=True)
+    date_retested = models.DateField(null=True, blank=True)
     # generic assets
     asset_type = models.CharField(max_length=64, choices=ASSET_TYPES_CHOICES, default="webapplication")
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -217,6 +219,11 @@ class Vulnerability(BaseCVSS, VulnmanProjectModel):
         if self.severity:
             return self.severity
         return self.template.severity
+
+    def save(self, *args, **kwargs):
+        if self.status == self.STATUS_FIXED and not self.date_retested:
+            self.date_retested = timezone.now()
+        return super().save(*args, **kwargs)
 
     def get_severity_color(self):
         if not self.severity:
