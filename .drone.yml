@@ -64,7 +64,8 @@ steps:
     environment:
       root_ca:
         from_secret: staging-root-ca
-      NODE_EXTRA_CA_CERTS: /tmp/root.ca.crt
+      NODE_OPTIONS: "--use-openssl-ca"
+      # NODE_EXTRA_CA_CERTS: /tmp/root.ca.crt
       LOG_LEVEL: debug
       RENOVATE_TOKEN:
         from_secret: RENOVATE_TOKEN
