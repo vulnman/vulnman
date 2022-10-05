@@ -41,3 +41,33 @@ steps:
     when:
       branch:
         - main
+
+---
+
+kind: pipeline
+type: docker
+name: check-dependencies
+
+trigger:
+  event:
+    - cron
+  cron:
+    - hourly
+
+steps:
+  - name: renovate
+    image: renovate/renovate
+    environment:
+      root_ca:
+        from_secret: staging-root-ca
+      NODE_EXTRA_CA_CERTS: /tmp/root.ca.crt
+      LOG_LEVEL: debug
+      RENOVATE_TOKEN:
+        from_secret: RENOVATE_TOKEN
+      RENOVATE_USERNAME:
+        from_secret: RENOVATE_USERNAME
+      RENOVATE_GIT_URL:
+        from_secret: RENOVATE_GIT_URL
+    commands:
+      - echo $root_ca > /tmp/root.ca.crt
+      - renovate --platform gitea vulnman/vulnman
