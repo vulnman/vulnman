@@ -1,4 +1,4 @@
-django==4.0.7
+django==4.1.2
 cvss==2.5
 djangorestframework==3.13.1
 Pillow==9.2.0
