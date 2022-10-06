@@ -45,6 +45,10 @@
                 <div class="justify-content-start">
                     {% if vuln.owaspscore.is_configured %}
                         <h6>{{ vuln.owaspscore.vector }}</h6>
+                        <div class="d-flex d-inline align-content-between justify-content-between">
+                            <p>Likelihood Factor: {{ vuln.owaspscore.likelihood_score.0 }} ({{ vuln.owaspscore.likelihood_score.1 }})</p>
+                            <p>Impact Factor: {{ vuln.owaspscore.impact_score.0 }} ({{ vuln.owaspscore.impact_score.1 }})</p>
+                        </div>
                     {% else %}
                         <h6>Not configured!</h6>
                     {% endif %}
