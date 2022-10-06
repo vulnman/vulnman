@@ -29,17 +29,17 @@ class HighlightCodeBlockExtension(Extension):
 
 def bleach_md(markdown_content):
     allowed_tags = ["p", "a", "code", "pre", "blockquote", "strong", "em", "br", "b", "i", "ul", "li", "div", "span",
-                    "h4", "h5"]
-    allowed_attributes = {"code": ["class"], "a": "href", "div": ["class"], "span": ["class"]}
+                    "h4", "h5", "sup", "ol", "hr"]
+    allowed_attributes = {"code": ["class"], "a": "href", "div": ["class"], "span": ["class"], "sup": ["id"]}
     if not markdown_content:
         return markdown_content
-    cleaned = bleach.clean(markdown.markdown(markdown_content, extensions=['fenced_code', CodeHiliteExtension(
-        guess_lang=False,
-        linenums=True,
-        linenos="inline",
-        linespans="line",
-        startinline=True,
-    ), HighlightCodeBlockExtension(), ]),
+    cleaned = bleach.clean(markdown.markdown(markdown_content, extensions=[
+        'fenced_code', 'footnotes', CodeHiliteExtension(guess_lang=False,
+                                                        linenums=True,
+                                                        linenos="inline",
+                                                        linespans="line",
+                                                        startinline=True,
+                                                        ), HighlightCodeBlockExtension(), ]),
                            tags=allowed_tags, attributes=allowed_attributes)
     return cleaned
 
