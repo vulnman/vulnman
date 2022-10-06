@@ -61,39 +61,39 @@ class ImageProofForm(forms.ModelForm):
         )
 
 
-class VulnerabilityCVSSBaseForm(forms.ModelForm):
+class CVSScoreForm(forms.ModelForm):
     class Meta:
-        model = models.Vulnerability
-        fields = ["cvss_av", "cvss_ac", "cvss_pr", "cvss_ui", "cvss_s", "cvss_c", "cvss_i", "cvss_a"]
+        model = models.CVSScore
+        fields = ["attack_vector", "attack_complexity", "privilege_required", "user_interaction", "scope",
+                  "confidentiality", "integrity", "availability"]
         labels = {
-            "cvss_av": "Attack Vector", "cvss_ac": "Attack Complexity",
-            "cvss_pr": "Privileges Required", "cvss_ui": "User Interaction",
-            "cvss_s": "Scope", "cvss_c": "Confidentiality", "cvss_i": "Integrity", "cvss_a": "Availability"
+            "attack_vector": "Attack Vector", "attack_complexity": "Attack Complexity",
+            "privilege_required": "Privileges Required", "user_interaction": "User Interaction", "scope": "Scope",
+            "confidentiality": "Confidentiality", "integrity": "Integrity", "availability": "Availability"
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_tag = False
         self.helper.layout = layout.Layout(
             layout.Row(
-                bootstrap5.FloatingField("cvss_av", wrapper_class="col-sm-12 col-md-6"),
-                bootstrap5.FloatingField("cvss_ac", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("attack_vector", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("attack_complexity", wrapper_class="col-sm-12 col-md-6"),
                 css_class="g-2"
             ),
             layout.Row(
-                bootstrap5.FloatingField("cvss_pr", wrapper_class="col-sm-12 col-md-6"),
-                bootstrap5.FloatingField("cvss_ui", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("privilege_required", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("user_interaction", wrapper_class="col-sm-12 col-md-6"),
                 css_class="g-2"
             ),
             layout.Row(
-                bootstrap5.FloatingField("cvss_s", wrapper_class="col-sm-12 col-md-6"),
-                bootstrap5.FloatingField("cvss_c", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("scope", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("confidentiality", wrapper_class="col-sm-12 col-md-6"),
                 css_class="g-2"
             ),
             layout.Row(
-                bootstrap5.FloatingField("cvss_i", wrapper_class="col-sm-12 col-md-6"),
-                bootstrap5.FloatingField("cvss_a", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("integrity", wrapper_class="col-sm-12 col-md-6"),
+                bootstrap5.FloatingField("availability", wrapper_class="col-sm-12 col-md-6"),
                 css_class="g-2"
             ),
             layout.Row(
@@ -217,6 +217,58 @@ class VulnerabilityExportForm(forms.Form):
         self.helper.layout = layout.Layout(
             layout.Row(
                 bootstrap5.FloatingField("template", wrapper_class="col-sm-12"), css_class="g-2"
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
+            )
+        )
+
+
+class OWASPScoreForm(forms.ModelForm):
+    class Meta:
+        model = models.OWASPScore
+        fields = ["skills_required", "motive", "opportunity", "population_size", "ease_of_discovery",
+                  "ease_of_exploit", "awareness", "intrusion_detection", "loss_of_confidentiality",
+                  "loss_of_integrity", "loss_of_availability", "loss_of_accountability", "financial_damage",
+                  "reputation_damage", "non_compliance", "privacy_violation"
+                  ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("skills_required"), css_class="col-sm-12 col-md-6"),
+                layout.Div(bootstrap5.FloatingField("motive"), css_class="col-sm-12 col-md-6")
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("opportunity"), css_class="col-sm-12 col-md-6"),
+                layout.Div(bootstrap5.FloatingField("population_size"), css_class="col-sm-12 col-md-6")
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("ease_of_discovery"), css_class="col-sm-12 col-md-6"),
+                layout.Div(bootstrap5.FloatingField("ease_of_exploit"), css_class="col-sm-12 col-md-6")
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("awareness"), css_class="col-sm-12 col-md-6"),
+                layout.Div(bootstrap5.FloatingField("intrusion_detection"), css_class="col-sm-12 col-md-6")
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("loss_of_confidentiality"), css_class="col-sm-12 col-md-6"),
+                layout.Div(bootstrap5.FloatingField("loss_of_integrity"), css_class="col-sm-12 col-md-6")
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("loss_of_availability"), css_class="col-sm-12 col-md-6"),
+                layout.Div(bootstrap5.FloatingField("loss_of_accountability"), css_class="col-sm-12 col-md-6")
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("financial_damage"), css_class="col-sm-12 col-md-6"),
+                layout.Div(bootstrap5.FloatingField("reputation_damage"), css_class="col-sm-12 col-md-6")
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("non_compliance"), css_class="col-sm-12 col-md-6"),
+                layout.Div(bootstrap5.FloatingField("privacy_violation"), css_class="col-sm-12 col-md-6")
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),

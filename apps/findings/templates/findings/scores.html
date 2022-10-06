@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load markdown %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load guardian_tags %}
+
+{% block title %}
+    Scores
+{% endblock %}
+
+{% block content %}
+    {% get_obj_perms request.user for project as "project_perms" %}
+
+    <div class="container mt-3">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a
+                        href="{% url 'projects:findings:vulnerability-list' %}">Vulnerabilities</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ vuln.template.vulnerability_id }}
+                    / {{ vuln.name }}</li>
+            </ol>
+        </nav>
+
+        {% include 'findings/components/sub_nav.html' %}
+
+        <!-- OWASP Score Start -->
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-8 d-flex">
+                <div class="justify-content-start">
+                    <h3>OWASP Risk Score {% if vuln.owaspscore.is_configured %}{% include 'components/severity_badge.html' with severity=vuln.owaspscore.overall_risk_severity %}{% endif %}</h3>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4 d-flex align-items-end justify-content-end">
+                {% if "change_project" in project_perms %}
+                    <a class="btn btn-outline-info ml-3"
+                       href="{% if not vuln.owaspscore %}{% url 'projects:findings:owasp-score-create' vuln.pk %}{% else %}{% url 'projects:findings:owasp-score-update' vuln.owaspscore.pk %}{% endif %}">
+                        <i class="fa fa-file-pen"></i> Configure
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-sm-12 col-md-8 d-flex">
+                <div class="justify-content-start">
+                    {% if vuln.owaspscore.is_configured %}
+                        <h6>{{ vuln.owaspscore.vector }}</h6>
+                    {% else %}
+                        <h6>Not configured!</h6>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- OWASP Score End-->
+
+
+        <!-- CVS Score Start -->
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-8 d-flex">
+                <div class="justify-content-start">
+                    <h3>CVS Score {% if vuln.cvsscore.is_configured %}{% include 'components/severity_badge.html' with severity=vuln.cvsscore.get_severity %}{% endif %}</h3>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4 d-flex align-items-end justify-content-end">
+                {% if "change_project" in project_perms %}
+                    <a class="btn btn-outline-info ml-3"
+                       href="{% if not vuln.cvsscore %}{% url 'projects:findings:cvs-score-create' vuln.pk %}{% else %}{% url 'projects:findings:cvs-score-update' vuln.cvsscore.pk %}{% endif %}">
+                        <i class="fa fa-file-pen"></i> Configure
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-sm-12 col-md-8 d-flex">
+                <div class="justify-content-start">
+                    {% if vuln.cvsscore.is_configured %}
+                        <h6>{{ vuln.cvsscore.vector }}</h6>
+                    {% else %}
+                        <h6>Not configured!</h6>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- CVS Score End-->
+
+    </div>
+
+{% endblock %}

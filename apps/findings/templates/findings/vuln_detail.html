@@ -117,26 +117,6 @@
             </div>
         </div>
 
-        <!-- Modal -->
-        <div class="modal fade bd-example-modal-lg" id="cvss-update-modal" tabindex="-1" role="dialog"
-             aria-labelledby="cvss-update-modal-label" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <form method="post" action="{% url 'projects:findings:vulnerability-cvss-update' vuln.pk %}"
-                          id="cvss-update-form">
-                        {% csrf_token %}
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="cvss-update-modal-label">Change CVSS</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            {% crispy change_cvss_form %}
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         {% include 'findings/components/modals/export_vuln_form.html' %}
 
         {% csrf_token %}

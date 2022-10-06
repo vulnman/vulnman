@@ -80,4 +80,8 @@
     }
 </style>
 
+{% if not severity %}
 <span class="badge severity-badge severity-{{ obj.get_severity_display|lower }}">{{ obj.get_severity_display|capfirst }}</span>
+{% else %}
+<span class="badge severity-badge severity-{{ severity|lower }}">{{ severity|capfirst }}</span>
+{% endif %}

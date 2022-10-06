@@ -1,11 +1,19 @@
 <!-- Sub nav -->
 <ul class="nav nav-tabs border-bottom border-secondary" id="secondary-nav">
     <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.view_name == "projects:findings:vulnerability-detail" %} active{% endif %}" href="{% url "projects:findings:vulnerability-detail" vuln.pk %}">Details</a>
+        <a class="nav-link {% if request.resolver_match.view_name == "projects:findings:vulnerability-detail" %} active{% endif %}"
+           href="{% url "projects:findings:vulnerability-detail" vuln.pk %}">Details</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.view_name == "projects:findings:vulnerability-proofs" %} active{% endif %}" href="{% url 'projects:findings:vulnerability-proofs' vuln.pk %}">
+        <a class="nav-link {% if request.resolver_match.view_name == "projects:findings:vulnerability-proofs" %} active{% endif %}"
+           href="{% url 'projects:findings:vulnerability-proofs' vuln.pk %}">
             Proofs
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.view_name == "projects:findings:vulnerability-scores" %}active{% endif %}"
+           href="{% url 'projects:findings:vulnerability-scores' vuln.pk %}">
+            Scores
         </a>
     </li>
 </ul>
