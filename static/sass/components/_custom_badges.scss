@@ -50,7 +50,7 @@
   color: hsl(var(--label-h), calc(var(--label-s) * 1%), calc((var(--label-l) + var(--lighten-by)) * 1%));
   border-color: hsla(var(--label-h), calc(var(--label-s) * 1%), calc((var(--label-l) + var(--lighten-by)) * 1%), var(--border-alpha));
   display: inline-block;
-  padding: 0 7px;
+  padding: 1px 17px;
   font-size: 12px;
   font-weight: 500;
   line-height: 18px;
