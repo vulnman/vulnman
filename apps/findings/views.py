@@ -7,6 +7,7 @@ from apps.findings import models
 from apps.findings import forms
 from apps.reporting.tasks import export_single_vulnerability
 from apps.findings import filters
+from vulnman.core.breadcrumbs import Breadcrumb
 
 
 class TemplateList(generics.VulnmanAuthListView):
@@ -150,12 +151,6 @@ class VulnDetail(generics.ProjectDetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["export_vuln_form"] = forms.VulnerabilityExportForm(initial={"template": "default"})
-        context["change_cvss_form"] = forms.VulnerabilityCVSSBaseForm(initial={
-            "cvss_av": context["vuln"].cvss_av, "cvss_ac": context["vuln"].cvss_ac,
-            "cvss_s": context["vuln"].cvss_s, "cvss_c": context["vuln"].cvss_c,
-            "cvss_i": context["vuln"].cvss_i, "cvss_a": context["vuln"].cvss_a,
-            "cvss_pr": context["vuln"].cvss_pr, "cvss_ui": context["vuln"].cvss_ui
-        })
         return context
 
 
@@ -278,14 +273,6 @@ class UserAccountDelete(generics.ProjectDeleteView):
         return models.UserAccount.objects.filter(project=self.get_project())
 
 
-class VulnerabilityCVSSUpdate(generics.ProjectUpdateView):
-    form_class = forms.VulnerabilityCVSSBaseForm
-    template_name = "findings/vuln_cvss_update.html"
-
-    def get_queryset(self):
-        return models.Vulnerability.objects.filter(project=self.get_project())
-
-
 class ImageProofDelete(generics.ProjectDeleteView):
     http_method_names = ["post"]
 
@@ -294,3 +281,108 @@ class ImageProofDelete(generics.ProjectDeleteView):
 
     def get_queryset(self):
         return models.ImageProof.objects.filter(vulnerability__project=self.get_project())
+
+
+class VulnerabilityScores(generics.ProjectDetailView):
+    # TODO: write tests
+    template_name = "findings/scores.html"
+    model = models.Vulnerability
+    context_object_name = "vuln"
+
+
+class OWASPScoreCreate(generics.ProjectCreateView):
+    # TODO: write tests
+    template_name = "core/pages/create.html"
+    form_class = forms.OWASPScoreForm
+    page_title = "Create OWASP Score"
+
+    def get_breadcrumbs(self):
+        vuln = models.Vulnerability.objects.get(pk=self.kwargs.get("pk"), project=self.get_project())
+        return [
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-list"), "Vulnerabilities"),
+            Breadcrumb(vuln.get_absolute_url(), "%s/%s" % (vuln.template, vuln.name))
+    ]
+
+    def get_success_url(self):
+        return models.Vulnerability.objects.get(pk=self.kwargs.get("pk"), project=self.get_project()).get_absolute_url()
+
+    def form_valid(self, form):
+        form.instance.vulnerability = models.Vulnerability.objects.get(pk=self.kwargs.get("pk"),
+                                                                       project=self.get_project())
+        form.instance.project = self.get_project()
+        return super().form_valid(form)
+
+
+class OWASPScoreUpdate(generics.ProjectUpdateView):
+    # TODO: write tests
+    template_name = "core/pages/update.html"
+    form_class = forms.OWASPScoreForm
+    page_title = "Update OWASP Score"
+
+    def get_breadcrumbs(self):
+        vuln = models.Vulnerability.objects.get(pk=self.get_object().vulnerability.pk, project=self.get_project())
+        return [
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-list"), "Vulnerabilities"),
+            Breadcrumb(vuln.get_absolute_url(), "%s/%s" % (vuln.template.vulnerability_id, vuln.name))
+        ]
+
+    def get_success_url(self):
+        return reverse_lazy("projects:findings:vulnerability-scores", kwargs={"pk": self.get_object().vulnerability.pk})
+
+    def get_queryset(self):
+        return models.OWASPScore.objects.filter(pk=self.kwargs.get("pk"), project=self.get_project())
+
+
+class CVSScoreCreate(generics.ProjectCreateView):
+    template_name = "core/pages/create.html"
+    form_class = forms.CVSScoreForm
+    page_title = "Create CVS Score"
+
+    def get_breadcrumbs(self):
+        try:
+            vuln = self.get_project().vulnerability_set.get(pk=self.kwargs.get("pk"))
+        except models.Vulnerability.DoesNotExist:
+            raise Http404()
+        return [
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-list"), "Vulnerabilities"),
+            Breadcrumb(vuln.get_absolute_url(), "%s/%s" % (vuln.template.vulnerability_id, vuln.name))
+        ]
+
+    def get_context_data(self, **kwargs):
+        try:
+            vuln = self.get_project().vulnerability_set.get(pk=self.kwargs.get("pk"))
+        except models.Vulnerability.DoesNotExist:
+            raise Http404()
+        kwargs["vuln"] = vuln
+        return super().get_context_data(**kwargs)
+
+    def get_permission_object(self):
+        return self.get_project()
+
+    def get_success_url(self):
+        context = self.get_context_data()
+        return context["vuln"].get_absolute_url()
+
+    def form_valid(self, form):
+        form.instance.vulnerability = self.get_context_data()["vuln"]
+        form.instance.project = self.get_project()
+        return super().form_valid(form)
+
+
+class CVSScoreUpdate(generics.ProjectUpdateView):
+    template_name = "core/pages/update.html"
+    form_class = forms.CVSScoreForm
+    page_title = "Update CVS Score"
+
+    def get_breadcrumbs(self):
+        vuln = models.Vulnerability.objects.get(pk=self.get_object().vulnerability.pk, project=self.get_project())
+        return [
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-list"), "Vulnerabilities"),
+            Breadcrumb(vuln.get_absolute_url(), "%s/%s" % (vuln.template.vulnerability_id, vuln.name))
+        ]
+
+    def get_success_url(self):
+        return reverse_lazy("projects:findings:vulnerability-scores", kwargs={"pk": self.get_object().vulnerability.pk})
+
+    def get_queryset(self):
+        return models.CVSScore.objects.filter(pk=self.kwargs.get("pk"), project=self.get_project())

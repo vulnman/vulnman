@@ -1,4 +1,3 @@
-import cvss
 import os
 import base64
 from uuid import uuid4
@@ -10,6 +9,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from vulnman.models import VulnmanModel, VulnmanProjectModel
 from apps.findings import querysets
+from apps.findings.models.scores import OWASPScore, CVSScore
 
 
 SEVERITY_CHOICES = [
@@ -68,102 +68,13 @@ class BaseVulnerability(VulnmanModel):
         abstract = True
 
 
-class BaseCVSS(models.Model):
-    # Attack Vector
-    CVSS_AV_NETWORK = "N"
-    CVSS_AV_ADJACENT = "A"
-    CVSS_AV_LOCAL = "L"
-    CVSS_AV_PHYSICAL = "P"
-    CVSS_AV_CHOICES = [
-        (CVSS_AV_NETWORK, "Network (N)"), (CVSS_AV_PHYSICAL, "Physical (P)"),
-        (CVSS_AV_ADJACENT, "Adjacent (A)", )
-    ]
-
-    # Attack Complexity
-    CVSS_AC_LOW = "L"
-    CVSS_AC_HIGH = "H"
-    CVSS_AC_CHOICES = [
-        (CVSS_AC_LOW, "Low (L)"), (CVSS_AC_HIGH, "High (H)")
-    ]
-
-    # Privileges Required
-    CVSS_PR_NONE = "N"
-    CVSS_PR_LOW = "L"
-    CVSS_PR_HIGH = "H"
-    CVSS_PR_CHOICES = [
-        (CVSS_PR_NONE, "None (N)"), (CVSS_PR_LOW, "Low (L)"), (CVSS_PR_HIGH, "High (H)")
-    ]
-
-    # User Interaction
-    CVSS_UI_NONE = "N"
-    CVSS_UI_REQUIRED = "R"
-    CVSS_UI_CHOICES = [
-        (CVSS_UI_NONE, "None (N)"), (CVSS_UI_REQUIRED, "Required (R)")
-    ]
-
-    # Scope
-    CVSS_S_UNCHANGED = "U"
-    CVSS_S_CHANGED = "C"
-    CVSS_S_CHOICES = [
-        (CVSS_S_UNCHANGED, "Unchanged (U)"), (CVSS_S_CHANGED, "Changed (C)")
-    ]
-    # Confidentiality
-    CVSS_C_NONE = "N"
-    CVSS_C_LOW = "L"
-    CVSS_C_HIGH = "H"
-    CVSS_C_CHOICES = [
-        (CVSS_C_NONE, "None (N)"), (CVSS_C_LOW, "Low (L)"), (CVSS_C_HIGH, "High (H)")
-    ]
-
-    # Integrity
-    CVSS_I_NONE = "N"
-    CVSS_I_LOW = "L"
-    CVSS_I_HIGH = "H"
-    CVSS_I_CHOICES = [
-        (CVSS_I_NONE, "None (N)"), (CVSS_I_LOW, "Low (L)"), (CVSS_I_HIGH, "High (H)")
-    ]
-
-    # Availability
-    CVSS_A_NONE = "N"
-    CVSS_A_LOW = "L"
-    CVSS_A_HIGH = "H"
-    CVSS_A_CHOICES = [
-        (CVSS_A_NONE, "None (N)"), (CVSS_A_LOW, "Low (L)"), (CVSS_A_HIGH, "High (H)")
-    ]
-
-    cvss_av = models.CharField(max_length=3, choices=CVSS_AV_CHOICES, blank=True, null=True)
-    cvss_ac = models.CharField(max_length=3, choices=CVSS_AC_CHOICES, blank=True, null=True)
-    cvss_pr = models.CharField(max_length=3, choices=CVSS_PR_CHOICES, blank=True, null=True)
-    cvss_ui = models.CharField(max_length=3, choices=CVSS_UI_CHOICES, blank=True, null=True)
-    cvss_s = models.CharField(max_length=3, choices=CVSS_S_CHOICES, blank=True, null=True)
-    cvss_c = models.CharField(max_length=3, choices=CVSS_C_CHOICES, blank=True, null=True)
-    cvss_i = models.CharField(max_length=3, choices=CVSS_I_CHOICES, blank=True, null=True)
-    cvss_a = models.CharField(max_length=3, choices=CVSS_A_CHOICES, blank=True, null=True)
-
-    class Meta:
-        abstract = True
-
-    def cvss_get_vector_string(self):
-        values = ["CVSS:3.1", "AV:%s" % self.cvss_av, "AC:%s" % self.cvss_ac, "PR:%s" % self.cvss_pr,
-            "UI:%s" % self.cvss_ui, "S:%s" % self.cvss_s, "C:%s" % self.cvss_c, "I:%s" % self.cvss_i,
-            "A:%s" % self.cvss_a
-        ]
-        return "/".join(values)
-
-    def cvss_get_base_score(self):
-        try:
-            return cvss.CVSS3(self.cvss_get_vector_string()).scores()[0]
-        except:
-            return None
-
-
 def project_pocs_path(instance, filename):
     ext = filename.split(".")[-1]
     filename = "%s.%s" % (uuid4(), ext)
     return "uploads/projects/%s/proofs/%s" % (instance.vulnerability.project.pk, filename)
 
 
-class Vulnerability(BaseCVSS, VulnmanProjectModel):
+class Vulnerability(VulnmanProjectModel):
     SEVERITY_CRITICAL = 4
     SEVERITY_HIGH = 3
     SEVERITY_MEDIUM = 2
