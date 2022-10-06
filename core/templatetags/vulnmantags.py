@@ -1,5 +1,6 @@
 from django import template
-from apps.findings.models import Template
+from django.utils.safestring import mark_safe
+import bleach
 from urllib.parse import urlencode
 
 register = template.Library()
@@ -41,3 +42,18 @@ def render_breadcrumbs(context):
     return {
         'breadcrumbs': context.get("breadcrumbs")
     }
+
+
+@register.filter
+def get_asset_link(asset):
+    # prevent XSS here but we need to mark the return string as safe
+    cleaned_asset = bleach.clean(str(asset))
+    cleaned_type = bleach.clean(asset.asset_type)
+    return mark_safe('<a href="{url}">{asset} ({asset_type})</a>'.format(
+        url=asset.get_absolute_url(), asset=cleaned_asset, asset_type=cleaned_type))
+
+
+@register.filter
+def get_customer_link(customer):
+    cleaned_name = bleach.clean(str(customer.name))
+    return mark_safe('<a href="6{url}">{name}</a>'.format(name=cleaned_name, url=customer.get_absolute_url()))

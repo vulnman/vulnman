@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load markdown %}
+{% load vulnmantags %}
 {% load project_contribs %}
 {% load guardian_tags %}
 
@@ -92,60 +93,20 @@
 
         <div class="row mt-3">
             <div class="col-sm-12 col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="clearfix">
-                            <p class="float-start">
-                                <strong>Customer:</strong>
-                            </p>
-                            <p class="float-end">
-                                <a href="{% url 'clients:client-detail' project.client.pk %}">{{ project.client.name }}</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                {% include 'components/cards/card_with_information.html' with icon="fa-handshake" title="Customer" value=project.client|get_customer_link %}
             </div>
             <div class="col-sm-12 col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="clearfix">
-                            <p class="float-start">
-                                <strong>Contributors:</strong>
-                            </p>
-                            <p class="float-end">{{ project.projectcontributor_set.count }}</p>
-                        </div>
-                    </div>
-                </div>
+                {% include 'components/cards/card_with_information.html' with icon="fa-users" title="Contributors" value=project.projectcontributor_set.count %}
             </div>
             <div class="col-sm-12 col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="clearfix">
-                            <p class="float-start">
-                                <strong>Open To Dos:</strong>
-                            </p>
-                            <p class="float-end">{{ project.get_open_todos.count }}</p>
-                        </div>
-                    </div>
-                </div>
+                {% include 'components/cards/card_with_information.html' with icon="fa-list-check" title="Open Checks" value=project.get_open_todos.count %}
             </div>
             <div class="col-sm-12 col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="clearfix">
-                            <p class="float-start">
-                                <strong>Your Role:</strong>
-                            </p>
-                            <p class="float-end">
-                                {% if request.user == project.creator %}
-                                    Creator
-                                {% else %}
-                                    {{ project|get_project_role:request.user }}
-                                {% endif %}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                {% if request.user == project.creator %}
+                    {% include 'components/cards/card_with_information.html' with icon="fa-user-secret" title="Your Role" value="Creator" %}
+                {% else %}
+                    {% include 'components/cards/card_with_information.html' with icon="fa-user-secret" title="Your Role" value=project|get_project_role:request.user %}
+                {% endif %}
             </div>
         </div>
 
