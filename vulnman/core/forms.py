@@ -24,7 +24,7 @@ class CodeMirrorWidget(forms.Textarea):
         output = [
             super().render(name, value, attrs, renderer),
             '<script>var id_%s = CodeMirror.fromTextArea(document.getElementById("id_%s"), '
-            '{mode: "markdown"});$("#id_%s").attr("required", false);</script>' % (
+            '{mode: "markdown", lineWrapping: true});$("#id_%s").attr("required", false);</script>' % (
                 name, name, name
             )
         ]
