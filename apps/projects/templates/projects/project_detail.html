@@ -55,38 +55,10 @@
                 </div>
             </div>
             <div class="col-md-4 col-sm-12">
-                <div class="card">
-                    <div class="card-body px-3 py-4-5">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="stats-icon purple">
-                                    <i class="fa fa-exclamation-triangle fa-2x py-2"></i>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <h6 class="text-muted font-semibold">Vulnerabilities</h6>
-                                <h6 class="font-extrabold mb-0">{{ project.vulnerability_set.count }}</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% include 'components/cards/card_with_information.html' with icon="fa-bug" title="Vulnerabilities" value=project.vulnerability_set.count %}
             </div>
             <div class="col-md-4 col-sm-12">
-                <div class="card">
-                    <div class="card-body px-3 py-4-5">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="stats-icon purple">
-                                    <i class="fa fa-server fa-2x py-2"></i>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <h6 class="text-muted font-semibold">Assets</h6>
-                                <h6 class="font-extrabold mb-0">{{ project.get_assets|length }}</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% include 'components/cards/card_with_information.html' with icon="fa-crosshairs" title="Assets" value=project.get_assets|length %}
             </div>
         </div>
 

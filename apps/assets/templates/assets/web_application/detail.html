@@ -41,7 +41,7 @@
                 {% include 'components/cards/card_with_information.html' with icon='fa-plug' title="Accessibility" value=webapp.get_accessibility_display %}
             </div>
             <div class="col-sm-12 col-md-4">
-                {% include 'components/cards/card_with_information.html' with icon='fa-bugs' title='Vulnerabilities' value=webapp.vulnerabilities_for_asset.count %}
+                {% include 'components/cards/card_with_information.html' with icon='fa-bug' title='Vulnerabilities' value=webapp.vulnerabilities_for_asset.count %}
             </div>
         </div>
 
