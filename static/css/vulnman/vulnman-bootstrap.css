@@ -10547,6 +10547,7 @@ textarea.form-control-lg {
 .choices__list--dropdown .choices__item--selectable.is-highlighted {
     background-color: $choices-highlight-bg;
 }*/
+/* do not display filepond credits. The JS option does not seem to have any effect anymore */
 .filepond--credits {
   display: none !important;
 }
@@ -11941,4 +11942,63 @@ select + .select2-container--bootstrap-5 {
 .form-floating .select2-container--bootstrap-5 .select2-selection > .select2-selection__rendered {
   margin-top: 0.6rem;
   margin-left: 0.25rem;
+}
+
+.status-unfixed {
+  --label-r: 114;
+  --label-g: 39;
+  --label-b: 34;
+  --label-h: 4;
+  --label-s: 54;
+  --label-l: 29;
+}
+
+.status-fixed {
+  --label-r: 56;
+  --label-g: 148;
+  --label-b: 102;
+  --label-h: 150;
+  --label-s: 45;
+  --label-l: 40;
+}
+
+.status-published {
+  --label-r: 87;
+  --label-g: 63;
+  --label-b: 115;
+  --label-h: 267;
+  --label-s: 29;
+  --label-l: 35;
+}
+
+.status-not-published {
+  --label-r: 79;
+  --label-g: 113;
+  --label-b: 120;
+  --label-h: 191;
+  --label-s: 21;
+  --label-l: 39;
+}
+
+.status-badge {
+  --lightness-threshold: 0.6;
+  --background-alpha: 0.18;
+  --border-alpha: 0.3;
+  --border-threshold: 0.96;
+  --perceived-lightness: calc(((var(--label-r) * 0.2126) + (var(--label-g) * 0.7152) + (var(--label-b) * 0.0722)) / 255);
+  --lightness-switch: max(0, min(calc((var(--perceived-lightness) - var(--lightness-threshold)) * -1000), 1));
+  --lighten-by: calc(((var(--lightness-threshold) - var(--perceived-lightness)) * 100) * var(--lightness-switch));
+  border-radius: 2em;
+  background: rgba(var(--label-r), var(--label-g), var(--label-b), var(--background-alpha));
+  border: 1px solid;
+  color: hsl(var(--label-h), calc(var(--label-s) * 1%), calc((var(--label-l) + var(--lighten-by)) * 1%));
+  border-color: hsla(var(--label-h), calc(var(--label-s) * 1%), calc((var(--label-l) + var(--lighten-by)) * 1%), var(--border-alpha));
+  display: inline-block;
+  padding: 0 7px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  text-decoration: none;
+  box-sizing: border-box;
+  margin-left: 5px;
 }
