@@ -39,7 +39,7 @@
                     <tbody>
                         {% for contact in contacts %}
                             <tr>
-                                <td><a href="{% url 'clients:contact-update' contact.pk %}">{{ contact.first_name }} {{ contact.last_name }}</a></td>
+                                <td>{{ contact.first_name }} {{ contact.last_name }}</td>
                                 <td>{{ contact.email }}</td>
                                 <td>{{ contact.phone }}</td>
                                 <td>{{ contact.profile.position }}</td>

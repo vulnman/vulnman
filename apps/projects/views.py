@@ -214,18 +214,6 @@ class ContactCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateVi
         return super().form_valid(form)
 
 
-class ContactUpdate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
-    # TODO: write tests
-    # FIXME: new user model
-    model = models.ClientContact
-    permission_required = ["projects.change_client"]
-    form_class = forms.ContactForm
-    template_name = "projects/clients/contact_create_or_update.html"
-
-    def get_success_url(self):
-        return reverse_lazy("clients:client-contacts", kwargs={"pk": self.kwargs.get("pk")})
-
-
 class ContactDelete(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDeleteView):
     # TODO: write tests
     # FIXME: new user model
