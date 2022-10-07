@@ -1,8 +1,12 @@
+from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy
 from django.http import Http404, HttpResponse
 from django.template.loader import render_to_string
 from django.conf import settings
+from django.utils.encoding import force_bytes
 import django_filters.views
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django_q.tasks import async_task
 from guardian.mixins import PermissionRequiredMixin
 from apps.projects import models
@@ -11,8 +15,8 @@ from apps.projects import filters
 from apps.account.models import User
 from core.tasks import send_mail_task
 from vulnman.core.views import generics
+from vulnman.core.utils import send_mail, get_unique_username_from_email
 from vulnman.core.mixins import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
-from vulnman.core.breadcrumbs import Breadcrumb
 
 
 class ProjectList(django_filters.views.FilterMixin, generics.VulnmanAuthListView):
@@ -157,13 +161,21 @@ class ClientContacts(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDetailV
     permission_required = ["projects.view_client"]
     template_name = "projects/clients/contacts_list.html"
 
+    def get_context_data(self, **kwargs):
+        kwargs["contacts"] = User.objects.filter(user_role=User.USER_ROLE_CUSTOMER,
+                                                 customer_profile__customer=self.get_object())
+        return super().get_context_data(**kwargs)
+
 
 class ContactCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateView):
     # TODO: write tests
-    model = models.ClientContact
+    model = User
     permission_required = ["projects.change_client"]
     form_class = forms.ContactForm
     template_name = "projects/clients/contact_create_or_update.html"
+    invite_mail_subject = "vulnman / Invitation to vulnman"
+    invite_mail_template_name = "emails/invite_customer.html"
+    invite_mail_from_mail = settings.DEFAULT_FROM_EMAIL
 
     def get_success_url(self):
         return reverse_lazy("clients:client-contacts", kwargs={"pk": self.kwargs.get("pk")})
@@ -179,13 +191,32 @@ class ContactCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateVi
         kwargs["client"] = self.get_client()
         return super().get_context_data(**kwargs)
 
+    def send_invite_mail(self, user):
+        current_site = get_current_site(self.request)
+        site_name = current_site.name
+        domain = current_site.domain
+        context = {"email": user.email, "domain": domain, "site_name": site_name,
+                   "uid": urlsafe_base64_encode(force_bytes(user.pk)), "user": user,
+                   "token": PasswordResetTokenGenerator().make_token(user),
+                   "protocol": self.request.scheme}
+        async_task(send_mail, self.invite_mail_subject, self.invite_mail_template_name, context,
+                   self.invite_mail_from_mail, user.email)
+
     def form_valid(self, form):
-        form.instance.client = self.get_client()
+        form.instance.username = get_unique_username_from_email(form.cleaned_data["email"])
+        form.instance.user_role = User.USER_ROLE_CUSTOMER
+        user = form.save()
+        user.customer_profile.position = form.cleaned_data["position"]
+        user.customer_profile.customer = self.get_client()
+        user.customer_profile.save()
+        if form.cleaned_data["invite_user"]:
+            self.send_invite_mail(form.instance)
         return super().form_valid(form)
 
 
 class ContactUpdate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
     # TODO: write tests
+    # FIXME: new user model
     model = models.ClientContact
     permission_required = ["projects.change_client"]
     form_class = forms.ContactForm
@@ -197,6 +228,7 @@ class ContactUpdate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthUpdateVi
 
 class ContactDelete(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDeleteView):
     # TODO: write tests
+    # FIXME: new user model
     model = models.ClientContact
     permission_required = ["projects.change_client"]
     http_method_names = ["post"]
@@ -227,7 +259,8 @@ class ProjectContributorCreate(generics.ProjectCreateView):
         return reverse_lazy("projects:contributor-list", kwargs={"pk": self.get_project().pk})
 
     def form_valid(self, form):
-        user = User.objects.filter(username=form.cleaned_data.get('username'), user_role=User.USER_ROLE_PENTESTER)
+        user_roles = [User.USER_ROLE_CUSTOMER, User.USER_ROLE_PENTESTER]
+        user = User.objects.filter(username=form.cleaned_data.get('username'), user_role__in=user_roles)
         if not user.exists():
             form.add_error("username", "Username not found!")
             return super().form_invalid(form)
@@ -331,53 +364,3 @@ class ProjectFileDelete(generics.ProjectDeleteView):
 
     def get_queryset(self):
         return models.ProjectFile.objects.filter(project=self.get_project())
-
-
-class ProjectContactList(generics.ProjectListView):
-    # TODO: write tests
-    template_name = "projects/contacts/list.html"
-    context_object_name = "contacts"
-    model = models.ProjectContact
-
-
-class ProjectContactCreate(generics.ProjectCreateView):
-    # TODO: write tests
-    template_name = "core/pages/create.html"
-    page_title = "Add Project Contact"
-    breadcrumbs = [
-        Breadcrumb(reverse_lazy("projects:contact-list"), "Contacts")
-    ]
-    form_class = forms.ProjectContactForm
-    success_url = reverse_lazy("projects:contact-list")
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["project"] = self.get_project()
-        return kwargs
-
-
-class ProjectContactUpdate(generics.ProjectUpdateView):
-    # TODO: write tests
-    template_name = "core/pages/update.html"
-    page_title = "Update Project Contact"
-    breadcrumbs = [
-        Breadcrumb(reverse_lazy("projects:contact-list"), "Contacts"),
-    ]
-    form_class = forms.ProjectContactForm
-    model = models.ProjectContact
-    success_url = reverse_lazy("projects:contact-list")
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["project"] = self.get_project()
-        return kwargs
-
-
-class ProjectContactDelete(generics.ProjectDeleteView):
-    # TODO: write tests
-    http_method_names = ["post"]
-    success_url = reverse_lazy("projects:contact-list")
-
-    def get_queryset(self):
-        return models.ProjectContact.objects.filter(project=self.get_project())
-

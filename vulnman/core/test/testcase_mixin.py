@@ -12,8 +12,6 @@ class VulnmanTestCaseMixin(object):
         self.pentester1 = self._create_user("pentester", "changeme", user_role=User.USER_ROLE_PENTESTER)
         self.pentester2 = self._create_user("pentester2", "changeme", user_role=User.USER_ROLE_PENTESTER)
         self.read_only1 = self._create_user("readonly1", "changeme")
-        self.manager = self._create_user("manager", "changeme")
-        self.manager.groups.add(Group.objects.get(name="Management"))
         self.project1 = self._create_project(creator=self.pentester1)
         self.project2 = self._create_project(creator=self.pentester2)
         self.add_contributor(self.read_only1, self.project1, role=ProjectContributor.ROLE_READ_ONLY)

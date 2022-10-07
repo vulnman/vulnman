@@ -1,0 +1,33 @@
+
+- name: Pentesters
+  permissions:
+    projects.Project:
+      - add_client
+      - view_client
+      - change_client
+      - delete_client
+      - add_project
+      - view_project
+      - change_project
+      - delete_project
+      - add_contributor
+    responsible_disc.Vulnerability:
+      - add_vulnerability
+      - view_vulnerability
+      - change_vulnerability
+      - delete_vulnerability
+      - invite_vendor
+      - add_comment
+
+
+- name: Customers
+  permissions:
+    projects.Project:
+      - view_project
+
+
+- name: Vendors
+  permissions:
+    responsible_disc.Vulnerability:
+      - view_vulnerability
+      - add_comment

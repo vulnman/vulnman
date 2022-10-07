@@ -37,12 +37,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for contact in client.clientcontact_set.all %}
+                        {% for contact in contacts %}
                             <tr>
                                 <td><a href="{% url 'clients:contact-update' contact.pk %}">{{ contact.first_name }} {{ contact.last_name }}</a></td>
                                 <td>{{ contact.email }}</td>
                                 <td>{{ contact.phone }}</td>
-                                <td>{{ contact.position }}</td>
+                                <td>{{ contact.profile.position }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

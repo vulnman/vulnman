@@ -12,7 +12,7 @@ class ClientDetailViewTestCase(TestCase, VulnmanTestCaseMixin):
     def test_pentester(self):
         self.client.force_login(self.pentester1)
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
 
     def test_vendor(self):
         self.client.force_login(self.vendor)
@@ -22,11 +22,6 @@ class ClientDetailViewTestCase(TestCase, VulnmanTestCaseMixin):
     def test_readonly(self):
         self.client.force_login(self.pentester1)
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 403)
-
-    def test_valid(self):
-        self.client.force_login(self.manager)
-        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
 
@@ -35,17 +30,12 @@ class ClientListViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.init_mixin()
         self.url = self.get_url("clients:client-list")
 
-    def test_valid(self):
-        self.client.force_login(self.manager)
+    def test_pentester(self):
+        self.client.force_login(self.pentester1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context["clients"]), 2)
         self.assertIn(self.project1.client, response.context["clients"])
-
-    def test_pentester(self):
-        self.client.force_login(self.pentester1)
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 403)
 
     def test_vendor(self):
         self.client.force_login(self.vendor)
