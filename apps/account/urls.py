@@ -21,6 +21,4 @@ urlpatterns = [
     path('profile/2fa/disable/', views.Disable2FAView.as_view(), name="disable-2fa"),
     path('profile/<str:slug>/', views.Profile.as_view(), name="user-profile"),
     path('change-password/', views.ChangePassword.as_view(), name="change-password"),
-
-    path('activate/<str:uidb64>/<str:token>/', views.ActivateAccount.as_view(), name="activate-account")
 ]

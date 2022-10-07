@@ -14,7 +14,6 @@ from apps.account import models
 from vulnman.core.views.mixins import ThemeMixin, VulnmanContextMixin
 from vulnman.core.views import generics
 from apps.account.models import User
-from apps.account.token import account_activation_token
 
 
 class Index(RedirectView):
@@ -107,13 +106,6 @@ class ChangePassword(VulnmanContextMixin, views.PasswordChangeView):
 
     def get_success_url(self):
         return reverse_lazy('account:user-profile', kwargs={'slug': self.request.user.username})
-
-
-class ActivateAccount(views.PasswordResetConfirmView, VulnmanContextMixin):
-    template_name = "account/activate_account.html"
-    form_class = forms.PasswordSetForm
-    token_generator = account_activation_token
-    success_url = reverse_lazy(settings.LOGIN_URL)
 
 
 class PasswordReset(views.PasswordResetView, VulnmanContextMixin):

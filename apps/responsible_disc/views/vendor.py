@@ -7,7 +7,6 @@ from django_q.tasks import async_task
 from vulnman.core.mixins import ObjectPermissionRequiredMixin
 from vulnman.core import utils
 from apps.account.models import User
-from apps.account.token import account_activation_token
 from apps.responsible_disc import forms
 from apps.responsible_disc import models
 
@@ -81,8 +80,22 @@ class InviteVendor(ObjectPermissionRequiredMixin, ShareWithMailMixin, PasswordRe
         return super().get_context_data(**kwargs)
 
     def create_new_vendor(self, email):
-        user = User.objects.create(username=email, email=email, user_role=User.USER_ROLE_VENDOR, is_active=True)
+        username = self.get_unique_username_from_email(email)
+        user = User.objects.create(username=username, email=email, user_role=User.USER_ROLE_VENDOR, is_active=True)
         return user
+
+    def get_unique_username_from_email(self, email):
+        while True:
+            username = "ven" + email.split('@')[0]
+            name, idx = username, 1
+            try:
+                # user with current username exists, so add numeral
+                User.objects.get(username=username)
+                name = username + str(idx)
+            except User.DoesNotExist:
+                username = name
+                break
+        return username
 
     def form_valid(self, form):
         # FIXME: this view is ugly!
