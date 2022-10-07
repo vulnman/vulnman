@@ -2,6 +2,13 @@
 
 {% block content %}
     <div class="center">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    {% include 'message.html' %}
+                {% endfor %}
+            </ul>
+        {% endif %}
         <h1 class="auth-title">Log in.</h1>
         {% if wizard.steps.current == "auth" %}
             <p class="auth-subtitle mb-5">Log in to your vulnman account.</p>
@@ -26,14 +33,16 @@
             {% if wizard.steps.current == "token" %}
                 {% include "account/components/auth_forms/totp_token_form.html" %}
             {% else %}
-            {% include 'account/components/auth_forms/login_form.html' %}
+                {% include 'account/components/auth_forms/login_form.html' %}
             {% endif %}
             {% if wizard.steps.current == "token" %}
-            <button class="btn btn-primary btn-block btn-lg shadow-lg mt-4">Continue</button>
+                <button class="btn btn-primary btn-block btn-lg shadow-lg mt-4">Continue</button>
             {% else %}
-            <button class="btn btn-primary btn-block btn-lg shadow-lg mt-4">Log in</button>
+                <button class="btn btn-primary btn-block btn-lg shadow-lg mt-4">Log in</button>
             {% endif %}
         </form>
     </div>
-
+    <div class="text-center mt-5 text-lg fs-4">
+        <p><a class="font-bold" href="{% url 'account:password-reset' %}">Forgot password?</a>.</p>
+    </div>
 {% endblock content %}

@@ -26,9 +26,10 @@ class InviteVendorTestCase(TestCase, VulnmanTestCaseMixin):
         self.client.force_login(self.pentester1)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(models.User.objects.filter(email=data["email"], is_active=False,
+        self.assertEqual(models.User.objects.filter(email=data["email"], is_active=True,
                                                     user_role=User.USER_ROLE_VENDOR).count(), 1)
         user = models.User.objects.get(email=data["email"])
+        self.assertEqual(user.password, "")
         self.assertEqual(len(get_user_perms(user, self.vuln1)), 2)
         self.assertIn("view_vulnerability", get_user_perms(user, self.vuln1))
         self.assertIn("add_comment", get_user_perms(user, self.vuln1))

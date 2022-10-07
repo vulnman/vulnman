@@ -1,5 +1,5 @@
 from vulnman.core.views.generics.vulnman import (
-    VulnmanDeleteView, VulnmanUpdateView, VulnmanCreateView, VulnmanDetailView, VulnmanListView,
+    VulnmanDeleteView, VulnmanUpdateView, VulnmanCreateView, VulnmanDetailView, VulnmanListView, VulnmanRedirectView,
     VulnmanAuthListView, VulnmanAuthCreateView, VulnmanAuthDeleteView, VulnmanAuthUpdateView,
     VulnmanAuthDetailView,
     VulnmanAuthTemplateView, VulnmanAuthFormView,

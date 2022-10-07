@@ -239,42 +239,12 @@ class InviteVendorForm(PasswordResetForm):
             )
         )
 
-    def get_users(self, email):
-        """Given an email, return matching user(s) who should receive a reset.
-
-        This allows subclasses to more easily customize the default policies
-        that prevent inactive users and users with unusable passwords from
-        resetting their password.
-        """
-        email_field_name = User.get_email_field_name()
-        qs = User.objects.filter(
-            **{
-                "%s__iexact" % email_field_name: email,
-                "is_active": False,
-            }
-        )
-        if not qs.exists():
-            user = User.objects.create(
-                username="vendor-%s" % uuid.uuid4(), email=email, is_vendor=True, is_active=False)
-        return (
-            u
-            for u in qs
-            if _unicode_ci_compare(email, getattr(u, email_field_name))
-        )
-
 
 class UnshareVulnerability(forms.Form):
     email = forms.EmailField()
 
     class Meta:
         fields = ["email"]
-
-
-def get_template_choices():
-    choices = []
-    for item in settings.REPORT_TEMPLATES.keys():
-        choices.append((item, item))
-    return choices
 
 
 class VulnerabilityExportForm(forms.Form):

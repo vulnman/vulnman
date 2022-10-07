@@ -121,3 +121,27 @@ class PasswordSetForm(SetPasswordForm):
         user.is_active = True
         user.save()
         return user
+
+
+class SetPasswordForm(PasswordSetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("new_password1")
+                )
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("new_password2")
+                )
+            ),
+            layout.Row(
+                FormActions(
+                    layout.Submit('submit', 'Save', css_class="btn-primary justify-content-center w-100"),
+                    wrapper_class="col-sm-12 col-md-6"
+                )
+            )
+        )

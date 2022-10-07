@@ -3,7 +3,10 @@ from django.views.generic import RedirectView
 from django.shortcuts import redirect
 from django.http.response import Http404
 from django.contrib.auth import views
+from django.contrib import messages
+from django.contrib.auth.forms import PasswordResetForm
 from django.urls import reverse_lazy
+from django.contrib.messages.views import SuccessMessageMixin
 from two_factor import views as tfa_views
 from two_factor.utils import default_device
 from apps.account import forms
@@ -111,3 +114,35 @@ class ActivateAccount(views.PasswordResetConfirmView, VulnmanContextMixin):
     form_class = forms.PasswordSetForm
     token_generator = account_activation_token
     success_url = reverse_lazy(settings.LOGIN_URL)
+
+
+class PasswordReset(views.PasswordResetView, VulnmanContextMixin):
+    template_name = "account/password_reset.html"
+    form_class = PasswordResetForm
+    email_template_name = "emails/password_reset.html"
+    subject_template_name = "emails/password_reset_subject.html"
+    success_url = reverse_lazy("account:password-reset-done")
+
+
+class PasswordResetDone(generics.VulnmanRedirectView):
+    url = reverse_lazy("account:login")
+    success_message = "If this user exists, you will receive an email containing further instructions."
+
+    def get_redirect_url(self, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super().get_redirect_url(*args, **kwargs)
+
+
+class PasswordResetConfirm(views.PasswordResetConfirmView):
+    template_name = "account/password_reset_confirm.html"
+    success_url = reverse_lazy("account:password-reset-confirm-done")
+    form_class = forms.SetPasswordForm
+
+
+class PasswordResetConfirmDone(generics.VulnmanRedirectView):
+    url = reverse_lazy("account:login")
+    success_message = "Password reset successful."
+
+    def get_redirect_url(self, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super().get_redirect_url(*args, **kwargs)
