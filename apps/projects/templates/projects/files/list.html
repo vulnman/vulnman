@@ -36,19 +36,22 @@
                 </div>
             </div>
         {% else %}
-            <div class="list-group mt-3">
+            <div class="row">
                 {% for obj in object_list %}
-                    <div href="{{ obj.get_absolute_url }}" class="list-group-item">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <span>{{ obj }}</span>
-                                <div class="float-end">
-                                    <a class="btn btn-sm btn-outline-warning" href="{% url 'projects:file-update' obj.pk %}"><i class="fa fa-edit"></i></a>
-                                    <a class="btn btn-sm btn-outline-secondary" href="{{ obj.get_absolute_url }}">
-                                        <i class="fa fa-download"></i>
-                                    </a>
+                    <div class="file-list-item col-sm-6 col-md-2">
+                        <div class="card justify-content-center align-items-center">
+                            <div class="card-content">
+                                <i class="fa fa-file fa-2x p-3"></i>
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex d-inline justify-content-evenly align-content-between">
+                                    <a href="{% url 'projects:file-update' obj.pk %}" class="btn btn-sm btn-outline-warning"><i class="fa fa-edit"></i></a>
+                                    <a href="{{ obj.get_absolute_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-download"></i></a>
                                 </div>
                             </div>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center">
+                            {{ obj|truncatechars:32 }}
                         </div>
                     </div>
                 {% endfor %}

@@ -83,8 +83,7 @@ class ProfileUpdate(generics.VulnmanAuthUpdateView):
         return obj
 
     def get_queryset(self):
-        return models.PentesterProfile.objects.filter(user__user_role=User.USER_ROLE_PENTESTER, user=self.request.user,
-                                                      user__is_active=True)
+        return models.PentesterProfile.objects.for_user(self.request.user)
 
     def form_valid(self, form):
         user = form.instance.user

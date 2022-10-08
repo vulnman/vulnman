@@ -15,6 +15,7 @@ from apps.projects import filters
 from apps.account.models import User
 from core.tasks import send_mail_task
 from vulnman.core.views import generics
+from vulnman.core.breadcrumbs import Breadcrumb
 from vulnman.core.utils import send_mail, get_unique_username_from_email
 from vulnman.core.mixins import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
 
@@ -239,10 +240,15 @@ class ProjectContributorList(generics.ProjectListView):
 
 
 class ProjectContributorCreate(generics.ProjectCreateView):
-    # TODO: do we need the "pk" here?
-    http_method_names = ["post"]
+    template_name = "core/pages/create.html"
     permission_required = ["projects.add_contributor"]
     form_class = forms.ContributorForm
+    page_title = "Add Project Contributor"
+
+    def get_breadcrumbs(self):
+        return [
+            Breadcrumb(self.get_success_url(), "Contributors")
+        ]
 
     def get_success_url(self):
         return reverse_lazy("projects:contributor-list", kwargs={"pk": self.get_project().pk})

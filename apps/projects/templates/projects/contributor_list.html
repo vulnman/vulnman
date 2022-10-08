@@ -15,7 +15,7 @@
         {% if project.creator == request.user %}
         <div class="clearfix">
             <div class="float-end">
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">
+                <a class="btn btn-primary" href="{% url 'projects:contributor-create' project.pk %}">
                     <i class="fa fa-plus"></i>
                 </a>
             </div>
@@ -53,58 +53,5 @@
                 </li>
             {% endfor %}
         </ul>
-
-
-        <!-- Create Modal -->
-        <div class="modal fade" id="create-modal" tabindex="-1" aria-labelledby="create-modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="create-modal-label">Add Contributor</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        {% crispy create_form %}
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-    $('#add-contributor-form').submit(function(e){
-        e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: "/api/v1/projects/contributors/",
-            dataType: "json",
-            data: {"role": $('#role option:selected').val(), "user": $('#username').val(), "project": "{{ project.pk }}"},
-            success: function(data){
-                location.reload()
-                // console.log(data)
-            },
-            beforeSend: function(xhr){
-                xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
-            }
-        });
-    });
-
-    function removeContributor(contrib_id){
-        $.ajax({
-            type: "DELETE",
-            url: "/api/v1/projects/contributors/" + contrib_id + "/",
-            dataType: "json",
-            data: {},
-            success: function(data){
-                location.reload()
-                // console.log(data)
-            },
-            beforeSend: function(xhr){
-                xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
-            }
-        });
-    }
-</script>
 {% endblock %}

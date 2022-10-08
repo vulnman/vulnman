@@ -7,6 +7,7 @@ from two_factor.utils import default_device
 from phonenumber_field.modelfields import PhoneNumberField
 from apps.projects.models import Project
 from apps.account import signals
+from apps.account import querysets
 
 
 class UserAccountManager(UserManager):
@@ -54,6 +55,7 @@ class User(AbstractUser):
 
 
 class PentesterProfile(models.Model):
+    objects = querysets.PentestProfileQuerySet()
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="pentester_profile")
     is_public = models.BooleanField(default=True)
     bio = models.TextField(null=True, blank=True)
