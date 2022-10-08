@@ -1,4 +1,3 @@
-import uuid
 from django import forms
 from django.conf import settings
 from django.urls import reverse_lazy
@@ -9,8 +8,7 @@ from crispy_bootstrap5 import bootstrap5
 from vulnman.core.forms import CodeMirrorWidget, FileDropWidget
 from vulnman.core.forms import DateInput
 from apps.responsible_disc import models
-from apps.account.models import User
-from django.contrib.auth.forms import PasswordResetForm, _unicode_ci_compare
+from django.contrib.auth.forms import PasswordResetForm
 
 
 class TextProofForm(forms.ModelForm):

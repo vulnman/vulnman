@@ -2,7 +2,6 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-
 {% block title %}
     {% if request.resolver_match.url_name == "client-update" %}
 Update Client
@@ -61,4 +60,11 @@ Create Client
         {% include 'modals/delete_object.html' with obj=form.instance %}
     {% endif %}
 
+{% endblock %}
+
+
+{% block extra_scripts %}
+    <script>
+        $('#id_logo').filepond({storeAsFile: true});
+    </script>
 {% endblock %}

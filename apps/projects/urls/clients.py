@@ -13,6 +13,5 @@ urlpatterns = [
     path("<str:pk>/contacts/", views.ClientContacts.as_view(), name="client-contacts"),
     path("<str:pk>/contacts/create/", views.ContactCreate.as_view(), name="contact-create"),
 
-    path("contacts/<str:pk>/update/", views.ContactUpdate.as_view(), name="contact-update"),
     path("contacts/<str:pk>/delete/", views.ContactDelete.as_view(), name="contact-delete")
 ]

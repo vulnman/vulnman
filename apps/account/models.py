@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
 from two_factor.utils import default_device
+from phonenumber_field.modelfields import PhoneNumberField
 from apps.projects.models import Project
 from apps.account import signals
 
@@ -43,6 +44,8 @@ class User(AbstractUser):
             return self.pentester_profile
         elif self.user_role == User.USER_ROLE_VENDOR:
             return self.vendor_profile
+        elif self.user_role == User.USER_ROLE_CUSTOMER:
+            return self.customer_profile
 
     def has_2fa_enabled(self):
         if default_device(self):
@@ -71,6 +74,13 @@ class VendorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="vendor_profile")
 
 
+class CustomerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="customer_profile")
+    customer = models.ForeignKey('projects.Client', on_delete=models.CASCADE, null=True)
+    position = models.CharField(max_length=64, default="unknown")
+    phone = PhoneNumberField(null=True, blank=True)
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.user_role == User.USER_ROLE_PENTESTER:
@@ -84,6 +94,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         instance.groups.add(group)
         instance.save()
     if created and instance.user_role == User.USER_ROLE_CUSTOMER:
+        CustomerProfile.objects.create(user=instance)
         group = Group.objects.get(name="Customers")
         instance.groups.add(group)
         instance.save()

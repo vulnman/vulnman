@@ -100,6 +100,12 @@ class Project(models.Model):
         ]
 
 
+def customer_logo_upload_path(instance, filename):
+    ext = filename.split(".")[-1]
+    filename = "logo.%s" % ext
+    return "uploads/customers/%s/files/%s" % (instance.pk, filename)
+
+
 class Client(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -110,9 +116,19 @@ class Client(models.Model):
     city = models.CharField(max_length=128)
     country = models.CharField(max_length=128)
     zip = models.IntegerField()
+    homepage = models.URLField(blank=True, null=True)
+    logo = models.ImageField(blank=True, null=True, upload_to=customer_logo_upload_path)
 
     def __str__(self):
         return self.name
+
+    def get_full_address(self):
+        return "%s, %s (%s)" % (self.city, self.zip, self.country)
+
+    def get_homepage_display(self):
+        if self.homepage:
+            return self.homepage
+        return "-"
 
     def get_absolute_url(self):
         return reverse_lazy("clients:client-detail", kwargs={"pk": self.pk})
@@ -125,7 +141,8 @@ class ClientContact(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,
+                                related_name="clientcontact_set")
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     email = models.EmailField()
@@ -143,23 +160,6 @@ class ClientContact(models.Model):
 
     def get_absolute_delete_url(self):
         return reverse_lazy("clients:contact-delete", kwargs={"pk": self.pk})
-
-
-class ProjectContact(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    client_contact = models.ForeignKey(ClientContact, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-
-    def get_absolute_delete_url(self):
-        return reverse_lazy("projects:contact-delete", kwargs={"pk": self.pk})
-
-    class Meta:
-        unique_together = [
-            ("project", "client_contact")
-        ]
 
 
 class ProjectContributor(models.Model):

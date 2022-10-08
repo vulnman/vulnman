@@ -1,0 +1,15 @@
+Hello,
+
+
+You are receiving this email because one of our security researchers has invited you to a vulnman instance.
+Vulnman allows software vendors, security researchers and project partners to share vulnerability information with each other.
+
+After activating your account, you can sign in to your account to view the vulnerability and project information.
+
+
+Your activation link is: {{ protocol }}://{{ domain }}{% url 'account:password-reset-confirm' uidb64=uid token=token %}
+
+
+Your vulnman username is: {{ user.username }}
+
+*vulnman is an open-source penetration testing and responsible disclosure management application*.
