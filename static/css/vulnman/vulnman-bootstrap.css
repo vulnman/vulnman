@@ -12002,3 +12002,67 @@ select + .select2-container--bootstrap-5 {
   box-sizing: border-box;
   margin-left: 5px;
 }
+
+.avatar {
+  display: inline-flex;
+  border-radius: 50%;
+  text-align: center;
+  vertical-align: middle;
+  position: relative;
+}
+.avatar .avatar-content {
+  width: 32px;
+  height: 32px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.875rem;
+}
+.avatar .avatar-content svg, .avatar .avatar-content i {
+  color: #fff;
+  font-size: 1rem;
+  height: 1rem;
+}
+.avatar .avatar-content i:before {
+  vertical-align: top;
+}
+.avatar img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+.avatar .avatar-status {
+  width: 0.7rem;
+  height: 0.7rem;
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  bottom: 0;
+  right: 0;
+}
+.avatar.avatar-sm .avatar-content, .avatar.avatar-sm img {
+  width: 24px;
+  height: 24px;
+  font-size: 0.8rem;
+}
+.avatar.avatar-md .avatar-content, .avatar.avatar-md img {
+  width: 32px;
+  height: 32px;
+  font-size: 0.8rem;
+}
+.avatar.avatar-md2 .avatar-content, .avatar.avatar-md2 img {
+  width: 40px;
+  height: 40px;
+  font-size: 0.8rem;
+}
+.avatar.avatar-lg .avatar-content, .avatar.avatar-lg img {
+  width: 48px;
+  height: 48px;
+  font-size: 1.2rem;
+}
+.avatar.avatar-xl .avatar-content, .avatar.avatar-xl img {
+  width: 60px;
+  height: 60px;
+  font-size: 1.4rem;
+}

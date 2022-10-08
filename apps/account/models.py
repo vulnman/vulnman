@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
 from two_factor.utils import default_device
+from phonenumber_field.modelfields import PhoneNumberField
 from apps.projects.models import Project
 from apps.account import signals
 
@@ -76,6 +77,8 @@ class VendorProfile(models.Model):
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="customer_profile")
     customer = models.ForeignKey('projects.Client', on_delete=models.CASCADE, null=True)
+    position = models.CharField(max_length=64, default="unknown")
+    phone = PhoneNumberField(null=True, blank=True)
 
 
 @receiver(post_save, sender=User)

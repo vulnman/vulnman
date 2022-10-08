@@ -9,31 +9,44 @@
 {% block content %}
 
     <div class="container mt-3">
-        <!-- Breadcrumbs -->
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'clients:client-list' %}">Clients</a></li>
-                <li class="breadcrumb-item active">{{ client.name }}</li>
-            </ol>
-        </nav>
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <!-- Breadcrumbs -->
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'clients:client-list' %}">Clients</a></li>
+                        <li class="breadcrumb-item active">{{ client.name }}</li>
+                    </ol>
+                </nav>
+            </div>
+            {% if perms.projects.change_project %}
+                <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                    <div class="d-inline">
+                        <a class="btn btn-outline-warning" href="{% url 'clients:client-update' client.pk %}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a class="btn btn-outline-danger" data-bs-toggle="modal"
+                           data-bs-target="#delete-modal-{{ client.pk }}">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
 
         {% include 'projects/components/client_sub_nav.html' %}
 
-        <div class="row mt-5">
-            <div class="col-sm-12 col-md-8 d-flex">
+        <div class="row mt-3">
+            <div class="col-sm-12 col-md-7 d-flex align-items-center">
                 <div class="justify-content-start">
                     <h3>{{ client.name }}</h3>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-4 d-flex align-items-end justify-content-end">
-                {% if perms.projects.change_client %}
-                    <a class="btn btn-outline-warning" href="{% url 'clients:client-update' client.pk %}">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                    <a class="btn btn-outline-danger" data-bs-toggle="modal"
-                       data-bs-target="#delete-modal-{{ client.pk }}">
-                        <i class="fa fa-trash"></i>
-                    </a>
+            <div class="col-sm-12 col-md-5 d-flex justify-content-end align-items-end">
+                {% if client.logo %}
+                    <div class="avatar avatar-xl">
+                        <img src="{{ client.logo.url }}" alt="Company Logo">
+                    </div>
                 {% endif %}
             </div>
         </div>
@@ -41,24 +54,13 @@
 
         <div class="row mt-3">
             <div class="col-sm-12 col-md-4">
-                {% include 'components/cards/simple_text_card.html' with label="Name" text=client.name %}
+                {% include 'components/cards/card_with_information.html' with icon="fa-road" title="Street" value=client.street %}
             </div>
             <div class="col-sm-12 col-md-4">
-                {% include 'components/cards/simple_text_card.html' with label="Street" text=client.street %}
+                {% include 'components/cards/card_with_information.html' with icon="fa-city" title="City" value=client.get_full_address %}
             </div>
             <div class="col-sm-12 col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="clearfix">
-                            <div class="float-start">
-                                <p class="card-text"><strong>City</strong></p>
-                            </div>
-                            <div class="float-end">
-                                <p class="card-text">{{ client.zip }} {{ client.city }}, {{ client.country }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% include 'components/cards/card_with_information.html' with icon="fa-location-dot" title="Homepage" value=client.get_homepage_display %}
             </div>
         </div>
 
@@ -67,19 +69,19 @@
                 <h3>Projects</h3>
                 <table class="table  table-striped table-hover mt-3">
                     <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Status</th>
-                        </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        {% for project in client.project_set.all %}
-                            <tr>
-                                <td><a href="{{ project.get_absolute_url }}">{{ project.name }}</a></td>
-                                <td>{{ project.get_status_display }}</td>
-                            </tr>
+                    {% for project in client.project_set.all %}
+                        <tr>
+                            <td><a href="{{ project.get_absolute_url }}">{{ project.name }}</a></td>
+                            <td>{{ project.get_status_display }}</td>
+                        </tr>
 
-                        {% endfor %}
+                    {% endfor %}
                     </tbody>
                 </table>
                 {% include 'modals/delete_object.html' with obj=client %}

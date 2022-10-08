@@ -203,10 +203,11 @@ class ContactCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateVi
                    self.invite_mail_from_mail, user.email)
 
     def form_valid(self, form):
-        form.instance.username = get_unique_username_from_email(form.cleaned_data["email"])
+        form.instance.username = get_unique_username_from_email(form.cleaned_data["email"], prefix="cus")
         form.instance.user_role = User.USER_ROLE_CUSTOMER
         user = form.save()
         user.customer_profile.position = form.cleaned_data["position"]
+        user.customer_profile.phone = form.cleaned_data.get("phone")
         user.customer_profile.customer = self.get_client()
         user.customer_profile.save()
         if form.cleaned_data["invite_user"]:

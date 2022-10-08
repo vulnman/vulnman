@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_bootstrap5 import bootstrap5
+from phonenumber_field.formfields import PhoneNumberField
 from apps.projects import models
 from vulnman.core.forms import DateInput, FileDropWidget, CodeMirrorWidget
 from crispy_forms.bootstrap import FormActions
@@ -53,7 +54,10 @@ class ClientForm(forms.ModelForm):
 
     class Meta:
         model = models.Client
-        fields = ["name", "street", "city", "country", "zip"]
+        fields = ["name", "street", "city", "country", "zip", "homepage", "logo"]
+        widgets = {
+            "logo": FileDropWidget()
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -71,6 +75,12 @@ class ClientForm(forms.ModelForm):
                 layout.Div(bootstrap5.FloatingField("zip"), css_class="col-sm-12 col-md-6")
             ),
             layout.Row(
+                layout.Div(bootstrap5.FloatingField("homepage"), css_class="col-sm-12")
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.Field("logo", wrapper_class="col-sm-12"))
+            ),
+            layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
                             wrapper_class="col-sm-12 col-md-6")
             )
@@ -80,10 +90,11 @@ class ClientForm(forms.ModelForm):
 class ContactForm(forms.ModelForm):
     invite_user = forms.BooleanField(required=False)
     position = forms.CharField()
+    phone = PhoneNumberField(required=False)
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "position"]
+        fields = ["first_name", "last_name", "email", "position", "phone"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -99,7 +110,8 @@ class ContactForm(forms.ModelForm):
                 layout.Div(bootstrap5.FloatingField("email"), css_class="col-sm-12 col-md-12"),
             ),
             layout.Row(
-                layout.Div(bootstrap5.FloatingField("position"), css_class="col-sm-12 col-md-12"),
+                layout.Div(bootstrap5.FloatingField("position"), css_class="col-sm-12 col-md-6"),
+                layout.Div(bootstrap5.FloatingField("phone"), css_class="col-sm-12 col-md-6")
             ),
             layout.Row(
                 layout.Div(bootstrap5.Field("invite_user"), css_class="col-sm-12 col-md-6")
