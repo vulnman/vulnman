@@ -53,6 +53,9 @@ class User(AbstractUser):
             return True
         return False
 
+    def get_absolute_delete_url(self):
+        return reverse_lazy("account:delete")
+
 
 class PentesterProfile(models.Model):
     objects = querysets.PentestProfileQuerySet()
@@ -81,6 +84,9 @@ class CustomerProfile(models.Model):
     customer = models.ForeignKey('projects.Client', on_delete=models.CASCADE, null=True)
     position = models.CharField(max_length=64, default="unknown")
     phone = PhoneNumberField(null=True, blank=True)
+
+    def get_absolute_update_url(self):
+        return reverse_lazy("account:customer-profile-update")
 
 
 @receiver(post_save, sender=User)

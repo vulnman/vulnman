@@ -6,7 +6,6 @@ from django.contrib.auth import views
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordResetForm
 from django.urls import reverse_lazy
-from django.contrib.messages.views import SuccessMessageMixin
 from two_factor import views as tfa_views
 from two_factor.utils import default_device
 from apps.account import forms
@@ -69,6 +68,38 @@ class QRCodeGeneratorView(tfa_views.QRGeneratorView):
     pass
 
 
+class CustomerProfileUpdate(generics.VulnmanAuthUpdateView):
+    template_name = "account/edit_profile.html"
+    success_url = reverse_lazy("index")
+    form_class = forms.CustomerProfileUpdateForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["first_name"] = self.request.user.first_name
+        initial["last_name"] = self.request.user.last_name
+        return initial
+
+    def get_queryset(self):
+        return models.CustomerProfile.objects.filter(user=self.request.user)
+
+    def get_object(self, queryset=None):
+        # prevent "pk" required in url
+        qs = self.get_queryset()
+        try:
+            obj = qs.get()
+        except qs.model.DoesNotExist:
+            raise Http404("No %(verbose_name)s found matching the query" % {
+                "verbose_name": qs.model._meta.verbose_name})
+        return obj
+
+    def form_valid(self, form):
+        user = form.instance.user
+        user.first_name = form.cleaned_data.get("first_name")
+        user.last_name = form.cleaned_data.get("last_name")
+        user.save()
+        return super().form_valid(form)
+
+
 class ProfileUpdate(generics.VulnmanAuthUpdateView):
     template_name = "account/edit_profile.html"
     form_class = forms.UpdatePentesterProfileForm
@@ -105,6 +136,16 @@ class ChangePassword(VulnmanContextMixin, views.PasswordChangeView):
 
     def get_success_url(self):
         return reverse_lazy('account:user-profile', kwargs={'slug': self.request.user.username})
+
+
+class AccountDeleteView(generics.VulnmanAuthDeleteView):
+    success_url = reverse_lazy("account:login")
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_queryset(self):
+        return models.User.objects.filter(pk=self.request.user.pk)
 
 
 class PasswordReset(views.PasswordResetView, VulnmanContextMixin):

@@ -38,6 +38,25 @@ class ChangePasswordForm(PasswordChangeForm):
         )
 
 
+class CustomerProfileUpdateForm(forms.ModelForm):
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+
+    class Meta:
+        model = models.CustomerProfile
+        fields = ["first_name", "last_name"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(layout.Div(bootstrap5.FloatingField("first_name"), css_class="col-sm-12")),
+            layout.Row(layout.Div(bootstrap5.FloatingField("last_name"), css_class="col-sm-12")),
+            layout.Row(FormActions(layout.Submit('submit', 'Submit', css_class="btn-primary w-100"),
+                                   wrapper_class="col-sm-12 col-md-6"))
+        )
+
+
 class UpdatePentesterProfileForm(forms.ModelForm):
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)

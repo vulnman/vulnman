@@ -6,13 +6,26 @@
 
 {% block content %}
     <div class="container mt-3">
-        <!-- Breadcrumbs -->
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'account:user-profile' request.user.username %}">{{ request.user.username }}'s Profile</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Update Profile</li>
-            </ol>
-        </nav>
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <!-- Breadcrumbs -->
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a
+                                href="{% url 'account:user-profile' request.user.username %}">{{ request.user.username }}'s
+                            Profile</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Update Profile</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                <div class="d-inline">
+                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ request.user.pk }}"><i class="fa fa-trash"></i></a>
+
+                </div>
+            </div>
+        </div>
+
 
         <div class="card mt-3">
             <div class="card-body">
@@ -24,4 +37,6 @@
         </div>
     </div>
 
+    {% include 'modals/delete_object.html' with obj=request.user %}
 {% endblock %}
+

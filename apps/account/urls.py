@@ -14,6 +14,11 @@ urlpatterns = [
          name="password-reset-confirm"),
     path('password-reset/confirm/done/', views.PasswordResetConfirmDone.as_view(), name="password-reset-confirm-done"),
 
+    path('delete/', views.AccountDeleteView.as_view(), name="delete"),
+
+    # customer views
+    path('profile/customers/update/', views.CustomerProfileUpdate.as_view(), name="customer-profile-update"),
+
     # profile
     path('profile/update/', views.ProfileUpdate.as_view(), name="profile-update"),
     path('profile/2fa/setup/', views.Setup2FAView.as_view(), name="setup-2fa"),
