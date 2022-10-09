@@ -85,3 +85,40 @@ class ProfileUpdateViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(models.User.objects.filter(
             pentester_profile__is_public=False, pk=self.pentester1.pk, last_name=data["last_name"]).count(), 0)
+
+
+class CustmomerUpdateViewTestCase(TestCase, VulnmanTestCaseMixin):
+    def setUp(self) -> None:
+        self.init_mixin()
+        self.url = self.get_url("account:customer-profile-update")
+        self.data = {"last_name": "Test123", "first_name": "FirstTest123"}
+
+    def test_status_code(self):
+        self.client.force_login(self.customer1)
+        response = self.client.post(self.url, self.data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(models.User.objects.filter(pk=self.customer1.pk, last_name=self.data["last_name"]).count(), 1)
+
+    def test_other_role(self):
+        self.client.force_login(self.pentester1)
+        response = self.client.post(self.url, self.data)
+        self.assertEqual(response.status_code, 404)
+
+
+class AccountDeleteViewTestCase(TestCase, VulnmanTestCaseMixin):
+    def setUp(self) -> None:
+        self.init_mixin()
+        self.url = self.get_url("account:delete")
+        self.data = {}
+
+    def test_status_code_customer(self):
+        self.client.force_login(self.customer1)
+        response = self.client.post(self.url, self.data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(models.User.objects.filter(pk=self.customer1.pk).count(), 0)
+
+    def test_status_code_vendor(self):
+        self.client.force_login(self.vendor)
+        response = self.client.post(self.url, self.data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(models.User.objects.filter(pk=self.vendor.pk).count(), 0)

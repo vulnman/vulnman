@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.views.generic import RedirectView
 from django.shortcuts import redirect
 from django.http.response import Http404
@@ -10,7 +9,7 @@ from two_factor import views as tfa_views
 from two_factor.utils import default_device
 from apps.account import forms
 from apps.account import models
-from vulnman.core.views.mixins import ThemeMixin, VulnmanContextMixin
+from vulnman.core.views.mixins import VulnmanContextMixin
 from vulnman.core.views import generics
 from apps.account.models import User
 
@@ -24,7 +23,7 @@ class Index(RedirectView):
         return reverse_lazy('account:login')
 
 
-class Login(ThemeMixin, tfa_views.LoginView):
+class Login(VulnmanContextMixin, tfa_views.LoginView):
     template_name = "account/login.html"
 
 

@@ -58,7 +58,7 @@ class User(AbstractUser):
 
 
 class PentesterProfile(models.Model):
-    objects = querysets.PentestProfileQuerySet()
+    objects = querysets.PentestProfileQuerySet.as_manager()
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="pentester_profile")
     is_public = models.BooleanField(default=True)
     bio = models.TextField(null=True, blank=True)

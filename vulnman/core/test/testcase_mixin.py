@@ -11,6 +11,7 @@ class VulnmanTestCaseMixin(object):
     def init_mixin(self):
         self.pentester1 = self._create_user("pentester", "changeme", user_role=User.USER_ROLE_PENTESTER)
         self.pentester2 = self._create_user("pentester2", "changeme", user_role=User.USER_ROLE_PENTESTER)
+        self.customer1 = self._create_user("customer1", "changeme", user_role=User.USER_ROLE_CUSTOMER)
         self.read_only1 = self._create_user("readonly1", "changeme")
         self.project1 = self._create_project(creator=self.pentester1)
         self.project2 = self._create_project(creator=self.pentester2)

@@ -34,7 +34,6 @@ class ReportManagementSummary(generics.ProjectUpdateView):
 
 
 class ReportReleaseList(generics.ProjectListView):
-    # TODO: write tests
     template_name = "reporting/report_releases.html"
     context_object_name = "releases"
 
@@ -54,7 +53,6 @@ class ReportReleaseList(generics.ProjectListView):
 
 
 class ReportReleaseDelete(generics.ProjectDeleteView):
-    # TODO: write tests
     http_method_names = ["post"]
 
     def get_queryset(self):
@@ -140,7 +138,6 @@ class ReportReleaseUpdate(generics.ProjectUpdateView):
 
 
 class ReportReleaseDetail(generics.ProjectDetailView):
-    # TODO: write tests
     context_object_name = "report"
 
     def get_queryset(self):

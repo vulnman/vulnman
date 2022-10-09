@@ -20,9 +20,14 @@ class ClientDetailViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.assertEqual(response.status_code, 403)
 
     def test_readonly(self):
-        self.client.force_login(self.pentester1)
+        self.client.force_login(self.read_only1)
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 403)
+
+    def test_customer(self):
+        self.client.force_login(self.customer1)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 403)
 
 
 class ClientListViewTestCase(TestCase, VulnmanTestCaseMixin):
@@ -44,5 +49,10 @@ class ClientListViewTestCase(TestCase, VulnmanTestCaseMixin):
 
     def test_readonly(self):
         self.client.force_login(self.read_only1)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_customer(self):
+        self.client.force_login(self.customer1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 403)
