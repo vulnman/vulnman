@@ -48,6 +48,8 @@ trigger:
   event:
     - cron
     - push
+  cron:
+    - daily
 
 steps:
   - name: renovate
