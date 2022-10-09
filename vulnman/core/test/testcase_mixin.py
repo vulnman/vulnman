@@ -11,12 +11,20 @@ class VulnmanTestCaseMixin(object):
     def init_mixin(self):
         self.pentester1 = self._create_user("pentester", "changeme", user_role=User.USER_ROLE_PENTESTER)
         self.pentester2 = self._create_user("pentester2", "changeme", user_role=User.USER_ROLE_PENTESTER)
+        self.client1 = self.create_instance(Client)
+        self.client2 = self.create_instance(Client)
         self.customer1 = self._create_user("customer1", "changeme", user_role=User.USER_ROLE_CUSTOMER)
+        self.customer2 = self._create_user("customer2", "changeme", user_role=User.USER_ROLE_CUSTOMER)
         self.read_only1 = self._create_user("readonly1", "changeme")
-        self.project1 = self._create_project(creator=self.pentester1)
-        self.project2 = self._create_project(creator=self.pentester2)
+        self.project1 = self._create_project(creator=self.pentester1, client=self.client1)
+        self.project2 = self._create_project(creator=self.pentester2, client=self.client2)
         self.add_contributor(self.read_only1, self.project1, role=ProjectContributor.ROLE_READ_ONLY)
         self.vendor = self._create_user("testvendor1", "changeme", user_role=User.USER_ROLE_VENDOR)
+        # add customer profiles for their clients
+        self.customer1.customer_profile.client = self.project1.client
+        self.customer1.customer_profile.save()
+        self.customer2.customer_profile.client = self.project2.client
+        self.customer2.customer_profile.save()
 
     def add_contributor(self, user, project, role=ProjectContributor.ROLE_PENTESTER):
         return ProjectContributor.objects.create(user=user, project=project, role=role)

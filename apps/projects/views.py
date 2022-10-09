@@ -260,11 +260,14 @@ class ProjectContributorCreate(generics.ProjectCreateView):
             form.add_error("username", "Username not found!")
             return super().form_invalid(form)
         form.instance.user = user.get()
-        if settings.EMAIL_BACKEND:
-            async_task(send_mail_task, "vulnman - New Project %s" % self.get_project().name,
-                       render_to_string("emails/new_project_contributor.html", context={
-                           "obj": form.instance, "request": self.request, "project": self.get_project()}),
-                       form.instance.user.email)
+        if form.instance.user.user_role == User.USER_ROLE_CUSTOMER:
+            if self.get_project() is not form.instance.user.customer_profile.customer:
+                form.add_error("username", "Cannot invite customer of other client to this project")
+                return super().form_invalid(form)
+        async_task(send_mail_task, "vulnman - New Project %s" % self.get_project().name,
+                   render_to_string("emails/new_project_contributor.html", context={
+                       "obj": form.instance, "request": self.request, "project": self.get_project()}),
+                   form.instance.user.email)
         return super().form_valid(form)
 
 

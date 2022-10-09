@@ -39,6 +39,16 @@ class ProjectContributorCreateViewTestCase(TestCase, VulnmanTestCaseMixin):
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 403)
 
+    def test_contributor_from_other_client(self):
+        models.ProjectContributor.objects.create(role=models.ProjectContributor.ROLE_PENTESTER,
+                                                 user=self.pentester1, project=self.project1)
+        self.login_with_project(self.pentester1, self.project1)
+        data = self.data
+        data["username"] = self.customer2.username
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"].errors), 1)
+
 
 class ProjectContributorListViewTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
