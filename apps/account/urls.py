@@ -20,6 +20,8 @@ urlpatterns = [
     path('profile/customers/update/', views.CustomerProfileUpdate.as_view(), name="customer-profile-update"),
 
     # profile
+    path('profile/my/', views.MyProfile.as_view(), name="profile-my"),
+
     path('profile/update/', views.ProfileUpdate.as_view(), name="profile-update"),
     path('profile/2fa/setup/', views.Setup2FAView.as_view(), name="setup-2fa"),
     path('profile/2fa/setup/qr/', views.QRCodeGeneratorView.as_view(), name="setup-2fa-qr"),

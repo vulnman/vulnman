@@ -45,11 +45,7 @@
                                 <a class="dropdown-item" href="{% url 'methodology:methodology-list' %}">Checklists</a>
                             {% endif %}
                             {% if request.user.profile %}
-                                {% if request.user.pentester_profile %}
-                                    <a class="dropdown-item" href="{{ request.user.profile.get_absolute_url }}">Profile</a>
-                                {% else %}
-                                    <a class="dropdown-item" href="{{ request.user.profile.get_absolute_update_url }}">Profile</a>
-                                {% endif %}
+                                <a class="dropdown-item" href="{% url 'account:profile-my' %}">Profile</a>
                             {% endif %}
                             {% if request.user.is_staff %}
                                 <div class="dropdown-divider"></div>

@@ -74,9 +74,15 @@ class PentesterProfile(models.Model):
     def get_absolute_url(self):
         return reverse_lazy("account:user-profile", kwargs={"slug": self.user.username})
 
+    def get_absolute_update_url(self):
+        return reverse_lazy("account:profile-update")
+
 
 class VendorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="vendor_profile")
+
+    def get_absolute_update_url(self):
+        return reverse_lazy("account:profile-update")
 
 
 class CustomerProfile(models.Model):

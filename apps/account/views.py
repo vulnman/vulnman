@@ -40,6 +40,15 @@ class Profile(generics.VulnmanDetailView):
         return models.User.objects.filter(user_role=User.USER_ROLE_PENTESTER, is_active=True)
 
 
+class MyProfile(generics.VulnmanAuthDetailView):
+    # TODO: write tests
+    # my profile require at least authentication
+    template_name = "account/my_profile.html"
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
 class Setup2FAView(tfa_views.SetupView):
     # TODO: write tests
     # TODO: write if 2fa is really required in login, if 2fa enabled

@@ -1,0 +1,14 @@
+{% if request.user == user %}
+    <a class="btn btn-outline-primary" href="{{ request.user.profile.get_absolute_update_url }}">Edit
+        Profile</a>
+    <a class="btn btn-outline-info mt-2" href="{% url 'account:change-password' %}">Change
+        Password</a>
+    {% if request.user.has_2fa_enabled %}
+        <a class="btn btn-outline-secondary mt-2" data-bs-target="#disable-2fa-modal"
+           data-bs-toggle="modal">Disable 2FA</a>
+        {% include 'account/components/profile/disable_2fa_modal.html' %}
+    {% else %}
+        <a class="btn btn-outline-secondary mt-2" href="{% url 'account:setup-2fa' %}">Setup
+            2FA</a>
+    {% endif %}
+{% endif %}
