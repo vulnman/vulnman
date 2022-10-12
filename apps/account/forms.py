@@ -5,6 +5,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
+from two_factor.forms import TOTPDeviceForm
 from vulnman.core.forms import CodeMirrorWidget
 from apps.account import models
 
@@ -163,4 +164,19 @@ class SetPasswordForm(PasswordSetForm):
                     wrapper_class="col-sm-12 col-md-6"
                 )
             )
+        )
+
+
+class TOTPDeviceCreateForm(TOTPDeviceForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["token"].widget = forms.TextInput()
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField("token")
+                )
+            ),
         )

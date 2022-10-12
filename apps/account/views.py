@@ -67,6 +67,12 @@ class Setup2FAView(tfa_views.SetupView):
             return redirect(self.get_success_url())
         return super().get(request, *args, **kwargs)
 
+    def get_form_list(self):
+        form_list = super().get_form_list()
+        if {'generator'} & set(form_list.keys()):
+            form_list["generator"] = forms.TOTPDeviceCreateForm
+        return form_list
+
 
 class Disable2FAView(tfa_views.DisableView):
     http_method_names = ["post"]

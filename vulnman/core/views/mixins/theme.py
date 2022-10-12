@@ -17,6 +17,7 @@ class ThemeMixin(object):
 
 
 class TOTPRequiredMixin:
+    # copied from django-two-factor-auth but enforce 2fa from settings
     # TODO: write test
     """
     View mixin which verifies that the user logged in using OTP.
