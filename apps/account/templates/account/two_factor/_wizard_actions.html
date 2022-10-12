@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<div class="d-flex flex-row justify-content-evenly">
+    {% if cancel_url %}
+  <a href="{{ cancel_url }}"
+     class="float-right btn btn-outline-secondary w-100">{% trans "Cancel" %}</a>
+{% endif %}
+{% if wizard.steps.prev %}
+  <button name="wizard_goto_step" type="submit"
+          value="{{ wizard.steps.prev }}"
+          class="btn btn-secondary w-100">{% trans "Back" %}</button>
+{% else %}
+  <button disabled name="" type="button" class="btn btn-secondary w-100">{% trans "Back" %}</button>
+{% endif %}
+<button type="submit" class="btn btn-primary w-100">{% trans "Next" %}</button>
+</div>

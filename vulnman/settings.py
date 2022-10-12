@@ -236,6 +236,8 @@ Q_CLUSTER = {
 
 ADDITIONAL_PACKAGES = []
 
+TOTP_ENFORCE_2FA = False
+
 try:
     from vulnman.conf.local_settings import *
 except ImportError:
