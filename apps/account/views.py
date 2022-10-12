@@ -42,7 +42,7 @@ class Profile(generics.VulnmanDetailView):
 
 class MyProfile(generics.VulnmanAuthDetailView):
     # TODO: write tests
-    # my profile require at least authentication
+    # my profile requires at least authentication
     template_name = "account/my_profile.html"
 
     def get_object(self, queryset=None):
