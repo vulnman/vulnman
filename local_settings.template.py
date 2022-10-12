@@ -69,6 +69,9 @@
 # Default: True
 # SESSION_COOKIE_SECURE = True
 
+# Enforce TOTP on all pages. ATTENTION: TOTP implementation is work in progress. Don't rely on it for now in production!
+# TOTP_ENFORCE_2FA = False
+
 ##############
 # LDAP
 # You need to install `django-auth-ldap` to use LDAP authentication
