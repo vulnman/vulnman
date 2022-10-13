@@ -39,13 +39,14 @@ class ImageProofForm(forms.ModelForm):
         model = models.ImageProof
         fields = ["name", "description", "image", "caption"]
         widgets = {
-            'image': FileDropWidget(),
+            'image': FileDropWidget(attrs={"class": "filepond-input"}),
             'description': CodeMirrorWidget()
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.include_media = False
         self.helper.layout = layout.Layout(
             layout.Row(
                 bootstrap5.FloatingField("name", wrapper_class="col-sm-12"),

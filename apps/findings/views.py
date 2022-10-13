@@ -110,8 +110,18 @@ class TextProofUpdate(generics.ProjectUpdateView):
 
 
 class ImageProofUpdate(generics.ProjectUpdateView):
-    template_name = "findings/image_proof_create_or_update.html"
+    template_name = "core/pages/update.html"
     form_class = forms.ImageProofForm
+    page_title = "Update Proof"
+
+    def get_breadcrumbs(self):
+        obj = self.get_object()
+        return [
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-list"), "Vulnerabilities"),
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-detail", kwargs={"pk": self.kwargs["pk"]}),
+                       obj.vulnerability),
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-proofs"), "Proofs")
+        ]
 
     def get_queryset(self):
         return models.ImageProof.objects.filter(vulnerability__project=self.get_project())
@@ -123,7 +133,17 @@ class ImageProofUpdate(generics.ProjectUpdateView):
 class AddImageProof(generics.ProjectCreateView):
     model = models.ImageProof
     form_class = forms.ImageProofForm
-    template_name = "findings/image_proof_create_or_update.html"
+    template_name = "core/pages/create.html"
+
+    def get_breadcrumbs(self):
+        vuln = self.get_project().vulnerability_set.get(pk=self.kwargs.get("pk"))
+        return [
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-list"), "Vulnerabilities"),
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-detail", kwargs={"pk": self.kwargs["pk"]}),
+                       vuln.name),
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-proofs", kwargs={"pk": self.kwargs["pk"]}),
+                       "Proofs")
+        ]
 
     def get_success_url(self):
         return reverse_lazy('projects:findings:vulnerability-proofs', kwargs={"pk": self.kwargs.get("pk")})

@@ -7,6 +7,11 @@
     {{ page_title }}
 {% endblock %}
 
+{% block extra_head %}
+    {% if not form.helper.include_media %}
+        {{ form.media.css }}
+    {% endif %}
+{% endblock %}
 
 {% block content %}
     <div class="container mt-3">
@@ -38,6 +43,9 @@
 {% endblock %}
 
 {% block extra_scripts %}
+    {% if not form.helper.include_media %}
+        {{ form.media.js }}
+    {% endif %}
 <script>
 $('.filepond-input').filepond({storeAsFile:true,credits:false});
 </script>
