@@ -1,6 +1,7 @@
 import django_filters.views
 from django.urls import reverse_lazy
 from vulnman.core.views import generics
+from vulnman.core.breadcrumbs import Breadcrumb
 from apps.assets import models
 from apps.assets import forms
 from apps.assets import filters
@@ -16,12 +17,24 @@ class WebApplicationList(generics.ProjectListView):
 
 class WebApplicationCreate(generics.ProjectCreateView):
     form_class = forms.WebApplicationForm
-    template_name = "assets/web_application/update.html"
+    template_name = "core/pages/create.html"
+    page_title = "Create Web Application"
+    breadcrumbs = [
+        Breadcrumb(reverse_lazy("projects:assets:webapp-list"), "Web Applications")
+    ]
 
 
 class WebApplicationUpdate(generics.ProjectUpdateView):
     form_class = forms.WebApplicationForm
-    template_name = "assets/web_application/update.html"
+    template_name = "core/pages/update.html"
+    page_title = "Update Web Application"
+
+    def get_breadcrumbs(self):
+        return [
+            Breadcrumb(reverse_lazy("projects:assets:webapp-list"), "Web Applications"),
+            Breadcrumb(reverse_lazy("projects:assets:webapp-detail", kwargs={"pk": self.kwargs.get("pk")}),
+                       self.get_object())
+        ]
 
     def get_queryset(self):
         return models.WebApplication.objects.filter(project=self.get_project())
@@ -39,7 +52,11 @@ class HostList(generics.ProjectListView):
 class HostCreate(generics.ProjectCreateView):
     # TODO: write tests
     form_class = forms.HostForm
-    template_name = "assets/host/create_or_update.html"
+    template_name = "core/pages/create.html"
+    page_title = "Create Host"
+    breadcrumbs = [
+        Breadcrumb(reverse_lazy("projects:assets:host-list"), "Hosts")
+    ]
 
     def get_queryset(self):
         return models.Host.objects.filter(project=self.get_project())
@@ -61,7 +78,11 @@ class ServiceList(django_filters.views.FilterMixin, generics.ProjectListView):
 
 class ServiceCreate(generics.ProjectCreateView):
     form_class = forms.ServiceForm
-    template_name = "assets/service/create_or_update.html"
+    template_name = "core/pages/create.html"
+    page_title = "Create Service"
+    breadcrumbs = [
+        Breadcrumb(reverse_lazy("projects:assets:service-list"), "Services")
+    ]
 
     def get_queryset(self):
         return models.Service.objects.filter(project=self.get_project())
@@ -107,7 +128,15 @@ class HostDelete(generics.ProjectDeleteView):
 class HostUpdate(generics.ProjectUpdateView):
     # TODO: write tests
     form_class = forms.HostForm
-    template_name = "assets/host/create_or_update.html"
+    template_name = "core/pages/update.html"
+    page_title = "Update Host"
+
+    def get_breadcrumbs(self):
+        return [
+            Breadcrumb(reverse_lazy("projects:assets:host-list"), "Hosts"),
+            Breadcrumb(reverse_lazy("projects:assets:host-detail", kwargs={"pk": self.kwargs.get("pk")}),
+                       self.get_object())
+        ]
 
     def get_queryset(self):
         return models.Host.objects.filter(project=self.get_project())
@@ -115,7 +144,14 @@ class HostUpdate(generics.ProjectUpdateView):
 
 class ServiceUpdate(generics.ProjectUpdateView):
     form_class = forms.ServiceForm
-    template_name = "assets/service/create_or_update.html"
+    template_name = "core/pages/update.html"
+
+    def get_breadcrumbs(self):
+        return [
+            Breadcrumb(reverse_lazy("projects:assets:service-list"), "Services"),
+            Breadcrumb(reverse_lazy("projects:assets:service-detail", kwargs={"pk": self.kwargs.get("pk")}),
+                       self.get_object())
+        ]
 
     def get_queryset(self):
         return models.Service.objects.filter(project=self.get_project())

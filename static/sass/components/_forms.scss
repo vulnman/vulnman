@@ -201,8 +201,3 @@
 .choices__list--dropdown .choices__item--selectable.is-highlighted {
     background-color: $choices-highlight-bg;
 }*/
-
-/* do not display filepond credits. The JS option does not seem to have any effect anymore */
-.filepond--credits {
-    display: none !important;
-}

@@ -23,9 +23,8 @@
             {% if perms.projects.change_project %}
                 <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
                     <div class="d-inline">
-                        <a class="btn btn-primary" href="{% url 'projects:assets:host-create' %}">
-                            <i class="fa fa-plus"></i>
-                        </a>
+                        {% url 'projects:assets:host-create' as create_url %}
+                        {% include 'core/components/buttons/create_obj.html' with text="New Host" url=create_url %}
                     </div>
                 </div>
             {% endif %}

@@ -1,0 +1,10 @@
+.filepond--drop-label {
+  background-color: $input-bg;
+  color: $body-color !important;
+  border: 1px solid $input-border-color;
+}
+
+/* do not display filepond credits. The JS option does not seem to have any effect anymore */
+.filepond--credits {
+    display: none !important;
+}

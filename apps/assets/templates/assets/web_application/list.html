@@ -22,9 +22,8 @@
             {% if "change_project" in project_perms %}
                 <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
                     <div class="d-inline">
-                        <a class="btn btn-primary" href="{% url 'projects:assets:webapp-create' %}">
-                            <i class="fa fa-plus"></i>
-                        </a>
+                        {% url 'projects:assets:webapp-create' as create_url %}
+                        {% include 'core/components/buttons/create_obj.html' with text="New Web Application" url=create_url %}
                     </div>
                 </div>
             {% endif %}

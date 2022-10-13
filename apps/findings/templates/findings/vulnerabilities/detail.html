@@ -49,9 +49,6 @@
                 <a class="btn btn-outline-warning" href="{% url 'projects:findings:vulnerability-update' vuln.pk %}">
                     <i class="fa fa-edit"></i>
                 </a>
-                <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ vuln.pk }}">
-                    <i class="fa fa-trash"></i>
-                </a>
             </div>
         </div>
 
@@ -261,7 +258,6 @@
         </div>
         {% csrf_token %}
 
-        {% include 'modals/delete_object.html' with obj=vuln %}
     </div>
 {% endblock %}
 

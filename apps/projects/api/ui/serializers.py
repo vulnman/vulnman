@@ -54,24 +54,3 @@ class StatsHostsByServicesSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Project
         fields = ["ips", "counts"]
-
-
-class StatsVulnCategoryCountSerializer(serializers.ModelSerializer):
-    labels = serializers.SerializerMethodField()
-    data = serializers.SerializerMethodField()
-
-    def get_labels(self, obj):
-        return VulnerabilityCategory.objects.filter(
-            template__vulnerability__project=obj).annotate(
-                count=Count('template__vulnerability__pk')).values_list(
-                    "display_name", flat=True)
-
-    def get_data(self, obj):
-        return VulnerabilityCategory.objects.filter(
-            template__vulnerability__project=obj).annotate(
-                count=Count('template__vulnerability__pk')).values_list(
-                    "count", flat=True)
-
-    class Meta:
-        model = models.Project
-        fields = ["labels", "data"]

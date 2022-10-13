@@ -22,7 +22,8 @@
 
         <div class="row mt-3">
             <div class="d-flex flex-column-reverse col-sm-12 align-items-end">
-                <a href="{% url 'projects:reporting:version-create' report.pk %}" class="btn btn-outline-primary"><i class="fa fa-plus"></i></a>
+                {% url 'projects:reporting:version-create' report.pk as create_url %}
+                {% include 'core/components/buttons/create_obj.html' with text="New Version" url=create_url %}
             </div>
         </div>
 

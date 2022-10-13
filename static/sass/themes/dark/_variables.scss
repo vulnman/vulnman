@@ -8,9 +8,9 @@ $pink:    #d63384;
 $red:     #dc3545;
 $orange:  #fd7e14;
 $yellow:  #ffc107;
-$green:   #198754;
+$green:   #068d4e;
 $teal:    #20c997;
-$cyan:    #0dcaf0;
+$cyan: #09d7d2;
 
 $white:    #fff !default;
 $gray-100: #f8f9fa !default;
@@ -34,14 +34,13 @@ $light:         $gray-100;
 $dark:          $gray-900;
 
 $theme-colors-light: (
-  'primary': rgba($primary, .6),
-  'secondary': rgba($secondary, .6),
-  'success': rgba($success, .6),
-  'danger': rgba($danger, .6),
-  'warning': rgba($warning, .6),
-  'info': rgba($info, .6),
+  'primary': tint-color($primary, 25%),
+  'secondary': tint-color($secondary, 25%),
+  'success': tint-color($success, 25%),
+  'danger': tint-color($danger, 35%),
+  'warning': tint-color($warning, 25%),
+  'info': tint-color($info, 25%),
 );
-
 
 // Body
 $body-bg:                   #151521;

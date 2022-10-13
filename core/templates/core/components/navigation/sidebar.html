@@ -62,7 +62,7 @@
         <div class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
             <small>Management</small>
         </div>
-        <a href="{% url 'projects:contributor-list' project.pk %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:contributor-list" %} active{% endif %}">
+        <a href="{% url 'projects:contributor-list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.view_name == "projects:contributor-list" %} active{% endif %}">
             <div class="d-flex w-100 justify-content-start align-items-center">
                 <i class="fa fa-users menu-icon"></i>
                 <span class="menu-collapsed">Contributors</span>

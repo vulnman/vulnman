@@ -245,17 +245,26 @@ class UserAccountList(generics.ProjectListView):
 
 class UserAccountCreate(generics.ProjectCreateView):
     # TODO: write tests
-    http_method_names = ["post"]
     model = models.UserAccount
     form_class = forms.UserAccountForm
     success_url = reverse_lazy("projects:findings:user-account-list")
+    template_name = "core/pages/create.html"
+    page_title = "Create User Account"
+    breadcrumbs = [
+        Breadcrumb(reverse_lazy("projects:findings:user-account-list"), "User Accounts")
+    ]
 
 
 class UserAccountUpdate(generics.ProjectUpdateView):
     # TODO: write tests
-    http_method_names = ["post"]
+    template_name = "core/pages/update.html"
     form_class = forms.UserAccountUpdateForm
     success_url = reverse_lazy("projects:findings:user-account-list")
+
+    def get_breadcrumbs(self):
+        return [
+            Breadcrumb(reverse_lazy("projects:findings:user-account-list"), "User Accounts"),
+        ]
 
     def get_queryset(self):
         return models.UserAccount.objects.filter(project=self.get_project())

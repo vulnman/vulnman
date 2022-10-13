@@ -244,14 +244,12 @@ class ProjectContributorCreate(generics.ProjectCreateView):
     permission_required = ["projects.add_contributor"]
     form_class = forms.ContributorForm
     page_title = "Add Project Contributor"
+    success_url = reverse_lazy("projects:contributor-list")
 
     def get_breadcrumbs(self):
         return [
-            Breadcrumb(self.get_success_url(), "Contributors")
+            Breadcrumb(reverse_lazy("projects:contributor-list"), "Contributors")
         ]
-
-    def get_success_url(self):
-        return reverse_lazy("projects:contributor-list", kwargs={"pk": self.get_project().pk})
 
     def form_valid(self, form):
         user_roles = [User.USER_ROLE_CUSTOMER, User.USER_ROLE_PENTESTER]
@@ -297,10 +295,14 @@ class ProjectTokenList(generics.ProjectListView):
 
 
 class ProjectTokenCreate(generics.ProjectCreateView):
-    http_method_names = ["post"]
+    template_name = "core/pages/create.html"
     form_class = forms.ProjectAPITokenForm
     success_url = reverse_lazy("projects:token-list")
     permission_required = ["projects.change_project"]
+    page_title = "Create API-Token"
+    breadcrumbs = [
+        Breadcrumb(reverse_lazy("projects:token-list"), "API-Tokens"),
+    ]
 
     def get_queryset(self):
         return models.ProjectAPIToken.objects.filter(project=self.get_project(), user=self.request.user)
@@ -328,9 +330,13 @@ class ProjectFileList(generics.ProjectListView):
 
 
 class ProjectFileCreate(generics.ProjectCreateView):
-    template_name = "projects/files/create_update.html"
+    template_name = "core/pages/create.html"
     form_class = forms.ProjectFileForm
     success_url = reverse_lazy("projects:file-list")
+    page_title = "Create New File"
+    breadcrumbs = [
+        Breadcrumb(reverse_lazy("projects:file-list"), "Files")
+    ]
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -349,8 +355,14 @@ class ProjectFileDetail(generics.ProjectDetailView):
 
 class ProjectFileUpdate(generics.ProjectUpdateView):
     # TODO: write tests
-    template_name = "projects/files/create_update.html"
+    template_name = "core/pages/update.html"
     form_class = forms.ProjectFileForm
+    page_title = "Update File"
+
+    def get_breadcrumbs(self):
+        return [
+            Breadcrumb(reverse_lazy("projects:file-list"), "Files"),
+        ]
 
     def get_queryset(self):
         return models.ProjectFile.objects.filter(project=self.get_project())

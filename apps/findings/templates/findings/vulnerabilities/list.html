@@ -21,9 +21,10 @@
 
             {% if perms.projects.change_project %}
             <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
-                <a class="btn btn-primary" href="{% url 'projects:findings:vulnerability-create' %}">
-                    <i class="fa fa-plus"></i> New Vulnerability
-                </a>
+
+                {% url "projects:findings:vulnerability-create" as create_url %}
+                {% include "core/components/buttons/create_obj.html" with url=create_url text="New Vulnerability" %}
+
             </div>
             {% endif %}
         </div>

@@ -26,9 +26,11 @@ urlpatterns = [
 
     path('image-proof/<str:pk>/delete/', views.ImageProofDelete.as_view(), name="image-proof-delete"),
     path('text-proof/<str:pk>/delete/', views.TextProofDelete.as_view(), name="text-proof-delete"),
+    # user accounts
     path('user-accounts/', views.UserAccountList.as_view(), name="user-account-list"),
     path('user-accounts/create/', views.UserAccountCreate.as_view(), name="user-account-create"),
     path('user-accounts/<str:pk>/delete/', views.UserAccountDelete.as_view(), name="user-account-delete"),
+    path('user-accounts/<str:pk>/update/', views.UserAccountUpdate.as_view(), name="user-account-update"),
 
     path("scores/owasp/<str:pk>/update/", views.OWASPScoreUpdate.as_view(), name="owasp-score-update"),
     path("scores/cvss/<str:pk>/update/", views.CVSScoreUpdate.as_view(), name="cvs-score-update")

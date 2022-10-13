@@ -8,19 +8,25 @@
 {% endblock %}
 
 {% block content %}
-    <h3 class="text-center">Contributors</h3>
-    <hr/>
-    
+    {% get_obj_perms request.user for project as "project_perms" %}
     <div class="container mt-3">
-        {% if project.creator == request.user %}
-        <div class="clearfix">
-            <div class="float-end">
-                <a class="btn btn-primary" href="{% url 'projects:contributor-create' project.pk %}">
-                    <i class="fa fa-plus"></i>
-                </a>
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">Contributors</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                <div class="d-inline">
+                    {% if "add_contributor" in project_perms %}
+                        {% url 'projects:contributor-create' as create_url %}
+                        {% include 'core/components/buttons/create_obj.html' with url=create_url text="New Contributor" %}
+                    {% endif %}
+                </div>
             </div>
         </div>
-        {% endif %}
 
         <ul class="list-group mt-3">
             {% get_obj_perms request.user for project as "project_perms" %}

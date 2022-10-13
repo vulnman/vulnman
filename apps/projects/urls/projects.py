@@ -30,11 +30,12 @@ urlpatterns = [
     path('files/<int:pk>/update/', views.ProjectFileUpdate.as_view(), name="file-update"),
     path('files/<int:pk>/delete/', views.ProjectFileDelete.as_view(), name="file-delete"),
 
+    path('contributors/', views.ProjectContributorList.as_view(), name="contributor-list"),
+    path('contributors/create/', views.ProjectContributorCreate.as_view(), name="contributor-create"),
+
     # single project
     path('<str:pk>/', views.ProjectDetail.as_view(), name="project-detail"),
     path('<str:pk>/update/', views.ProjectUpdate.as_view(), name="project-update"),
     path('<str:pk>/close/', views.ProjectUpdateClose.as_view(), name="project-close"),
-    path('<str:pk>/contributors/', views.ProjectContributorList.as_view(), name="contributor-list"),
-    path('<str:pk>/contributors/create/', views.ProjectContributorCreate.as_view(), name="contributor-create"),
     path('<str:pk>/contributors/delete/', views.ProjectContributorDelete.as_view(), name="contributor-delete")
 ]

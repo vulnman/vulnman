@@ -6,7 +6,7 @@ from apps.projects import models
 class ProjectContributorCreateViewTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
-        self.url = self.get_url("projects:contributor-create", pk=self.project1.pk)
+        self.url = self.get_url("projects:contributor-create")
         self.data = {
             "username": self.pentester2.username, "role": models.ProjectContributor.ROLE_PENTESTER
         }
@@ -53,7 +53,7 @@ class ProjectContributorCreateViewTestCase(TestCase, VulnmanTestCaseMixin):
 class ProjectContributorListViewTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
-        self.url = self.get_url("projects:contributor-list", pk=self.project1.pk)
+        self.url = self.get_url("projects:contributor-list")
         self.contributor1 = models.ProjectContributor.objects.create(role=models.ProjectContributor.ROLE_PENTESTER,
                                                                      user=self.pentester2, project=self.project1)
 

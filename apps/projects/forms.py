@@ -178,7 +178,7 @@ class ProjectFileForm(forms.ModelForm):
         model = models.ProjectFile
         fields = ["name", "file"]
         widgets = {
-            'file': FileDropWidget()
+            'file': FileDropWidget(attrs={"class": "filepond-input"})
         }
 
     def __init__(self, *args, **kwargs):

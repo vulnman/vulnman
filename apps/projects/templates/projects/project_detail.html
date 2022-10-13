@@ -102,19 +102,12 @@
             <div class="col-sm-12 col-md-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <p class="card-text">Vulnerability Categories</p>
-                        <canvas id="wordmap-chart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-3 mb-5">
-            <div class="col-sm-12">
-                <div class="card h-100">
-                    <div class="card-body">
                         <p class="card-text">Description</p>
+                        {% if project.description %}
                         {{ project.description|md_to_html }}
+                        {% else %}
+                        <i>No description provided!</i>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -229,51 +222,8 @@
             }
         )
 
-        var wordmap_chart = new Chart(
-            document.getElementById("wordmap-chart"), {
-                type: "radar",
-                data: {
-                    labels: [],
-                    datasets: [
-                        {
-                            data: [],
-                            backgroundColor: 'rgba(255, 0, 0 ,0.2)',
-                            borderColor: 'rgba(255, 0, 0 ,0.5)'
-                        }
-                    ]
-                },
-                options: {
-                    title: {
-                        display: false
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    responsive: true,
-                    scales: {
-                        r: {
-                            angleLines: {
-                                color: 'white'
-                            },
-                            pointLabels: {
-                                fontColor: 'white' // labels around the edge like 'Running'
-                            },
-                            grid: {
-                                color: 'white'
-                            },
-                            ticks: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            })
-
         getVulnsBySeverity()
         getHostsByServices()
-        getVulnCategoryCount()
 
         function getVulnsBySeverity() {
             $.get('/api/ui/projects/{{project.pk}}/vulns_by_severity/', function (data, status) {
@@ -291,16 +241,6 @@
                     hosts_by_service_chart.data.labels = data.ips;
                     hosts_by_service_chart.data.datasets[0].data = data.counts;
                     hosts_by_service_chart.update();
-                }
-            });
-        }
-
-        function getVulnCategoryCount() {
-            $.get('/api/ui/projects/{{project.pk}}/vuln_category_counts/', function (data, status) {
-                if (status === "success") {
-                    wordmap_chart.data.labels = data.labels;
-                    wordmap_chart.data.datasets[0].data = data.data;
-                    wordmap_chart.update();
                 }
             });
         }

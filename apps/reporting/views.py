@@ -16,8 +16,12 @@ class ReportList(generics.ProjectListView):
 
 
 class ReportCreate(generics.ProjectCreateView):
-    template_name = "reporting/report_create.html"
+    template_name = "core/pages/create.html"
     form_class = forms.ReportCreateForm
+    page_title = "Create Report"
+    breadcrumbs = [
+        Breadcrumb(reverse_lazy("projects:reporting:report-list"), "Reports")
+    ]
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -64,8 +68,17 @@ class ReportReleaseDelete(generics.ProjectDeleteView):
 
 class ReportReleaseCreate(generics.ProjectCreateView):
     # TODO: write tests
-    template_name = "reporting/report_create.html"
+    template_name = "core/pages/create.html"
     form_class = forms.ReportReleaseForm
+
+    def get_breadcrumbs(self):
+        report = self.get_report()
+        return [
+            Breadcrumb(reverse_lazy("projects:reporting:report-list"), "Reports"),
+            Breadcrumb(reverse_lazy("projects:reporting:report-detail", kwargs={"pk": self.kwargs["pk"]}), report.name),
+            Breadcrumb(reverse_lazy("projects:reporting:report-release-list", kwargs={"pk": self.kwargs["pk"]}),
+                       "Releases")
+        ]
 
     def get_success_url(self):
         return reverse_lazy("projects:reporting:report-release-list", kwargs={"pk": self.kwargs.get("pk")})
@@ -93,7 +106,6 @@ class ReportReleaseCreate(generics.ProjectCreateView):
 
 class ReportReleaseWIPCreate(generics.ProjectCreateView):
     # TODO: write tests
-    template_name = "reporting/report_release_create.html"
     http_method_names = ["post"]
     form_class = forms.ReportReleaseWIPForm
 
@@ -127,8 +139,19 @@ class ReportReleaseWIPCreate(generics.ProjectCreateView):
 
 class ReportReleaseUpdate(generics.ProjectUpdateView):
     # TODO: write tests
-    template_name = "reporting/report_release_update.html"
+    template_name = "core/pages/update.html"
     form_class = forms.ReportReleaseUpdateForm
+    page_title = "Update Report Release"
+
+    def get_breadcrumbs(self):
+        obj = self.get_object()
+        return [
+            Breadcrumb(reverse_lazy("projects:reporting:report-list"), "Reports"),
+            Breadcrumb(reverse_lazy("projects:reporting:report-detail", kwargs={"pk": self.kwargs["pk"]}),
+                       obj.report.name),
+            Breadcrumb(reverse_lazy("projects:reporting:report-release-list", kwargs={"pk": self.kwargs["pk"]}),
+                       "Releases")
+        ]
 
     def get_queryset(self):
         return models.ReportRelease.objects.filter(pk=self.kwargs.get("pk"), project=self.get_project())
@@ -178,8 +201,20 @@ class VersionList(generics.ProjectListView):
 
 class VersionCreate(generics.ProjectCreateView):
     # TODO: write tests
-    template_name = "reporting/version_create.html"
+    # template_name = "reporting/version_create.html"
+    template_name = "core/pages/create.html"
     form_class = forms.VersionForm
+    page_title = "Create New Version"
+
+    def get_breadcrumbs(self):
+        report = models.Report.objects.get(pk=self.kwargs.get("pk"), project=self.get_project())
+        return [
+            Breadcrumb(reverse_lazy("projects:reporting:report-list"), "Reports"),
+            Breadcrumb(reverse_lazy("projects:reporting:report-detail", kwargs={"pk": self.kwargs.get("pk")}),
+                       report.name),
+            Breadcrumb(reverse_lazy("projects:reporting:version-list", kwargs={"pk": self.kwargs.get("pk")}),
+                       "Versions")
+        ]
 
     def get_queryset(self):
         return models.ReportVersion.objects.filter(project=self.get_project(), report__pk=self.kwargs.get("pk"))

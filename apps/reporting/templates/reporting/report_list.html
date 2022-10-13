@@ -9,26 +9,26 @@
 {% endblock %}
 
 {% block content %}
+    {% get_obj_perms request.user for project as "project_perms" %}
     <div class="container mt-3">
-
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active">Reports</li>
-            </ol>
-        </nav>
-
-        <div class="row">
-            <!-- Search bar -->
-            {# include 'responsible_disc/components/vulnerability_searchbar.html' #}
-
-            {% if perms.projects.change_project %}
-                <div class="col-sm-12 d-flex flex-column-reverse align-items-end">
-                    <a class="btn btn-primary" href="{% url 'projects:reporting:report-create' %}">
-                        <i class="fa fa-plus"></i> New Report
-                    </a>
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">Reports</li>
+                    </ol>
+                </nav>
+            </div>
+            {% if "change_project" in project_perms %}
+                <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                    <div class="d-inline">
+                        {% url 'projects:reporting:report-create' as create_url %}
+                        {% include 'core/components/buttons/create_obj.html' with text="New Report" url=create_url %}
+                    </div>
                 </div>
             {% endif %}
         </div>
+
 
         <div class="card mt-3">
             <div class="card-header border-bottom">

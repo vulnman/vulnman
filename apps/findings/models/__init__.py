@@ -237,7 +237,7 @@ class Reference(VulnmanModel):
 
 class UserAccount(VulnmanProjectModel):
     username = models.CharField(max_length=128)
-    password = models.CharField(max_length=512)
+    password = models.CharField(max_length=512, blank=True, null=True)
     role = models.CharField(max_length=128, blank=True, null=True)
     account_compromised = models.BooleanField(default=False)
 

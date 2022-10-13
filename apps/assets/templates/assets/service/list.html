@@ -26,9 +26,8 @@
                         <i class="fa fa-filter"></i>
                     </button>
                     {% if "change_project" in project_perms %}
-                        <a class="btn btn-primary" href="{% url 'projects:assets:service-create' %}">
-                            <i class="fa fa-plus"></i>
-                        </a>
+                        {% url 'projects:assets:service-create' as create_url %}
+                        {% include 'core/components/buttons/create_obj.html' with url=create_url text="New Service" %}
                     {% endif %}
                 </div>
             </div>

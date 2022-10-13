@@ -8,19 +8,25 @@ Tokens
 
 
 {% block content %}
-    <h3 class="text-center">Project Tokens</h3>
-    <hr/>
+    {% get_obj_perms request.user for project as "project_perms" %}
 
     <div class="container mt-3">
-        <div class="clearfix">
-            <div class="float-end">
-                {% get_obj_perms request.user for project as "project_perms" %}
-                {% if "change_project" in project_perms %}
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">
-                    <i class="fa fa-plus"></i>
-                </a>
-                {% endif %}
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">API-Tokens</li>
+                    </ol>
+                </nav>
             </div>
+            {% if "change_project" in project_perms %}
+                <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                    <div class="d-inline">
+                        {% url 'projects:token-create' as create_url %}
+                        {% include 'core/components/buttons/create_obj.html' with text="New API-Token" url=create_url %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
         <div class="list-group mt-3">

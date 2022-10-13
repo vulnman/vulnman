@@ -23,103 +23,59 @@
             {% if "change_project" in project_perms %}
                 <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
                     <div class="d-inline">
-                <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#account-create-modal">
-                    <i class="fa fa-plus"></i>
-                </a>
+                        {% url "projects:findings:user-account-create" as create_url %}
+                        {% include "core/components/buttons/create_obj.html" with url=create_url text="New Account" %}
                     </div>
                 </div>
             {% endif %}
         </div>
         {% if user_accounts %}
-        <table class="table table-hover table-striped mt-3">
-            <thead>
-            <tr>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Compromised</th>
-                <th>Password</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for account in user_accounts %}
+            <table class="table table-hover table-striped mt-3">
+                <thead>
                 <tr>
-                    <td>{{ account.username }}</td>
-                    <td>{{ account.role }}</td>
-                    <td>{{ account.account_compromised }}</td>
-                    <td>
-                        <a href="#" data-bs-toggle="modal"
-                           data-bs-target="#password-show-modal-{{ account.pk }}">Show</a>
-                    </td>
-                    <td>
-                        <a class="btn btn-sm btn-outline-warning" data-bs-toggle="modal"
-                           data-bs-target="#update-modal-{{ account.pk }}">
-                            <i class="fa fa-edit"></i>
-                        </a>
-                        <a class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                           data-bs-target="#delete-modal-{{ account.pk }}">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </td>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Compromised</th>
+                    <th>Password</th>
                 </tr>
-                <div class="modal fade" id="password-show-modal-{{ account.pk }}" tabindex="-1"
-                     aria-labelledby="password-show-modal-{{ account.pk }}-label">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="password-show-modal-{{ account.pk }}-label">Password</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <p>{{ account.password }}</p>
+                </thead>
+                <tbody>
+                {% for account in user_accounts %}
+                    <tr>
+                        <td><a href="{% url 'projects:findings:user-account-update' account.pk %}">{{ account.username }}</a></td>
+                        <td>{{ account.role|default:"-" }}</td>
+                        <td>{{ account.account_compromised }}</td>
+                        <td>
+                            <a href="#" data-bs-toggle="modal"
+                               data-bs-target="#password-show-modal-{{ account.pk }}">Show</a>
+                        </td>
+                    </tr>
+                    <div class="modal fade" id="password-show-modal-{{ account.pk }}" tabindex="-1"
+                         aria-labelledby="password-show-modal-{{ account.pk }}-label">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="password-show-modal-{{ account.pk }}-label">
+                                        Password</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>{{ account.password }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                {% include 'modals/delete_object.html' with obj=account %}
-
-            {% endfor %}
-            </tbody>
-        </table>
+                {% endfor %}
+                </tbody>
+            </table>
         {% else %}
-                <div class="card mt-3">
+            <div class="card mt-3">
                 <div class="card-body">
                     {% show_blankslate %}
                 </div>
             </div>
         {% endif %}
-        <div class="modal fade" id="account-create-modal" tabindex="-1" aria-labelledby="account-create-modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="account-create-modal-label">Create User Account</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        {% crispy account_create_form %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {% for update_form in account_update_forms %}
-            <div class="modal fade" id="update-modal-{{ update_form.instance.pk }}" tabindex="-1"
-                 aria-labelledby="update-modal-{{ update_form.instance.pk }}-label">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="update-modal-{{ update_form.instance.pk }}-label">Update User Account</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            {% crispy update_form %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
 
         {% include 'core/components/navigation/pagination.html' %}
     </div>

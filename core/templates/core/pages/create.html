@@ -36,3 +36,9 @@
         </div>
     </div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+$('.filepond-input').filepond({storeAsFile:true,credits:false});
+</script>
+{% endblock %}
