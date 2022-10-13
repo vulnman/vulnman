@@ -277,7 +277,7 @@ class ProjectContributorDelete(generics.ProjectDeleteView):
         return models.ProjectContributor.objects.filter(pk=self.kwargs.get("pk"), project=self.get_project())
 
     def get_success_url(self):
-        return reverse_lazy("projects:contributor-list", kwargs={"pk": self.get_project().pk})
+        return reverse_lazy("projects:contributor-list")
 
 
 class ProjectTokenList(generics.ProjectListView):
