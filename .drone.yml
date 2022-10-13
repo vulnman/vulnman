@@ -49,7 +49,7 @@ trigger:
     - cron
     - push
   cron:
-    - daily
+    - check-dependencies
 
 steps:
   - name: renovate
