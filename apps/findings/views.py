@@ -99,8 +99,19 @@ class TextProofCreate(generics.ProjectCreateView):
 
 
 class TextProofUpdate(generics.ProjectUpdateView):
-    template_name = "findings/proof_update.html"
+    template_name = "core/pages/update.html"
     form_class = forms.TextProofForm
+    page_title = "Update Proof"
+
+    def get_breadcrumbs(self):
+        obj = self.get_object()
+        return [
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-list"), "Vulnerabilities"),
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-detail", kwargs={"pk": obj.vulnerability.pk}),
+                       obj.vulnerability),
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-proofs", kwargs={"pk": obj.vulnerability.pk}),
+                       "Proofs")
+        ]
 
     def get_queryset(self):
         return models.TextProof.objects.filter(vulnerability__project=self.get_project())
@@ -118,9 +129,10 @@ class ImageProofUpdate(generics.ProjectUpdateView):
         obj = self.get_object()
         return [
             Breadcrumb(reverse_lazy("projects:findings:vulnerability-list"), "Vulnerabilities"),
-            Breadcrumb(reverse_lazy("projects:findings:vulnerability-detail", kwargs={"pk": self.kwargs["pk"]}),
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-detail", kwargs={"pk": obj.vulnerability.pk}),
                        obj.vulnerability),
-            Breadcrumb(reverse_lazy("projects:findings:vulnerability-proofs"), "Proofs")
+            Breadcrumb(reverse_lazy("projects:findings:vulnerability-proofs", kwargs={"pk": obj.vulnerability.pk}),
+                       "Proofs")
         ]
 
     def get_queryset(self):
