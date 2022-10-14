@@ -9,6 +9,12 @@ urlpatterns = [
     path('', views.ProjectList.as_view(), name="project-list"),
     path('create/', views.ProjectCreate.as_view(), name="project-create"),
 
+    path('pending-confirmation/', views.ProjectContributorConfirmList.as_view(), name="contributor-confirm-list"),
+    path('pending-confirmation/<str:pk>/delete/', views.ProjectContributorConfirmDelete.as_view(),
+         name="contributor-confirm-delete"),
+    path('pending-confirmation/<str:pk>/confirm/', views.ProjectContributorConfirmUpdate.as_view(),
+         name="contributor-confirm-update"),
+
     # reporting urls
     path('reporting/', include('apps.reporting.urls')),
 

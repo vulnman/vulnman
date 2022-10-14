@@ -56,4 +56,4 @@ def get_asset_link(asset):
 @register.filter
 def get_customer_link(customer):
     cleaned_name = bleach.clean(str(customer.name))
-    return mark_safe('<a href="6{url}">{name}</a>'.format(name=cleaned_name, url=customer.get_absolute_url()))
+    return mark_safe('<a href="{url}">{name}</a>'.format(name=cleaned_name, url=customer.get_absolute_url()))

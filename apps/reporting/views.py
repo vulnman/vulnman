@@ -147,9 +147,9 @@ class ReportReleaseUpdate(generics.ProjectUpdateView):
         obj = self.get_object()
         return [
             Breadcrumb(reverse_lazy("projects:reporting:report-list"), "Reports"),
-            Breadcrumb(reverse_lazy("projects:reporting:report-detail", kwargs={"pk": self.kwargs["pk"]}),
+            Breadcrumb(reverse_lazy("projects:reporting:report-detail", kwargs={"pk": obj.report.pk}),
                        obj.report.name),
-            Breadcrumb(reverse_lazy("projects:reporting:report-release-list", kwargs={"pk": self.kwargs["pk"]}),
+            Breadcrumb(reverse_lazy("projects:reporting:report-release-list", kwargs={"pk": obj.report.pk}),
                        "Releases")
         ]
 

@@ -178,26 +178,16 @@ class ProjectContributor(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     role = models.CharField(max_length=16, choices=CONTRIBUTOR_ROLE_CHOICES)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    confirmed = models.BooleanField(default=False)
+    date_confirmed = models.DateTimeField(null=True, blank=True)
+    invite_email = models.EmailField(null=True, blank=True)
 
     def __str__(self):
-        return self.user.username
-
-    def save(self, *args, **kwargs):
-        obj = super().save(*args, **kwargs)
-        self.assign_role_permissions(self.role)
-        return obj
-
-    def assign_role_permissions(self, role):
-        # TODO: use signals here
-        perms = []
-        if role == ProjectContributor.ROLE_PENTESTER:
-            perms = ProjectContributor.ROLE_PENTESTER_PERMISSIONS
-        elif role == ProjectContributor.ROLE_READ_ONLY:
-            perms = ProjectContributor.ROLE_READ_ONLY_PERMISSIONS
-        for perm in perms:
-            assign_perm(perm, user_or_group=self.user, obj=self.project)
+        if self.user:
+            return self.user.username
+        return self.invite_email
 
     def get_project(self):
         return self.project

@@ -124,11 +124,10 @@ class ContactForm(forms.ModelForm):
 
 
 class ContributorForm(forms.ModelForm):
-    username = forms.CharField()
 
     class Meta:
         model = models.ProjectContributor
-        fields = ["username", "role"]
+        fields = ["invite_email", "role"]
 
     def __init__(self, project=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -137,7 +136,7 @@ class ContributorForm(forms.ModelForm):
             self.helper.form_action = reverse_lazy("projects:contributor-create", kwargs={"pk": project.pk})
         self.helper.layout = layout.Layout(
             layout.Row(
-                layout.Div(bootstrap5.FloatingField("username"), css_class="col-sm-12"),
+                layout.Div(bootstrap5.FloatingField("invite_email"), css_class="col-sm-12"),
             ),
             layout.Row(
                 layout.Div(bootstrap5.FloatingField("role"), css_class="col-sm-12"),
@@ -147,6 +146,14 @@ class ContributorForm(forms.ModelForm):
                             wrapper_class="col-sm-12 col-md-6")
             )
         )
+
+
+class ContributorConfirmForm(forms.ModelForm):
+    confirm = forms.BooleanField()
+
+    class Meta:
+        model = models.ProjectContributor
+        fields = ["confirm"]
 
 
 class ProjectAPITokenForm(forms.ModelForm):

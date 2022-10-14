@@ -26,9 +26,8 @@
             </div>
             {% if perms.projects.add_project %}
                 <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
-                    <a class="btn btn-primary" href="{% url 'clients:client-create' %}">
-                        <i class="fa fa-plus"></i> New Client
-                    </a>
+                    {% url 'clients:client-create' as create_url %}
+                    {% include 'core/components/buttons/create_obj.html' with text="New Client" url=create_url %}
                 </div>
             {% endif %}
         </div>

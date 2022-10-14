@@ -35,7 +35,11 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="float-start">
-                                {{ contributor.user.username}}
+                                {% if contributor.confirmed %}
+                                    {{ contributor.user.username}}
+                                {% else %}
+                                    {{ contributor.invite_email|truncatechars:12 }} <span class="badge badge-pill">Confirmation Pending</span>
+                                {% endif %}
                             </div>
                             <div class="float-end">
                                 {% if "add_contributor" in project_perms %}

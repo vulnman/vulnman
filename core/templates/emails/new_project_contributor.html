@@ -1,5 +1,7 @@
 Hello {{ obj.user.username }},
 
-You were added to a new project.
+You were added to the project "{{ project.name }}".
 
-{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}{{ project.get_absolute_url }}
+Login at:
+
+{{ login_url }}

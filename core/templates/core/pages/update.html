@@ -8,32 +8,34 @@
 {% endblock %}
 
 {% block extra_head %}
-{{ form.media.css }}
+    {{ form.media.css }}
 {% endblock %}
 
 {% block content %}
     <div class="container mt-3">
-        <!-- Breadcrumbs -->
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                {% for breadcrumb in breadcrumbs %}
-                    <li class="breadcrumb-item">
-                        <a href="{{ breadcrumb.url }}">{{ breadcrumb.name }}</a>
-                    </li>
-                {% endfor %}
-                <li class="breadcrumb-item active">Update</li>
-            </ol>
-        </nav>
-
-        <div class="row mb-3">
-            <div class="d-flex flex-md-column-reverse align-items-end">
-                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ form.instance.pk }}">
-                    <i class="fa fa-trash"></i>
-                </button>
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        {% for breadcrumb in breadcrumbs %}
+                            <li class="breadcrumb-item">
+                                <a href="{{ breadcrumb.url }}">{{ breadcrumb.name }}</a>
+                            </li>
+                        {% endfor %}
+                        <li class="breadcrumb-item active">Update</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                <div class="d-inline">
+                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ form.instance.pk }}">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="card">
+        <div class="card mt-3">
             <div class="card-body">
                 <h4 class="card-title">Update Instance</h4>
                 <hr/>
@@ -47,7 +49,7 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-$('.filepond-input').filepond({storeAsFile:true,credits:false});
-</script>
+    <script>
+        $('.filepond-input').filepond({storeAsFile: true, credits: false});
+    </script>
 {% endblock %}

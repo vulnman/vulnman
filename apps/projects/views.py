@@ -1,7 +1,7 @@
 from django.contrib.sites.shortcuts import get_current_site
+from django.utils import timezone
 from django.urls import reverse_lazy
 from django.http import Http404, HttpResponse
-from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils.encoding import force_bytes
 import django_filters.views
@@ -13,7 +13,6 @@ from apps.projects import models
 from apps.projects import forms
 from apps.projects import filters
 from apps.account.models import User
-from core.tasks import send_mail_task
 from vulnman.core.views import generics
 from vulnman.core.breadcrumbs import Breadcrumb
 from vulnman.core.utils import send_mail, get_unique_username_from_email
@@ -133,7 +132,6 @@ class ClientDetail(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDetailVie
 
 
 class ClientCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateView):
-    # TODO: write tests
     template_name = "projects/clients/create_or_update.html"
     model = models.Client
     permission_required = ["projects.add_client"]
@@ -141,7 +139,6 @@ class ClientCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCreateVie
 
 
 class ClientUpdate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
-    # TODO: write tests
     template_name = "projects/clients/create_or_update.html"
     model = models.Client
     permission_required = ["projects.change_client"]
@@ -149,7 +146,6 @@ class ClientUpdate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthUpdateVie
 
 
 class ClientDelete(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDeleteView):
-    # TODO: write tests
     model = models.Client
     permission_required = ["projects.delete_client"]
     http_method_names = ["post"]
@@ -245,27 +241,43 @@ class ProjectContributorCreate(generics.ProjectCreateView):
     form_class = forms.ContributorForm
     page_title = "Add Project Contributor"
     success_url = reverse_lazy("projects:contributor-list")
+    success_message = "Invite Mail was Sent!"
 
     def get_breadcrumbs(self):
         return [
             Breadcrumb(reverse_lazy("projects:contributor-list"), "Contributors")
         ]
 
-    def form_valid(self, form):
+    def is_customer_for_current_project(self, user):
+        if self.get_project().client is not user.customer_profile.customer:
+            return False
+        return True
+
+    def is_send_mail_allowed(self, form):
         user_roles = [User.USER_ROLE_CUSTOMER, User.USER_ROLE_PENTESTER]
-        user = User.objects.filter(username=form.cleaned_data.get('username'), user_role__in=user_roles)
+        user = User.objects.filter(email=form.cleaned_data["invite_email"], user_role__in=user_roles)
         if not user.exists():
-            form.add_error("username", "Username not found!")
-            return super().form_invalid(form)
-        form.instance.user = user.get()
-        if form.instance.user.user_role == User.USER_ROLE_CUSTOMER:
-            if self.get_project() is not form.instance.user.customer_profile.customer:
-                form.add_error("username", "Cannot invite customer of other client to this project")
-                return super().form_invalid(form)
-        async_task(send_mail_task, "vulnman - New Project %s" % self.get_project().name,
-                   render_to_string("emails/new_project_contributor.html", context={
-                       "obj": form.instance, "request": self.request, "project": self.get_project()}),
-                   form.instance.user.email)
+            return False
+        contrib_user = user.get()
+        form.instance.user = contrib_user
+        if contrib_user.user_role == User.USER_ROLE_CUSTOMER:
+            if not self.is_customer_for_current_project(contrib_user):
+                return False
+        # check if we are already part of the project
+        if models.ProjectContributor.objects.filter(user=contrib_user, project=self.get_project()).exists():
+            return False
+        return True
+
+    def send_invite_mail(self, user):
+        subject = "vulnman / New Project Invite"
+        context = {"obj": user, "project": self.get_project(), "login_url": self.request.build_absolute_uri(
+            reverse_lazy("account:login"))}
+        async_task(send_mail, subject, "emails/new_project_contributor.html", context, settings.DEFAULT_FROM_EMAIL,
+                   user.email)
+
+    def form_valid(self, form):
+        if self.is_send_mail_allowed(form):
+            self.send_invite_mail(form.instance.user)
         return super().form_valid(form)
 
 
@@ -278,6 +290,38 @@ class ProjectContributorDelete(generics.ProjectDeleteView):
 
     def get_success_url(self):
         return reverse_lazy("projects:contributor-list")
+
+
+class ProjectContributorConfirmList(generics.VulnmanAuthListView):
+    # TODO: write tests
+    template_name = "projects/contributor_confirm_list.html"
+
+    def get_queryset(self):
+        return models.ProjectContributor.objects.filter(user=self.request.user, confirmed=False)
+
+
+class ProjectContributorConfirmDelete(generics.VulnmanAuthDeleteView):
+    # TODO: write tests
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:contributor-confirm-list")
+
+    def get_queryset(self):
+        return models.ProjectContributor.objects.filter(user=self.request.user, confirmed=False)
+
+
+class ProjectContributorConfirmUpdate(generics.VulnmanAuthUpdateView):
+    # TODO: write tests
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:contributor-confirm-list")
+    form_class = forms.ContributorConfirmForm
+
+    def get_queryset(self):
+        return models.ProjectContributor.objects.filter(user=self.request.user, confirmed=False)
+
+    def form_valid(self, form):
+        form.instance.confirmed = True
+        form.instance.date_confirmed = timezone.now()
+        return super().form_valid(form)
 
 
 class ProjectTokenList(generics.ProjectListView):

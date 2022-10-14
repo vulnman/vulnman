@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Pending Project Confirmations
+{% endblock %}
+
+
+{% block content %}
+    <div class="container mt-3">
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+                        <li class="breadcrumb-item active">Pending</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="list-group mt-3">
+            {% for contributor in object_list %}
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    <p>[{{ contributor.project.client }}] {{ contributor.project }}</p>
+                                </div>
+                                <div class="float-end">
+                                    <form class="d-inline" method="POST" action="{% url 'projects:contributor-confirm-update' contributor.pk %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="confirm" value="1">
+                                        <button class="btn btn-outline-success"><i class="fa fa-check"></i></button>
+                                    </form>
+                                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal-{{ contributor.pk }}">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="clearfix">
+                                <div class="float-start">
+                                    <small class="text-muted"><i>Created: {{ contributor.date_created|timesince }} ago</i></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% include 'projects/components/modal_contribution_deny.html' with obj=contributor %}
+            {% empty %}
+                <li class="list-group-item">No pending projects here!</li>
+            {% endfor %}
+        </div>
+
+        {% include 'core/components/navigation/pagination.html' %}
+    </div>
+{% endblock %}
+

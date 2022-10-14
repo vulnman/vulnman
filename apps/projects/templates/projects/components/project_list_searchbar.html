@@ -7,11 +7,15 @@
             <button class="btn btn-outline-secondary"><i class="fa fa-search"></i></button>
         </form>
     </div>
-    {% if perms.projects.add_project %}
-        <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
-            <a class="btn btn-primary" href="{% url 'projects:project-create' %}">
-                <i class="fa fa-plus"></i> New Project
-            </a>
+    <div class="col-sm-12 col-md-6 d-flex flex-column-reverse align-items-end">
+        <div class="d-inline">
+            <a href="{% url "projects:contributor-confirm-list" %}" class="btn btn-outline-secondary">Pending Confirmation</a>
+            {% if perms.projects.add_project %}
+                <a class="btn btn-primary" href="{% url 'projects:project-create' %}">
+                    <i class="fa fa-plus"></i> New Project
+                </a>
+            {% endif %}
         </div>
-    {% endif %}
+
+    </div>
 </div>
