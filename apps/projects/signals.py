@@ -20,7 +20,7 @@ def delete_contributor_from_project(sender, instance, **kwargs):
 @receiver(post_save, sender=ProjectContributor)
 def assign_contributor_permissions(sender, instance=None, created=False, **kwargs):
     # do this only on confirmation
-    if created:
+    if created and not instance.confirmed:
         return
     perms = []
     if instance.role == ProjectContributor.ROLE_PENTESTER:

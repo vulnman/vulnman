@@ -30,8 +30,8 @@ class ProjectUserRolesTestCase(TestCase, VulnmanTestCaseMixin):
         url = self.get_url("projects:assets:host-create")
         payload = {"ip": "1.2.3.4", "accessibility": 1, "environment": models.Host.ENVIRONMENT_UNKNOWN}
         self.login_with_project(self.pentester2, self.project1)
-        self._create_instance(ProjectContributor,
-            user=self.pentester2, role=ProjectContributor.ROLE_PENTESTER, project=self.project1)
+        self.create_instance(ProjectContributor, user=self.pentester2, confirmed=True,
+                             role=ProjectContributor.ROLE_PENTESTER, project=self.project1)
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(models.Host.objects.count(), 1)

@@ -8,13 +8,19 @@ class ProjectContributorCreateViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.init_mixin()
         self.url = self.get_url("projects:contributor-create")
         self.data = {
-            "username": self.pentester2.username, "role": models.ProjectContributor.ROLE_PENTESTER
+            "invite_email": self.pentester2.email, "role": models.ProjectContributor.ROLE_PENTESTER
         }
 
     def test_valid(self):
         self.login_with_project(self.pentester1, self.project1)
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 302)
+        # username is only set if user exists, so check it
+        self.assertEqual(models.ProjectContributor.objects.filter(user=self.pentester2, project=self.project1).count(),
+                         1)
+        contributor = models.ProjectContributor.objects.get(user=self.pentester2, project=self.project1)
+        contributor.confirmed = True
+        contributor.save()
         self.assertEqual(self.pentester2.has_perm("projects.change_project", self.project1), True)
         self.assertEqual(self.pentester2.has_perm("projects.add_contributor", self.project1), False)
         # FIXME: this is not working with django_q at the moment
@@ -40,14 +46,17 @@ class ProjectContributorCreateViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.assertEqual(response.status_code, 403)
 
     def test_contributor_from_other_client(self):
-        models.ProjectContributor.objects.create(role=models.ProjectContributor.ROLE_PENTESTER,
+        # test if a contact of another customer can be added to a project that does not belong to the customer
+        models.ProjectContributor.objects.create(role=models.ProjectContributor.ROLE_PENTESTER, confirmed=True,
                                                  user=self.pentester1, project=self.project1)
         self.login_with_project(self.pentester1, self.project1)
         data = self.data
-        data["username"] = self.customer2.username
+        data["invite_email"] = self.customer2.email
         response = self.client.post(self.url, data)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context["form"].errors), 1)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(models.ProjectContributor.objects.filter(user=self.customer2, project=self.project1).count(),
+                         0)
+        print(models.ProjectContributor.objects.filter(user=self.customer2, project=self.project1).values())
 
 
 class ProjectContributorListViewTestCase(TestCase, VulnmanTestCaseMixin):

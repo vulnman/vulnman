@@ -249,7 +249,7 @@ class ProjectContributorCreate(generics.ProjectCreateView):
         ]
 
     def is_customer_for_current_project(self, user):
-        if self.get_project().client is not user.customer_profile.customer:
+        if self.get_project().client != user.customer_profile.customer:
             return False
         return True
 
@@ -262,6 +262,7 @@ class ProjectContributorCreate(generics.ProjectCreateView):
         form.instance.user = contrib_user
         if contrib_user.user_role == User.USER_ROLE_CUSTOMER:
             if not self.is_customer_for_current_project(contrib_user):
+                form.instance.user = None
                 return False
         # check if we are already part of the project
         if models.ProjectContributor.objects.filter(user=contrib_user, project=self.get_project()).exists():

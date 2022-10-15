@@ -79,7 +79,7 @@ class ProjectTokenListViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.assertEqual(response.context["tokens"][0], self.token2)
 
     def test_contributor(self):
-        models.ProjectContributor.objects.create(role=models.ProjectContributor.ROLE_PENTESTER,
+        models.ProjectContributor.objects.create(role=models.ProjectContributor.ROLE_PENTESTER, confirmed=True,
                                                  user=self.pentester2, project=self.project1)
         self.login_with_project(self.pentester2, self.project1)
         response = self.client.get(self.url)

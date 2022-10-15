@@ -26,8 +26,8 @@ class VulnmanTestCaseMixin(object):
         self.customer2.customer_profile.client = self.project2.client
         self.customer2.customer_profile.save()
 
-    def add_contributor(self, user, project, role=ProjectContributor.ROLE_PENTESTER):
-        return ProjectContributor.objects.create(user=user, project=project, role=role)
+    def add_contributor(self, user, project, role=ProjectContributor.ROLE_PENTESTER, confirmed=True):
+        return ProjectContributor.objects.create(user=user, project=project, role=role, confirmed=confirmed)
 
     def _create_user(self, username, password, is_staff=False, **kwargs):
         email = "%s@example.com" % username
