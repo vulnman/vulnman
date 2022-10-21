@@ -19,5 +19,12 @@ urlpatterns = [
     path("services/create/", views.ServiceCreate.as_view(), name="service-create"),
     path('services/<str:pk>/', views.ServiceDetail.as_view(), name="service-detail"),
     path('services/<str:pk>/delete/', views.ServiceDelete.as_view(), name="service-delete"),
-    path('services/<str:pk>/update/', views.ServiceUpdate.as_view(), name="service-update")
+    path('services/<str:pk>/update/', views.ServiceUpdate.as_view(), name="service-update"),
+
+    # Thick Clients
+    path('thick-clients/', views.ThickClientList.as_view(), name="thick-client-list"),
+    path('thick-clients/create/', views.ThickClientCreate.as_view(), name="thick-client-create"),
+    path('thick-clients/<str:pk>/', views.ThickClientDetail.as_view(), name="thick-client-detail"),
+    path('thick-clients/<str:pk>/delete/', views.ThickClientDelete.as_view(), name="thick-client-delete"),
+    path('thick-clients/<str:pk>/update/', views.ThickClientUpdate.as_view(), name="thick-client-update"),
 ]

@@ -59,7 +59,7 @@ class Project(models.Model):
 
     def get_assets(self):
         assets = list(self.webapplication_set.all()) + list(self.host_set.all()) + \
-                 list(self.service_set.all())
+                 list(self.service_set.all()) + list(self.thickclient_set.all())
         return assets
 
     def get_scope(self):

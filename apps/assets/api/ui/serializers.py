@@ -40,3 +40,17 @@ class ServiceSerializer(ProjectRelatedObjectSerializer):
         data["asset_type"] = models.Service.ASSET_TYPE_CHOICE[1]
         data["display_name"] = "%s:%s (%s)" % (instance.host.ip, instance.port, instance.name)
         return data
+
+
+class ThickClientSerializer(ProjectRelatedObjectSerializer):
+    class Meta:
+        model = models.ThickClient
+        fields = ["uuid", "name", "project"]
+        read_only_fields = ["uuid"]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["asset_type"] = models.ThickClient.ASSET_TYPE_CHOICE[1]
+        data["name"] = str(instance)
+        data["display_name"] = str(instance)
+        return data

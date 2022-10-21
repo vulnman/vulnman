@@ -105,7 +105,8 @@ class Vulnerability(VulnmanProjectModel):
     ASSET_TYPES_CHOICES = [
         ("webapplication", "Web Application"),
         ("host", "Host"),
-        ("service", "Service")
+        ("service", "Service"),
+        ("thick-client", "Thick Client")
     ]
 
     objects = querysets.VulnerabilityManager.from_queryset(querysets.VulnerabilityQuerySet)()

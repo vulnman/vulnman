@@ -23,3 +23,10 @@ class WebApplicationViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, Pr
     serializer_class = serializers.WebApplicationSerializer
     queryset = models.WebApplication.objects.all()
     object_permissions_required = ["projects.view_project"]
+
+
+class ThickClientViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, ProjectSessionViewSet):
+    # TODO: write tests
+    serializer_class = serializers.ThickClientSerializer
+    queryset = models.ThickClient.objects.all()
+    object_permissions_required = ["projects.view_project"]
