@@ -175,3 +175,51 @@ class WebApplicationDelete(generics.ProjectDeleteView):
     def get_queryset(self):
         return models.WebApplication.objects.filter(
             project=self.get_project())
+
+
+class ThickClientList(generics.ProjectListView):
+    # TODO: write test
+    template_name = "assets/thick_client/list.html"
+
+    def get_queryset(self):
+        return models.ThickClient.objects.filter(project=self.get_project())
+
+
+class ThickClientCreate(generics.ProjectCreateView):
+    # TODO: write test
+    form_class = forms.ThickClientForm
+    template_name = "core/pages/create.html"
+    page_title = "Create Thick Client"
+    breadcrumbs = [
+        Breadcrumb(reverse_lazy("projects:assets:thick-client-list"), "Thick Clients")
+    ]
+
+
+class ThickClientDetail(generics.ProjectDetailView):
+    # TODO: write test
+    template_name = "assets/thick_client/detail.html"
+    model = models.ThickClient
+
+
+class ThickClientDelete(generics.ProjectDeleteView):
+    http_method_names = ["post"]
+    success_url = reverse_lazy("projects:assets:thick-client-list")
+
+    def get_queryset(self):
+        return models.ThickClient.objects.filter(project=self.get_project())
+
+
+class ThickClientUpdate(generics.ProjectUpdateView):
+    form_class = forms.ThickClientForm
+    template_name = "core/pages/update.html"
+    page_title = "Update Thick Client"
+
+    def get_breadcrumbs(self):
+        obj = self.get_object()
+        return [
+            Breadcrumb(reverse_lazy("projects:assets:thick-client-list"), "Thick Clients"),
+            Breadcrumb(obj.get_absolute_url(), obj)
+        ]
+
+    def get_queryset(self):
+        return models.ThickClient.objects.filter(project=self.get_project())

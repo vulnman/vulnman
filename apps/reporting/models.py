@@ -19,7 +19,7 @@ class Report(VulnmanProjectModel):
 
     REPORT_VARIANT_CHOICES = [
         (REPORT_VARIANT_PENTEST_REPORT, "Pentest Report"),
-        (REPORT_VARIANT_PENTEST_CSV, "Pentest CSV")
+        (REPORT_VARIANT_PENTEST_CSV, "Vulnerability CSV")
     ]
 
     REPORT_VARIANT_CONTENT_TYPES = {

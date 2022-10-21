@@ -94,9 +94,27 @@ class ServiceForm(forms.ModelForm):
         )
 
 
-class ServiceUpdateForm(ServiceForm):
+class ThickClientForm(forms.ModelForm):
+    class Meta:
+        model = models.ThickClient
+        fields = ["name", "operating_system", "description", "accessibility", "version",
+                  "programming_language", "environment"]
 
-    def __init__(self, project, *args, **kwargs):
-        super().__init__(project, *args, **kwargs)
-        self.helper.form_action = reverse_lazy(
-            "projects:assets:service-update", kwargs={"pk": self.instance.pk})
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = layout.Layout(
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("name", wrapper_class="col-sm-12")),
+                layout.Div(bootstrap5.FloatingField("version", wrapper_class="col-sm-12")),
+                layout.Div(bootstrap5.FloatingField("operating_system", wrapper_class="col-sm-12")),
+                layout.Div(bootstrap5.FloatingField("programming_language", wrapper_class="col-sm-12")),
+                layout.Div(bootstrap5.FloatingField("environment", wrapper_class="col-sm-12")),
+                layout.Div(bootstrap5.FloatingField("accessibility", wrapper_class="col-sm-12")),
+                layout.Div(bootstrap5.Field("description", wrapper_class="col-sm-12")),
+            ),
+            layout.Row(
+                FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
+                            wrapper_class="col-sm-12 col-md-6")
+            )
+        )

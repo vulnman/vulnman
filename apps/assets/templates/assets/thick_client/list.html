@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load guardian_tags %}
+{% load vulnmantags %}
+
+{% block title %}
+    Thick Clients
+{% endblock %}
+
+{% block content %}
+    {% get_obj_perms request.user for project as "project_perms" %}
+
+    <div class="container mt-3">
+        <div class="row d-flex">
+            <div class="d-flex flex-column col-sm-12 col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">Thick Clients</li>
+                    </ol>
+                </nav>
+            </div>
+            {% if "change_project" in project_perms %}
+                <div class="d-flex flex-column-reverse col-md-5 col-sm-12 align-items-end justify-content-end">
+                    <div class="d-inline">
+                        {% url 'projects:assets:thick-client-create' as create_url %}
+                        {% include 'core/components/buttons/create_obj.html' with text="New Thick Client" url=create_url %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        {% if not object_list %}
+            <div class="card mt-3">
+                <div class="card-body">
+                    {% show_blankslate %}
+                </div>
+            </div>
+        {% else %}
+            <table class="table table-hover table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Version</th>
+                        <th>Operating System</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for obj in object_list %}
+                        <tr>
+                            <td><a href="#">{{ obj.name }}</a></td>
+                            <td>{{ obj.version }}</td>
+                            <td>{{ obj.operating_system }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    {% include "core/components/navigation/pagination.html" %}
+{% endblock content %}

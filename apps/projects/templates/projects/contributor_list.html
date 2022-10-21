@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load vulnmantags %}
 {% load guardian_tags %}
 
 {% block title %}
@@ -28,8 +29,14 @@
             </div>
         </div>
 
+        {% if not contributors %}
+            <div class="card mt-3">
+                <div class="card-body">
+                    {% include 'core/components/blankslate.html' with icon="fa-users" title="No Contributors" text="Share this project with other users using the button above!" %}
+                </div>
+            </div>
+        {% else %}
         <ul class="list-group mt-3">
-            {% get_obj_perms request.user for project as "project_perms" %}
             {% for contributor in contributors %}
                 <li class="list-group-item">
                     <div class="row">
@@ -63,5 +70,6 @@
                 </li>
             {% endfor %}
         </ul>
+        {% endif %}
     </div>
 {% endblock %}
