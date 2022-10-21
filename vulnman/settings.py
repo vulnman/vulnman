@@ -142,7 +142,6 @@ INSTALLED_APPS = [
     # apps
     'apps.account.apps.AccountConfig',
     'apps.reporting.apps.ReportingConfig',
-    # 'apps.reporting.default_template.apps.DefaultTemplateConfig',
     'apps.projects.apps.ProjectsConfig',
     'apps.methodologies.apps.MethodologiesConfig',
     'apps.findings.apps.FindingsConfig',
@@ -150,6 +149,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'api.apps.ApiConfig',
     'apps.responsible_disc.apps.ResponsibleDiscConfig',
+    'apps.checklists.apps.ChecklistsConfig'
 ]
 
 
