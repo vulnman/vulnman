@@ -13,7 +13,7 @@ from apps.account.models import User
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = models.Project
-        fields = ["client", "start_date", "end_date", "name", "cvss_required", "pentest_method", "description"]
+        fields = ["client", "start_date", "end_date", "name", "pentest_method", "description"]
         widgets = {
             'start_date': DateInput(),
             'end_date': DateInput(),
@@ -39,9 +39,6 @@ class ProjectForm(forms.ModelForm):
             ),
             layout.Row(
                 layout.Div(bootstrap5.Field("description"), css_class="col-sm-12")
-            ),
-            layout.Row(
-                layout.Div(bootstrap5.Field("cvss_required"), css_class="col-sm-12 col-md-6"),
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),
