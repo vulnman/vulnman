@@ -63,8 +63,9 @@ class Project(models.Model):
         return assets
 
     def get_scope(self):
-        # used in default report template
-        scope_assets = list(self.webapplication_set.all()) + list(self.host_set.all())
+        # used to get scope without "helper" assets like "service"
+        scope_assets = list(self.webapplication_set.all()) + list(self.host_set.all()) + list(
+            self.thickclient_set.all())
         return scope_assets
 
     def get_draft_report(self):
