@@ -12,8 +12,6 @@ urlpatterns = [
     path('vulnerabilities/<str:pk>/export-pdf/', views.VulnerabilityExport.as_view(), name="vulnerability-export-pdf"),
     path('vulnerabilities/<str:pk>/export-advisory/', views.VulnerabilityAdvisoryExport.as_view(),
          name="vulnerability-export-advisory"),
-    path('vulnerabilities/<str:pk>/notify-vendor/',
-         views.VulnerabilityNotifyVendor.as_view(), name="vulnerability-notify-vendor"),
     path('vulnerabilities/<int:pk>/add-log-item/', views.VulnerabilityLogCreate.as_view(),
          name="vulnerability-log-create"),
     path('vulnerabilities/<int:pk>/timeline/', views.VulnerabilityTimeline.as_view(), name="vulnerability-timeline"),

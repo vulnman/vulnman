@@ -12122,10 +12122,6 @@ select + .select2-container--bootstrap-5 {
   border: 1px solid #35354f;
 }
 
-.filepond--item-panel2 {
-  border-radius: 0.25rem;
-}
-
 /* do not display filepond credits. The JS option does not seem to have any effect anymore */
 .filepond--credits {
   display: none !important;

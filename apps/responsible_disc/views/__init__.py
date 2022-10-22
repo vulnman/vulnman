@@ -154,22 +154,6 @@ class VulnerabilityExport(ObjectPermissionRequiredMixin, generics.VulnmanAuthDet
         return response
 
 
-class VulnerabilityNotifyVendor(generics.VulnmanAuthUpdateView):
-    # TODO: write tests
-    form_class = forms.VulnerabilityNotificationForm
-    http_method_names = ["post"]
-
-    def get_queryset(self):
-        return models.Vulnerability.objects.filter(user=self.request.user)
-
-    def form_valid(self, form):
-        if not form.instance.vendor_email:
-            form.add_error("empty", "No vendor email set")
-            return super().form_invalid(form)
-        async_task(tasks.notify_vendor, form.instance.pk)
-        return super().form_valid(form)
-
-
 class VulnUpdate(ObjectPermissionRequiredMixin, generics.VulnmanAuthUpdateView):
     # TODO: write tests
     model = models.Vulnerability

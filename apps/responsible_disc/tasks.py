@@ -17,6 +17,7 @@ def export_advisory(vulnerability):
 
 
 def notify_vendor(vulnerability_pk):
+    # TODO: Deprecated
     vulnerability = models.Vulnerability.objects.get(pk=vulnerability_pk)
     pdf_source = export_single_vulnerability(vulnerability, vulnerability.advisory_template)
     if not vulnerability.vendor_email:
