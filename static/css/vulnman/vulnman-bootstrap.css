@@ -10605,10 +10605,8 @@ textarea.form-control-lg {
   height: 90px;
   padding: 1.5rem;
   padding-left: 0;
-  z-index: 9999;
 }
 .navbar .navbar-nav {
-  z-index: 9999;
   background-color: #151521;
 }
 .navbar .navbar-nav li {

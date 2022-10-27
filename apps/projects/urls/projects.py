@@ -21,6 +21,9 @@ urlpatterns = [
     # command
     path('methodologies/', include('apps.methodologies.urls.projects')),
 
+    # checklists
+    path('checklists/', include('apps.checklists.urls')),
+
     # findings
     path('findings/', include('apps.findings.urls.projects')),
 

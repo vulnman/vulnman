@@ -84,9 +84,17 @@ class ProjectTask(BaseChecklistTask):
         (STATUS_NOT_TESTED, "Not Tested"),
         (STATUS_NOT_APPLICABLE, "Not Applicable")
     ]
+    ASSET_TYPES_CHOICES = [
+        ("webapplication", "Web Application"),
+        ("host", "Host"),
+        ("service", "Service"),
+        ("thick-client", "Thick Client")
+    ]
+
     project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
     status = models.PositiveIntegerField(default=STATUS_OPEN, choices=TASK_STATUS_CHOICES)
 
+    asset_type = models.CharField(max_length=64, choices=ASSET_TYPES_CHOICES, default="webapplication")
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to={
         "model__in": ['Host', 'Service', 'assets.WebApplication']
     })
@@ -97,3 +105,6 @@ class ProjectTask(BaseChecklistTask):
         if self.creator:
             return self.creator.username
         return "vulnman bot"
+
+    class Meta:
+        unique_together = [('task_id', 'object_id')]
