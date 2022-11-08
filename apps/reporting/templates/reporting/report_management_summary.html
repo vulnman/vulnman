@@ -11,6 +11,8 @@
             <div class="d-flex flex-column col-sm-12 col-md-7">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
+                        {% include 'core/components/navigation/sidebar-toggler.html' %}
+
                         <li class="breadcrumb-item"><a href="{% url 'projects:reporting:report-list' %}">Reports</a>
                         </li>
                         <li class="breadcrumb-item active">{{ report.name }}</li>

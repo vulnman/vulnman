@@ -1,0 +1,12 @@
+{% if request.user.is_authenticated and project %}
+    <!--<a class="text-muted btn d-lg-none" id="sidebarToggle">
+        <i class="fa fa-navicon"></i>
+    </a>-->
+    <div class="break-point-lg">
+        <a id="btn-toggle" href="#" class="sidebar-toggler break-point-lg">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <span style="padding-left: 1rem;" class="d-lg-none d-md-none"></span>
+    </div>
+
+{% endif %}

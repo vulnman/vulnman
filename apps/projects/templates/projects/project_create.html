@@ -18,6 +18,7 @@
         <!-- Breadcrumbs -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
+                {% include 'core/components/navigation/sidebar-toggler.html' %}
                 <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
                 {% if request.resolver_match.url_name == "project-update" %}
                     <li class="breadcrumb-item"><a href="{{ project.get_absolute_url }}">{{ project.name }}</a></li>

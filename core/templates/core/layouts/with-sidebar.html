@@ -10,12 +10,13 @@
 <body>
     {% include 'core/components/navigation/topnav.html' %}
 
-    <div class="fixed-sidebar {% if project %}has-sidebar{% endif %} d-flex layout" id="page-wrapper">
-        {% if project %}
+    <div class="fixed-sidebar has-sidebar d-flex layout" id="page-wrapper">
         {% include 'core/components/navigation/sidebar.html' %}
-        {% endif %}
-        <!-- Page Content -->
-        <div class="layout" id="page-content">
+
+        <!-- Content -->
+        <div class="layout">
+
+            <!-- Page Content -->
             <div class="content">
                 {% if messages %}
                     <ul class="messages">
@@ -33,9 +34,8 @@
 <!-- Scripts -->
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 
-    {% if project %}
-        {% include 'core/components/navigation/sidebar.js.html' %}
-    {% endif %}
+{% include 'core/components/navigation/sidebar.js.html' %}
+
 {% block extra_scripts %}
 {% endblock extra_scripts %}
 </body>

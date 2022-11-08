@@ -324,6 +324,11 @@ $nav-tabs-link-active-bg:           rgba(44, 44, 58, 0.85);
 $nav-tabs-link-hover-border-color:  $gray-200 $gray-200 $nav-tabs-border-color;
 $nav-tabs-link-active-border-color: $gray-300 $gray-300 $nav-tabs-link-active-bg;
 
+$navbar-brand-height:               $navbar-brand-font-size * $line-height-base;
+$navbar-brand-padding-y:            0rem;
+$navbar-brand-margin-end:           0rem;
+$navbar-height:                     90px;
+
 // Dropdowns
 $dropdown-color:                    #92929F;
 $dropdown-bg:                       #161b22;
@@ -425,3 +430,4 @@ $horizontal-submenu-shadow-color: rgba(27, 27, 27, 0.1);
 // Select2
 $s2bs5-item-hover-bg:            $list-group-hover-bg;
 $s2bs5-item-focus-bg:            $list-group-bg;
+

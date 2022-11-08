@@ -10,11 +10,14 @@
 
 {% block content %}
     <div class="container mt-3">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active">Vulnerabilities</li>
-            </ol>
-        </nav>
+        <div class="">
+
+                <ol class="breadcrumb d-flex align-items-center">
+                    {% include 'core/components/navigation/sidebar-toggler.html' %}
+                    <li class="breadcrumb-item active">Vulnerabilities</li>
+                </ol>
+        </div>
+
         <div class="row">
             <!-- Search bar -->
             {% include 'responsible_disc/components/vulnerability_searchbar.html' %}

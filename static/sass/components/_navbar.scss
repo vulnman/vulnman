@@ -1,8 +1,7 @@
 .navbar {
-  height: 90px;
-  padding: 1.5rem;
+  height: $navbar-height;
   padding-left: 0;
-
+  background-color: $body-bg;
 
   .navbar-nav {
     background-color: $body-bg;
@@ -18,7 +17,6 @@
     font-weight: bold;
     color: $navbar-dark-color;
   }
-
 
   .user-menu img {
     width: 39px;

@@ -1,62 +1,54 @@
 {% load static %}
 <!-- Top Navigation -->
-<nav class="navbar navbar-expand-sm border-bottom">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-sm border-bottom fixed-top">
 
-        <a class="navbar-brand d-flex align-content-between" href="{% url 'index' %}">
-            <img src="{% static 'images/logo-icon.svg' %}" class="navbar-brand-logo" height="80" width="80">
-            <span class="navbar-brand-title">VULNMAN</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-            <span class="fa fa-bars text-muted"></span>
-        </button>
+    <a class="navbar-brand d-flex align-content-between" href="{% url 'index' %}">
+        <img src="{% static 'images/logo-icon.svg' %}" class="navbar-brand-logo" height="80" width="80" alt="">
+        <span class="navbar-brand-title d-none d-md-block">VULNMAN</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+        <span class="fa fa-bars text-muted"></span>
+    </button>
 
-        {% if request.user.is_authenticated and project %}
-            <button class="btn btn-outline-secondary" id="sidebarToggle">
-                <i class="fa fa-navicon"></i>
-            </button>
-        {% endif %}
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mt-lg-0 mt-3">
-                {% if request.user.is_authenticated %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mt-lg-0 mt-3">
+            {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'projects:project-list' %}">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'responsible_disc:vulnerability-list' %}">Responsible
+                        Disclosure</a>
+                </li>
+                {% if perms.projects.view_client %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'projects:project-list' %}">Projects</a>
+                        <a class="nav-link" href="{% url 'clients:client-list' %}">Clients</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'responsible_disc:vulnerability-list' %}">Responsible
-                            Disclosure</a>
-                    </li>
-                    {% if perms.projects.view_client %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'clients:client-list' %}">Clients</a>
-                        </li>
-                    {% endif %}
                 {% endif %}
-                {% if request.user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-                           data-bs-toggle="dropdown" aria-haspopup="true"
-                           aria-expanded="false">{{ request.user.username }}</a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'findings:template-list' %}">Vulnerability
-                                Templates</a>
-                            {% if request.user.pentester_profile %}
-                                <a class="dropdown-item" href="{% url 'methodology:methodology-list' %}">Checklists</a>
-                            {% endif %}
-                            {% if request.user.profile %}
-                                <a class="dropdown-item" href="{% url 'account:profile-my' %}">Profile</a>
-                            {% endif %}
-                            {% if request.user.is_staff %}
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank" rel="noopener">Administration</a>
-                            {% endif %}
+            {% endif %}
+            {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">{{ request.user.username }}</a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'findings:template-list' %}">Vulnerability
+                            Templates</a>
+                        {% if request.user.pentester_profile %}
+                            <a class="dropdown-item" href="{% url 'methodology:methodology-list' %}">Checklists</a>
+                        {% endif %}
+                        {% if request.user.profile %}
+                            <a class="dropdown-item" href="{% url 'account:profile-my' %}">Profile</a>
+                        {% endif %}
+                        {% if request.user.is_staff %}
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a>
-                        </div>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
+                            <a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank" rel="noopener">Administration</a>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
     </div>
 </nav>
