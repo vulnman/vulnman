@@ -4,6 +4,7 @@ from uuid import uuid4
 from django.db import models
 from django.urls import reverse_lazy
 from django.conf import settings
+from django.utils import timezone
 from django.utils.functional import lazy
 from vulnman.models import VulnmanModel
 from apps.responsible_disc import querysets
@@ -58,6 +59,7 @@ class Vulnerability(models.Model):
     is_published = models.BooleanField(default=False)
     is_fixed = models.BooleanField(default=False)
     advisory_template = models.CharField(max_length=32, default="default")
+    internal_id = models.CharField(max_length=32, null=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -78,6 +80,8 @@ class Vulnerability(models.Model):
         return reverse_lazy("responsible_disc:vulnerability-delete", kwargs={"pk": self.pk})
 
     def save(self, *args, **kwargs):
+        if not self.internal_id:
+            self.internal_id = self.get_next_internal_id()
         if not self.pk:
             super().save(*args, **kwargs)
             VulnerabilityLog.objects.create(action=VulnerabilityLog.ACTION_VULNERABILITY_CREATION,
@@ -96,6 +100,18 @@ class Vulnerability(models.Model):
 
     def get_timeline(self):
         return self.vulnerabilitylog_set.all()
+
+    @staticmethod
+    def get_next_internal_id():
+        qs = Vulnerability.objects.filter(date_created__date__year=timezone.now().year, internal_id__isnull=False).order_by("internal_id")
+        if not qs.exists():
+            return "%s%s-%s" % (settings.RESPONSIBLE_DISCLOSURE_VULNERABILITY_ID_PREFIX, timezone.now().year, "0001")
+        last_internal_id = qs.last().internal_id.split("-")[-1]
+        if int(last_internal_id) > 9999:
+            new_internal_id = "%05d" % int(int(last_internal_id) + 1)
+        else:
+            new_internal_id = "%04d" % int(int(last_internal_id) + 1)
+        return "%s%s-%s" % (settings.RESPONSIBLE_DISCLOSURE_VULNERABILITY_ID_PREFIX, timezone.now().year, new_internal_id)
 
     class Meta:
         ordering = ["-date_created"]

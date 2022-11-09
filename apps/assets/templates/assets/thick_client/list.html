@@ -47,7 +47,7 @@
                 <tbody>
                     {% for obj in object_list %}
                         <tr>
-                            <td><a href="#">{{ obj.name }}</a></td>
+                            <td><a href="{% url 'projects:assets:thick-client-detail' obj.pk %}">{{ obj.name }}</a></td>
                             <td>{{ obj.version }}</td>
                             <td>{{ obj.operating_system }}</td>
                         </tr>
