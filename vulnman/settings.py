@@ -238,6 +238,9 @@ ADDITIONAL_PACKAGES = []
 
 TOTP_ENFORCE_2FA = False
 
+RESPONSIBLE_DISCLOSURE_VULNERABILITY_ID_PREFIX = "vulnman-"
+
+
 try:
     from vulnman.conf.local_settings import *
 except ImportError:
