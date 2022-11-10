@@ -60,6 +60,7 @@ class Vulnerability(models.Model):
     is_fixed = models.BooleanField(default=False)
     advisory_template = models.CharField(max_length=32, default="default")
     internal_id = models.CharField(max_length=32, null=True)
+    date_planned_disclosure = models.DateField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils import timezone
 from vulnman.core.test import VulnmanTestCaseMixin
 from apps.responsible_disc import models
 from apps.findings.models import Template
@@ -31,7 +32,7 @@ class VulnerabilityListView(TestCase, VulnmanTestCaseMixin):
                    "status": models.Vulnerability.STATUS_OPEN, "vendor": "TestVendor",
                    "vendor_homepage": "https://example.com", "vendor_email": "admin@example.com",
                    "affected_product": "Test Product", "affected_versions": "<1.0.0",
-                   "severity": "", "advisory_template": "default"
+                   "severity": "", "advisory_template": "default", "date_planned_disclosure": "2022-10-10"
                    }
         self.client.force_login(self.pentester1)
         response = self.client.post(url, payload)

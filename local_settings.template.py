@@ -125,5 +125,8 @@
 
 # RESPONSIBLE_DISCLOSURE_VULNERABILITY_ID_PREFIX = "vulnman-"
 
+# Amount of days for the planned publication of the vulnerability details
+# RESPONSIBLE_DISCLOSURE_PLANNED_PUBLICATION_INTERVAL = 60
+
 # Additional Django packages/apps
 # ADDITIONAL_PACKAGES = []

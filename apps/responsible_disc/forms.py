@@ -77,10 +77,13 @@ class VulnerabilityForm(forms.ModelForm):
 
     class Meta:
         model = models.Vulnerability
+        widgets = {
+            "date_planned_disclosure": DateInput()
+        }
         fields = [
             "template_id", "name", "status", "cve_id", "severity", "cve_request_id", "vendor", "vendor_homepage",
             "vendor_email", "is_fixed", "is_published", "advisory_template",
-            "fixed_version", "affected_versions", "affected_product"]
+            "fixed_version", "affected_versions", "affected_product", "date_planned_disclosure"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -148,6 +151,9 @@ class VulnerabilityForm(forms.ModelForm):
                 layout.Div(
                     bootstrap5.FloatingField("advisory_template"), css_class="col-sm-12"
                 )
+            ),
+            layout.Row(
+                layout.Div(bootstrap5.FloatingField("date_planned_disclosure"), css_class="col-sm-12")
             ),
             layout.Row(
                 FormActions(layout.Submit("submit", "Submit", css_class="btn btn-primary w-100"),

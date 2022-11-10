@@ -1,6 +1,8 @@
 import django_filters.views
 from django.urls import reverse_lazy
 from django.http import HttpResponse, Http404
+from django.utils import timezone
+from django.conf import settings
 from django_q.tasks import async_task
 from guardian.shortcuts import get_users_with_perms, get_user_perms, remove_perm
 from vulnman.core.views import generics
@@ -62,6 +64,12 @@ class VulnerabilityCreate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthCr
             form.instance.severity = form.instance.template.severity
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["date_planned_disclosure"] = timezone.now() + timezone.timedelta(
+            days=settings.RESPONSIBLE_DISCLOSURE_PLANNED_PUBLICATION_INTERVAL)
+        return initial
 
 
 class VulnerabilityDetail(ObjectPermissionRequiredMixin, generics.VulnmanAuthDetailView):
