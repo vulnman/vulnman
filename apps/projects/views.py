@@ -19,10 +19,11 @@ from vulnman.core.utils import send_mail, get_unique_username_from_email
 from vulnman.core.mixins import VulnmanPermissionRequiredMixin, ObjectPermissionRequiredMixin
 
 
-class ProjectList(django_filters.views.FilterMixin, generics.VulnmanAuthListView):
+class ProjectList(django_filters.views.FilterMixin, VulnmanPermissionRequiredMixin, generics.VulnmanAuthListView):
     template_name = "projects/project_list.html"
     context_object_name = "projects"
     filterset_class = filters.ProjectFilter
+    permission_required = ["projects.view_project"]
 
     def get_queryset(self):
         qs = models.Project.objects.for_user(self.request.user)

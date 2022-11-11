@@ -1,4 +1,5 @@
 {% load static %}
+
 <!-- Top Navigation -->
 <nav class="navbar navbar-expand-sm border-bottom fixed-top">
 
@@ -13,9 +14,11 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mt-lg-0 mt-3">
             {% if request.user.is_authenticated %}
+                {% if perms.projects.view_project %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'projects:project-list' %}">Projects</a>
                 </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'responsible_disc:vulnerability-list' %}">Responsible
                         Disclosure</a>

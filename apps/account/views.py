@@ -19,6 +19,8 @@ class Index(RedirectView):
         if self.request.user.is_authenticated:
             if self.request.user.user_role == User.USER_ROLE_VENDOR:
                 return reverse_lazy('responsible_disc:vulnerability-list')
+            elif self.request.user.user_role == User.USER_ROLE_BUGHUNTER:
+                return reverse_lazy('responsible_disc:vulnerability-list')
             return reverse_lazy('projects:project-list')
         return reverse_lazy('account:login')
 

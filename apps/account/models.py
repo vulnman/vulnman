@@ -22,11 +22,13 @@ class User(AbstractUser):
     USER_ROLE_PENTESTER = 0
     USER_ROLE_VENDOR = 1
     USER_ROLE_CUSTOMER = 2
+    USER_ROLE_BUGHUNTER = 3
 
     USER_ROLE_CHOICES = [
         (USER_ROLE_PENTESTER, "Pentester"),
         (USER_ROLE_CUSTOMER, "Customer"),
-        (USER_ROLE_VENDOR, "Vendor")
+        (USER_ROLE_VENDOR, "Vendor"),
+        (USER_ROLE_BUGHUNTER, "Bughunter"),
     ]
 
     email = models.EmailField(unique=True)
@@ -110,6 +112,10 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.user_role == User.USER_ROLE_CUSTOMER:
         CustomerProfile.objects.create(user=instance)
         group = Group.objects.get(name="Customers")
+        instance.groups.add(group)
+        instance.save()
+    if created and instance.user_role == User.USER_ROLE_BUGHUNTER:
+        group = Group.objects.get(name="Bughunters")
         instance.groups.add(group)
         instance.save()
 

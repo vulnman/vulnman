@@ -105,7 +105,6 @@ class VulnerabilityTimeline(ObjectPermissionRequiredMixin, generics.VulnmanAuthD
 
 
 class VulnerabilityLogCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
-    # TODO: write tests
     http_method_names = ["post"]
     form_class = forms.VulnerabilityLogForm
     model = models.VulnerabilityLog
@@ -125,7 +124,6 @@ class VulnerabilityLogCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuth
 
 
 class TextProofDelete(generics.VulnmanAuthDeleteView):
-    # TODO: write tests
     model = models.TextProof
     http_method_names = ["post"]
 
@@ -252,7 +250,6 @@ class ImageProofUpdate(generics.VulnmanAuthUpdateView):
 
 
 class TextProofCreate(ObjectPermissionRequiredMixin, generics.VulnmanAuthCreateView):
-    # TODO: write tests
     template_name = "responsible_disc/proof_create.html"
     form_class = forms.TextProofForm
     permission_required = ["responsible_disc.change_vulnerability"]
