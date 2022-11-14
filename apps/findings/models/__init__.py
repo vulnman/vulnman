@@ -51,6 +51,7 @@ class VulnerabilityCategory(VulnmanModel):
 
 class CWEEntry(VulnmanModel):
     entry = models.CharField(max_length=32, unique=True)
+    name = models.CharField(max_length=128, null=True)
 
     def __str__(self):
         return self.entry
@@ -117,6 +118,7 @@ class Vulnerability(VulnmanProjectModel):
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_OPEN)
     severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES, blank=True, null=True)
     date_retested = models.DateField(null=True, blank=True)
+    internal_id = models.CharField(max_length=32, null=True)
     # generic assets
     asset_type = models.CharField(max_length=64, choices=ASSET_TYPES_CHOICES, default="webapplication")
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -134,6 +136,8 @@ class Vulnerability(VulnmanProjectModel):
         return self.template.severity
 
     def save(self, *args, **kwargs):
+        if self.internal_id is None:
+            self.internal_id = self.get_next_internal_id()
         if self.status == self.STATUS_FIXED and not self.date_retested:
             self.date_retested = timezone.now()
         return super().save(*args, **kwargs)
@@ -148,6 +152,18 @@ class Vulnerability(VulnmanProjectModel):
 
     def get_absolute_delete_url(self):
         return reverse_lazy('projects:findings:vulnerability-delete', kwargs={'pk': self.pk})
+
+    def get_next_internal_id(self):
+        qs = Vulnerability.objects.filter(project=self.project, date_created__date__year=timezone.now().year, internal_id__isnull=False).order_by("internal_id")
+        if not qs.exists():
+            return "{date}-0001".format(date=timezone.now().strftime("%Y%m%d"))
+        last_internal_id = qs.last().internal_id.split("-")[-1]
+        if int(last_internal_id) > 9999:
+            new_internal_id = "%05d" % int(int(last_internal_id) + 1)
+        else:
+            new_internal_id = "%04d" % int(int(last_internal_id) + 1)
+        formated_date = timezone.now().strftime("%Y%m%d")
+        return "{date}-{id}".format(date=formated_date, id=new_internal_id)
 
     @property
     def proofs(self):

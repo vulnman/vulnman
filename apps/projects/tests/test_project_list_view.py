@@ -24,8 +24,7 @@ class ProjectListViewTestCase(TestCase, VulnmanTestCaseMixin):
     def test_no_projects_vendor(self):
         self.client.force_login(self.vendor)
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context.get("projects", [])), 0)
+        self.assertEqual(response.status_code, 403)
 
     def test_project_status_filter(self):
         self.client.force_login(self.pentester1)

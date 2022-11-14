@@ -22,7 +22,6 @@ class LoginViewBaseTestCase(TestCase, VulnmanTestCaseMixin):
         data = {"auth-username": vendor.username, "auth-password": "password", "login-current_step": "auth"}
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse(settings.LOGIN_REDIRECT_URL))
 
     def test_login_wrong_creds(self):
         data = {"auth-username": "randomusername", "auth-password": "randompassword", "login-current_step": "auth"}

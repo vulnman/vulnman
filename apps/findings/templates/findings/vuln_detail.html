@@ -21,10 +21,8 @@
         <ol class="breadcrumb">
             {% include 'core/components/navigation/sidebar-toggler.html' %}
 
-            <li class="breadcrumb-item"><a
-                    href="{% url 'projects:findings:vulnerability-list' %}">Vulnerabilities</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ vuln.template.vulnerability_id }}
-                / {{ vuln.name }}</li>
+            <li class="breadcrumb-item"><a href="{% url 'projects:findings:vulnerability-list' %}">Vulnerabilities</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ vuln.internal_id }}</li>
         </ol>
     </nav>
 
