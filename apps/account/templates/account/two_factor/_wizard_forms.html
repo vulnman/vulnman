@@ -1,6 +1,6 @@
 {% load crispy_forms_tags %}
 
 <table class="mb-3">
-  {% crispy wizard.management_form %}
+  {{ wizard.management_form }}
   {% crispy wizard.form %}
 </table>

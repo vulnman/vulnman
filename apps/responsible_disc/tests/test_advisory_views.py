@@ -12,8 +12,6 @@ from apps.responsible_disc import models
 class AdvisoryExportViewTestCase(TestCase, VulnmanTestCaseMixin):
     def setUp(self) -> None:
         self.init_mixin()
-        settings.TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
-        settings.CELERY_TASK_ALWAYS_EAGER = True
         self.vulnerability = self.create_instance(models.Vulnerability, user=self.pentester1)
         self.url = self.get_url("responsible_disc:vulnerability-export-advisory", pk=self.vulnerability.pk)
 

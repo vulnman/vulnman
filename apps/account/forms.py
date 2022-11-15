@@ -173,6 +173,7 @@ class TOTPDeviceCreateForm(TOTPDeviceForm):
         super().__init__(*args, **kwargs)
         self.fields["token"].widget = forms.TextInput()
         self.helper = FormHelper()
+        self.helper.form_tag = False
         self.helper.layout = layout.Layout(
             layout.Row(
                 layout.Div(

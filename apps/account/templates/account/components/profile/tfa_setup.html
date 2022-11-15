@@ -21,7 +21,6 @@
       token in the field below. Your YubiKey will be linked to your
       account.{% endblocktrans %}</p>
   {% endif %}
-
   <form action="" method="post">{% csrf_token %}
     {% include "account/two_factor/_wizard_forms.html" %}
 

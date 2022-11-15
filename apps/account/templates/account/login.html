@@ -29,7 +29,6 @@
         {% endif %}
         <form action="" method="post">
             {% csrf_token %}
-            {{ wizard.management_form }}
             {% if wizard.steps.current == "token" %}
                 {% include "account/components/auth_forms/totp_token_form.html" %}
             {% else %}
