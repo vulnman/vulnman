@@ -13264,3 +13264,8 @@ select + .select2-container--bootstrap-5 {
 .filepond--credits {
   display: none !important;
 }
+
+.codehilite pre code {
+  white-space: break-spaces;
+  word-break: break-word;
+}
