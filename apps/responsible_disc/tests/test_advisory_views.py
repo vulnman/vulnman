@@ -1,10 +1,8 @@
 import base64
 import io
 import zipfile
-
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.conf import settings
 from vulnman.core.test import VulnmanTestCaseMixin
 from apps.responsible_disc import models
 
