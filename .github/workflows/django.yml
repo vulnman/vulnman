@@ -30,4 +30,4 @@ jobs:
         python manage.py create_secret_key
     - name: Run Tests
       run: |
-        python manage.py test
+        python manage.py test --settings vulnman.conf.test_settings

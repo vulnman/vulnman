@@ -149,7 +149,8 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'api.apps.ApiConfig',
     'apps.responsible_disc.apps.ResponsibleDiscConfig',
-    'apps.checklists.apps.ChecklistsConfig'
+    'apps.checklists.apps.ChecklistsConfig',
+    'apps.notifications.apps.NotificationsConfig'
 ]
 
 
@@ -238,8 +239,14 @@ ADDITIONAL_PACKAGES = []
 
 TOTP_ENFORCE_2FA = False
 
+MAIL_SUBJECT_PREFIX = "[vulnman] "
 RESPONSIBLE_DISCLOSURE_VULNERABILITY_ID_PREFIX = "vulnman-"
 RESPONSIBLE_DISCLOSURE_PLANNED_PUBLICATION_INTERVAL = 60
+RESPONSIBLE_DISCLOSURE_NOTIFY_DAYS_BEFORE_DISCLOSURE = 5
+RESPONSIBLE_DISCLOSURE_NOTIFY_VENDOR_DISCLOSURE = False
+RESPONSIBLE_DISCLOSURE_NOTIFY_MAIL_SUBJECT = "Vulnerability Disclosure is coming"
+PROJECTS_NOTIFY_CONTRIBUTORS_ON_CRITICAL = False
+
 
 try:
     from vulnman.conf.local_settings import *

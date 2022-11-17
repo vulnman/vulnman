@@ -226,7 +226,6 @@ class ContactDelete(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDeleteVi
 
 class ProjectContributorList(generics.ProjectListView):
     template_name = "projects/contributor_list.html"
-    model = models.ProjectContributor
     permission_required = ["projects.view_project"]
     context_object_name = "contributors"
 
@@ -234,6 +233,10 @@ class ProjectContributorList(generics.ProjectListView):
         context = super().get_context_data(**kwargs)
         context["create_form"] = forms.ContributorForm(project=self.get_project())
         return context
+
+    def get_queryset(self):
+        return models.ProjectContributor.objects.filter(project=self.get_project())
+
 
 
 class ProjectContributorCreate(generics.ProjectCreateView):
