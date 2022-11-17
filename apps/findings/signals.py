@@ -11,8 +11,8 @@ def vulnerability_critical_notification(sender, instance=None, created=False, **
         return
     if created and instance.severity == models.Vulnerability.SEVERITY_CRITICAL:
         subject = "New Critical Vulnerability created"
-        mail_template = "findings/emails/notify_critical_vulnerability.html"
-        context = {"vulnerability": instance}
+        mail_template = "emails/notify_critical_vulnerability.html"
+        context = {"vulnerability": instance, "base_url": settings.VULNMAN_BASE_URL}
         contributors = instance.project.projectcontributor_set.values_list("user__email", flat=True)
         to_mails = list(contributors)
         to_mails.append(instance.project.creator.email)

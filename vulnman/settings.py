@@ -247,6 +247,7 @@ RESPONSIBLE_DISCLOSURE_NOTIFY_VENDOR_DISCLOSURE = False
 RESPONSIBLE_DISCLOSURE_NOTIFY_MAIL_SUBJECT = "Vulnerability Disclosure is coming"
 PROJECTS_NOTIFY_CONTRIBUTORS_ON_CRITICAL = False
 
+VULNMAN_BASE_URL = None
 
 try:
     from vulnman.conf.local_settings import *

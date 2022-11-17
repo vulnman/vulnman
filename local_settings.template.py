@@ -19,6 +19,9 @@
 # Useful to load your customized templates for vulnerabilities and reports.
 # ADDITIONAL_PACKAGES = []
 
+# Used to calculate links inside mails
+# VULNMAN_BASE_URL = "https://example.com"
+
 
 # #################
 # Database Settings
