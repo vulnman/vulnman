@@ -110,7 +110,6 @@
 
 #####################################
 # Responsible Disclosure Application
-# NOTE: This feature is under active development
 #####################################
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = "smtp.example.com"
@@ -127,6 +126,9 @@
 
 # Amount of days for the planned publication of the vulnerability details
 # RESPONSIBLE_DISCLOSURE_PLANNED_PUBLICATION_INTERVAL = 60
+
+# Templates that just provide advisory templates and not a report template
+# RESPONSIBLE_DISCLOSURE_ADVISORY_TEMPLATES = REPORT_TEMPLATES
 
 # Additional Django packages/apps
 # ADDITIONAL_PACKAGES = []

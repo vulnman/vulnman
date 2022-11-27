@@ -66,7 +66,7 @@ class ImageProofForm(forms.ModelForm):
 
 def get_template_choices():
     choices = []
-    for choice in settings.REPORT_TEMPLATES.keys():
+    for choice in settings.RESPONSIBLE_DISCLOSURE_ADVISORY_TEMPLATES.keys():
         choices.append((choice, choice))
     return choices
 
