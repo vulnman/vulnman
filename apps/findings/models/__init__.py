@@ -1,4 +1,5 @@
 import os
+import time
 import base64
 from uuid import uuid4
 from django.db import models
@@ -153,17 +154,30 @@ class Vulnerability(VulnmanProjectModel):
     def get_absolute_delete_url(self):
         return reverse_lazy('projects:findings:vulnerability-delete', kwargs={'pk': self.pk})
 
+    @staticmethod
+    def get_counter_from_internal_id(internal_id):
+        year = int(internal_id[:4])
+        ts = int(time.mktime(timezone.datetime(year=year, month=1, day=1).timetuple()))
+        ts = int(ts / 100)
+        counter = internal_id[4:].replace(str(ts), "").replace("-", "")
+        return int(counter)
+
     def get_next_internal_id(self):
-        qs = Vulnerability.objects.filter(project=self.project, date_created__date__year=timezone.now().year, internal_id__isnull=False).order_by("internal_id")
+        year = timezone.now().year
+        qs = Vulnerability.objects.filter(date_created__date__year=year, internal_id__isnull=False).order_by("internal_id")
+        counter = int(time.mktime(timezone.datetime(year=year, month=1, day=1).timetuple()))
+        counter = int(counter / 100)
         if not qs.exists():
-            return "{date}-0001".format(date=timezone.now().strftime("%Y%m%d"))
-        last_internal_id = qs.last().internal_id.split("-")[-1]
-        if int(last_internal_id) > 9999:
-            new_internal_id = "%05d" % int(int(last_internal_id) + 1)
+            return "{year}{counter}0001".format(year=year, counter=counter)
+        latest_internal_id = qs.last().internal_id
+        latest_counter = self.get_counter_from_internal_id(latest_internal_id)
+        length = len(str(latest_counter))
+        if length < 4:
+            formatter = "%04d"
         else:
-            new_internal_id = "%04d" % int(int(last_internal_id) + 1)
-        formated_date = timezone.now().strftime("%Y%m%d")
-        return "{date}-{id}".format(date=formated_date, id=new_internal_id)
+            formatter = "%0{len}d".format(len=len(str(latest_counter)))
+        new_internal_id = formatter % int(int(latest_counter) + 1)
+        return "{date}{counter}{id}".format(date=year, counter=counter, id=new_internal_id)
 
     @property
     def proofs(self):
