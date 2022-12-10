@@ -108,17 +108,21 @@
 #    "email": "mail"
 #}
 
-#####################################
-# Responsible Disclosure Application
-#####################################
+#######
+# Mail
+#######
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = "smtp.example.com"
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'jdoe'
 # EMAIL_HOST_PASSWORD = 'changme'
-
 # DEFAULT_FROM_EMAIL = "jdoe@example.com"
+
+
+#####################################
+# Responsible Disclosure Application
+#####################################
 
 # RESPONSIBLE_DISCLOSURE_MAIL_FROM = DEFAULT_FROM_EMAIL
 
