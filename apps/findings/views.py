@@ -77,14 +77,10 @@ class VulnCreate(generics.ProjectCreateView):
 
 
 class VulnerabilityCopy(generics.ProjectUpdateView):
-    model = models.Vulnerability
     form_class = forms.VulnerabilityCopyForm
-    permission_required = ["projects.change_project"]
-    return_403 = True
-    raise_exception = True
 
-    def get_permission_object(self):
-        return self.get_project()
+    def get_queryset(self):
+        return models.Vulnerability.objects.filter(project=self.get_project())
 
     def form_valid(self, form):
         new_vuln = models.Vulnerability.objects.copy_from_vulnerability(self.get_object())

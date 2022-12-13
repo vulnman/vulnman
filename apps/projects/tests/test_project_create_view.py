@@ -12,6 +12,7 @@ class ProjectCreateViewTestCase(TestCase, VulnmanTestCaseMixin):
 
     def test_create_pentester(self):
         data = {"name": "Test Project Lorem", "start_date": timezone.now().date(),
+                "status": models.Project.PENTEST_STATUS_OPEN,
                 "end_date": timezone.now().date(), "client": self.customer.pk, "cvss_required": False,
                 "pentest_method": models.Project.PENTEST_METHOD_WHITEBOX}
         self.client.force_login(self.pentester1)

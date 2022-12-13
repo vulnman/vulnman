@@ -189,3 +189,33 @@ class VulnerabilityDeleteViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.login_with_project(self.pentester2, self.project2)
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, 404)
+
+
+class VulnerabilityCopyViewTestCase(TestCase, VulnmanTestCaseMixin):
+    def setUp(self):
+        self.init_mixin()
+        self.vulnerability1 = self.create_instance(models.Vulnerability, project=self.project1)
+        self.vulnerability2 = self.create_instance(models.Vulnerability, project=self.project2)
+        self.url = self.get_url("projects:findings:vulnerability-copy", pk=self.vulnerability1.pk)
+
+    def test_valid(self):
+        self.login_with_project(self.pentester1, self.project1)
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(models.Vulnerability.objects.filter(
+            project=self.project1, name=self.vulnerability1.name).count(), 2)
+
+    def test_pentester2(self):
+        self.login_with_project(self.pentester2, self.project2)
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_customer(self):
+        self.login_with_project(self.customer1, self.project1)
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_readonly(self):
+        self.login_with_project(self.read_only1, self.project1)
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 403)

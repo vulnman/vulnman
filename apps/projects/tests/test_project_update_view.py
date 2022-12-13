@@ -13,7 +13,8 @@ class ProjectUpdateViewTestCase(TestCase, VulnmanTestCaseMixin):
         url = self.get_url("projects:project-update", pk=self.project1.pk)
         data = {"name": "Test Project Lorem", "start_date": timezone.now().date(),
                 "end_date": timezone.now().date(), "client": self.customer.pk, "cvss_required": False,
-                "pentest_method": models.Project.PENTEST_METHOD_WHITEBOX}
+                "pentest_method": models.Project.PENTEST_METHOD_WHITEBOX,
+                "status": models.Project.PENTEST_STATUS_OPEN}
         self.login_with_project(self.pentester1, self.project1)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
