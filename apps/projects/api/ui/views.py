@@ -21,12 +21,3 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
         if serializer.is_valid():
             return Response(serializer.data, status=200)
         return Response(serializer.errors, 400)
-
-    @action(detail=True, methods=['get'])
-    def hosts_by_services(self, request, pk=None):
-        serializer = serializers.StatsHostsByServicesSerializer(
-            instance=self.get_object(),
-            data=request.data)
-        if serializer.is_valid():
-            return Response(serializer.data, status=200)
-        return Response(serializer.errors, 400)

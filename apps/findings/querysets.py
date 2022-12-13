@@ -1,3 +1,4 @@
+import copy
 from django.db.models import QuerySet, Manager
 from django.contrib.contenttypes.models import ContentType
 from apps.assets import models as asset_models
@@ -55,3 +56,15 @@ class VulnerabilityManager(Manager):
             if qs.exists():
                 return model_class
         raise Exception("Invalid Asset Type")
+
+    def copy_from_vulnerability(self, vulnerability):
+        obj = self.model.objects.get(pk=vulnerability.pk)
+        obj.pk = None
+        obj.internal_id = obj.get_next_internal_id()
+        obj.save()
+        for proof in vulnerability.proofs:
+            new_proof = copy.copy(proof)
+            new_proof.pk = None
+            new_proof.vulnerability = obj
+            new_proof.save()
+        return obj

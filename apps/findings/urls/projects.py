@@ -21,6 +21,7 @@ urlpatterns = [
     path('vulnerabilities/<str:pk>/image-text-proof/', views.ImageProofUpdate.as_view(), name="image-proof-update"),
     path('vulnerabilities/<str:pk>/proofs/', views.VulnerabilityProofs.as_view(), name="vulnerability-proofs"),
     path('vulnerabilities/<str:pk>/scores/', views.VulnerabilityScores.as_view(), name="vulnerability-scores"),
+    path('vulnerabilities/<str:pk>/copy/', views.VulnerabilityCopy.as_view(), name="vulnerability-copy"),
     path('vulnerabilities/<str:pk>/scores/owasp/create/', views.OWASPScoreCreate.as_view(), name="owasp-score-create"),
     path('vulnerabilities/<str:pk>/scores/cvs/create/', views.CVSScoreCreate.as_view(), name="cvs-score-create"),
 

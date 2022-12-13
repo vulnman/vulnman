@@ -13,7 +13,7 @@
     </div>
     <div class="col-sm-12 col-md-4">
         {% if vuln.date_retested %}
-            {% include 'components/cards/card_with_information.html' with icon="fa-calendar-check" title="Retested Date" value=vuln.date_retested.date %}
+            {% include 'components/cards/card_with_information.html' with icon="fa-calendar-check" title="Retested Date" value=vuln.date_retested|date %}
         {% else %}
             {% include 'components/cards/card_with_information.html' with icon="fa-calendar-check" title="Retested Date" value="-" %}
         {% endif %}

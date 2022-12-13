@@ -48,8 +48,13 @@ class Report(VulnmanProjectModel):
         related_name="report_set")
     title = models.CharField(max_length=256, null=True, blank=True)
     language = models.CharField(choices=settings.LANGUAGES, default="en", max_length=6)
-    template = models.CharField(choices=get_report_templates(), default="default", max_length=64)
+    template = models.CharField(default="default", max_length=64)
     report_variant = models.PositiveIntegerField(choices=REPORT_VARIANT_CHOICES, default=REPORT_VARIANT_PENTEST_REPORT)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._meta.get_field("template").choices = get_report_templates()
+
 
     def get_report_title(self):
         if self.title:

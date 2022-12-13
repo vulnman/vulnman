@@ -76,6 +76,22 @@ class VulnCreate(generics.ProjectCreateView):
         return kwargs
 
 
+class VulnerabilityCopy(generics.ProjectUpdateView):
+    model = models.Vulnerability
+    form_class = forms.VulnerabilityCopyForm
+    permission_required = ["projects.change_project"]
+    return_403 = True
+    raise_exception = True
+
+    def get_permission_object(self):
+        return self.get_project()
+
+    def form_valid(self, form):
+        new_vuln = models.Vulnerability.objects.copy_from_vulnerability(self.get_object())
+        self.success_url = new_vuln.get_absolute_url()
+        return super().form_valid(form)
+
+
 class TextProofCreate(generics.ProjectCreateView):
     form_class = forms.TextProofForm
     template_name = "findings/text_proof_create_or_update.html"

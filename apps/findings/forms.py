@@ -276,3 +276,11 @@ class OWASPScoreForm(forms.ModelForm):
                             wrapper_class="col-sm-12 col-md-6")
             )
         )
+
+
+class VulnerabilityCopyForm(forms.ModelForm):
+    dummy = forms.BooleanField(required=False)
+
+    class Meta:
+        model = models.Vulnerability
+        fields = ["dummy"]

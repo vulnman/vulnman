@@ -17,6 +17,8 @@ def get_report_templates():
 
 
 class ReportCreateForm(forms.ModelForm):
+    template = forms.ChoiceField(label="Template", choices=get_report_templates())
+
     class Meta:
         model = models.Report
         fields = ["author", "title", "language", "name", "template", "report_variant"]

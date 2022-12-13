@@ -42,7 +42,7 @@
                 {% include 'components/cards/card_with_information.html' with icon="fa-feather" title="Author" value=report.author %}
             </div>
             <div class="col-md-3 col-sm-12">
-                {% include 'components/cards/card_with_information.html' with icon='fa-wand-magic-sparkles' title="Template" value=report.get_template_display %}
+                {% include 'components/cards/card_with_information.html' with icon='fa-wand-magic-sparkles' title="Template" value=report.template %}
             </div>
             <div class="col-md-3 col-sm-12">
                 {% include 'components/cards/card_with_information.html' with icon='fa-file-alt' title="Variant" value=report.get_report_variant_display %}

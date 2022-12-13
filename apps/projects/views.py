@@ -80,6 +80,11 @@ class ProjectDetail(VulnmanPermissionRequiredMixin, generics.VulnmanAuthDetailVi
             self.request.session['project_pk'] = str(self.get_object().pk)
         return self.render_to_response(context)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["latest_vulnerabilities"] = self.get_object().vulnerability_set.order_by("-date_created")[:5]
+        return context
+
     def get_queryset(self):
         qs = models.Project.objects.for_user(self.request.user)
         return qs.filter(pk=self.kwargs.get("pk"))
@@ -97,23 +102,12 @@ class ProjectUpdate(VulnmanPermissionRequiredMixin, generics.VulnmanAuthUpdateVi
         qs = models.Project.objects.for_user(self.request.user, perms="projects.change_project")
         return qs.filter(pk=self.kwargs.get("pk"))
 
-
-class ProjectUpdateClose(PermissionRequiredMixin, generics.ProjectRedirectView):
-    http_method_names = ["post"]
-    url = reverse_lazy("projects:project-list")
-    return_403 = True
-    raise_exception = True
-    permission_required = ["projects.change_project"]
-
-    def get_permission_object(self):
-        return self.get_project()
-
-    def post(self, request, *args, **kwargs):
-        obj = self.get_project()
-        obj.status = models.Project.PENTEST_STATUS_CLOSED
-        obj.save()
-        obj.archive_project()
-        return super().post(request, *args, **kwargs)
+    def form_valid(self, form):
+        if form.cleaned_data["status"] == models.Project.PENTEST_STATUS_CLOSED:
+            form.save()
+            form.instance.archive_project()
+            return super().form_valid(form)
+        return super().form_valid(form)
 
 
 class ClientList(ObjectPermissionRequiredMixin, generics.VulnmanAuthListView):
