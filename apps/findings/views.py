@@ -214,7 +214,7 @@ class VulnerabilityExport(generics.ProjectDetailView):
             template = "default"
         result = export_single_vulnerability(self.get_object(), template)
         response = HttpResponse(result, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        response['Content-Disposition'] = 'attachment; filename="finding_%s.pdf"' % self.get_object().internal_id
         return response
 
 
