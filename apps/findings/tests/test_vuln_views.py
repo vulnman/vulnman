@@ -37,7 +37,7 @@ class VulnerabilityCreateViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.template = self._create_instance(models.Template)
         self.asset1 = self._create_instance(asset_models.WebApplication, project=self.project1)
         self.asset2 = self._create_instance(asset_models.WebApplication, project=self.project2)
-        self.data = {"name": "Testvuln", "template_id": self.template.vulnerability_id,
+        self.data = {"name": "Testvuln", "template_id": self.template.vulnerability_id, "date_found": "2022-12-01",
                      "f_asset": self.asset1.pk, "status": models.Vulnerability.STATUS_OPEN, "auth_required": True,
                      "user_account": "", "asset_type": asset_models.WebApplication.ASSET_TYPE}
 
@@ -135,7 +135,7 @@ class VulnerabilityUpdateViewTestCase(TestCase, VulnmanTestCaseMixin):
         self.vulnerability = self.create_instance(models.Vulnerability, project=self.project1, asset=self.asset1,
                                                   content_type=ct, object_id=self.asset1.pk)
         self.url = self.get_url("projects:findings:vulnerability-update", pk=self.vulnerability.pk)
-        self.data = {"name": "Testvuln1234", "template_id": self.vulnerability.template.vulnerability_id,
+        self.data = {"name": "Testvuln1234", "template_id": self.vulnerability.template.vulnerability_id, "date_found": "2022-12-01",
                      "f_asset": str(self.asset1.pk), "status": models.Vulnerability.STATUS_OPEN, "auth_required": True,
                      "user_account": "", "asset_type": asset_models.WebApplication.ASSET_TYPE}
 
