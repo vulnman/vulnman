@@ -118,6 +118,7 @@ class Vulnerability(VulnmanProjectModel):
     cve_id = models.CharField(max_length=28, null=True, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_OPEN)
     severity = models.PositiveIntegerField(choices=SEVERITY_CHOICES, blank=True, null=True)
+    date_found = models.DateField(default=timezone.now)
     date_retested = models.DateField(null=True, blank=True)
     internal_id = models.CharField(max_length=32, null=True)
     # generic assets

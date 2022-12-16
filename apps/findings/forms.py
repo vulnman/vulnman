@@ -5,7 +5,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import FormActions
 from crispy_bootstrap5 import bootstrap5
-from vulnman.core.forms import CodeMirrorWidget, FileDropWidget
+from vulnman.core.forms import CodeMirrorWidget, FileDropWidget, DateInput
 
 
 class TextProofForm(forms.ModelForm):
@@ -119,7 +119,10 @@ class VulnerabilityForm(forms.ModelForm):
     class Meta:
         model = models.Vulnerability
         fields = ["template_id", "name", "asset_type", "f_asset", "status", "cve_id", "severity",
-                  "auth_required", "user_account"]
+                  "auth_required", "user_account", "date_found"]
+        widgets = {
+            "date_found": DateInput()
+        }
 
     def get_asset_choices(self, project):
         choices = []
@@ -157,6 +160,11 @@ class VulnerabilityForm(forms.ModelForm):
                 ),
                 layout.Div(
                     bootstrap5.FloatingField('f_asset'), css_class="col-sm-12 col-md-6"
+                )
+            ),
+            layout.Row(
+                layout.Div(
+                    bootstrap5.FloatingField('date_found'), css_class="col-sm-12",
                 )
             ),
             layout.Row(
