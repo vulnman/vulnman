@@ -1,14 +1,14 @@
 version: "3.9"
 services:
   db:
-    image: postgres
+    image: postgres:15.1
     environment:
       - POSTGRES_DB=vulnman
       - POSTGRES_USER=vulnman
       - POSTGRES_PASSWORD=vulnman
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000 --settings=vulnman.settings.local
     volumes:
       - .:/code
     ports:
