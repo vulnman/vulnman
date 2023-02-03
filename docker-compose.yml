@@ -17,6 +17,6 @@ services:
       - POSTGRES_NAME=vulnman
       - POSTGRES_USER=vulnman
       - POSTGRES_PASSWORD=vulnman
-      - DJANGO_SETTINGS_MODULE=vulnman.settings.staging
+      - DJANGO_SETTINGS_MODULE=vulnman.settings.local
     depends_on:
       - db
