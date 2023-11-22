@@ -1,8 +1,9 @@
 # Vulnman
 
+***
 **Vulnman is deprecated and replaced by [PeCoReT](https://github.com/PeCoReT/pecoret).**
 
-
+***
 [Vulnman](https://vulnman.github.io) is an open source pentest management application written in Python using the powerful Django framework.
 
 It aims to have a central place to manage vulnerabilities and other penetration assets.
